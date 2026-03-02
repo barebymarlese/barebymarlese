@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BARE by Marlese — Professional Laser Tattoo Removal South Oxfordshire</title>
+
+  <!-- Fonts (similar clean, modern look) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #cacdc6;
+      --heading-muted: #878274;
+      --heading-dark: #24221a;
+      --body: #cacdc6;          /* per your spec: “other writing” */
+      --brand: #5e6959;         /* BARE by Marlese */
+      --panel: #24221a;         /* dark panels so #cacdc6 body text stays readable */
+      --panel-2: rgba(36,34,26,.88);
+      --line: rgba(36,34,26,.35);
+      --shadow: 0 18px 45px rgba(0,0,0,.16);
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--heading-dark);
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; }
+
+    /* Top nav */
+    .nav{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+      background: rgba(202,205,198,.86);
+      border-bottom: 1px solid rgba(36,34,26,.15);
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding: 14px 0;
+    }
+    .logo{
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      letter-spacing:.26em;
+      font-weight:600;
+      text-transform:uppercase;
+    }
+    .logo .bare{ color: var(--brand); font-size: 22px; }
+    .logo .by{ letter-spacing:.05em; font-weight:500; text-transform:none; color: var(--heading-muted); font-size: 14px; }
+
+    .nav-links{
+      display:flex;
+      gap:18px;
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--heading-dark);
+      opacity:.85;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav-links a{ padding:8px 10px; border-radius:999px; }
+    .nav-links a:hover{ background: rgba(36,34,26,.07); }
+
+    /* Hero */
+    .hero{
+      padding: 54px 0 40px;
+    }
+
+    /* ✅ NEW: Centered hero title (matches section titles) */
+    .hero-title{
+      text-align:center;
+      margin: 0 0 26px;
+    }
+    .hero-title h1{
+      margin:0;
+      font-size: 65px;          /* per your spec */
+      line-height: 0.95;
+      letter-spacing: .01em;
+      text-shadow: 0 10px 28px rgba(0,0,0,.18);
+    }
+    .hero-title h1 .muted{ color: var(--heading-muted); font-weight:600; }
+    .hero-title h1 .dark{ color: var(--heading-dark); font-weight:700; }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 28px;
+      align-items:center;
+    }
+
+    .hero-card{
+      background: rgba(202,205,198,.55);
+      border: 1px solid rgba(36,34,26,.12);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero-torso{
+      width:100%;
+      height: 340px;
+      object-fit: cover;
+      border-radius: 14px;
+      display:block;
+      filter: contrast(1.02) saturate(.95);
+    }
+    .hero-right{
+      display:flex;
+      flex-direction:column;
+      gap: 18px;
+      align-items:flex-end;
+      text-align:right;
+    }
+    .hero-brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-top: 6px;
+    }
+    .hero-brand .bare{
+      color: var(--brand);
+      font-size: 54px;
+      letter-spacing: .28em;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .hero-brand .divider{
+      width:1px; height:54px; background: rgba(36,34,26,.3);
+    }
+    .hero-brand .by{
+      color: var(--heading-muted);
+      letter-spacing: .06em;
+      font-weight: 500;
+      font-size: 16px;
+      text-transform:none;
+    }
+
+    .hero-meta{
+      color: var(--heading-dark);
+      opacity: .8;
+      letter-spacing: .08em;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 1.35;
+    }
+    .hero-locations{
+      color: var(--heading-dark);
+      opacity: .78;
+      letter-spacing: .06em;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+    .hero-tagline{
+      margin-top: 6px;
+      text-align:left;
+      font-size: 12px;
+      letter-spacing: .16em;
+      color: var(--heading-dark);
+      opacity:.75;
+      text-transform: uppercase;
+    }
+
+    /* Section heading */
+    section{ padding: 44px 0; }
+    .section-title{
+      text-align:center;
+      margin: 0 0 22px;
+      font-size: 56px;
+      color: var(--heading-muted);
+      letter-spacing: .02em;
+      text-shadow: 0 10px 28px rgba(0,0,0,.16);
+      font-weight: 600;
+    }
+
+    /* Services */
+    .services-grid{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap: 26px;
+      align-items:stretch;
+    }
+    .portrait{
+      width:100%;
+      height: 420px;
+      object-fit: cover;
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.15);
+      filter: grayscale(1) contrast(1.04);
+      background: #ddd;
+    }
+    .service-panels{
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
+    }
+    .triple{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.16);
+      background: rgba(202,205,198,.45);
+    }
+    .panel{
+      padding: 18px 18px 20px;
+      border-right: 1px solid rgba(36,34,26,.12);
+      min-height: 168px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      text-align:center;
+    }
+    .panel:last-child{ border-right: none; }
+    .panel h3{
+      margin: 0 0 10px;
+      color: var(--heading-dark);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .panel p{
+      margin:0;
+      color: var(--heading-dark);
+      opacity:.86;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .aftercare{
+      border-radius: 18px;
+      padding: 18px 22px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.16);
+      background: rgba(202,205,198,.45);
+      text-align:center;
+    }
+    .aftercare h3{
+      margin: 0 0 10px;
+      color: var(--heading-dark);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .aftercare p{
+      margin:0;
+      color: var(--heading-dark);
+      opacity:.86;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    /* Price list */
+    .price-grid{
+      display:grid;
+      grid-template-columns: 1fr 1.05fr 1fr;
+      gap: 22px;
+      align-items:stretch;
+    }
+    .price-col{
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.16);
+      background: rgba(202,205,198,.45);
+      padding: 18px 18px 14px;
+    }
+    .price-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(36,34,26,.18);
+    }
+    .price-row:last-child{ border-bottom:none; }
+    .price-name{
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform:none;
+      color: var(--heading-dark);
+    }
+    .price-amt{
+      font-weight: 600;
+      letter-spacing:.04em;
+      color: var(--heading-dark);
+    }
+    .price-size{
+      margin-top: -2px;
+      font-size: 12px;
+      letter-spacing:.06em;
+      opacity:.8;
+      color: var(--heading-dark);
+    }
+    .price-note{
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.16);
+      background: rgba(94,105,89,.18);
+      padding: 18px 18px 16px;
+      position: relative;
+      overflow:hidden;
+    }
+    .price-note p{
+      margin:0 0 12px;
+      color: var(--heading-dark);
+      opacity:.9;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .bundle-top{
+      text-align:right;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--heading-dark);
+      opacity:.85;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .save{
+      font-size: 12px;
+      letter-spacing:.12em;
+      text-transform: uppercase;
+      opacity: .8;
+      color: var(--heading-dark);
+    }
+
+    /* Contact */
+    .contact-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items:stretch;
+    }
+    .contact-left{
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.16);
+      background: rgba(202,205,198,.45);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+      min-height: 420px;
+    }
+    .contact-left h2{
+      margin: 0 0 18px;
+      font-size: 56px;
+      color: var(--heading-muted);
+      font-weight: 600;
+      text-shadow: 0 10px 28px rgba(0,0,0,.16);
+      letter-spacing: .02em;
+    }
+    .contact-arm{
+      position:absolute;
+      left:-24px;
+      bottom:-8px;
+      width: calc(100% + 120px);
+      max-width:none;
+      opacity: .98;
+      filter: saturate(.98) contrast(1.02);
+    }
+    .contact-email{
+      position:absolute;
+      right: 18px;
+      top: 180px;
+      text-align:left;
+      color: var(--heading-dark);
+      opacity:.85;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .contact-email strong{ font-weight: 600; }
+
+    .contact-right{
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.16);
+      overflow:hidden;
+      min-height: 420px;
+      background:#111;
+    }
+    .contact-boat{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: grayscale(1) contrast(1.02);
+    }
+
+    /* Footer */
+    footer{
+      padding: 20px 0 34px;
+      text-align:center;
+      font-size: 12px;
+      letter-spacing:.12em;
+      text-transform: uppercase;
+      color: var(--heading-dark);
+      opacity:.7;
+    }
+
+    /* Mobile */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .hero-right{ align-items:flex-start; text-align:left; }
+      .services-grid{ grid-template-columns: 1fr; }
+      .portrait{ height: 360px; max-width: 420px; justify-self:center; }
+      .triple{ grid-template-columns: 1fr; }
+      .panel{ border-right:none; border-bottom: 1px solid rgba(36,34,26,.12); }
+      .panel:last-child{ border-bottom:none; }
+      .price-grid{ grid-template-columns: 1fr; }
+      .contact-grid{ grid-template-columns: 1fr; }
+      .contact-left h2{ font-size: 46px; }
+
+      /* keep the hero title readable on mobile */
+      .hero-title h1{ font-size: 52px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <div class="logo" aria-label="BARE by Marlese">
+        <span class="bare">BARE</span>
+        <span class="by">by Marlese</span>
+      </div>
+      <nav class="nav-links" aria-label="Site navigation">
+        <a href="#services">Services</a>
+        <a href="#prices">Price List</a>
+        <a href="#contact">Get in Touch</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section class="hero" id="top">
+      <div class="wrap">
+        <!-- ✅ NEW: centered headline (matches Services / Price List centering) -->
+        <div class="hero-title">
+          <h1>
+            <span class="muted">Professional Laser Tattoo</span><br>
+            <span class="dark">Removal South Oxfordshire</span>
+          </h1>
+        </div>
+
+        <div class="hero-grid">
+          <div>
+            <div class="hero-card">
+              <img class="hero-torso" src="assets/hero-torso.png" alt="Tattoo removal before and after style visual" />
+              <div class="hero-tagline">GIVE YOURSELF THE FREEDOM TO BE BARE AGAIN.</div>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="hero-brand" aria-label="BARE by Marlese">
+              <div class="bare">BARE</div>
+              <div class="divider" role="presentation"></div>
+              <div class="by">by<br>Marlese</div>
+            </div>
+
+            <div class="hero-meta">
+              VTCT Level 5<br>
+              Professional<br>
+              Safe
+            </div>
+
+            <div class="hero-locations">
+              South Oxfordshire<br>
+              Henley on Thames<br>
+              Wallingford<br>
+              Didcot
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="wrap">
+        <h2 class="section-title">Services</h2>
+
+        <div class="services-grid">
+          <img class="portrait" src="assets/services-portrait.png" alt="Portrait photo" />
+
+          <div class="service-panels">
+            <div class="triple" role="group" aria-label="Services">
+              <div class="panel">
+                <h3>Consultation</h3>
+                <p>
+                  At Bare, every treatment begins<br>
+                  with a thoughtful consultation.<br>
+                  Your tattoo, skin, and individual<br>
+                  needs are carefully assessed so<br>
+                  your journey feels safe, informed,<br>
+                  and tailored to you.
+                </p>
+              </div>
+
+              <div class="panel">
+                <h3>Preparation</h3>
+                <p>
+                  The skin is gently cleansed and<br>
+                  prepared. Where needed, a<br>
+                  numbing cream is applied to<br>
+                  ensure your comfort throughout<br>
+                  the session.
+                </p>
+              </div>
+
+              <div class="panel">
+                <h3>Treatment</h3>
+                <p>
+                  Advanced laser technology is<br>
+                  used to target unwanted tattoo<br>
+                  ink with precision. The laser<br>
+                  breaks the ink down into fine<br>
+                  particles, allowing your body to<br>
+                  gradually clear it over time.
+                </p>
+              </div>
+            </div>
+
+            <div class="aftercare">
+              <h3>Tattoo Removal Aftercare &amp; Healing</h3>
+              <p>
+                Cooling techniques are incorporated to calm the skin and enhance comfort while protecting the<br>
+                surrounding area.
+              </p>
+              <p>
+                After treatment, a soothing product is applied and clear aftercare guidance is provided to support<br>
+                healing and maintain healthy skin between sessions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICE LIST -->
+    <section id="prices">
+      <div class="wrap">
+        <h2 class="section-title">PRICE LIST</h2>
+
+        <div class="price-grid">
+          <!-- Left -->
+          <div class="price-col" aria-label="Single session prices">
+            <div class="price-row">
+              <div>
+                <div class="price-name">Tiny Tattoo</div>
+              </div>
+              <div class="price-amt">£70</div>
+            </div>
+            <div class="price-size">1cm-3cm x 1cm-3cm</div>
+
+            <div class="price-row" style="margin-top:10px;">
+              <div class="price-name">Small Tattoo</div>
+              <div class="price-amt">£95</div>
+            </div>
+            <div class="price-size">4cm-8cm x 4cm-8cm</div>
+
+            <div class="price-row" style="margin-top:10px;">
+              <div class="price-name">Medium Tattoo</div>
+              <div class="price-amt">£120</div>
+            </div>
+            <div class="price-size">9cm-13cm x 9cm-13cm</div>
+
+            <div class="price-row" style="margin-top:10px;">
+              <div class="price-name">Large Tattoo</div>
+              <div class="price-amt">£160</div>
+            </div>
+            <div class="price-size">14cm-20cm x 14cm-20cm</div>
+
+            <div class="price-row" style="margin-top:10px;">
+              <div class="price-name">XL Tattoo</div>
+              <div class="price-amt">£200</div>
+            </div>
+            <div class="price-size">20cm-24cm x 20cm-24cm</div>
+          </div>
+
+          <!-- Middle note -->
+          <div class="price-note" aria-label="Pricing notes">
+            <p>
+              Tattoo removal is rarely a linear process.<br>
+              Whether you’re aiming for full removal or<br>
+              simply fading a tattoo for a cover-up, I<br>
+              can tailor a treatment package to suit<br>
+              your specific requirements. Let’s chat<br>
+              about creating a roadmap that works best<br>
+              for you.
+            </p>
+
+            <p style="margin-top:14px;">
+              Bundles are valid for <strong>12 months</strong> from the<br>
+              date of purchase. For safety reasons, a<br>
+              minimum interval of eight weeks is<br>
+              required between sessions. Full payment<br>
+              must be made upfront. A <strong>24-hour</strong><br>
+              cancellation policy applies; if this is not<br>
+              met, the session may be forfeited.<br>
+              However, the eight-week interval will still<br>
+              apply before the next booking.
+            </p>
+          </div>
+
+          <!-- Right -->
+          <div class="price-col" aria-label="6-session bundle">
+            <div class="bundle-top">6-SESSION BUNDLE<br>SOUTH OXFORDSHIRE (COMMIT &amp; SAVE!)</div>
+
+            <div class="price-row">
+              <div class="price-name">Tiny Tattoo</div>
+              <div class="price-amt">£360</div>
+            </div>
+            <div class="save">SAVE £60</div>
+            <div class="price-size">1cm-3cm x 1cm-3cm</div>
+
+            <div class="price-row" style="margin-top:12px;">
+              <div class="price-name">Small Tattoo</div>
+              <div class="price-amt">£495</div>
+            </div>
+            <div class="save">SAVE £75</div>
+            <div class="price-size">4cm-8cm x 4cm-8cm</div>
+
+            <div class="price-row" style="margin-top:12px;">
+              <div class="price-name">Medium Tattoo</div>
+              <div class="price-amt">£620</div>
+            </div>
+            <div class="save">SAVE £100</div>
+            <div class="price-size">9cm-13cm x 9cm-13cm</div>
+
+            <div class="price-row" style="margin-top:12px;">
+              <div class="price-name">Large Tattoo</div>
+              <div class="price-amt">£820</div>
+            </div>
+            <div class="save">SAVE £140</div>
+            <div class="price-size">14cm-20cm x 14cm-20cm</div>
+
+            <div class="price-row" style="margin-top:12px;">
+              <div class="price-name">XL Tattoo</div>
+              <div class="price-amt">£1050</div>
+            </div>
+            <div class="save">SAVE £150</div>
+            <div class="price-size">20cm-24cm x 20cm-24cm</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GET IN TOUCH -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="contact-grid">
+          <div class="contact-left">
+            <h2>GET IN TOUCH</h2>
+
+            <div class="contact-email">
+              <strong>Email:</strong><br>
+              marlese@barebymarlese.com
+            </div>
+
+            <img class="contact-arm" src="assets/contact-arm.png" alt="Tattoo fading visual with 1x 2x 3x 4x 5x markers" />
+          </div>
+
+          <div class="contact-right" aria-label="Background image">
+            <img class="contact-boat" src="assets/contact-boat.png" alt="Black and white aerial boat image" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    BARE by Marlese
+  </footer>
+</body>
+</html>
