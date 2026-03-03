@@ -103,8 +103,8 @@
     </div>
   </div>
 </section>
-<script>
 
+<script>
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgeqqlb";
 
 document.getElementById("fitzForm").addEventListener("submit", async function(e) {
@@ -112,31 +112,34 @@ document.getElementById("fitzForm").addEventListener("submit", async function(e)
 
   const form = this;
 
-  // Calculate score
+  // Calculate score (max 20)
   let score = 0;
   ["q1","q2","q3","q4","q5"].forEach(q => {
     const selected = form.querySelector(`input[name="${q}"]:checked`);
-    if(selected) score += parseInt(selected.value);
+    if(selected) score += parseInt(selected.value, 10);
   });
 
+  // Correct mapping for score 0–20
   let type = "";
-  if(score <= 6) type = "Type I";
-  else if(score <= 10) type = "Type II";
-  else if(score <= 15) type = "Type III";
-  else if(score <= 20) type = "Type IV";
-  else if(score <= 25) type = "Type V";
+  if(score <= 2) type = "Type I";
+  else if(score <= 6) type = "Type II";
+  else if(score <= 10) type = "Type III";
+  else if(score <= 14) type = "Type IV";
+  else if(score <= 17) type = "Type V";
   else type = "Type VI";
 
   document.getElementById("fitzTypeHidden").value = type;
   document.getElementById("fitzScoreHidden").value = score;
 
   const formData = new FormData(form);
+  formData.append("_subject", `Fitzpatrick Skin Test — ${type} (score ${score}/20)`);
+  formData.append("submitted_at", new Date().toISOString());
 
   try {
     const response = await fetch(FORMSPREE_ENDPOINT, {
       method: "POST",
       body: formData,
-      headers: { 'Accept': 'application/json' }
+      headers: { "Accept": "application/json" }
     });
 
     if(response.ok){
@@ -145,15 +148,12 @@ document.getElementById("fitzForm").addEventListener("submit", async function(e)
     } else {
       alert("There was a problem submitting the form.");
     }
-
   } catch(error){
     alert("Submission failed. Please try again.");
   }
-
 });
 
 document.getElementById("fitzReset").addEventListener("click", function(){
   document.getElementById("fitzForm").reset();
 });
-
 </script>
