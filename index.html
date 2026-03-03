@@ -51,13 +51,36 @@
       padding: 14px 0;
     }
     .logo{
-      display:flex;
-      align-items:baseline;
-      gap:10px;
-      letter-spacing:.26em;
-      font-weight:600;
-      text-transform:uppercase;
-    }
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-decoration:none;
+}
+
+.brand-top{
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--heading-muted);
+  font-weight: 600;
+}
+
+.brand-main{
+  font-size: 18px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.brand-location{
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: var(--heading-dark);
+  opacity: .8;
+  line-height: 1.4;
+}
     .logo .bare{ color: var(--brand); font-size: 22px; }
     .logo .by{ letter-spacing:.05em; font-weight:500; text-transform:none; color: var(--heading-muted); font-size: 14px; }
 
