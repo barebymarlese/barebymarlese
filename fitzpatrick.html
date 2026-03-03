@@ -231,10 +231,59 @@
       opacity:.7;
     }
 
-    @media (max-width: 980px){
-      .fitz-grid{ grid-template-columns: 1fr; }
-      .fitz-options{ grid-template-columns: 1fr; }
-    }
+   @media (max-width: 980px){
+
+  /* ✅ Mobile nav layout */
+  .nav-inner{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .logo{
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .nav-links{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 0;
+    font-size: 12px;
+    letter-spacing: .12em;
+  }
+
+  .nav-links a{
+    padding: 8px 0;
+  }
+
+  /* ✅ Fitz layout mobile */
+  .fitz-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .fitz-options{
+    grid-template-columns: 1fr;
+  }
+
+  .fitz-card{
+    padding: 18px;
+  }
+
+  .fitz-q{
+    padding: 14px;
+  }
+
+  .fitz-opt{
+    padding: 12px 12px;
+  }
+
+  .section-title{
+    font-size: 42px;
+  }
+}
   </style>
 </head>
 
