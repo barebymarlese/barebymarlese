@@ -285,15 +285,20 @@
 
       #consultation{ padding-bottom: 80px; }
     }
-    /* remove underline from logo link */
-  .logo,
-  .logo:link,
-  .logo:visited,
-  .logo:hover,
-  .logo:active{
-    text-decoration: none;
-    color: inherit;
-  }
+  /* FORCE: no underline on logo on desktop + mobile */
+header .logo,
+header .logo:link,
+header .logo:visited,
+header .logo:hover,
+header .logo:active{
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* also ensure inner text isn't underlined */
+header .logo *{
+  text-decoration: none !important;
+}
   </style>
 </head>
 
