@@ -425,18 +425,19 @@
 /* Mobile */
 @media (max-width: 980px){
 
-  /* ✅ MOBILE NAV: logo on top, links in ONE ROW */
+  /* Logo left */
   .nav-inner{
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
-    .logo{
+
+  .logo{
     justify-content: flex-start;
     width: 100%;
   }
 
+  /* Links in ONE ROW under logo */
   .nav-links{
     width: 100%;
     display: flex;
@@ -451,6 +452,7 @@
     padding: 8px 0;
   }
 
+  /* Layout adjustments */
   .hero-grid{ grid-template-columns: 1fr; }
   .hero-right{ align-items:center; text-align:center; }
   .hero-brand{ justify-content:center; }
@@ -464,7 +466,7 @@
   .contact-grid{ grid-template-columns: 1fr; }
   .contact-left h2{ font-size: 46px; }
 
-  /* keep the hero title readable on mobile */
+  /* keep hero title readable */
   .hero-title h1{ font-size: 52px; }
 }
   </style>
