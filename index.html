@@ -425,7 +425,7 @@
 /* Mobile */
 @media (max-width: 980px){
 
-  /* Logo left */
+  /* Mobile nav layout */
   .nav-inner{
     flex-direction: column;
     align-items: flex-start;
@@ -433,25 +433,29 @@
   }
 
   .logo{
-    justify-content: flex-start;
     width: 100%;
+    justify-content: flex-start;
   }
 
-  /* Links in ONE ROW under logo */
+  /* ✅ Proper one-line nav */
   .nav-links{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  gap: 0;
-  font-size: 11px;      /* slightly smaller so 5 fit */
-  letter-spacing: .10em;
-}
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    font-size: 10px;              /* smaller to fit 5 items */
+    letter-spacing: .08em;        /* reduced spacing */
+    gap: 4px;
+  }
 
-.nav-links a{
-  padding: 8px 0;
-}
+  .nav-links a{
+    flex: 1;                      /* evenly distribute */
+    text-align: center;
+    padding: 6px 2px;
+  }
 
+}
   /* Layout adjustments */
   .hero-grid{ grid-template-columns: 1fr; }
   .hero-right{ align-items:center; text-align:center; }
