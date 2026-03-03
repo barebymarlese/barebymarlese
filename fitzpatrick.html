@@ -1,159 +1,435 @@
-<!-- FITZPATRICK SKIN TYPE TEST -->
-<section id="fitzpatrick">
-  <div class="wrap">
-    <h2 class="section-title">FITZPATRICK SKIN TEST</h2>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fitzpatrick Skin Test | BARE by Marlese</title>
 
-    <div class="fitz-card">
-      <p class="fitz-intro">
-        This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment.
-      </p>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-      <form id="fitzForm" class="fitz-form">
-        <!-- Client details -->
-        <div class="fitz-grid">
-          <input type="text" name="client_name" placeholder="Full Name *" required>
-          <input type="email" name="client_email" placeholder="Email Address *" required>
-          <input type="tel" name="client_phone" placeholder="Contact Number *" required>
-        </div>
+  <style>
+    :root{
+      --bg:#cacdc6;
+      --heading-muted:#878274;
+      --heading-dark:#24221a;
+      --body:#cacdc6;
+      --brand:#5e6959;
+      --shadow: 0 18px 45px rgba(0,0,0,.16);
+    }
 
-        <!-- Questions -->
-        <div class="fitz-q">
-          <div class="fitz-q-title">1) What is the natural colour of your hair?</div>
-          <label class="fitz-opt"><input type="radio" name="q1" value="0" required> Red / very light blonde</label>
-          <label class="fitz-opt"><input type="radio" name="q1" value="1"> Blonde</label>
-          <label class="fitz-opt"><input type="radio" name="q1" value="2"> Dark blonde / light brown</label>
-          <label class="fitz-opt"><input type="radio" name="q1" value="3"> Brown</label>
-          <label class="fitz-opt"><input type="radio" name="q1" value="4"> Dark brown / black</label>
-        </div>
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--heading-dark);
+    }
+    a{ color:inherit; }
+    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; }
 
-        <div class="fitz-q">
-          <div class="fitz-q-title">2) What is your natural eye colour?</div>
-          <label class="fitz-opt"><input type="radio" name="q2" value="0" required> Light blue / green / grey</label>
-          <label class="fitz-opt"><input type="radio" name="q2" value="1"> Blue / green</label>
-          <label class="fitz-opt"><input type="radio" name="q2" value="2"> Hazel</label>
-          <label class="fitz-opt"><input type="radio" name="q2" value="3"> Light brown</label>
-          <label class="fitz-opt"><input type="radio" name="q2" value="4"> Dark brown</label>
-        </div>
+    /* Nav (same feel as your site) */
+    .nav{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+      background: rgba(202,205,198,.86);
+      border-bottom: 1px solid rgba(36,34,26,.15);
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding: 14px 0;
+    }
+    .logo{
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      letter-spacing:.26em;
+      font-weight:600;
+      text-transform:uppercase;
+    }
+    .logo .bare{ color: var(--brand); font-size: 22px; }
+    .logo .by{ letter-spacing:.05em; font-weight:500; text-transform:none; color: var(--heading-muted); font-size: 14px; }
 
-        <div class="fitz-q">
-          <div class="fitz-q-title">3) How does your skin react to strong sun exposure?</div>
-          <label class="fitz-opt"><input type="radio" name="q3" value="0" required> Always burns, never tans</label>
-          <label class="fitz-opt"><input type="radio" name="q3" value="1"> Usually burns, tans slightly</label>
-          <label class="fitz-opt"><input type="radio" name="q3" value="2"> Sometimes mild burn, tans gradually</label>
-          <label class="fitz-opt"><input type="radio" name="q3" value="3"> Rarely burns, tans easily</label>
-          <label class="fitz-opt"><input type="radio" name="q3" value="4"> Never burns, deeply pigmented</label>
-        </div>
+    .nav-links{
+      display:flex;
+      gap:18px;
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--heading-dark);
+      opacity:.85;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav-links a{ padding:8px 10px; border-radius:999px; text-decoration:none; }
+    .nav-links a:hover{ background: rgba(36,34,26,.07); }
 
-        <div class="fitz-q">
-          <div class="fitz-q-title">4) How often do you tan?</div>
-          <label class="fitz-opt"><input type="radio" name="q4" value="0" required> Never</label>
-          <label class="fitz-opt"><input type="radio" name="q4" value="1"> Rarely</label>
-          <label class="fitz-opt"><input type="radio" name="q4" value="2"> Sometimes</label>
-          <label class="fitz-opt"><input type="radio" name="q4" value="3"> Often</label>
-          <label class="fitz-opt"><input type="radio" name="q4" value="4"> Always / very easily</label>
-        </div>
+    section{ padding: 44px 0; }
+    .section-title{
+      text-align:center;
+      margin: 0 0 22px;
+      font-size: 56px;
+      color: var(--heading-muted);
+      letter-spacing: .02em;
+      text-shadow: 0 10px 28px rgba(0,0,0,.16);
+      font-weight: 600;
+    }
 
-        <div class="fitz-q">
-          <div class="fitz-q-title">5) What is your natural skin tone (untanned areas)?</div>
-          <label class="fitz-opt"><input type="radio" name="q5" value="0" required> Very fair</label>
-          <label class="fitz-opt"><input type="radio" name="q5" value="1"> Fair</label>
-          <label class="fitz-opt"><input type="radio" name="q5" value="2"> Medium</label>
-          <label class="fitz-opt"><input type="radio" name="q5" value="3"> Olive / light brown</label>
-          <label class="fitz-opt"><input type="radio" name="q5" value="4"> Brown / deep brown</label>
-        </div>
+    /* Fitz UI (clean + bordered + tap-friendly) */
+    .fitz-card{
+      background: rgba(202,205,198,.55);
+      border: 1px solid rgba(36,34,26,.16);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .fitz-intro{
+      margin: 0 0 16px;
+      opacity:.86;
+      line-height:1.55;
+      font-size:14px;
+      text-align:center;
+    }
 
-        <!-- Consent (special category + GDPR) -->
-        <div class="fitz-consent">
-          <label class="fitz-consent-line">
-            <input type="checkbox" name="gdpr_contact_consent" value="Yes" required>
-            <span>
-              I consent to BARE by Marlese collecting and storing my contact details to respond to my enquiry.
-            </span>
-          </label>
+    .fitz-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:12px;
+      margin-bottom: 14px;
+    }
+    .fitz-grid input{
+      padding:12px;
+      border-radius:12px;
+      border:1px solid rgba(36,34,26,.22);
+      background: rgba(202,205,198,.65);
+      color: var(--heading-dark);
+      font-family: inherit;
+      outline:none;
+    }
+    .fitz-grid input:focus{
+      border-color: rgba(94,105,89,.7);
+      box-shadow: 0 0 0 3px rgba(94,105,89,.22);
+    }
 
-          <label class="fitz-consent-line">
-            <input type="checkbox" name="gdpr_health_consent" value="Yes" required>
-            <span>
-              I give <strong>explicit consent</strong> for BARE by Marlese to collect and process my skin type and consultation-related information for treatment suitability and safety.
-              I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
-            </span>
-          </label>
+    .fitz-q{
+      margin-top:14px;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(36,34,26,.14);
+      background: rgba(202,205,198,.40);
+    }
+    .fitz-q-title{
+      font-weight:700;
+      margin-bottom:10px;
+    }
 
-          <p class="fitz-small">
-            Please do not submit urgent medical information here. This is for consultation screening only.
-          </p>
-        </div>
+    .fitz-options{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px 12px;
+    }
+    .fitz-opt{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(36,34,26,.12);
+      background: rgba(202,205,198,.55);
+      cursor:pointer;
+      user-select:none;
+    }
+    .fitz-opt:hover{ border-color: rgba(94,105,89,.45); }
 
-        <!-- Hidden fields populated by JS -->
-        <input type="hidden" name="fitz_type" id="fitzTypeHidden">
-        <input type="hidden" name="fitz_score" id="fitzScoreHidden">
+    .fitz-opt input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+    .fitz-mark{
+      width:18px; height:18px;
+      border-radius:999px;
+      border:2px solid rgba(36,34,26,.35);
+      display:grid;
+      place-items:center;
+      flex:0 0 18px;
+      background: rgba(202,205,198,.75);
+    }
+    .fitz-mark::after{
+      content:"";
+      width:10px; height:10px;
+      border-radius:999px;
+      background: var(--brand);
+      transform: scale(0);
+      transition: transform .12s ease;
+    }
+    .fitz-opt input:checked + .fitz-mark::after{ transform: scale(1); }
 
-        <div class="fitz-actions">
-          <button type="submit" class="fitz-btn">CALCULATE & SEND</button>
-          <button type="button" id="fitzReset" class="fitz-btn fitz-btn-ghost">RESET</button>
-        </div>
+    .fitz-consent{
+      margin-top:16px;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(36,34,26,.14);
+      background: rgba(94,105,89,.12);
+    }
+    .fitz-consent .fitz-options{ grid-template-columns: 1fr; }
+    .fitz-small{ font-size:12px; opacity:.75; margin-top:10px; }
 
-        <div id="fitzResult" class="fitz-result" hidden>
-          <div class="fitz-pill" id="fitzPill">Type</div>
-          <div class="fitz-result-text" id="fitzText"></div>
-          <div class="fitz-notes" id="fitzNotes"></div>
-          <div class="fitz-small" id="fitzStatus"></div>
-        </div>
-      </form>
+    .fitz-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .fitz-btn{
+      background: var(--brand);
+      color: var(--body);
+      border:0;
+      border-radius:999px;
+      padding:12px 18px;
+      font-weight:700;
+      letter-spacing:.06em;
+      cursor:pointer;
+    }
+    .fitz-btn-ghost{
+      background:transparent;
+      border:1px solid rgba(36,34,26,.25);
+      color: var(--heading-dark);
+    }
+
+    .fitz-result{
+      margin-top:16px;
+      padding:16px;
+      border-radius:16px;
+      border:1px solid rgba(36,34,26,.14);
+      background: rgba(202,205,198,.40);
+    }
+    .fitz-pill{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      background: rgba(94,105,89,.18);
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    footer{
+      padding: 20px 0 34px;
+      text-align:center;
+      font-size: 12px;
+      letter-spacing:.12em;
+      text-transform: uppercase;
+      color: var(--heading-dark);
+      opacity:.7;
+    }
+
+    @media (max-width: 980px){
+      .fitz-grid{ grid-template-columns: 1fr; }
+      .fitz-options{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <div class="logo" aria-label="BARE by Marlese">
+        <span class="bare">BARE</span>
+        <span class="by">by Marlese</span>
+      </div>
+      <nav class="nav-links" aria-label="Site navigation">
+        <a href="index.html#services">Services</a>
+        <a href="index.html#prices">Price List</a>
+        <a href="fitzpatrick.html">Skin Test</a>
+        <a href="index.html#contact">Get in Touch</a>
+      </nav>
     </div>
-  </div>
-</section>
+  </header>
 
-<script>
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgeqqlb";
+  <main>
+    <section id="fitzpatrick">
+      <div class="wrap">
+        <h2 class="section-title">FITZPATRICK SKIN TEST</h2>
 
-document.getElementById("fitzForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
+        <div class="fitz-card">
+          <p class="fitz-intro">
+            This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment.
+          </p>
 
-  const form = this;
+          <form id="fitzForm">
+            <div class="fitz-grid">
+              <input type="text" name="client_name" placeholder="Full Name *" required>
+              <input type="email" name="client_email" placeholder="Email Address *" required>
+              <input type="tel" name="client_phone" placeholder="Contact Number *" required>
+            </div>
 
-  // Calculate score (max 20)
-  let score = 0;
-  ["q1","q2","q3","q4","q5"].forEach(q => {
-    const selected = form.querySelector(`input[name="${q}"]:checked`);
-    if(selected) score += parseInt(selected.value, 10);
-  });
+            <div class="fitz-q">
+              <div class="fitz-q-title">1) What is the natural colour of your hair?</div>
+              <div class="fitz-options">
+                <label class="fitz-opt"><input type="radio" name="q1" value="0" required><span class="fitz-mark"></span><span>Red / very light blonde</span></label>
+                <label class="fitz-opt"><input type="radio" name="q1" value="1"><span class="fitz-mark"></span><span>Blonde</span></label>
+                <label class="fitz-opt"><input type="radio" name="q1" value="2"><span class="fitz-mark"></span><span>Dark blonde / light brown</span></label>
+                <label class="fitz-opt"><input type="radio" name="q1" value="3"><span class="fitz-mark"></span><span>Brown</span></label>
+                <label class="fitz-opt"><input type="radio" name="q1" value="4"><span class="fitz-mark"></span><span>Dark brown / black</span></label>
+              </div>
+            </div>
 
-  // Correct mapping for score 0–20
-  let type = "";
-  if(score <= 2) type = "Type I";
-  else if(score <= 6) type = "Type II";
-  else if(score <= 10) type = "Type III";
-  else if(score <= 14) type = "Type IV";
-  else if(score <= 17) type = "Type V";
-  else type = "Type VI";
+            <div class="fitz-q">
+              <div class="fitz-q-title">2) What is your natural eye colour?</div>
+              <div class="fitz-options">
+                <label class="fitz-opt"><input type="radio" name="q2" value="0" required><span class="fitz-mark"></span><span>Light blue / green / grey</span></label>
+                <label class="fitz-opt"><input type="radio" name="q2" value="1"><span class="fitz-mark"></span><span>Blue / green</span></label>
+                <label class="fitz-opt"><input type="radio" name="q2" value="2"><span class="fitz-mark"></span><span>Hazel</span></label>
+                <label class="fitz-opt"><input type="radio" name="q2" value="3"><span class="fitz-mark"></span><span>Light brown</span></label>
+                <label class="fitz-opt"><input type="radio" name="q2" value="4"><span class="fitz-mark"></span><span>Dark brown</span></label>
+              </div>
+            </div>
 
-  document.getElementById("fitzTypeHidden").value = type;
-  document.getElementById("fitzScoreHidden").value = score;
+            <div class="fitz-q">
+              <div class="fitz-q-title">3) How does your skin react to strong sun exposure?</div>
+              <div class="fitz-options">
+                <label class="fitz-opt"><input type="radio" name="q3" value="0" required><span class="fitz-mark"></span><span>Always burns, never tans</span></label>
+                <label class="fitz-opt"><input type="radio" name="q3" value="1"><span class="fitz-mark"></span><span>Usually burns, tans slightly</span></label>
+                <label class="fitz-opt"><input type="radio" name="q3" value="2"><span class="fitz-mark"></span><span>Sometimes mild burn, tans gradually</span></label>
+                <label class="fitz-opt"><input type="radio" name="q3" value="3"><span class="fitz-mark"></span><span>Rarely burns, tans easily</span></label>
+                <label class="fitz-opt"><input type="radio" name="q3" value="4"><span class="fitz-mark"></span><span>Never burns, deeply pigmented</span></label>
+              </div>
+            </div>
 
-  const formData = new FormData(form);
-  formData.append("_subject", `Fitzpatrick Skin Test — ${type} (score ${score}/20)`);
-  formData.append("submitted_at", new Date().toISOString());
+            <div class="fitz-q">
+              <div class="fitz-q-title">4) How often do you tan?</div>
+              <div class="fitz-options">
+                <label class="fitz-opt"><input type="radio" name="q4" value="0" required><span class="fitz-mark"></span><span>Never</span></label>
+                <label class="fitz-opt"><input type="radio" name="q4" value="1"><span class="fitz-mark"></span><span>Rarely</span></label>
+                <label class="fitz-opt"><input type="radio" name="q4" value="2"><span class="fitz-mark"></span><span>Sometimes</span></label>
+                <label class="fitz-opt"><input type="radio" name="q4" value="3"><span class="fitz-mark"></span><span>Often</span></label>
+                <label class="fitz-opt"><input type="radio" name="q4" value="4"><span class="fitz-mark"></span><span>Always / very easily</span></label>
+              </div>
+            </div>
 
-  try {
-    const response = await fetch(FORMSPREE_ENDPOINT, {
-      method: "POST",
-      body: formData,
-      headers: { "Accept": "application/json" }
+            <div class="fitz-q">
+              <div class="fitz-q-title">5) What is your natural skin tone (untanned areas)?</div>
+              <div class="fitz-options">
+                <label class="fitz-opt"><input type="radio" name="q5" value="0" required><span class="fitz-mark"></span><span>Very fair</span></label>
+                <label class="fitz-opt"><input type="radio" name="q5" value="1"><span class="fitz-mark"></span><span>Fair</span></label>
+                <label class="fitz-opt"><input type="radio" name="q5" value="2"><span class="fitz-mark"></span><span>Medium</span></label>
+                <label class="fitz-opt"><input type="radio" name="q5" value="3"><span class="fitz-mark"></span><span>Olive / light brown</span></label>
+                <label class="fitz-opt"><input type="radio" name="q5" value="4"><span class="fitz-mark"></span><span>Brown / deep brown</span></label>
+              </div>
+            </div>
+
+            <div class="fitz-consent">
+              <div class="fitz-options">
+                <label class="fitz-opt">
+                  <input type="checkbox" name="gdpr_contact_consent" value="Yes" required>
+                  <span class="fitz-mark"></span>
+                  <span>I consent to BARE by Marlese collecting and storing my contact details to respond to my enquiry.</span>
+                </label>
+
+                <label class="fitz-opt">
+                  <input type="checkbox" name="gdpr_health_consent" value="Yes" required>
+                  <span class="fitz-mark"></span>
+                  <span>I give <strong>explicit consent</strong> for BARE by Marlese to collect and process my skin type and consultation-related information for treatment suitability and safety. I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+                </label>
+              </div>
+
+              <div class="fitz-small">
+                Please do not submit urgent medical information here. This is for consultation screening only.
+              </div>
+            </div>
+
+            <input type="hidden" name="fitz_type" id="fitzTypeHidden">
+            <input type="hidden" name="fitz_score" id="fitzScoreHidden">
+
+            <div class="fitz-actions">
+              <button type="submit" class="fitz-btn">CALCULATE &amp; SEND</button>
+              <button type="button" id="fitzReset" class="fitz-btn fitz-btn-ghost">RESET</button>
+            </div>
+
+            <div id="fitzResult" class="fitz-result" hidden>
+              <div class="fitz-pill" id="fitzPill">Type</div>
+              <div id="fitzText"></div>
+              <div class="fitz-small" id="fitzStatus"></div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © BARE by Marlese | <a href="privacy.html">Privacy Policy</a>
+  </footer>
+
+  <script>
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgeqqlb";
+
+    const form = document.getElementById("fitzForm");
+    const resultBox = document.getElementById("fitzResult");
+    const pill = document.getElementById("fitzPill");
+    const text = document.getElementById("fitzText");
+    const status = document.getElementById("fitzStatus");
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      let score = 0;
+      ["q1","q2","q3","q4","q5"].forEach(q => {
+        const selected = form.querySelector(`input[name="${q}"]:checked`);
+        if(selected) score += parseInt(selected.value, 10);
+      });
+
+      let type = "";
+      if(score <= 2) type = "Type I";
+      else if(score <= 6) type = "Type II";
+      else if(score <= 10) type = "Type III";
+      else if(score <= 14) type = "Type IV";
+      else if(score <= 17) type = "Type V";
+      else type = "Type VI";
+
+      document.getElementById("fitzTypeHidden").value = type;
+      document.getElementById("fitzScoreHidden").value = score;
+
+      pill.textContent = type;
+      text.textContent = `${type} (score ${score}/20)`;
+      resultBox.hidden = false;
+      status.textContent = "Sending…";
+
+      const fd = new FormData(form);
+      fd.append("_subject", `Fitzpatrick Skin Test — ${type} (score ${score}/20)`);
+      fd.append("submitted_at", new Date().toISOString());
+
+      try{
+        const res = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          body: fd,
+          headers: { "Accept": "application/json" }
+        });
+
+        if(!res.ok) throw new Error("Send failed");
+        status.textContent = "Saved & emailed ✅";
+        form.reset();
+      }catch(err){
+        status.textContent = "Calculated, but sending failed. Check Formspree endpoint.";
+      }
     });
 
-    if(response.ok){
-      alert("Thank you. Your Fitzpatrick result has been submitted.");
+    document.getElementById("fitzReset").addEventListener("click", function(){
       form.reset();
-    } else {
-      alert("There was a problem submitting the form.");
-    }
-  } catch(error){
-    alert("Submission failed. Please try again.");
-  }
-});
-
-document.getElementById("fitzReset").addEventListener("click", function(){
-  document.getElementById("fitzForm").reset();
-});
-</script>
+      resultBox.hidden = true;
+      status.textContent = "";
+      text.textContent = "";
+      pill.textContent = "Type";
+    });
+  </script>
+</body>
+</html>
