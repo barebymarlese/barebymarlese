@@ -11,14 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    .brand-credentials{
-  text-align:center;
-  margin-top: 10px;
-}
-
-.hero-meta{
-  margin-bottom: 14px;
-}
     :root{
       --bg: #cacdc6;
       --heading-muted: #878274;
@@ -127,12 +119,12 @@
       filter: contrast(1.02) saturate(.95);
     }
     .hero-right{
-  display:flex;
-  flex-direction:column;
-  gap: 18px;
-  align-items:center;
-  text-align:center;
-}
+      display:flex;
+      flex-direction:column;
+      gap: 18px;
+      align-items:flex-end;
+      text-align:right;
+    }
     .hero-brand{
       display:flex;
       align-items:center;
@@ -484,13 +476,14 @@
             </div>
           </div>
 
-             <div class="hero-right">
+    <div class="hero-right">
   <div class="hero-brand" aria-label="BARE by Marlese">
     <div class="bare">BARE</div>
     <div class="divider" role="presentation"></div>
     <div class="by">by<br>Marlese</div>
   </div>
 
+  <!-- Combined + Centered Section -->
   <div class="brand-credentials">
     <div class="hero-meta">
       VTCT Level 5<br>
@@ -506,6 +499,7 @@
     </div>
   </div>
 </div>
+      </div>
     </section>
 
     <!-- SERVICES -->
