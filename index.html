@@ -696,7 +696,7 @@
   </div>
 </section>
 
-   <!-- GET IN TOUCH -->
+<!-- GET IN TOUCH -->
 <section id="contact">
   <div class="wrap">
     <div class="contact-grid">
@@ -704,36 +704,32 @@
       <div class="contact-left">
         <h2>GET IN TOUCH</h2>
 
+        <!-- Keep email ONCE -->
         <div class="contact-email">
           <strong>Email:</strong><br>
           marlese@barebymarlese.com
         </div>
 
-        <!-- ✅ FORMSPREE FORM STARTS HERE -->
+        <!-- Formspree form -->
         <form action="https://formspree.io/f/meelbvyn" method="POST" class="contact-form">
-
+          <input type="hidden" name="_subject" value="New enquiry — BARE by Marlese">
           <input type="text" name="name" placeholder="Full Name *" required>
-
           <input type="email" name="email" placeholder="Email Address *" required>
 
-          <textarea name="message" rows="5"
+          <textarea name="message" rows="4"
             placeholder="Tell me about your tattoo (size, location, colours, age)… *"
             required></textarea>
 
-          <!-- GDPR -->
-          <label style="font-size:13px; display:block; margin-top:12px;">
+          <label class="gdpr-line">
             <input type="checkbox" name="gdpr_consent" value="Yes" required>
-            I consent to BARE by Marlese storing my details for consultation purposes.
+            <span>I consent to BARE by Marlese storing my details to respond to my enquiry (GDPR).</span>
           </label>
 
-          <button type="submit" style="margin-top:14px;">
-            SEND ENQUIRY
-          </button>
-
+          <button type="submit" class="contact-btn">SEND ENQUIRY</button>
         </form>
-        <!-- ✅ FORMSPREE FORM ENDS HERE -->
 
-        <img class="contact-arm" src="assets/contact-arm.png" alt="Tattoo fading visual" />
+        <!-- Arm image ALWAYS below the form -->
+        <img class="contact-arm" src="assets/contact-arm.png" alt="Tattoo fading visual with 1x 2x 3x 4x 5x markers" />
       </div>
 
       <div class="contact-right" aria-label="Background image">
