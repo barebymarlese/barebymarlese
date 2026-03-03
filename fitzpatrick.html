@@ -231,9 +231,9 @@
       opacity:.7;
     }
 
-   @media (max-width: 980px){
+  @media (max-width: 980px){
 
-  /* ✅ Mobile nav layout */
+  /* Mobile nav layout */
   .nav-inner{
     flex-direction: column;
     align-items: flex-start;
@@ -259,7 +259,7 @@
     padding: 8px 0;
   }
 
-  /* ✅ Fitz layout mobile */
+  /* Fitz layout mobile */
   .fitz-grid{
     grid-template-columns: 1fr;
   }
@@ -270,6 +270,8 @@
 
   .fitz-card{
     padding: 18px;
+    height: auto !important;
+    overflow: visible !important;
   }
 
   .fitz-q{
@@ -278,6 +280,20 @@
 
   .fitz-opt{
     padding: 12px 12px;
+  }
+
+  /* Buttons full width */
+  .fitz-actions{
+    flex-direction: column;
+  }
+
+  .fitz-btn{
+    width: 100%;
+  }
+
+  /* Prevent bottom cut-off */
+  #fitzpatrick{
+    padding-bottom: 80px;
   }
 
   .section-title{
