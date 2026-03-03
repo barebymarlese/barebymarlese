@@ -349,6 +349,63 @@
       color: var(--heading-dark);
     }
 
+    /* Forms (Skin Test + Consultation) */
+    .forms-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items:stretch;
+    }
+    .forms-card{
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(36,34,26,.16);
+      background: rgba(202,205,198,.45);
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .forms-title{
+      font-weight: 800;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--heading-dark);
+      opacity: .9;
+    }
+    .forms-desc{
+      color: var(--heading-dark);
+      opacity:.86;
+      font-size:14px;
+      line-height:1.5;
+    }
+    .forms-btn{
+      display:inline-block;
+      margin-top: 4px;
+      background: var(--brand);
+      color: var(--body);
+      border-radius:999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      letter-spacing:.06em;
+      text-decoration:none;
+      text-align:center;
+    }
+    .forms-btn:hover{ filter: brightness(.96); }
+    .forms-small{
+      font-size: 12px;
+      opacity:.75;
+      margin-top: 2px;
+    }
+    .forms-note{
+      margin-top: 16px;
+      text-align:center;
+      font-size: 12px;
+      opacity:.78;
+    }
+
+
     /* Contact */
     .contact-grid{
       display:grid;
@@ -446,7 +503,7 @@
   flex-wrap: nowrap;
   gap: 8px;
   font-size: 12px;
-  letter-spacing: .10em;
+  letter-spacing: .12em;
 }
 
 .nav-links a{
@@ -485,9 +542,8 @@
       </div>
 <nav class="nav-links" aria-label="Site navigation">
   <a href="#services">Services</a>
-  <a href="#prices">Price List</a>
-  <a href="fitzpatrick.html">Skin Test</a>
-  <a href="consultation.html">Consultation</a>
+  <a href="#prices">Price</a>
+  <a href="#forms">Forms</a>
   <a href="#contact">Contact</a>
 </nav>
     </div>
@@ -735,6 +791,40 @@
     </div>
   </div>
 </section>
+
+
+<!-- FORMS -->
+<section id="forms">
+  <div class="wrap">
+    <h2 class="section-title">FORMS</h2>
+
+    <div class="forms-grid">
+      <div class="forms-card">
+        <div class="forms-title">Fitzpatrick Skin Test</div>
+        <div class="forms-desc">
+          Quick pre-screening to estimate skin type and support safe treatment planning.
+        </div>
+        <a class="forms-btn" href="fitzpatrick.html">Start Skin Test</a>
+        <div class="forms-small">~2 minutes · Requires consent</div>
+      </div>
+
+      <div class="forms-card">
+        <div class="forms-title">Consultation &amp; Medical History</div>
+        <div class="forms-desc">
+          Full consultation form including contraindications and medication history.
+        </div>
+        <a class="forms-btn" href="consultation.html">Start Consultation</a>
+        <div class="forms-small">~5 minutes · Explicit consent required</div>
+      </div>
+    </div>
+
+    <div class="forms-note">
+      By submitting these forms you confirm you have read our
+      <a href="privacy.html">Privacy Policy</a>.
+    </div>
+  </div>
+</section>
+
 
 <!-- GET IN TOUCH -->
 <section id="contact" style="padding:56px 0;">
