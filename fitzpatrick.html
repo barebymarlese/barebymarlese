@@ -438,6 +438,46 @@
     <label class="fitz-opt"><input type="radio" name="q10" value="4"><span class="fitz-mark"></span><span>Always</span></label>
   </div>
 </div>
+            <!-- Consent -->
+<div class="fitz-consent">
+  <div class="fitz-options">
+    <label class="fitz-opt">
+      <input type="checkbox" name="gdpr_contact_consent" value="Yes" required>
+      <span class="fitz-mark"></span>
+      <span>I consent to BARE by Marlese collecting and storing my contact details to respond to my enquiry.</span>
+    </label>
+
+    <label class="fitz-opt">
+      <input type="checkbox" name="gdpr_health_consent" value="Yes" required>
+      <span class="fitz-mark"></span>
+      <span>
+        I give <strong>explicit consent</strong> for BARE by Marlese to collect and process my skin type and consultation-related information for treatment suitability and safety.
+        I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+      </span>
+    </label>
+  </div>
+
+  <div class="fitz-small">
+    Please do not submit urgent medical information here. This is for consultation screening only.
+  </div>
+</div>
+
+<!-- Hidden fields populated by JS -->
+<input type="hidden" name="fitz_type" id="fitzTypeHidden">
+<input type="hidden" name="fitz_score" id="fitzScoreHidden">
+
+<!-- Buttons -->
+<div class="fitz-actions">
+  <button type="submit" class="fitz-btn">CALCULATE &amp; SEND</button>
+  <button type="button" id="fitzReset" class="fitz-btn fitz-btn-ghost">RESET</button>
+</div>
+
+<!-- Result -->
+<div id="fitzResult" class="fitz-result" hidden>
+  <div class="fitz-pill" id="fitzPill">Type</div>
+  <div id="fitzText"></div>
+  <div class="fitz-small" id="fitzStatus"></div>
+</div>
           </form>
 
         </div>
