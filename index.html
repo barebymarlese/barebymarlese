@@ -280,27 +280,30 @@
       background: rgba(202,205,198,.45);
     }
     .panel{
-      padding: 18px 18px 20px;
+      padding: 24px 26px;
       border-right: 1px solid rgba(36,34,26,.12);
-      min-height: 168px;
+      min-height: 200px;
       display:flex;
       flex-direction:column;
-      justify-content:center;
+      align-items:center;
+      justify-content:flex-start;
       text-align:center;
     }
     .panel:last-child{ border-right: none; }
     .panel h3{
-      margin: 0 0 10px;
+      margin: 0 0 14px;
       color: var(--heading-dark);
       font-size: 16px;
       font-weight: 700;
+      line-height:1.2;
     }
     .panel p{
       margin:0;
       color: var(--heading-dark);
       opacity:.86;
       font-size: 14px;
-      line-height: 1.45;
+      line-height:1.6;
+      max-width:240px;
     }
 
     .aftercare{
