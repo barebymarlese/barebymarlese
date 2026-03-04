@@ -1,0 +1,108 @@
+<!-- =========================
+     AFTERCARE (Add to your Forms page)
+     Paste this block in <body> where your Skin Test + Consultation forms live
+     ========================= -->
+<section id="aftercare" class="form-section">
+  <div class="wrap">
+    <header class="form-head">
+      <h2 class="section-title">LASER TATTOO REMOVAL AFTERCARE</h2>
+      <p class="section-sub">
+        Please read carefully. Proper aftercare supports safe healing and the best possible fading results.
+      </p>
+    </header>
+
+    <div class="aftercare-grid">
+      <!-- Left: Aftercare content -->
+      <div class="aftercare-card" aria-label="Aftercare instructions">
+        <div class="aftercare-badge">AFTERCARE GUIDE</div>
+
+        <div class="aftercare-block">
+          <h3 class="aftercare-h3">Immediately after treatment (first 24–48 hours)</h3>
+          <ul class="aftercare-list">
+            <li>Keep the protective dressing on for <strong>24–48 hours</strong> (or as advised).</li>
+            <li>Redness, warmth, swelling, and tenderness (similar to sunburn) can be normal.</li>
+            <li>Use a <strong>cool compress</strong> for short periods to help with swelling.</li>
+          </ul>
+        </div>
+
+        <div class="aftercare-block">
+          <h3 class="aftercare-h3">First week</h3>
+          <ul class="aftercare-list">
+            <li>Blistering, crusting, or scabbing can occur as part of healing.</li>
+            <li>Keep the area <strong>clean, dry, and protected</strong>.</li>
+            <li>Apply a recommended healing ointment / <strong>fragrance-free moisturiser</strong>.</li>
+            <li><strong>Do not</strong> pick, scratch, or pop blisters (this increases scarring/infection risk).</li>
+          </ul>
+        </div>
+
+        <div class="aftercare-block">
+          <h3 class="aftercare-h3">Avoid</h3>
+          <ul class="aftercare-list">
+            <li><strong>Sun exposure</strong> for at least <strong>4–6 weeks</strong>.</li>
+            <li><strong>Hot baths, hot tubs, swimming pools</strong> for around <strong>2 weeks</strong>.</li>
+            <li><strong>Exfoliants</strong>, harsh products, alcohol-based products on the area until healed.</li>
+            <li><strong>Make-up/cosmetics</strong> over the area until the skin has healed.</li>
+            <li><strong>Intense exercise</strong> for <strong>24–48 hours</strong> post-treatment.</li>
+          </ul>
+        </div>
+
+        <div class="aftercare-block">
+          <h3 class="aftercare-h3">Healing timeline (typical)</h3>
+          <div class="timeline">
+            <div class="timeline-row"><span class="t-dot" aria-hidden="true"></span><span><strong>24–48 hours:</strong> redness/swelling</span></div>
+            <div class="timeline-row"><span class="t-dot" aria-hidden="true"></span><span><strong>Days 3–7:</strong> possible blistering/crusting</span></div>
+            <div class="timeline-row"><span class="t-dot" aria-hidden="true"></span><span><strong>Weeks 2–4:</strong> skin regeneration</span></div>
+            <div class="timeline-row"><span class="t-dot" aria-hidden="true"></span><span><strong>Up to 8 weeks:</strong> body continues breaking down ink</span></div>
+          </div>
+          <p class="aftercare-note">
+            Sessions are typically spaced <strong>6–8 weeks</strong> apart to allow full recovery.
+          </p>
+        </div>
+
+        <div class="aftercare-block">
+          <h3 class="aftercare-h3">Protect your skin</h3>
+          <ul class="aftercare-list">
+            <li>Once initial healing has settled, use <strong>SPF 50</strong> when the area is exposed.</li>
+            <li>UV protection helps reduce risk of <strong>hyperpigmentation</strong> and uneven tone.</li>
+          </ul>
+        </div>
+
+        <div class="aftercare-alert">
+          <div class="alert-title">When to contact us</div>
+          <p class="alert-text">
+            Get in touch if you notice increasing redness/swelling after 48 hours, pus/discharge, severe pain,
+            fever, or any signs of infection.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: Acknowledgement (matches “forms” feel) -->
+      <aside class="aftercare-card aftercare-side" aria-label="Aftercare acknowledgement">
+        <div class="aftercare-badge">CLIENT ACKNOWLEDGEMENT</div>
+
+        <p class="side-text">
+          Before you submit your Skin Test / Consultation form, please confirm you have read and understood the aftercare.
+        </p>
+
+        <label class="check-row">
+          <input type="checkbox" id="aftercareAgree" name="aftercareAgree" required />
+          <span>I have read and understand the aftercare instructions.</span>
+        </label>
+
+        <label class="check-row">
+          <input type="checkbox" id="aftercareQuestions" name="aftercareQuestions" />
+          <span>I’d like to discuss aftercare questions before treatment.</span>
+        </label>
+
+        <div class="mini-divider"></div>
+
+        <p class="side-small">
+          Tip: you can add this checkbox inside your existing form too (Skin Test / Consultation) so it’s submitted with the form.
+        </p>
+
+        <!-- Optional: if you have a PDF later, swap # with your file path -->
+        <a class="aftercare-link" href="#" target="_blank" rel="noopener">Download Aftercare (PDF)</a>
+      </aside>
+    </div>
+  </div>
+</section>
