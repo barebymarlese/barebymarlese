@@ -753,17 +753,22 @@ color:#5e6959;
   color:#878274;
 }
 
-button,
-.cta,
-.green-btn{
-transition:all .25s ease;
+
+
+/* Premium button hover lift */
+.forms-btn,
+.floating-cta{
+  transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease, opacity .25s ease;
+  will-change: transform;
 }
 
-button:hover,
-.cta:hover,
-.green-btn:hover{
-transform:translateY(-2px);
-box-shadow:0 8px 20px rgba(0,0,0,0.2);
+/* Only apply hover on devices that actually support hover (desktop/laptop) */
+@media (hover:hover) and (pointer:fine){
+  .forms-btn:hover,
+  .floating-cta:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
 }
 
 </style>
