@@ -328,7 +328,7 @@ header .logo *{
         </p>
 
         <div class="con-card">
-          <form id="consultation-form" action="https://formspree.io/f/mykdryle" method="POST">
+          <form id="consultation-form" action="https://formspree.io/f/mykdryle" method="POST" enctype="multipart/form-data">
             <!-- Client details -->
             <div class="con-section">
               <div class="con-h3">Client Details</div>
@@ -405,12 +405,19 @@ header .logo *{
               <textarea class="con-textarea" name="current_medications" rows="3" placeholder="Aspirin, St. John's Wort, fish oil, etc."></textarea>
             </div>
 
-            <!-- Photos (optional link/upload guidance) -->
+            <!-- Photos -->
             <div class="con-section">
               <div class="con-h3">Photos</div>
-              <p class="con-small" style="margin:0;">
-                If you have been asked to send photos, please reply to your confirmation email with clear images of the tattoo in good lighting.
-                (Website upload can be added later if needed.)
+              <p class="con-small" style="margin:0 0 12px;">
+                Upload clear photos of the tattoo in good lighting (optional but recommended). 
+                Please avoid filters. Include one close-up and one photo showing the surrounding area.
+              </p>
+
+              <label class="con-label" for="tattoo_photos">Upload tattoo photos (optional)</label>
+              <input class="con-input" id="tattoo_photos" type="file" name="tattoo_photos" accept="image/*" multiple>
+
+              <p class="con-small" style="margin:10px 0 0;">
+                File upload limits: up to 10 files per submission, max 25MB per file.
               </p>
             </div>
 
@@ -438,30 +445,30 @@ header .logo *{
               </div>
             </div>
 
-            
             <!-- Aftercare acknowledgement -->
-            <div class="con-consent">
+            <div class="con-consent" style="margin-top:14px;">
               <div class="con-h3">Aftercare Acknowledgement</div>
 
               <label class="con-opt" style="margin-top:10px;">
-                <input type="checkbox" name="aftercare_understanding" value="Yes" required>
+                <input type="checkbox" name="aftercare_understood" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  I confirm that I understand proper laser tattoo removal aftercare, including avoiding sun exposure,
-                  not picking blisters or scabs, keeping the area clean, and allowing appropriate healing time between sessions.
+                  I confirm I understand that laser tattoo removal requires proper aftercare (including avoiding sun exposure, not picking blisters/scabs, and allowing appropriate healing time between sessions).
                 </span>
               </label>
 
               <label class="con-opt" style="margin-top:10px;">
-                <input type="checkbox" name="treatment_expectations" value="Yes" required>
+                <input type="checkbox" name="results_vary" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  I understand that multiple treatments may be required and that results vary depending on tattoo ink,
-                  depth, colour, and individual skin response.
+                  I understand that multiple sessions may be required and results vary depending on ink, depth, location, and individual skin response.
                 </span>
               </label>
-            </div>
 
+              <div class="con-small">
+                You can download the full aftercare guide from the Forms section on the home page.
+              </div>
+            </div>
 
             <!-- Hidden metadata -->
             <input type="hidden" name="submitted_at" id="submitted_at">
