@@ -713,6 +713,38 @@ color:#878274;
 .nav-instagram:hover{
 color:#5e6959;
 }
+  
+
+/* AFTERCARE ALIGNMENT FIX (cards + content aligned) */
+#aftercare .wrap > div{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  align-items:stretch;
+}
+
+/* Make all aftercare cards equal height and tidy spacing */
+#aftercare .forms-card{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  padding:28px;
+  gap:0;                 /* control spacing via margins for consistent alignment */
+}
+
+/* Force headings to reserve the same space so body text starts aligned */
+#aftercare .forms-card h3{
+  margin:0 0 14px;
+  line-height:1.2;
+  min-height:3.6em;      /* space for up to 3 lines */
+}
+
+/* Make the paragraph fill remaining space evenly */
+#aftercare .forms-desc{
+  margin:0;
+  flex:1;
+  line-height:1.6;
+}
   </style>
 </head>
 
