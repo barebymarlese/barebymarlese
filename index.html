@@ -609,17 +609,23 @@
   .hero-title h1{ font-size: 52px; }
 
   /* Mobile forms alignment: keep buttons and timing lines aligned */
+  #forms .forms-grid{
+    align-items:stretch;
+    grid-auto-rows:1fr;         /* make both cards the same height */
+  }
   #forms .forms-card{
     display:flex;
     flex-direction:column;
     height:100%;
   }
+  #forms .forms-desc{
+    flex:1;                     /* equalise space above the button */
+  }
   #forms .forms-btn{
-    margin-top:auto;           /* push button to the same baseline */
     width:100%;
   }
   #forms .forms-small{
-    margin-top:10px;           /* consistent spacing under button */
+    margin-top:10px;
   }
 }
     /* keep hero title readable */
