@@ -346,14 +346,14 @@ header .logo *{
 
         <div class="fitz-card">
           <p class="fitz-intro">
-            This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment.
+            This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment. If you opened this from the consultation form, your result will automatically fill back in — no email will be sent.
           </p>
 
           <form id="fitzForm">
             <div class="fitz-grid">
-              <input type="text" name="client_name" placeholder="Full Name *" required>
-              <input type="email" name="client_email" placeholder="Email Address *" required>
-              <input type="tel" name="client_phone" placeholder="Contact Number *" required>
+              <input type="text" name="client_name" placeholder="Full Name (optional)">
+              <input type="email" name="client_email" placeholder="Email Address (optional)">
+              <input type="tel" name="client_phone" placeholder="Contact Number (optional)">
             </div>
 
            <div class="fitz-q">
@@ -504,7 +504,7 @@ header .logo *{
 
 <!-- Buttons -->
 <div class="fitz-actions">
-  <button type="submit" class="fitz-btn">CALCULATE &amp; SEND</button>
+  <button type="submit" class="fitz-btn">CALCULATE</button>
   <button type="button" id="fitzReset" class="fitz-btn fitz-btn-ghost">RESET</button>
 </div>
 
@@ -525,16 +525,24 @@ header .logo *{
     © BARE by Marlese | <a href="privacy.html">Privacy Policy</a>
   </footer>
 
+  
   <script>
-    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgeqqlb";
-
     const form = document.getElementById("fitzForm");
     const resultBox = document.getElementById("fitzResult");
     const pill = document.getElementById("fitzPill");
     const text = document.getElementById("fitzText");
     const status = document.getElementById("fitzStatus");
 
-    form.addEventListener("submit", async function(e) {
+    function calculateFitzType(score){
+      if(score <= 7) return "I";
+      if(score <= 16) return "II";
+      if(score <= 25) return "III";
+      if(score <= 30) return "IV";
+      if(score <= 35) return "V";
+      return "VI";
+    }
+
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
 
       let score = 0;
@@ -543,38 +551,36 @@ header .logo *{
         if(selected) score += parseInt(selected.value, 10);
       });
 
-      let type = "";
-if(score <= 7) type = "Type I";
-else if(score <= 16) type = "Type II";
-else if(score <= 25) type = "Type III";
-else if(score <= 30) type = "Type IV";
-else if(score <= 35) type = "Type V";
-else type = "Type VI";
+      const roman = calculateFitzType(score);
+      const typeLabel = `Type ${roman}`;
 
-      document.getElementById("fitzTypeHidden").value = type;
+      // Populate hidden fields (useful if you ever decide to save later)
+      document.getElementById("fitzTypeHidden").value = typeLabel;
       document.getElementById("fitzScoreHidden").value = score;
 
-      pill.textContent = type;
-      text.textContent = `${type} (score ${score}/40)`;
+      // Show result on this page
+      pill.textContent = typeLabel;
+      text.textContent = `${typeLabel} (score ${score}/40)`;
       resultBox.hidden = false;
-      status.textContent = "Sending…";
 
-      const fd = new FormData(form);
-      fd.append("_subject", `Fitzpatrick Skin Test — ${type} (score ${score}/40)`);
-      fd.append("submitted_at", new Date().toISOString());
+      // Save locally so the consultation page can read it even if messaging is blocked
+      try{
+        localStorage.setItem("bare_fitz_type", roman);
+        localStorage.setItem("bare_fitz_score", String(score));
+      }catch(e){}
+
+      // If this page was opened from the consultation form, send result back
+      const payload = { kind: "bare_fitz_result", fitz: roman, score };
 
       try{
-        const res = await fetch(FORMSPREE_ENDPOINT, {
-          method: "POST",
-          body: fd,
-          headers: { "Accept": "application/json" }
-        });
-
-        if(!res.ok) throw new Error("Send failed");
-        status.textContent = "Saved & emailed ✅";
-        form.reset();
-      }catch(err){
-        status.textContent = "Calculated, but sending failed. Check Formspree endpoint.";
+        if(window.opener && !window.opener.closed){
+          window.opener.postMessage(payload, "*");
+          status.textContent = "Result sent back to your consultation form ✅ You can close this tab.";
+        }else{
+          status.textContent = "Result saved ✅ Return to your consultation form to see it filled in.";
+        }
+      }catch(e){
+        status.textContent = "Result saved ✅ Return to your consultation form to see it filled in.";
       }
     });
 
@@ -584,7 +590,14 @@ else type = "Type VI";
       status.textContent = "";
       text.textContent = "";
       pill.textContent = "Type";
+      document.getElementById("fitzTypeHidden").value = "";
+      document.getElementById("fitzScoreHidden").value = "";
+      try{
+        localStorage.removeItem("bare_fitz_type");
+        localStorage.removeItem("bare_fitz_score");
+      }catch(e){}
     });
   </script>
+
 </body>
 </html>
