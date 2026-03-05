@@ -484,7 +484,8 @@ header .logo *{
 
               <label class="con-label">Your Fitzpatrick skin type</label>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <input class="con-input" type="text" name="fitzpatrick" id="fitzpatrick_value" placeholder="Not completed yet" readonly required style="flex:1 1 260px;">
+                <input class="con-input" type="text" id="fitzpatrick_display" placeholder="Not completed yet" readonly style="flex:1 1 260px;">
+                <input type="hidden" name="fitzpatrick" id="fitzpatrick_value" value="">
                 <button type="button" class="con-btn con-btn-ghost" id="open-fitz-btn" style="flex:0 0 auto;">TAKE FITZPATRICK TEST</button>
                 <button type="button" class="con-btn con-btn-ghost" id="clear-fitz-btn" style="flex:0 0 auto;">CLEAR</button>
               </div>
@@ -875,6 +876,17 @@ header .logo *{
     const openFitzBtn = document.getElementById("open-fitz-btn");
     const clearFitzBtn = document.getElementById("clear-fitz-btn");
 
+    const fitzLabelMap = {
+      "I": "Type I — Very fair skin, always burns, never tans",
+      "II": "Type II — Fair skin, burns easily, tans minimally",
+      "III": "Type III — Medium skin, sometimes burns, gradually tans",
+      "IV": "Type IV — Olive skin, rarely burns, tans easily",
+      "V": "Type V — Brown skin, very rarely burns",
+      "VI": "Type VI — Dark brown/black skin, never burns"
+    };
+    const fitzDisplayEl = document.getElementById("fitzpatrick_display");
+
+
     function applyFitzResult(payload){
       if(!payload) return;
       const type = (payload.fitz || payload.type || "").toString().trim();
@@ -886,6 +898,9 @@ header .logo *{
       if(m) norm = m[1].toUpperCase();
 
       fitzValueEl.value = norm;
+      if(fitzDisplayEl){
+        fitzDisplayEl.value = fitzLabelMap[norm] || ("Type " + norm);
+      }
       if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
 
       // Persist so refresh doesn't lose it
@@ -901,6 +916,9 @@ header .logo *{
       const savedScore = localStorage.getItem("bare_fitz_score");
       if(savedType){
         fitzValueEl.value = savedType;
+        if(fitzDisplayEl){
+          fitzDisplayEl.value = fitzLabelMap[savedType] || ("Type " + savedType);
+        }
         if(savedScore) fitzScoreEl.value = savedScore;
       }
     }catch(e){}
@@ -916,6 +934,7 @@ header .logo *{
     if(clearFitzBtn){
       clearFitzBtn.addEventListener("click", () => {
         fitzValueEl.value = "";
+        if(fitzDisplayEl) fitzDisplayEl.value = "";
         fitzScoreEl.value = "";
         try{
           localStorage.removeItem("bare_fitz_type");
