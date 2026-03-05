@@ -357,6 +357,142 @@ header .logo *{
               <textarea class="con-textarea" name="previous_removal_history" rows="2"></textarea>
             </div>
 
+            
+            <!-- Tattoo Characteristics -->
+            <div class="con-section">
+              <div class="con-h3">Tattoo Characteristics</div>
+
+              <label class="con-label">Type of tattoo</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Professional">
+                  <span class="con-mark"></span>
+                  <span>Professional</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Amateur">
+                  <span class="con-mark"></span>
+                  <span>Amateur</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Cosmetic / PMU">
+                  <span class="con-mark"></span>
+                  <span>Cosmetic / PMU</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Not sure">
+                  <span class="con-mark"></span>
+                  <span>Not sure</span>
+                </label>
+              </div>
+
+              <label class="con-label">What colours are in the tattoo?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_black" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Black</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_blue" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Blue</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_green" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Green</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_red" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Red</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_yellow" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yellow</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_white" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>White</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_multicolour" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Multi-colour</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_not_sure" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Not sure</span>
+                </label>
+              </div>
+
+              <label class="con-label">Is the tattoo raised or scarred?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_raised_scarred" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_raised_scarred" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+
+              <label class="con-label">Have you ever had a reaction to your tattoo ink?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_ink_reaction" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_ink_reaction" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+
+              <label class="con-label">If yes, please describe</label>
+              <textarea class="con-textarea" name="tattoo_ink_reaction_details" rows="2" placeholder="e.g. swelling, itching, rash, raised areas"></textarea>
+            </div>
+
+            <!-- Fitzpatrick Skin Type -->
+            <div class="con-section">
+              <div class="con-h3">Fitzpatrick Skin Type</div>
+              <p class="con-small" style="margin:0 0 8px;">
+                This helps us choose safe laser settings and reduce the risk of pigmentation changes.
+              </p>
+
+              <label class="con-label">Select your skin type</label>
+              <select class="con-select" name="fitzpatrick" required>
+                <option value="" selected disabled>Please select…</option>
+                <option value="I">I — Very fair skin, always burns, never tans</option>
+                <option value="II">II — Fair skin, usually burns, tans minimally</option>
+                <option value="III">III — Medium skin, sometimes mild burn, tans gradually</option>
+                <option value="IV">IV — Olive skin, rarely burns, tans easily</option>
+                <option value="V">V — Brown skin, very rarely burns, tans very easily</option>
+                <option value="VI">VI — Dark skin, never burns, deeply pigmented</option>
+              </select>
+            </div>
+
             <!-- Medical history -->
             <div class="con-section">
               <div class="con-h3">Medical History & Safety</div>
@@ -385,7 +521,19 @@ header .logo *{
                   <span class="con-mark"></span>
                   <span>Using any photosensitising medication or products</span>
                 </label>
+                
                 <label class="con-opt">
+                  <input type="checkbox" name="autoimmune_disease" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Autoimmune disease or immune system condition</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="immunosuppressive_meds" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Immunosuppressive medication (e.g. steroids, biologics)</span>
+                </label>
+<label class="con-opt">
                   <input type="checkbox" name="moles_lesions_area" value="Yes">
                   <span class="con-mark"></span>
                   <span>Moles or suspicious lesions in treatment area</span>
@@ -625,6 +773,21 @@ header .logo *{
                   I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
                 </span>
               </label>
+              <label class="con-label" style="margin-top:14px;">Clinical photos (optional)</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="photo_consent" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>I consent to clinical photos being taken for treatment monitoring</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="photo_consent" value="No">
+                  <span class="con-mark"></span>
+                  <span>No, I do not consent to photos</span>
+                </label>
+              </div>
+
 
               <div class="con-small">
                 Please do not submit urgent medical information here. This is for consultation screening only.
@@ -650,6 +813,30 @@ header .logo *{
                   I understand that multiple sessions may be required and results vary depending on ink, depth, location, and individual skin response.
                 </span>
               </label>
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="sun_avoidance_commitment" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I understand I must avoid sun exposure and tanning (including self-tan on the area) during my treatment course and follow all pre- and post-care instructions.
+                </span>
+              </label>
+
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="patch_test_acknowledgement" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I understand that a patch test may be required before treatment.
+                </span>
+              </label>
+
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="honesty_acknowledgement" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I confirm that I have answered all questions honestly and understand that providing incorrect information may affect treatment safety.
+                </span>
+              </label>
+
 
               <div class="con-small">
                 You can download the full aftercare guide from the Forms section on the home page.
