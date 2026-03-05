@@ -893,12 +893,12 @@ header .logo *{
     const fitzDescEl = document.getElementById("fitzpatrick_desc");
 function applyFitzResult(payload){
       if(!payload) return;
-      const type = (payload.fitz || payload.type || "").toString().trim();
+      const type = (payload.fitz || payload.fitzpatrick || payload.type || "").toString().trim();
       if(!type) return;
 
       // Normalise to "I".."VI" if "Type III" is sent
       let norm = type;
-      const m = type.match(/(I{1,3}|IV|V|VI)/i);
+      const m = type.match(/(I{1,3}|IV|V|VI)\b/i);
       if(m) norm = m[1].toUpperCase();
 
       fitzValueEl.value = norm;
@@ -955,15 +955,50 @@ if(savedScore) fitzScoreEl.value = savedScore;
       });
     }
 
-    // Receive result from the Fitzpatrick page
-    window.addEventListener("message", (event) => {
-      // On static hosting, origin should match your domain.
-      // We still accept messages only if the expected payload is present.
-      const data = event.data;
-      if(!data || typeof data !== "object") return;
-      if(data.kind !== "bare_fitz_result") return;
-      applyFitzResult(data);
-    });
+    
+// Receive result from the Fitzpatrick page (popup) OR via localStorage (new tab / mobile)
+window.addEventListener("message", (event) => {
+  const data = event.data;
+  if(!data || typeof data !== "object") return;
+
+  // Accept either of these payloads:
+  // 1) { kind:"bare_fitz_result", fit:"II", label:"Type II — ..." }
+  // 2) { fitzpatrick:"II", label:"Type II — ..." }
+  if(data.kind === "bare_fitz_result" || data.fitzpatrick || data.fitz || data.type){
+    applyFitzResult(data);
+  }
+});
+
+function syncFitzFromStorage(){
+  try{
+    const t = localStorage.getItem("bare_fitz_type") || localStorage.getItem("fitzpatrick_result");
+    const s = localStorage.getItem("bare_fitz_score");
+    const l = localStorage.getItem("bare_fitz_label");
+    if(t){
+      applyFitzResult({ fitz: t, score: (s ? Number(s) : undefined), label: l || (fitzLabelMap[t] || "") });
+    }
+  }catch(e){}
+}
+
+// If the Fitzpatrick test opens in a new tab (common on mobile), postMessage won't work.
+// These listeners ensure the consultation updates as soon as you return.
+window.addEventListener("focus", syncFitzFromStorage);
+document.addEventListener("visibilitychange", () => {
+  if(!document.hidden) syncFitzFromStorage();
+});
+
+// If the Fitzpatrick tab writes localStorage, this event fires in THIS tab.
+window.addEventListener("storage", (e) => {
+  if(!e) return;
+  if(["bare_fitz_type","bare_fitz_label","bare_fitz_score","fitzpatrick_result"].includes(e.key)){
+    syncFitzFromStorage();
+  }
+});
+
+// Run once in case the result was already saved
+syncFitzFromStorage();
+
+});
 
     const form = document.getElementById("consultation-form");
     const statusEl = document.getElementById("status");
