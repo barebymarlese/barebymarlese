@@ -876,6 +876,7 @@ header .logo *{
     const openFitzBtn = document.getElementById("open-fitz-btn");
     const clearFitzBtn = document.getElementById("clear-fitz-btn");
 
+    
     const fitzLabelMap = {
       "I": "Type I — Very fair skin, always burns, never tans",
       "II": "Type II — Fair skin, burns easily, tans minimally",
@@ -885,9 +886,7 @@ header .logo *{
       "VI": "Type VI — Dark brown/black skin, never burns"
     };
     const fitzDisplayEl = document.getElementById("fitzpatrick_display");
-
-
-    function applyFitzResult(payload){
+function applyFitzResult(payload){
       if(!payload) return;
       const type = (payload.fitz || payload.type || "").toString().trim();
       if(!type) return;
@@ -898,10 +897,11 @@ header .logo *{
       if(m) norm = m[1].toUpperCase();
 
       fitzValueEl.value = norm;
+      
       if(fitzDisplayEl){
         fitzDisplayEl.value = fitzLabelMap[norm] || ("Type " + norm);
       }
-      if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
+if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
 
       // Persist so refresh doesn't lose it
       try{
@@ -916,10 +916,9 @@ header .logo *{
       const savedScore = localStorage.getItem("bare_fitz_score");
       if(savedType){
         fitzValueEl.value = savedType;
-        if(fitzDisplayEl){
-          fitzDisplayEl.value = fitzLabelMap[savedType] || ("Type " + savedType);
-        }
-        if(savedScore) fitzScoreEl.value = savedScore;
+        
+        if(fitzDisplayEl){ fitzDisplayEl.value = fitzLabelMap[savedType] || ("Type " + savedType); }
+if(savedScore) fitzScoreEl.value = savedScore;
       }
     }catch(e){}
 
@@ -934,8 +933,9 @@ header .logo *{
     if(clearFitzBtn){
       clearFitzBtn.addEventListener("click", () => {
         fitzValueEl.value = "";
-        if(fitzDisplayEl) fitzDisplayEl.value = "";
-        fitzScoreEl.value = "";
+        
+        if(fitzDisplayEl){ fitzDisplayEl.value = ""; }
+fitzScoreEl.value = "";
         try{
           localStorage.removeItem("bare_fitz_type");
           localStorage.removeItem("bare_fitz_score");
