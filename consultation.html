@@ -385,11 +385,130 @@ header .logo *{
                   <span class="con-mark"></span>
                   <span>Using any photosensitising medication or products</span>
                 </label>
+                <label class="con-opt">
+                  <input type="checkbox" name="moles_lesions_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Moles or suspicious lesions in treatment area</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="vitiligo" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Vitiligo</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="active_infection_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Active infection in treatment area</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="recent_chemical_peel_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Recent chemical peel in treatment area</span>
+                </label>
+
               </div>
 
               <label class="con-label">List any autoimmune or skin conditions (e.g. lupus, eczema)</label>
               <textarea class="con-textarea" name="medical_conditions" rows="2"></textarea>
             </div>
+
+
+            <!-- Viral & Blood-Borne Conditions -->
+            <div class="con-section">
+              <div class="con-h3">Viral &amp; Blood-Borne Conditions</div>
+
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="checkbox" name="cold_sores_hsv" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>History of cold sores (Herpes Simplex Virus)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="hepatitis_b" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Hepatitis B</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="hepatitis_c" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Hepatitis C</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="hiv" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>HIV</span>
+                </label>
+              </div>
+
+              <label class="con-label">Other blood-borne condition (please specify)</label>
+              <input class="con-input" type="text" name="other_blood_borne">
+            </div>
+
+            <!-- Chronic Health Conditions -->
+            <div class="con-section">
+              <div class="con-h3">Chronic Health Conditions</div>
+
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="checkbox" name="diabetes" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Diabetes (Type I or II)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="epilepsy_seizures" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Epilepsy or history of seizures</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="heart_condition_pacemaker" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Heart condition or pacemaker</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="bleeding_disorder" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Bleeding disorder (e.g. haemophilia)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Allergies -->
+            <div class="con-section">
+              <div class="con-h3">Allergies</div>
+
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="checkbox" name="tattoo_ink_allergy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Tattoo ink allergy</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="lidocaine_numbing_allergy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Lidocaine / numbing cream allergy</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="latex_allergy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Latex allergy</span>
+                </label>
+              </div>
+
+              <label class="con-label">Other allergies (please specify)</label>
+              <input class="con-input" type="text" name="other_allergies">
+            </div>
+
 
             <!-- Medications -->
             <div class="con-section">
@@ -401,8 +520,75 @@ header .logo *{
                 <option value="Yes">Yes</option>
               </select>
 
-              <label class="con-label">List all current medications (including blood thinners, herbs, vitamins)</label>
+
+
+              <div class="con-options" style="margin-top:12px;">
+                <label class="con-opt">
+                  <input type="checkbox" name="blood_thinners" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Blood thinners (anticoagulants)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="iron_supplements" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Iron supplements</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="gold_therapy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Gold therapy (for rheumatoid arthritis)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="antibiotics_last_2_weeks" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Antibiotics taken in the last 2 weeks</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="retinol_retina_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Retinol / Retin-A used in treatment area</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="photosensitising_supplements" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>St. John’s Wort or other photosensitising supplements</span>
+                </label>
+              </div>
+
+              <label class="con-label">List all current medications (including herbs, vitamins, supplements)</label>
               <textarea class="con-textarea" name="current_medications" rows="3" placeholder="Aspirin, St. John's Wort, fish oil, etc."></textarea>
+            </div>
+
+            <!-- Lifestyle Factors -->
+            <div class="con-section">
+              <div class="con-h3">Lifestyle Factors</div>
+
+              <label class="con-label">Do you smoke or vape?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="smoke_vape" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="smoke_vape" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+
+              <label class="con-label">If yes: cigarettes per day</label>
+              <input class="con-input" type="text" name="cigarettes_per_day" placeholder="e.g. 5">
+
+              <div class="con-small">
+                Smoking can slow the body’s ability to clear tattoo pigment and may extend the number of sessions required.
+              </div>
             </div>
 
             <!-- Photos -->
