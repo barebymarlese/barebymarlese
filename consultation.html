@@ -484,13 +484,16 @@ header .logo *{
 
               <label class="con-label">Your Fitzpatrick skin type</label>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <input class="con-input" type="text" id="fitzpatrick_display" placeholder="Not completed yet" readonly style="flex:1 1 260px;">
-                <input type="hidden" name="fitzpatrick" id="fitzpatrick_value" value="">
-                <button type="button" class="con-btn con-btn-ghost" id="open-fitz-btn" style="flex:0 0 auto;">TAKE FITZPATRICK TEST</button>
-                <button type="button" class="con-btn con-btn-ghost" id="clear-fitz-btn" style="flex:0 0 auto;">CLEAR</button>
-              </div>
+  <input class="con-input" type="text" id="fitzpatrick_code" placeholder="—" readonly style="flex:0 0 90px; text-align:center; font-weight:700; letter-spacing:.06em;">
+  <div id="fitzpatrick_desc" style="flex:1 1 260px; padding:12px; border-radius:12px; border:1px solid rgba(36,34,26,.22); background: rgba(202,205,198,.65); color: var(--heading-dark); line-height:1.35; font-size:13px; opacity:.9;">
+    Not completed yet
+  </div>
 
-              <div class="con-small" style="margin-top:10px;">
+  <input type="hidden" name="fitzpatrick" id="fitzpatrick_value" value="">
+  <button type="button" class="con-btn con-btn-ghost" id="open-fitz-btn" style="flex:0 0 auto;">TAKE FITZPATRICK TEST</button>
+  <button type="button" class="con-btn con-btn-ghost" id="clear-fitz-btn" style="flex:0 0 auto;">CLEAR</button>
+</div>
+<div class="con-small" style="margin-top:10px;">
                 Taking the test will open in a new tab. When you finish, your result will automatically fill here.
               </div>
 
@@ -886,7 +889,8 @@ header .logo *{
       "V": "Type V — Brown skin, very rarely burns",
       "VI": "Type VI — Dark brown/black skin, never burns"
     };
-    const fitzDisplayEl = document.getElementById("fitzpatrick_display");
+    const fitzDisplayEl = document.getElementById("fitzpatrick_code");
+    const fitzDescEl = document.getElementById("fitzpatrick_desc");
 function applyFitzResult(payload){
       if(!payload) return;
       const type = (payload.fitz || payload.type || "").toString().trim();
@@ -899,14 +903,18 @@ function applyFitzResult(payload){
 
       fitzValueEl.value = norm;
       
-      if(fitzDisplayEl){
-        fitzDisplayEl.value = fitzLabelMap[norm] || ("Type " + norm);
+      if(fitzDisplayEl){ fitzDisplayEl.value = norm; }
+      if(fitzDescEl){
+        const lbl = (payload.label || "").toString().trim();
+        fitzDescEl.textContent = lbl || fitzLabelMap[norm] || ("Type " + norm);
       }
 if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
 
       // Persist so refresh doesn't lose it
       try{
         localStorage.setItem("bare_fitz_type", norm);
+        const lbl = (payload.label || "").toString().trim();
+        if(lbl) localStorage.setItem("bare_fitz_label", lbl);
         if(fitzScoreEl.value) localStorage.setItem("bare_fitz_score", fitzScoreEl.value);
       }catch(e){}
     }
@@ -915,10 +923,12 @@ if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = St
     try{
       const savedType = localStorage.getItem("bare_fitz_type");
       const savedScore = localStorage.getItem("bare_fitz_score");
+      const savedLabel = localStorage.getItem("bare_fitz_label");
       if(savedType){
         fitzValueEl.value = savedType;
         
-        if(fitzDisplayEl){ fitzDisplayEl.value = fitzLabelMap[savedType] || ("Type " + savedType); }
+        if(fitzDisplayEl){ fitzDisplayEl.value = savedType; }
+        if(fitzDescEl){ fitzDescEl.textContent = savedLabel || fitzLabelMap[savedType] || ("Type " + savedType); }
 if(savedScore) fitzScoreEl.value = savedScore;
       }
     }catch(e){}
@@ -934,12 +944,13 @@ if(savedScore) fitzScoreEl.value = savedScore;
     if(clearFitzBtn){
       clearFitzBtn.addEventListener("click", () => {
         fitzValueEl.value = "";
-        
         if(fitzDisplayEl){ fitzDisplayEl.value = ""; }
-fitzScoreEl.value = "";
+        if(fitzDescEl){ fitzDescEl.textContent = "Not completed yet"; }
+        fitzScoreEl.value = "";
         try{
           localStorage.removeItem("bare_fitz_type");
           localStorage.removeItem("bare_fitz_score");
+          localStorage.removeItem("bare_fitz_label");
         }catch(e){}
       });
     }
