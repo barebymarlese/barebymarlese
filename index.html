@@ -650,6 +650,8 @@
 
   /* Mobile forms alignment: keep buttons and timing lines aligned */
   #forms .forms-grid{
+    grid-template-columns:1fr;  /* stack cards on mobile */
+    gap:18px;
     align-items:stretch;
     grid-auto-rows:1fr;         /* make both cards the same height */
   }
