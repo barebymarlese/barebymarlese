@@ -744,6 +744,7 @@ header .logo *{
               </div>
             </div>
 
+            
             <!-- Photos -->
             <div class="con-section">
               <div class="con-h3">Photos</div>
@@ -893,7 +894,7 @@ function applyFitzResult(payload){
 
       // Normalise to "I".."VI" if "Type III" is sent
       let norm = type;
-      const m = type.match(/(I{1,3}|IV|V|VI)\b/i);
+      const m = type.match(/(I{1,3}|IV|V|VI)/i);
       if(m) norm = m[1].toUpperCase();
 
       fitzValueEl.value = norm;
