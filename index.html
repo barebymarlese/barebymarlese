@@ -503,8 +503,15 @@ transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
       font-size: 12px;
       opacity:.78;
     }
+    
+/* MOBILE FIX FOR FORMS */
+@media (max-width:820px){
 
+.forms-grid{
+grid-template-columns:1fr;
+}
 
+}
     /* Contact */
     .contact-grid{
       display:grid;
