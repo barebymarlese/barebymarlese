@@ -474,26 +474,30 @@ header .logo *{
               <textarea class="con-textarea" name="tattoo_ink_reaction_details" rows="2" placeholder="e.g. swelling, itching, rash, raised areas"></textarea>
             </div>
 
+            
             <!-- Fitzpatrick Skin Type -->
-            <div class="con-section">
+            <div class="con-section" id="fitz-section">
               <div class="con-h3">Fitzpatrick Skin Type</div>
-              <p class="con-small" style="margin:0 0 8px;">
+              <p class="con-small" style="margin:0 0 10px;">
                 This helps us choose safe laser settings and reduce the risk of pigmentation changes.
               </p>
 
-              <label class="con-label">Select your skin type</label>
-              <select class="con-select" name="fitzpatrick" required>
-                <option value="" selected disabled>Please select…</option>
-                <option value="I">I — Very fair skin, always burns, never tans</option>
-                <option value="II">II — Fair skin, usually burns, tans minimally</option>
-                <option value="III">III — Medium skin, sometimes mild burn, tans gradually</option>
-                <option value="IV">IV — Olive skin, rarely burns, tans easily</option>
-                <option value="V">V — Brown skin, very rarely burns, tans very easily</option>
-                <option value="VI">VI — Dark skin, never burns, deeply pigmented</option>
-              </select>
+              <label class="con-label">Your Fitzpatrick skin type</label>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <input class="con-input" type="text" name="fitzpatrick" id="fitzpatrick_value" placeholder="Not completed yet" readonly required style="flex:1 1 260px;">
+                <button type="button" class="con-btn con-btn-ghost" id="open-fitz-btn" style="flex:0 0 auto;">TAKE FITZPATRICK TEST</button>
+                <button type="button" class="con-btn con-btn-ghost" id="clear-fitz-btn" style="flex:0 0 auto;">CLEAR</button>
+              </div>
+
+              <div class="con-small" style="margin-top:10px;">
+                Taking the test will open in a new tab. When you finish, your result will automatically fill here.
+              </div>
+
+              <input type="hidden" name="fitzpatrick_score" id="fitzpatrick_score" value="">
             </div>
 
             <!-- Medical history -->
+
             <div class="con-section">
               <div class="con-h3">Medical History & Safety</div>
 
@@ -864,6 +868,72 @@ header .logo *{
   </footer>
 
   <script>
+    
+    // Fitzpatrick test integration (auto-fill)
+    const fitzValueEl = document.getElementById("fitzpatrick_value");
+    const fitzScoreEl = document.getElementById("fitzpatrick_score");
+    const openFitzBtn = document.getElementById("open-fitz-btn");
+    const clearFitzBtn = document.getElementById("clear-fitz-btn");
+
+    function applyFitzResult(payload){
+      if(!payload) return;
+      const type = (payload.fitz || payload.type || "").toString().trim();
+      if(!type) return;
+
+      // Normalise to "I".."VI" if "Type III" is sent
+      let norm = type;
+      const m = type.match(/(I{1,3}|IV|V|VI)\b/i);
+      if(m) norm = m[1].toUpperCase();
+
+      fitzValueEl.value = norm;
+      if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
+
+      // Persist so refresh doesn't lose it
+      try{
+        localStorage.setItem("bare_fitz_type", norm);
+        if(fitzScoreEl.value) localStorage.setItem("bare_fitz_score", fitzScoreEl.value);
+      }catch(e){}
+    }
+
+    // Load saved result (if they did the test earlier)
+    try{
+      const savedType = localStorage.getItem("bare_fitz_type");
+      const savedScore = localStorage.getItem("bare_fitz_score");
+      if(savedType){
+        fitzValueEl.value = savedType;
+        if(savedScore) fitzScoreEl.value = savedScore;
+      }
+    }catch(e){}
+
+    // Open the Fitzpatrick test in a new tab and allow it to message back
+    if(openFitzBtn){
+      openFitzBtn.addEventListener("click", () => {
+        // Pass a hint so the test knows it was launched from consultation
+        window.open("fitzpatrick.html?from=consultation", "_blank");
+      });
+    }
+
+    if(clearFitzBtn){
+      clearFitzBtn.addEventListener("click", () => {
+        fitzValueEl.value = "";
+        fitzScoreEl.value = "";
+        try{
+          localStorage.removeItem("bare_fitz_type");
+          localStorage.removeItem("bare_fitz_score");
+        }catch(e){}
+      });
+    }
+
+    // Receive result from the Fitzpatrick page
+    window.addEventListener("message", (event) => {
+      // On static hosting, origin should match your domain.
+      // We still accept messages only if the expected payload is present.
+      const data = event.data;
+      if(!data || typeof data !== "object") return;
+      if(data.kind !== "bare_fitz_result") return;
+      applyFitzResult(data);
+    });
+
     const form = document.getElementById("consultation-form");
     const statusEl = document.getElementById("status");
     const resetBtn = document.getElementById("reset-btn");
@@ -884,6 +954,14 @@ header .logo *{
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      // Ensure Fitzpatrick result is completed
+      if(!fitzValueEl || !fitzValueEl.value){
+        setStatus("Please complete the Fitzpatrick Skin Test before submitting.", "error");
+        statusEl.style.display = "block";
+        document.getElementById("fitz-section")?.scrollIntoView({behavior:"smooth", block:"start"});
+        return;
+      }
 
       submittedAt.value = new Date().toISOString();
       subjectLine.value = "Laser Tattoo Removal Consultation — BARE by Marlese";
