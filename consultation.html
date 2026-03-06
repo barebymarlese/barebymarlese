@@ -1142,15 +1142,22 @@ syncFitzFromStorage();
           headers: { "Accept": "application/json" }
         });
 
-        if(res.ok){
-          setStatus("Success! Your form has been submitted. We will contact you shortly.", "success");
-          form.reset();
-        }else{
-          setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
-        }
-      }catch(err){
-        setStatus("Oops — connection error. Please try again.", "error");
-      }
+if(res.ok){
+  setStatus("Thank you for submitting your consultation. We will contact you shortly. Redirecting you back to the website…", "success");
+  form.reset();
+
+  // redirect to homepage
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 2000);
+
+}else{
+  setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
+}
+
+}catch(err){
+  setStatus("Oops — connection error. Please try again.", "error");
+}
     });
   </script>
 </body>
