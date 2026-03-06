@@ -258,6 +258,29 @@
       font-weight: 600;
     }
 
+/* Policies heading hierarchy */
+.policies-title{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:6px;
+}
+
+.policies-main{
+font-size:56px;
+color: var(--heading-muted);
+font-weight:600;
+text-shadow:0 10px 28px rgba(0,0,0,.16);
+}
+
+.policies-sub{
+font-size:28px;
+color: var(--heading-dark);
+font-weight:600;
+letter-spacing:.02em;
+}
+
+
     /* Services */
     .services-cards{
       display:grid;
@@ -1262,7 +1285,10 @@ Free consultation • Personalised treatment plan • No obligation
 <!-- TREATMENT POLICIES -->
 <section id="policies">
   <div class="wrap">
-    <h2 class="section-title">Treatment Policies & Booking Information</h2>
+    <h2 class="section-title policies-title">
+      <span class="policies-main">Laser Tattoo Removal</span>
+      <span class="policies-sub">Treatment Policies & Booking Information</span>
+    </h2>
 
     <div class="price-note">
       <p>
