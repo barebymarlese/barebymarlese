@@ -20,6 +20,7 @@
     }
 
     *{ box-sizing:border-box; }
+    *, *::before, *::after{ min-width:0; }
     html, body{
       width:100%;
       max-width:100%;
@@ -114,7 +115,12 @@
 
     .con-input, .con-select, .con-textarea{
       width:100%;
+      max-width:100%;
+      min-width:0;
       padding: 12px;
+      font-size:16px;
+      -webkit-appearance:none;
+      appearance:none;
       border-radius: 12px;
       border: 1px solid rgba(36,34,26,.22);
       background: rgba(202,205,198,.65);
@@ -122,7 +128,7 @@
       font-family: inherit;
       outline: none;
     }
-    .con-textarea{ min-height: 90px; resize: vertical; }
+    .con-textarea{ min-height: 90px; resize: vertical; overflow-wrap:anywhere; word-break:break-word; }
 
     .con-input:focus, .con-select:focus, .con-textarea:focus{
       border-color: rgba(94,105,89,.7);
@@ -163,6 +169,10 @@
     .con-opt{
       display:flex;
       align-items:flex-start;
+      width:100%;
+      max-width:100%;
+      overflow-wrap:anywhere;
+      word-break:break-word;
       gap:10px;
       padding: 10px 12px;
       border-radius: 14px;
@@ -224,6 +234,7 @@
     }
     .con-btn{
       background: var(--brand);
+      font-size:16px;
       color: var(--body);
       border:0;
       border-radius:999px;
@@ -324,6 +335,17 @@
       }
 
       #consultation{ padding-bottom: 80px; overflow-x:hidden; }
+
+      input,
+      select,
+      textarea,
+      button{
+        font-size:16px !important;
+      }
+
+      .con-textarea{
+        min-height:110px;
+      }
     }
      /* FORCE: no underline on logo on desktop + mobile */
 header .logo,
