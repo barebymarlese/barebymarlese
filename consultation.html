@@ -502,7 +502,7 @@ header .logo *{
               <div class="con-h3">Tattoo Information</div>
 
               <label class="con-label">Approximate age of tattoo</label>
-              <input class="con-input" type="text" name="tattoo_age" placeholder="e.g. 5 years" required>
+              <input class="con-input" type="text" name="tattoo_age" placeholder="e.g. 5 years">
 
               <label class="con-label">Location on body</label>
               <input class="con-input" type="text" name="tattoo_location">
@@ -519,7 +519,7 @@ header .logo *{
               <label class="con-label">Type of tattoo</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="tattoo_type" value="Professional" required>
+                  <input type="radio" name="tattoo_type" value="Professional">
                   <span class="con-mark"></span>
                   <span>Professional</span>
                 </label>
@@ -603,7 +603,7 @@ header .logo *{
               <label class="con-label">Is the tattoo raised or scarred?</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="tattoo_raised_scarred" value="No" required>
+                  <input type="radio" name="tattoo_raised_scarred" value="No">
                   <span class="con-mark"></span>
                   <span>No</span>
                 </label>
@@ -618,7 +618,7 @@ header .logo *{
               <label class="con-label">Have you ever had a reaction to your tattoo ink?</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="tattoo_ink_reaction" value="No" required>
+                  <input type="radio" name="tattoo_ink_reaction" value="No">
                   <span class="con-mark"></span>
                   <span>No</span>
                 </label>
@@ -941,7 +941,7 @@ header .logo *{
               <label class="con-label">Do you smoke or vape?</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="smoke_vape" value="No" required>
+                  <input type="radio" name="smoke_vape" value="No">
                   <span class="con-mark"></span>
                   <span>No</span>
                 </label>
@@ -1369,14 +1369,6 @@ syncFitzFromStorage();
         setStatus("Please complete the Fitzpatrick Skin Test before submitting.", "error");
         statusEl.style.display = "block";
         document.getElementById("fitz-section")?.scrollIntoView({behavior:"smooth", block:"start"});
-        return;
-      }
-
-      const selectedColours = [...document.querySelectorAll('[data-none-group="tattoo-colours"] input[type="checkbox"]:checked')];
-      if(!selectedColours.length){
-        setStatus("Please select the tattoo colour information before submitting.", "error");
-        statusEl.style.display = "block";
-        document.querySelector('[data-none-group="tattoo-colours"]')?.scrollIntoView({behavior:"smooth", block:"center"});
         return;
       }
 
