@@ -20,14 +20,21 @@
     }
 
     *{ box-sizing:border-box; }
+    html, body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+    }
     body{
       margin:0;
       font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background:var(--bg);
       color:var(--heading-dark);
+      overscroll-behavior-x:none;
+      -webkit-text-size-adjust:100%;
     }
     a{ color:inherit; }
-    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; }
+    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; max-width:100%; }
 
     /* Nav */
     .nav{
@@ -283,7 +290,40 @@
       .con-actions{ flex-direction: column; }
       .con-btn{ width: 100%; }
 
-      #consultation{ padding-bottom: 80px; }
+      html, body{
+        overflow-x:hidden !important;
+        position:relative;
+      }
+
+      .wrap,
+      .con-card,
+      .con-section,
+      .con-consent,
+      .con-grid,
+      .con-options,
+      .con-input,
+      .con-select,
+      .con-textarea{
+        max-width:100%;
+        min-width:0;
+      }
+
+      #fitz-section > div[style]{
+        display:grid !important;
+        grid-template-columns:1fr;
+        gap:10px !important;
+        align-items:stretch !important;
+      }
+
+      #fitzpatrick_code,
+      #fitzpatrick_label,
+      #open-fitz-btn,
+      #clear-fitz-btn{
+        width:100% !important;
+        flex:unset !important;
+      }
+
+      #consultation{ padding-bottom: 80px; overflow-x:hidden; }
     }
      /* FORCE: no underline on logo on desktop + mobile */
 header .logo,
