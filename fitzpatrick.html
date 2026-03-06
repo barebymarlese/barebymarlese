@@ -374,7 +374,7 @@ header .logo *{
             This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment. If you opened this from the consultation form, your result will automatically fill back in — no email will be sent.
           </p>
 
-          <form id="fitzForm">
+          <form id="fitzForm" autocomplete="off">
             <div class="fitz-grid">
               <input type="text" name="client_name" placeholder="Full Name (optional)">
               <input type="email" name="client_email" placeholder="Email Address (optional)">
@@ -578,6 +578,40 @@ header .logo *{
     };
 
 
+
+
+    function clearBareStoredFitz(){
+      try{
+        localStorage.removeItem("fitzpatrick_result");
+        localStorage.removeItem("bare_fitz_type");
+        localStorage.removeItem("bare_fitz_score");
+        localStorage.removeItem("bare_fitz_label");
+      }catch(e){}
+    }
+
+    function resetFitzPageIfRequested(){
+      try{
+        const params = new URLSearchParams(window.location.search);
+        if(params.get("reset") === "1"){
+          form.reset();
+          resultBox.hidden = true;
+          status.textContent = "";
+          text.textContent = "";
+          pill.textContent = "Type";
+          if(desc){ desc.textContent = ""; }
+          document.getElementById("fitzTypeHidden").value = "";
+          document.getElementById("fitzScoreHidden").value = "";
+          clearBareStoredFitz();
+          if(window.history && window.history.replaceState){
+            const clean = window.location.pathname + (window.location.hash || "");
+            window.history.replaceState({}, document.title, clean);
+          }
+        }
+      }catch(e){}
+    }
+
+    resetFitzPageIfRequested();
+
     form.addEventListener("submit", function(e) {
       e.preventDefault();
 
@@ -640,10 +674,7 @@ header .logo *{
       document.getElementById("fitzTypeHidden").value = "";
       document.getElementById("fitzScoreHidden").value = "";
       try{
-        localStorage.removeItem("fitzpatrick_result");
-        localStorage.removeItem("bare_fitz_type");
-        localStorage.removeItem("bare_fitz_score");
-        localStorage.removeItem("bare_fitz_label");
+        clearBareStoredFitz();
       }catch(e){}
     });
   </script>
