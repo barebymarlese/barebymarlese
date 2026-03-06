@@ -371,16 +371,10 @@ header .logo *{
 
         <div class="fitz-card">
           <p class="fitz-intro">
-            This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment. If you opened this from the consultation form, your result will automatically fill back in — no email will be sent.
+            This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment. If you opened this from the consultation form, your result will automatically fill back in when you finish.
           </p>
 
           <form id="fitzForm" autocomplete="off">
-            <div class="fitz-grid">
-              <input type="text" name="client_name" placeholder="Full Name (optional)">
-              <input type="email" name="client_email" placeholder="Email Address (optional)">
-              <input type="tel" name="client_phone" placeholder="Contact Number (optional)">
-            </div>
-
            <div class="fitz-q">
   <div class="fitz-q-title">1) Natural hair colour</div>
   <div class="fitz-options">
@@ -499,29 +493,6 @@ header .logo *{
     <label class="fitz-opt"><input type="radio" name="q10" value="4"><span class="fitz-mark"></span><span>Always</span></label>
   </div>
 </div>
-            <!-- Consent -->
-<div class="fitz-consent">
-  <div class="fitz-options">
-    <label class="fitz-opt">
-      <input type="checkbox" name="gdpr_contact_consent" value="Yes" required>
-      <span class="fitz-mark"></span>
-      <span>I consent to BARE by Marlese collecting and storing my contact details to respond to my enquiry.</span>
-    </label>
-
-    <label class="fitz-opt">
-      <input type="checkbox" name="gdpr_health_consent" value="Yes" required>
-      <span class="fitz-mark"></span>
-      <span>
-        I give <strong>explicit consent</strong> for BARE by Marlese to collect and process my skin type and consultation-related information for treatment suitability and safety.
-        I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
-      </span>
-    </label>
-  </div>
-
-  <div class="fitz-small">
-    Please do not submit urgent medical information here. This is for consultation screening only.
-  </div>
-</div>
 
 <!-- Hidden fields populated by JS -->
 <input type="hidden" name="fitz_type" id="fitzTypeHidden">
@@ -624,7 +595,7 @@ header .logo *{
       const roman = calculateFitzType(score);
       const typeLabel = `Type ${roman}`;
 
-      // Populate hidden fields (useful if you ever decide to save later)
+      // Populate hidden fields
       document.getElementById("fitzTypeHidden").value = typeLabel;
       document.getElementById("fitzScoreHidden").value = score;
 
@@ -634,8 +605,7 @@ header .logo *{
       if(desc){ desc.textContent = fitzLabelMap[roman] || typeLabel; }
       resultBox.hidden = false;
 
-      // Save locally so the consultation page can read it even if popups/messages are blocked
-      // (We store multiple keys for compatibility with different consultation page versions.)
+      // Save locally so the consultation page can read it even if postMessage is blocked
       try{
         localStorage.setItem("fitzpatrick_result", roman);      // simple key
         localStorage.setItem("bare_fitz_type", roman);
