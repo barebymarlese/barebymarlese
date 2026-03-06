@@ -920,7 +920,7 @@
 <nav class="nav-links" aria-label="Site navigation">
   <a class="nav-item" href="#services">Process</a>
   <a class="nav-item" href="#prices">Price</a>
-  <a class="nav-item" href="#forms">Forms</a>
+  <a class="nav-item" href="#forms" id="nav-forms-link">Forms</a>
   <a class="nav-item" href="#contact">Contact</a>
   
     
@@ -1283,7 +1283,7 @@ Free consultation • Personalised treatment plan • No obligation
         <div class="forms-desc">
           Quick pre-screening to estimate skin type and support safe treatment planning.
         </div>
-        <a class="forms-btn" href="fitzpatrick.html">Start Skin Test</a>
+        <a class="forms-btn" href="fitzpatrick.html?reset=1">Start Skin Test</a>
         <div class="forms-small">~2 minutes · Requires consent</div>
       </div>
 
@@ -1292,7 +1292,7 @@ Free consultation • Personalised treatment plan • No obligation
         <div class="forms-desc">
           Full consultation form including contraindications and medication history.
         </div>
-        <a class="forms-btn" href="consultation.html">Start Consultation</a>
+        <a class="forms-btn" href="consultation.html?reset=1">Start Consultation</a>
         <div class="forms-small">~5 minutes · Explicit consent required</div>
       </div>
     </div>
@@ -1440,7 +1440,7 @@ text-align:center;
 
 </section>
   </main>
-<a class="floating-cta" href="consultation.html">
+<a class="floating-cta" href="consultation.html?reset=1">
   <span class="dot"></span>
   Book Consultation
 </a>
@@ -1448,5 +1448,30 @@ text-align:center;
   © BARE by Marlese — Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire |
   <a href="privacy.html" style="color:#878274;">Privacy Policy</a>
 </footer>
+
+<script>
+(function(){
+  function clearBareFormState(){
+    try{
+      [
+        "fitzpatrick_result",
+        "bare_fitz_type",
+        "bare_fitz_label",
+        "bare_fitz_score"
+      ].forEach(function(key){ localStorage.removeItem(key); });
+    }catch(e){}
+  }
+
+  var formsLink = document.getElementById("nav-forms-link");
+  var startSkin = document.querySelector('a.forms-btn[href^="fitzpatrick.html"]');
+  var startConsult = document.querySelector('a.forms-btn[href^="consultation.html"]');
+  var floatingConsult = document.querySelector('a.floating-cta[href^="consultation.html"]');
+
+  [formsLink, startSkin, startConsult, floatingConsult].forEach(function(el){
+    if(!el) return;
+    el.addEventListener("click", clearBareFormState);
+  });
+})();
+</script>
 </body>
 </html>
