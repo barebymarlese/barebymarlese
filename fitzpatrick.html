@@ -20,7 +20,12 @@
     }
 
     *{ box-sizing:border-box; }
-    html, body{ max-width:100%; overflow-x:hidden; }
+    *, *::before, *::after{ min-width:0; }
+    html, body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+    }
     body{
       margin:0;
       font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -30,7 +35,7 @@
     a{ color:inherit; 
        text-decoration:none;
      }
-    .wrap{ width:min(1100px, calc(100% - 48px)); max-width:100%; margin:0 auto; }
+    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; max-width:100%; }
 
     /* Nav (same feel as your site) */
     .nav{
@@ -91,9 +96,6 @@
       border-radius: 18px;
       box-shadow: var(--shadow);
       padding: 22px;
-      width:100%;
-      max-width:100%;
-      overflow:hidden;
     }
     .fitz-intro{
       margin: 0 0 16px;
@@ -110,7 +112,13 @@
       margin-bottom: 14px;
     }
     .fitz-grid input{
+      width:100%;
+      max-width:100%;
+      min-width:0;
       padding:12px;
+      font-size:16px;
+      -webkit-appearance:none;
+      appearance:none;
       border-radius:12px;
       border:1px solid rgba(36,34,26,.22);
       background: rgba(202,205,198,.65);
@@ -143,6 +151,10 @@
     .fitz-opt{
       display:flex;
       align-items:center;
+      width:100%;
+      max-width:100%;
+      overflow-wrap:anywhere;
+      word-break:break-word;
       gap:10px;
       padding:10px 12px;
       border-radius:14px;
@@ -195,6 +207,7 @@
     }
     .fitz-btn{
       background: var(--brand);
+      font-size:16px;
       color: var(--body);
       border:0;
       border-radius:999px;
@@ -252,22 +265,22 @@
   }
 
   .nav-links{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 8px;
-  font-size: 12px;
-  letter-spacing: .12em;
-}
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: .12em;
+  }
 
-.nav-links a{
-  flex: 1;
-  text-align: center;
-  padding: 8px 0;
-  white-space: nowrap;
-}
+  .nav-links a{
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    white-space: nowrap;
+  }
 
   /* Fitz layout mobile */
   .fitz-grid{
@@ -292,7 +305,6 @@
     padding: 12px 12px;
   }
 
-  /* Buttons full width */
   .fitz-actions{
     flex-direction: column;
   }
@@ -301,57 +313,24 @@
     width: 100%;
   }
 
-  /* Prevent bottom cut-off */
   #fitzpatrick{
     padding-bottom: 80px;
-    overflow-x: clip;
+    overflow-x:hidden;
   }
 
   .section-title{
     font-size: 42px;
-    word-break: break-word;
   }
 
-  html, body{
-    overflow-x:hidden;
-    width:100%;
-    position:relative;
+  input,
+  select,
+  textarea,
+  button{
+    font-size:16px !important;
   }
+}
 
-  .wrap,
-  .fitz-card,
-  .fitz-q,
-  .fitz-consent,
-  .fitz-result,
-  .fitz-grid,
-  .fitz-options,
-  .fitz-actions,
-  .fitz-opt,
-  .fitz-btn,
-  .fitz-grid input{
-    width:100%;
-    max-width:100%;
-    min-width:0;
-  }
-
-  .fitz-opt span:last-child,
-  .fitz-small,
-  .fitz-intro,
-  .fitz-q-title,
-  #fitzText,
-  #fitzDesc,
-  #fitzStatus{
-    overflow-wrap:anywhere;
-    word-break:break-word;
-  }
-
-  .fitz-actions,
-  .fitz-options,
-  .fitz-grid{
-    overflow-x:clip;
-  }
-
-   /* FORCE: no underline on logo on desktop + mobile */
+/* FORCE: no underline on logo on desktop + mobile */
 header .logo,
 header .logo:link,
 header .logo:visited,
@@ -364,7 +343,6 @@ header .logo:active{
 /* also ensure inner text isn't underlined */
 header .logo *{
   text-decoration: none !important;
-}
 }
   </style>
 </head>
