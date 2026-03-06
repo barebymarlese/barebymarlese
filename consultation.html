@@ -159,6 +159,26 @@
       opacity: .9;
     }
 
+    .con-field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
+    }
+    .con-field .con-label{
+      margin:0;
+    }
+    input[type="date"].con-input{
+      min-height:50px;
+      line-height:1.2;
+      color: var(--heading-dark);
+      -webkit-appearance:none;
+      appearance:none;
+    }
+    input[type="date"].con-input::-webkit-date-and-time-value{
+      text-align:left;
+    }
+
     /* Ticks / radios (same style as Fitz) */
     .con-options{
       display:grid;
@@ -490,7 +510,10 @@ header .logo *{
               <div class="con-grid">
                 <input class="con-input" type="text" name="full_name" placeholder="Full Name *" required>
                 <input class="con-input" type="email" name="email" placeholder="Email Address *" required>
-                <input class="con-input" type="date" name="dob" required>
+                <div class="con-field">
+                  <label class="con-label" for="dob">Date of Birth *</label>
+                  <input class="con-input" type="date" id="dob" name="dob" required>
+                </div>
               </div>
 
               <label class="con-label">Contact Number</label>
