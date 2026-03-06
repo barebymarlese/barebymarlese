@@ -390,7 +390,7 @@ header .logo *{
         </p>
 
         <div class="con-card">
-          <form id="consultation-form" action="https://formspree.io/f/mykdryle" method="POST" enctype="multipart/form-data">
+          <form id="consultation-form" autocomplete="off" action="https://formspree.io/f/mykdryle" method="POST" enctype="multipart/form-data">
             <!-- Client details -->
             <div class="con-section">
               <div class="con-h3">Client Details</div>
@@ -951,6 +951,45 @@ header .logo *{
     };
     const fitzDisplayEl = document.getElementById("fitzpatrick_code");
     const fitzDescEl = document.getElementById("fitzpatrick_label");
+
+    function clearBareStoredFitz(){
+      try{
+        localStorage.removeItem("fitzpatrick_result");
+        localStorage.removeItem("bare_fitz_type");
+        localStorage.removeItem("bare_fitz_score");
+        localStorage.removeItem("bare_fitz_label");
+      }catch(e){}
+    }
+
+    function clearConsultationFormState(){
+      const consultationFormEl = document.getElementById("consultation-form");
+      const statusNode = document.getElementById("status");
+      if(consultationFormEl) consultationFormEl.reset();
+      if(fitzValueEl) fitzValueEl.value = "";
+      if(fitzDisplayEl) fitzDisplayEl.value = "";
+      if(fitzDescEl) fitzDescEl.value = "Not completed yet";
+      if(fitzScoreEl) fitzScoreEl.value = "";
+      clearBareStoredFitz();
+      if(statusNode){
+        statusNode.style.display = "none";
+        statusNode.className = "";
+        statusNode.textContent = "";
+      }
+    }
+
+    function resetPageIfRequested(){
+      try{
+        const params = new URLSearchParams(window.location.search);
+        if(params.get("reset") === "1"){
+          clearConsultationFormState();
+          if(window.history && window.history.replaceState){
+            const clean = window.location.pathname + (window.location.hash || "");
+            window.history.replaceState({}, document.title, clean);
+          }
+        }
+      }catch(e){}
+    }
+
 function applyFitzResult(payload){
       if(!payload) return;
       const type = (payload.fitz || payload.fitzpatrick || payload.type || "").toString().trim();
@@ -979,6 +1018,8 @@ if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = St
       }catch(e){}
     }
 
+        resetPageIfRequested();
+
     // Load saved result (if they did the test earlier)
     try{
       const savedType = localStorage.getItem("bare_fitz_type");
@@ -997,7 +1038,7 @@ if(savedScore) fitzScoreEl.value = savedScore;
     if(openFitzBtn){
       openFitzBtn.addEventListener("click", () => {
         // Pass a hint so the test knows it was launched from consultation
-        window.open("fitzpatrick.html?from=consultation", "_blank");
+        window.open("fitzpatrick.html?reset=1&from=consultation", "_blank");
       });
     }
 
@@ -1008,9 +1049,7 @@ if(savedScore) fitzScoreEl.value = savedScore;
         if(fitzDescEl){ fitzDescEl.value = "Not completed yet"; }
         fitzScoreEl.value = "";
         try{
-          localStorage.removeItem("bare_fitz_type");
-          localStorage.removeItem("bare_fitz_score");
-          localStorage.removeItem("bare_fitz_label");
+          clearBareStoredFitz();
         }catch(e){}
       });
     }
@@ -1070,10 +1109,7 @@ syncFitzFromStorage();
     }
 
     resetBtn.addEventListener("click", () => {
-      form.reset();
-      statusEl.style.display = "none";
-      statusEl.className = "";
-      statusEl.textContent = "";
+      clearConsultationFormState();
     });
 
     form.addEventListener("submit", async (e) => {
