@@ -927,6 +927,98 @@ letter-spacing:.02em;
   .contact-form-grid{ grid-template-columns:1fr; }
 }
 
+
+
+/* Success popup */
+.success-popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.42);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  z-index:9999;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .28s ease, visibility .28s ease;
+}
+.success-popup.show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.success-card{
+  width:min(460px, 100%);
+  background:rgba(202,205,198,.98);
+  border:1px solid rgba(36,34,26,.14);
+  border-radius:24px;
+  box-shadow:0 28px 70px rgba(0,0,0,.24);
+  padding:34px 28px;
+  text-align:center;
+  transform:translateY(14px) scale(.98);
+  transition:transform .32s ease;
+}
+.success-popup.show .success-card{
+  transform:translateY(0) scale(1);
+}
+.success-check{
+  width:72px;
+  height:72px;
+  margin:0 auto 18px;
+  border-radius:999px;
+  background:var(--brand);
+  color:var(--body);
+  display:grid;
+  place-items:center;
+  font-size:34px;
+  font-weight:700;
+  box-shadow:0 12px 28px rgba(94,105,89,.28);
+  transform:scale(.7);
+  opacity:0;
+}
+.success-popup.show .success-check{
+  animation:popCheck .5s ease forwards;
+}
+.success-card h3{
+  margin:0 0 10px;
+  font-size:28px;
+  line-height:1.2;
+  color:var(--heading-dark);
+}
+.success-card p{
+  margin:0;
+  font-size:15px;
+  line-height:1.6;
+  color:var(--heading-dark);
+}
+.success-small{
+  margin-top:16px;
+  font-size:13px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--heading-muted);
+  opacity:.92;
+}
+@keyframes popCheck{
+  0%{ transform:scale(.55); opacity:0; }
+  60%{ transform:scale(1.12); opacity:1; }
+  100%{ transform:scale(1); opacity:1; }
+}
+@media (max-width: 980px){
+  .success-popup{
+    padding:18px;
+  }
+  .success-card{
+    padding:30px 22px;
+    border-radius:20px;
+  }
+  .success-card h3{
+    font-size:24px;
+  }
+}
+
 </style>
 </head>
 
@@ -1443,7 +1535,7 @@ text-align:center;
 
 <div class="contact-trust">Safe • Medical-grade laser • Personalised treatment</div>
 
-        <form action="https://formspree.io/f/mqedvnlp" method="POST" style="
+        <form id="contact-form" action="https://formspree.io/f/mqedvnlp" method="POST" style="
           display:flex;
           flex-direction:column;
           gap:12px;
@@ -1481,6 +1573,8 @@ text-align:center;
 
         </form>
 
+        <p id="contact-status" style="display:none;"></p>
+
         <img src="assets/contact-arm.jpg"
              alt="Laser tattoo removal fading results consultation South Oxfordshire"
              style="width:100%;margin-top:12px;border-radius:12px;">
@@ -1493,6 +1587,17 @@ text-align:center;
 
 </section>
   </main>
+
+  <div id="success-popup" class="success-popup" aria-hidden="true">
+    <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
+      <div class="success-check">✓</div>
+      <h3 id="success-title">Enquiry Sent</h3>
+      <p>Thank you for getting in touch.<br>We will contact you shortly.</p>
+      <div class="success-small">Returning you to the website…</div>
+    </div>
+  </div>
+
+
 <a class="floating-cta" href="consultation.html?reset=1">
   <span class="dot"></span>
   Book Consultation
@@ -1501,6 +1606,7 @@ text-align:center;
   © BARE by Marlese — Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire |
   <a href="privacy.html" style="color:#878274;">Privacy Policy</a>
 </footer>
+
 
 <script>
 (function(){
@@ -1524,7 +1630,55 @@ text-align:center;
     if(!el) return;
     el.addEventListener("click", clearBareFormState);
   });
+
+  var contactForm = document.getElementById("contact-form");
+  var contactStatus = document.getElementById("contact-status");
+  var successPopup = document.getElementById("success-popup");
+
+  function setContactStatus(msg, type){
+    if(!contactStatus) return;
+    contactStatus.textContent = msg;
+    contactStatus.className = type || "";
+    contactStatus.style.display = "block";
+  }
+
+  if(contactForm){
+    contactForm.addEventListener("submit", async function(e){
+      e.preventDefault();
+
+      setContactStatus("Sending…", "success");
+
+      var data = new FormData(contactForm);
+
+      try{
+        var res = await fetch(contactForm.action, {
+          method: "POST",
+          body: data,
+          headers: { "Accept": "application/json" }
+        });
+
+        if(res.ok){
+          if(contactStatus) contactStatus.style.display = "none";
+          contactForm.reset();
+
+          if(successPopup){
+            successPopup.classList.add("show");
+            successPopup.setAttribute("aria-hidden", "false");
+          }
+
+          setTimeout(function(){
+            window.location.href = "index.html";
+          }, 3000);
+        }else{
+          setContactStatus("Oops — there was a problem sending your enquiry. Please try again.", "error");
+        }
+      }catch(err){
+        setContactStatus("Oops — connection error. Please try again.", "error");
+      }
+    });
+  }
 })();
 </script>
+
 </body>
 </html>
