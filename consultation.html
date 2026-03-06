@@ -484,10 +484,8 @@ header .logo *{
 
               <label class="con-label">Your Fitzpatrick skin type</label>
               <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-  <input class="con-input" type="text" id="fitzpatrick_code" placeholder="—" readonly style="flex:0 0 90px; text-align:center; font-weight:700; letter-spacing:.06em;">
-  <div id="fitzpatrick_desc" style="flex:1 1 260px; padding:12px; border-radius:12px; border:1px solid rgba(36,34,26,.22); background: rgba(202,205,198,.65); color: var(--heading-dark); line-height:1.35; font-size:13px; opacity:.9;">
-    Not completed yet
-  </div>
+  <input class="con-input" type="text" id="fitzpatrick_code" placeholder="Type" readonly style="flex:0 0 110px; text-align:center; font-weight:700; letter-spacing:.06em;">
+  <input class="con-input" type="text" id="fitzpatrick_label" placeholder="Not completed yet" readonly style="flex:1 1 360px;">
 
   <input type="hidden" name="fitzpatrick" id="fitzpatrick_value" value="">
   <button type="button" class="con-btn con-btn-ghost" id="open-fitz-btn" style="flex:0 0 auto;">TAKE FITZPATRICK TEST</button>
@@ -890,7 +888,7 @@ header .logo *{
       "VI": "Type VI — Dark brown/black skin, never burns"
     };
     const fitzDisplayEl = document.getElementById("fitzpatrick_code");
-    const fitzDescEl = document.getElementById("fitzpatrick_desc");
+    const fitzDescEl = document.getElementById("fitzpatrick_label");
 function applyFitzResult(payload){
       if(!payload) return;
       const type = (payload.fitz || payload.fitzpatrick || payload.type || "").toString().trim();
@@ -906,7 +904,7 @@ function applyFitzResult(payload){
       if(fitzDisplayEl){ fitzDisplayEl.value = norm; }
       if(fitzDescEl){
         const lbl = (payload.label || "").toString().trim();
-        fitzDescEl.textContent = lbl || fitzLabelMap[norm] || ("Type " + norm);
+        fitzDescEl.value = lbl || fitzLabelMap[norm] || ("Type " + norm);
       }
 if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
 
@@ -928,7 +926,7 @@ if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = St
         fitzValueEl.value = savedType;
         
         if(fitzDisplayEl){ fitzDisplayEl.value = savedType; }
-        if(fitzDescEl){ fitzDescEl.textContent = savedLabel || fitzLabelMap[savedType] || ("Type " + savedType); }
+        if(fitzDescEl){ fitzDescEl.value = savedLabel || fitzLabelMap[savedType] || ("Type " + savedType); }
 if(savedScore) fitzScoreEl.value = savedScore;
       }
     }catch(e){}
@@ -945,7 +943,7 @@ if(savedScore) fitzScoreEl.value = savedScore;
       clearFitzBtn.addEventListener("click", () => {
         fitzValueEl.value = "";
         if(fitzDisplayEl){ fitzDisplayEl.value = ""; }
-        if(fitzDescEl){ fitzDescEl.textContent = "Not completed yet"; }
+        if(fitzDescEl){ fitzDescEl.value = "Not completed yet"; }
         fitzScoreEl.value = "";
         try{
           localStorage.removeItem("bare_fitz_type");
@@ -997,8 +995,6 @@ window.addEventListener("storage", (e) => {
 
 // Run once in case the result was already saved
 syncFitzFromStorage();
-
-});
 
     const form = document.getElementById("consultation-form");
     const statusEl = document.getElementById("status");
