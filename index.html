@@ -67,6 +67,7 @@
       font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--heading-dark);
+      padding-top:90px;
     }
 
 
@@ -85,11 +86,13 @@
 
     /* Top nav */
     .nav{
-      position: sticky;
+      position: fixed;
       top:0;
-      z-index: 50;
+      left:0;
+      width:100%;
+      z-index:1000;
       backdrop-filter: blur(8px);
-      background: rgba(202,205,198,.86);
+      background: rgba(202,205,198,.92);
       border-bottom: 1px solid rgba(36,34,26,.15);
     }
     .nav-inner{
