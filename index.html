@@ -929,6 +929,167 @@ letter-spacing:.02em;
 
 
 
+
+/* PREMIUM BOOKING SECTION */
+.booking-shell{
+  margin: 8px 0 22px;
+  padding: 22px;
+  border: 1px solid rgba(202,205,198,.12);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(202,205,198,.06), rgba(202,205,198,.02));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+.booking-kicker{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:#878274;
+  margin-bottom:8px;
+}
+.booking-title{
+  text-align:center;
+  color:#cacdc6;
+  font-size:26px;
+  font-weight:600;
+  margin:0 0 8px;
+}
+.booking-intro{
+  text-align:center;
+  color:#cacdc6;
+  opacity:.84;
+  max-width:620px;
+  margin:0 auto 18px;
+  line-height:1.6;
+  font-size:14px;
+}
+.booking-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.booking-card{
+  background: rgba(202,205,198,.06);
+  border:1px solid rgba(202,205,198,.14);
+  border-radius:18px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  min-height:100%;
+}
+.booking-card-top{
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:#878274;
+  margin-bottom:8px;
+}
+.booking-card h3{
+  margin:0 0 10px;
+  color:#cacdc6;
+  font-size:20px;
+  line-height:1.2;
+}
+.booking-card p{
+  margin:0 0 14px;
+  color:#cacdc6;
+  opacity:.84;
+  font-size:14px;
+  line-height:1.6;
+  flex:1;
+}
+.booking-points{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:0 0 16px;
+}
+.booking-points span{
+  display:inline-flex;
+  align-items:center;
+  padding:7px 12px;
+  border-radius:999px;
+  background: rgba(202,205,198,.08);
+  border:1px solid rgba(202,205,198,.12);
+  color:#cacdc6;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.booking-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:54px;
+  padding:0 20px;
+  border-radius:999px;
+  background:#5e6959;
+  color:#cacdc6;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.booking-btn:hover{
+  filter: brightness(.97);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(0,0,0,.22);
+}
+.booking-note{
+  text-align:center;
+  margin-top:16px;
+  color:#878274;
+  font-size:12px;
+  letter-spacing:.08em;
+  line-height:1.6;
+}
+.hero-book-wrap{
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+}
+.hero-book-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:56px;
+  padding:0 28px;
+  border-radius:999px;
+  background:#5e6959;
+  color:#cacdc6;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow: 0 16px 38px rgba(0,0,0,.18);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.hero-book-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 20px 46px rgba(0,0,0,.22);
+  filter: brightness(.97);
+}
+@media (max-width:980px){
+  .booking-grid{
+    grid-template-columns:1fr;
+  }
+  .booking-shell{
+    padding:18px;
+  }
+  .booking-title{
+    font-size:24px;
+  }
+  .hero-book-wrap{
+    width:100%;
+  }
+  .hero-book-btn{
+    width:100%;
+    max-width:320px;
+  }
+}
+
+
 /* Success popup */
 .success-popup{
   position:fixed;
@@ -1111,8 +1272,8 @@ letter-spacing:.02em;
 Free consultation • Personalised treatment plan
 </div>
 
-  <div style="margin-top:18px;">
-    <a class="forms-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Appointment</a>
+  <div class="hero-book-wrap">
+    <a class="hero-book-btn" href="#contact">Book Appointment</a>
   </div>
 
   
@@ -1539,8 +1700,46 @@ text-align:center;
 
 <div class="contact-trust">Safe • Medical-grade laser • Personalised treatment</div>
 
-        <div style="display:flex;justify-content:center;margin: 6px 0 18px;">
-          <a class="forms-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Appointment</a>
+        <div class="booking-shell">
+          <div class="booking-kicker">Online Booking</div>
+          <h3 class="booking-title">Book your appointment with BARE by Marlese</h3>
+          <p class="booking-intro">
+            Start with the right appointment for your stage. New clients should book a consultation and patch test first. Returning clients can book treatment once consultation has been completed.
+          </p>
+
+          <div class="booking-grid">
+            <div class="booking-card">
+              <div class="booking-card-top">New Clients</div>
+              <h3>Consultation &amp; Patch Test</h3>
+              <p>
+                A calm, personalised first appointment including consultation, skin assessment and patch test where appropriate, so your treatment plan is safe, informed and tailored to you.
+              </p>
+              <div class="booking-points">
+                <span>35 Minutes</span>
+                <span>Consultation First</span>
+                <span>Patch Test Included</span>
+              </div>
+              <a class="booking-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Consultation</a>
+            </div>
+
+            <div class="booking-card">
+              <div class="booking-card-top">Existing Clients</div>
+              <h3>Laser Treatment Session</h3>
+              <p>
+                For existing clients only who have already completed their consultation and patch test. Use this option for ongoing laser tattoo removal treatment appointments.
+              </p>
+              <div class="booking-points">
+                <span>Returning Clients</span>
+                <span>24 Hr Notice</span>
+                <span>Manage Online</span>
+              </div>
+              <a class="booking-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Treatment</a>
+            </div>
+          </div>
+
+          <div class="booking-note">
+            Online booking powered by Google Calendar • 24 hours’ notice required for changes • Manage your booking from your confirmation email
+          </div>
         </div>
 
         <form id="contact-form" action="https://formspree.io/f/mqedvnlp" method="POST" style="
