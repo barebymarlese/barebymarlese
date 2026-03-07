@@ -917,16 +917,6 @@ letter-spacing:.02em;
   line-height: 1.35;
 }
 
-/* Contact form grid: 2 columns desktop, 1 column mobile */
-.contact-form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-@media (max-width:520px){
-  .contact-form-grid{ grid-template-columns:1fr; }
-}
-
 
 
 
@@ -1089,96 +1079,6 @@ letter-spacing:.02em;
   }
 }
 
-
-/* Success popup */
-.success-popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.42);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  z-index:9999;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  transition:opacity .28s ease, visibility .28s ease;
-}
-.success-popup.show{
-  opacity:1;
-  visibility:visible;
-  pointer-events:auto;
-}
-.success-card{
-  width:min(460px, 100%);
-  background:rgba(202,205,198,.98);
-  border:1px solid rgba(36,34,26,.14);
-  border-radius:24px;
-  box-shadow:0 28px 70px rgba(0,0,0,.24);
-  padding:34px 28px;
-  text-align:center;
-  transform:translateY(14px) scale(.98);
-  transition:transform .32s ease;
-}
-.success-popup.show .success-card{
-  transform:translateY(0) scale(1);
-}
-.success-check{
-  width:72px;
-  height:72px;
-  margin:0 auto 18px;
-  border-radius:999px;
-  background:var(--brand);
-  color:var(--body);
-  display:grid;
-  place-items:center;
-  font-size:34px;
-  font-weight:700;
-  box-shadow:0 12px 28px rgba(94,105,89,.28);
-  transform:scale(.7);
-  opacity:0;
-}
-.success-popup.show .success-check{
-  animation:popCheck .5s ease forwards;
-}
-.success-card h3{
-  margin:0 0 10px;
-  font-size:28px;
-  line-height:1.2;
-  color:var(--heading-dark);
-}
-.success-card p{
-  margin:0;
-  font-size:15px;
-  line-height:1.6;
-  color:var(--heading-dark);
-}
-.success-small{
-  margin-top:16px;
-  font-size:13px;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-  color:var(--heading-muted);
-  opacity:.92;
-}
-@keyframes popCheck{
-  0%{ transform:scale(.55); opacity:0; }
-  60%{ transform:scale(1.12); opacity:1; }
-  100%{ transform:scale(1); opacity:1; }
-}
-@media (max-width: 980px){
-  .success-popup{
-    padding:18px;
-  }
-  .success-card{
-    padding:30px 22px;
-    border-radius:20px;
-  }
-  .success-card h3{
-    font-size:24px;
-  }
-}
 
 </style>
 </head>
@@ -1675,11 +1575,11 @@ text-align:center;
 
 
 <div class="contact-links" aria-label="Contact links">
-  <a href="mailto:marlese@barebymarlese.com" class="contact-icon" aria-label="Email">
+  <a href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener" class="contact-icon" aria-label="Book Appointment">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/>
     </svg>
-    <span>Email</span>
+    <span>Book</span>
   </a>
 
   <a href="https://www.instagram.com/barebymarlese/" target="_blank" rel="noopener noreferrer" class="contact-icon" aria-label="Instagram">
@@ -1742,49 +1642,9 @@ text-align:center;
           </div>
         </div>
 
-        <form id="contact-form" action="https://formspree.io/f/mqedvnlp" method="POST" style="
-          display:flex;
-          flex-direction:column;
-          gap:12px;
-          margin-bottom:16px;
-        ">
-
-          <input type="hidden" name="_subject" value="New enquiry — BARE by Marlese">
-          <input type="text" name="_gotcha" style="display:none">
-
-          <div class="contact-form-grid">
-            <input type="text" name="name" placeholder="Full Name *" required
-              style="padding:12px;border-radius:8px;border:1px solid #878274;background:#1a1914;color:#cacdc6;">
-
-            <input type="email" name="email" placeholder="Email Address *" required
-              style="padding:12px;border-radius:8px;border:1px solid #878274;background:#1a1914;color:#cacdc6;">
-
-            <input type="tel" name="phone" placeholder="Contact Number *"
-              style="padding:12px;border-radius:8px;border:1px solid #878274;background:#1a1914;color:#cacdc6;">
-          </div>
-
-          <textarea name="message" rows="4"
-            placeholder="Tell me about your tattoo (size, location, colours, age)… *"
-            required
-            style="padding:12px;border-radius:8px;border:1px solid #878274;background:#1a1914;color:#cacdc6;"></textarea>
-
-          <label style="display:flex;gap:8px;font-size:13px;line-height:1.4;">
-            <input type="checkbox" name="gdpr_consent" value="Yes" required>
-            <span>I consent to BARE by Marlese storing my details to respond to my enquiry (GDPR).</span>
-          </label>
-
-          <button type="submit"
-            style="background:#5e6959;color:#cacdc6;border:none;padding:12px;border-radius:30px;font-weight:600;cursor:pointer;">
-            SEND ENQUIRY
-          </button>
-
-        </form>
-
-        <p id="contact-status" style="display:none;"></p>
-
         <img src="assets/contact-arm.jpg"
              alt="Laser tattoo removal fading results consultation South Oxfordshire"
-             style="width:100%;margin-top:12px;border-radius:12px;">
+             style="width:100%;margin-top:8px;border-radius:12px;">
 
       </div>
 
@@ -1794,16 +1654,6 @@ text-align:center;
 
 </section>
   </main>
-
-  <div id="success-popup" class="success-popup" aria-hidden="true">
-    <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
-      <div class="success-check">✓</div>
-      <h3 id="success-title">Enquiry Sent</h3>
-      <p>Thank you for getting in touch.<br>We will contact you shortly.</p>
-      <div class="success-small">Returning you to the website…</div>
-    </div>
-  </div>
-
 
 <a class="floating-cta" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">
   <span class="dot"></span>
