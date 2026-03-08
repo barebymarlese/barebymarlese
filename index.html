@@ -67,7 +67,6 @@
       font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--heading-dark);
-      padding-top:90px;
     }
 
 
@@ -86,13 +85,11 @@
 
     /* Top nav */
     .nav{
-      position: fixed;
+      position: sticky;
       top:0;
-      left:0;
-      width:100%;
-      z-index:1000;
+      z-index: 50;
       backdrop-filter: blur(8px);
-      background: rgba(202,205,198,.92);
+      background: rgba(202,205,198,.86);
       border-bottom: 1px solid rgba(36,34,26,.15);
     }
     .nav-inner{
@@ -1176,7 +1173,7 @@ Free consultation • Personalised treatment plan
 </div>
 
   <div class="hero-book-wrap">
-    <a class="hero-book-btn" href="#contact">Book Appointment</a>
+    <a class="hero-book-btn" href="#contact">Book Consultation</a>
   </div>
 
   
@@ -1578,7 +1575,7 @@ text-align:center;
 
 
 <div class="contact-links" aria-label="Contact links">
-  <a href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener" class="contact-icon" aria-label="Book Appointment">
+  <a href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener" class="contact-icon" aria-label="Book Consultation">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/>
     </svg>
@@ -1607,7 +1604,7 @@ text-align:center;
           <div class="booking-kicker">Online Booking</div>
           <h3 class="booking-title">Book your appointment with BARE by Marlese</h3>
           <p class="booking-intro">
-            Start with the right appointment for your stage. New clients should book a consultation and patch test first. Returning clients can book treatment once consultation has been completed.
+            All clients begin with a consultation and patch test. This allows your skin type, tattoo characteristics and treatment plan to be assessed safely before any laser sessions begin.
           </p>
 
           <div class="booking-grid">
@@ -1625,19 +1622,7 @@ text-align:center;
               <a class="booking-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Consultation</a>
             </div>
 
-            <div class="booking-card">
-              <div class="booking-card-top">Existing Clients</div>
-              <h3>Laser Treatment Session</h3>
-              <p>
-                For existing clients only who have already completed their consultation and patch test. Use this option for ongoing laser tattoo removal treatment appointments.
-              </p>
-              <div class="booking-points">
-                <span>Returning Clients</span>
-                <span>24 Hr Notice</span>
-                <span>Manage Online</span>
-              </div>
-              <a class="booking-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Treatment</a>
-            </div>
+            
           </div>
 
           <div class="booking-note">
@@ -1660,7 +1645,7 @@ text-align:center;
 
 <a class="floating-cta" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">
   <span class="dot"></span>
-  Book Appointment
+  Book Consultation
 </a>
   <footer>
   © BARE by Marlese — Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire |
