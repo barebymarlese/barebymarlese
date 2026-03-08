@@ -211,7 +211,7 @@
       text-transform: uppercase;
     }
     .hero-brand .divider{
-      width:1px; height:54px; background: rgba(36,34,26,.3);
+      width:1px; min-height:54px; background: rgba(36,34,26,.3);
     }
     .hero-brand .by{
       color: var(--heading-muted);
@@ -512,7 +512,7 @@ letter-spacing:.02em;
       justify-content:center;
       width:100%;
       max-width:260px;
-      height:54px;
+      min-height:54px;
       margin:12px auto 0;
       padding:0 22px;
       background: var(--brand);
@@ -522,7 +522,7 @@ letter-spacing:.02em;
       letter-spacing:.06em;
       text-decoration:none;
       text-align:center;
-      white-space:nowrap;
+      white-space:normal; line-height:1.2; padding:10px 18px;
       box-sizing:border-box;
       transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
     }
@@ -804,7 +804,7 @@ letter-spacing:.02em;
   border-radius:20px;
   font-size:14px;
   display:inline-block;
-  white-space:nowrap;
+  white-space:normal; line-height:1.2; padding:10px 18px;
 }
 /* AFTERCARE ALIGNMENT FIX (cards + content aligned) */
 #aftercare .wrap > div{
@@ -1060,7 +1060,7 @@ letter-spacing:.02em;
   align-items:center;
   justify-content:center;
   width:100%;
-  min-height:54px;
+  min-min-height:54px;
   padding:0 20px;
   border-radius:999px;
   background:#5e6959;
