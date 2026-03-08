@@ -1162,9 +1162,10 @@ header .logo *{
         statusNode.className = "";
         statusNode.textContent = "";
       }
-      if(successPopup){
-        successPopup.classList.remove("show");
-        successPopup.setAttribute("aria-hidden", "true");
+      const popupEl = document.getElementById("success-popup");
+      if(popupEl){
+        popupEl.classList.remove("show");
+        popupEl.setAttribute("aria-hidden", "true");
       }
       try{
         updateColourScoring();
@@ -1425,7 +1426,7 @@ if(res.ok){
   }
 
   setTimeout(() => {
-    window.location.href = "https://calendar.app.google/ArSSzdv4s7CF759Q7";
+    window.location.replace("https://calendar.app.google/ArSSzdv4s7CF759Q7");
   }, 4000);
 
 }else{
