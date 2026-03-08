@@ -1110,8 +1110,8 @@ header .logo *{
     <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
       <div class="success-check">✓</div>
       <h3 id="success-title">Consultation Submitted</h3>
-      <p>Thank you for submitting your consultation.<br>We will contact you shortly.</p>
-      <div class="success-small">Returning you to the website…</div>
+      <p>Thank you for completing your consultation.<br>You will now be redirected to book your consultation and patch test appointment.</p>
+      <div class="success-small">Redirecting to booking…</div>
     </div>
   </div>
 
@@ -1425,7 +1425,7 @@ if(res.ok){
   }
 
   setTimeout(() => {
-    window.location.href = "index.html";
+    window.location.href = "https://calendar.app.google/ArSSzdv4s7CF759Q7";
   }, 3000);
 
 }else{
@@ -1437,38 +1437,6 @@ if(res.ok){
 }
     });
   </script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-const form=document.getElementById("consultation-form");
-if(!form) return;
-form.addEventListener("submit",function(e){
-e.preventDefault();
-const data=new FormData(form);
-fetch(form.action,{method:"POST",body:data,headers:{'Accept':'application/json'}})
-.then(()=>{
-const popup=document.createElement("div");
-popup.style.position="fixed";
-popup.style.inset="0";
-popup.style.background="rgba(0,0,0,.5)";
-popup.style.display="flex";
-popup.style.alignItems="center";
-popup.style.justifyContent="center";
-popup.style.zIndex="9999";
-popup.innerHTML=`
-<div style="background:#cacdc6;padding:40px;border-radius:18px;text-align:center;max-width:420px;">
-<h3 style="margin-top:0;">Consultation Submitted</h3>
-<p>Your consultation form has been received.<br>You can now book your appointment.</p>
-<a href="https://calendar.app.google.com/calendar/u/0/appointments"
-style="display:inline-block;margin-top:16px;padding:14px 22px;border-radius:999px;background:#5e6959;color:#cacdc6;font-weight:700;text-decoration:none;">
-Book Appointment
-</a>
-</div>`;
-document.body.appendChild(popup);
-});
-});
-});
-</script>
 
 </body>
 </html>
