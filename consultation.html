@@ -3,87 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BARE by Marlese — Professional Laser Tattoo Removal South Oxfordshire</title>
-  
-<meta name="description" content="VTCT Level 5 Certified Laser Tattoo Removal Specialist in South Oxfordshire. Safe, professional tattoo removal serving Henley-on-Thames, Wallingford and Didcot. Book a consultation." />
-<link rel="canonical" href="https://barebymarlese.com/" />
-<meta property="og:title" content="Laser Tattoo Removal South Oxfordshire | BARE by Marlese" />
-<meta property="og:description" content="VTCT Level 5 Certified. Safe, professional laser tattoo removal serving Henley, Wallingford and Didcot. Book a consultation." />
-<meta property="og:url" content="https://barebymarlese.com/" />
-<meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="theme-color" content="#cacdc6" />
+  <title>Consultation Form | BARE by Marlese</title>
 
-<!-- LOCAL SEO STRUCTURED DATA -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "MedicalBusiness",
-  "name": "BARE by Marlese",
-  "image": "https://barebymarlese.com/assets/hero-torso.png",
-  "url": "https://barebymarlese.com",
-  "telephone": "+44",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "South Oxfordshire",
-    "addressRegion": "Oxfordshire",
-    "addressCountry": "GB"
-  },
-  "areaServed": [
-    "Henley-on-Thames",
-    "Wallingford",
-    "Didcot",
-    "South Oxfordshire"
-  ],
-  "description": "VTCT Level 5 Certified Laser Tattoo Removal Specialist offering professional tattoo removal consultations and treatments in South Oxfordshire.",
-  "priceRange": "££",
-  "sameAs": [
-    "https://www.instagram.com/barebymarlese"
-  ]
-}
-</script>
-  
-  <!-- Fonts (similar clean, modern look) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg: #cacdc6;
-      --heading-muted: #878274;
-      --heading-dark: #24221a;
-      --body: #cacdc6;          /* per your spec: “other writing” */
-      --brand: #5e6959;         /* BARE by Marlese */
-      --panel: #24221a;         /* dark panels so #cacdc6 body text stays readable */
-      --panel-2: rgba(36,34,26,.88);
-      --line: rgba(36,34,26,.35);
+      --bg:#cacdc6;
+      --heading-muted:#878274;
+      --heading-dark:#24221a;
+      --body:#cacdc6;
+      --brand:#5e6959;
       --shadow: 0 18px 45px rgba(0,0,0,.16);
     }
 
     *{ box-sizing:border-box; }
+    *, *::before, *::after{ min-width:0; }
+    html, body{
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+    }
     body{
       margin:0;
-      font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--heading-dark);
+      font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--heading-dark);
+      overscroll-behavior-x:none;
+      -webkit-text-size-adjust:100%;
     }
+    a{ color:inherit; }
+    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; max-width:100%; }
 
-
-    /* Lock sideways scrolling (mobile) */
-    html, body{
-      overflow-x: hidden;
-      max-width: 100%;
-    }
-    img, svg{
-      max-width: 100%;
-      height: auto;
-    }
-
-    a{ color: inherit; text-decoration: none; }
-    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; }
-
-    /* Top nav */
+    /* Nav */
     .nav{
       position: sticky;
       top:0;
@@ -100,36 +54,13 @@
       padding: 14px 0;
     }
     .logo{
-  display:flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  text-decoration:none;
-}
-
-.brand-top{
-  font-size: 12px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--heading-muted);
-  font-weight: 600;
-}
-
-.brand-main{
-  font-size: 18px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--brand);
-}
-
-.brand-location{
-  font-size: 13px;
-  letter-spacing: .04em;
-  color: var(--heading-dark);
-  opacity: .8;
-  line-height: 1.4;
-}
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      letter-spacing:.26em;
+      font-weight:600;
+      text-transform:uppercase;
+    }
     .logo .bare{ color: var(--brand); font-size: 22px; }
     .logo .by{ letter-spacing:.05em; font-weight:500; text-transform:none; color: var(--heading-muted); font-size: 14px; }
 
@@ -144,470 +75,213 @@
       flex-wrap:wrap;
       justify-content:flex-end;
     }
-    .nav-links .nav-item{ padding:8px 10px; border-radius:999px; }
+    .nav-links a{ padding:8px 10px; border-radius:999px; text-decoration:none; }
     .nav-links a:hover{ background: rgba(36,34,26,.07); }
 
-    /* Hero */
-    .hero{
-      padding: 54px 0 40px;
-    }
-
-    /* ✅ NEW: Centered hero title (matches section titles) */
-    .hero-title{
-      text-align:center;
-      margin: 0 0 26px;
-    }
-    .hero-title h1{
-      margin:0;
-      font-size: 65px;          /* per your spec */
-      line-height: 0.95;
-      letter-spacing: .01em;
-      text-shadow: 0 10px 28px rgba(0,0,0,.18);
-    }
-    .hero-title h1 .muted{ color: var(--heading-muted); font-weight:600; }
-    .hero-title h1 .dark{ color: var(--heading-dark); font-weight:700; }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 28px;
-      align-items:center;
-    }
-
-    .hero-card{
-      background: rgba(202,205,198,.55);
-      border: 1px solid rgba(36,34,26,.12);
-      border-radius: 18px;
-      padding: 18px 18px 16px;
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .hero-torso{
-      width:100%;
-      height: 340px;
-      object-fit: cover;
-      border-radius: 14px;
-      display:block;
-      filter: contrast(1.02) saturate(.95);
-    }
-    .hero-right{
-  display:flex;
-  flex-direction:column;
-  gap: 18px;
-  align-items:center;
-  text-align:center;
-}
-    .hero-brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin-top: 6px;
-    }
-    .hero-brand .bare{
-      color: var(--brand);
-      font-size: 54px;
-      letter-spacing: .28em;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    .hero-brand .divider{
-      width:1px; height:54px; background: rgba(36,34,26,.3);
-    }
-    .hero-brand .by{
-      color: var(--heading-muted);
-      letter-spacing: .06em;
-      font-weight: 500;
-      font-size: 16px;
-      text-transform:none;
-    }
-
-    .hero-meta{
-      color: var(--heading-dark);
-      opacity: .8;
-      letter-spacing: .08em;
-      font-weight: 600;
-      text-transform: uppercase;
-      line-height: 1.35;
-    }
-    .hero-locations{
-      color: var(--heading-dark);
-      opacity: .78;
-      letter-spacing: .06em;
-      line-height: 1.25;
-      font-weight: 500;
-    }
-    .hero-tagline{
-      margin-top: 14px;
-      text-align:center;
-      font-size: 12px;
-      letter-spacing: .16em;
-      color: var(--heading-dark);
-      opacity:1;
-      text-transform: uppercase;
-    }
-
-    /* Section heading */
     section{ padding: 44px 0; }
     .section-title{
       text-align:center;
-      margin: 0 0 22px;
-      font-size: 56px;
-      color: var(--heading-muted);
-      letter-spacing: .02em;
-      text-shadow: 0 10px 28px rgba(0,0,0,.16);
-      font-weight: 600;
-    }
-
-/* Policies heading hierarchy */
-.policies-title{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:6px;
-}
-
-.policies-main{
-font-size:56px;
-color: var(--heading-muted);
-font-weight:600;
-text-shadow:0 10px 28px rgba(0,0,0,.16);
-}
-
-.policies-sub{
-font-size:28px;
-color: var(--heading-dark);
-font-weight:600;
-letter-spacing:.02em;
-}
-
-
-    /* Services */
-    .services-cards{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 22px;
-      align-items:stretch;
-      margin-top: 20px;
-    }
-    .services-grid{
-      display:grid;
-      grid-template-columns: 280px 1fr;
-      gap: 26px;
-      align-items:stretch;
-    }
-    .portrait{
-      width:100%;
-      height: 420px;
-      object-fit: cover;
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.15);
-      filter: grayscale(1) contrast(1.04);
-      background: #ddd;
-    }
-    .service-panels{
-      display:flex;
-      flex-direction:column;
-      gap: 16px;
-    }
-    .triple{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 0;
-      border-radius: 18px;
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
-    }
-    .panel{
-      padding: 24px 26px;
-      border-right: 1px solid rgba(36,34,26,.12);
-      min-height: 200px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:flex-start;
-      text-align:center;
-    }
-    .panel:last-child{ border-right: none; }
-    .panel h3{
-      margin: 0 0 14px;
-      color: var(--heading-dark);
-      font-size: 16px;
-      font-weight: 700;
-      line-height:1.2;
-    }
-    .panel p{
-      margin:0;
-      color: var(--heading-dark);
-      opacity:.86;
-      font-size: 14px;
-      line-height:1.6;
-      max-width:240px;
-    }
-
-    .aftercare{
-      border-radius: 18px;
-      padding: 18px 22px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
-      text-align:center;
-    }
-    .aftercare h3{
-      margin: 0 0 10px;
-      color: var(--heading-dark);
-      font-size: 16px;
-      font-weight: 700;
-    }
-    .aftercare p{
-      margin:0;
-      color: var(--heading-dark);
-      opacity:.86;
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    /* Price list */
-    .price-grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:22px;
-  align-items:stretch;
-  max-width:820px;
-  margin:0 auto;
-}
-    .price-col{
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
-      padding: 18px 18px 14px;
-    }
-    .price-row{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(36,34,26,.18);
-    }
-    .price-row:last-child{ border-bottom:none; }
-    .price-name{
-      font-weight: 500;
-      letter-spacing: .12em;
-      text-transform:none;
-      color: var(--heading-dark);
-    }
-    .price-amt{
-      font-weight: 600;
-      letter-spacing:.04em;
-      color: var(--heading-dark);
-    }
-    .price-size{
-      margin-top: -2px;
-      font-size: 12px;
-      letter-spacing:.06em;
-      opacity:.8;
-      color: var(--heading-dark);
-    }
-    .price-amt-stack{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  line-height:1.15;
-  min-height:32px;
-}
-
-.save-spacer{
-  visibility:hidden;
-}
-.price-note{
-  border-radius:18px;
-  box-shadow: var(--shadow);
-  border:1px solid rgba(36,34,26,.16);
-  background: rgba(202,205,198,.45);
-  padding:18px 18px 16px;
-  max-width:820px;
-  margin:22px auto 0;
-}
-    .price-note p{
-      margin:0 0 12px;
-      color: var(--heading-dark);
-      opacity:.9;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .bundle-top{
-  text-align:right;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--heading-dark);
-  opacity:.85;
-  font-size: 12px;
-  margin-bottom: 10px;
-  min-height:40px;   /* ADD THIS */
-}
-
-.single-top{
-  text-align:right;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--heading-dark);
-  opacity:.85;
-  font-size: 12px;
-  margin-bottom: 10px;
-  min-height:40px;   /* ADD THIS */
-}
-    .save{
-      font-size: 12px;
-      letter-spacing:.12em;
-      text-transform: uppercase;
-      opacity: .8;
-      color: var(--heading-dark);
-    }
-
-    /* Forms (Skin Test + Consultation) */
-    .forms-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-      align-items:stretch;
-    }
-    .forms-card{
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
-      padding: 18px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    /* FAQ heading alignment fix */
-#faq .forms-card h3{
-  min-height:3em;
-  line-height:1.2;
-}
-    .forms-title{
-      font-weight: 800;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      font-size: 12px;
-      color: var(--heading-dark);
-      opacity: .9;
-    }
-    .forms-desc{
-      color: var(--heading-dark);
-      opacity:.86;
-      font-size:14px;
-      line-height:1.5;
-    }
-    .forms-btn{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:100%;
-      max-width:260px;
-      height:54px;
-      margin:12px auto 0;
-      padding:0 22px;
-      background: var(--brand);
-      color: var(--body);
-      border-radius:999px;
-      font-weight: 700;
-      letter-spacing:.06em;
-      text-decoration:none;
-      text-align:center;
-      white-space:nowrap;
-      box-sizing:border-box;
-      transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
-    }
-
-.forms-btn:hover{
-      filter: brightness(.96);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    }
-    .forms-small{
-      font-size: 12px;
-      opacity:.75;
-      margin-top: 2px;
-    }
-    .forms-note{
-      margin-top: 16px;
-      text-align:center;
-      font-size: 12px;
-      opacity:.78;
-    }
-
-
-    /* Contact */
-    .contact-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-      align-items:stretch;
-    }
-    .contact-left{
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
-      padding: 18px;
-      position: relative;
-      overflow:hidden;
-      min-height: 420px;
-    }
-    .contact-left h2{
       margin: 0 0 18px;
       font-size: 56px;
       color: var(--heading-muted);
-      font-weight: 600;
-      text-shadow: 0 10px 28px rgba(0,0,0,.16);
       letter-spacing: .02em;
+      text-shadow: 0 10px 28px rgba(0,0,0,.16);
+      font-weight: 600;
     }
-    .contact-arm{
-      position:absolute;
-      left:-24px;
-      bottom:-8px;
-      width: calc(100% + 120px);
-      max-width:none;
-      opacity: .98;
-      filter: saturate(.98) contrast(1.02);
-    }
-    .contact-email{
-      position:absolute;
-      right: 18px;
-      top: 180px;
-      text-align:left;
-      color: var(--heading-dark);
-      opacity:.85;
+    .subnote{
+      text-align:center;
+      margin: 0 auto 22px;
+      max-width: 820px;
+      opacity: .86;
+      line-height: 1.55;
       font-size: 14px;
-      line-height: 1.4;
     }
-    .contact-email strong{ font-weight: 600; }
 
-    .contact-right{
+    /* Card + form */
+    .con-card{
+      background: rgba(202,205,198,.55);
+      border: 1px solid rgba(36,34,26,.16);
       border-radius: 18px;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      overflow:hidden;
-      min-height: 420px;
-      background:#111;
-    }
-    .contact-boat{
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      display:block;
-      filter: grayscale(1) contrast(1.02);
+      padding: 22px;
     }
 
-    /* Footer */
+    .con-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .con-input, .con-select, .con-textarea{
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      padding: 12px;
+      font-size:16px;
+      -webkit-appearance:none;
+      appearance:none;
+      border-radius: 12px;
+      border: 1px solid rgba(36,34,26,.22);
+      background: rgba(202,205,198,.65);
+      color: var(--heading-dark);
+      font-family: inherit;
+      outline: none;
+    }
+    .con-textarea{ min-height: 90px; resize: vertical; overflow-wrap:anywhere; word-break:break-word; }
+
+    .con-input:focus, .con-select:focus, .con-textarea:focus{
+      border-color: rgba(94,105,89,.7);
+      box-shadow: 0 0 0 3px rgba(94,105,89,.22);
+    }
+
+    .con-section{
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(36,34,26,.14);
+      background: rgba(202,205,198,.40);
+    }
+    .con-h3{
+      margin: 0 0 10px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--heading-dark);
+      opacity: .85;
+    }
+    .con-label{
+      display:block;
+      margin: 12px 0 6px;
+      font-weight: 700;
+      font-size: 13px;
+      opacity: .9;
+    }
+
+    .con-field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
+    }
+    .con-field .con-label{
+      margin:0;
+    }
+    input[type="date"].con-input{
+      min-height:50px;
+      line-height:1.2;
+      color: var(--heading-dark);
+      -webkit-appearance:none;
+      appearance:none;
+    }
+    input[type="date"].con-input::-webkit-date-and-time-value{
+      text-align:left;
+    }
+
+    /* Ticks / radios (same style as Fitz) */
+    .con-options{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 12px;
+      margin-top: 10px;
+    }
+    .con-opt{
+      display:flex;
+      align-items:flex-start;
+      width:100%;
+      max-width:100%;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(36,34,26,.12);
+      background: rgba(202,205,198,.55);
+      cursor:pointer;
+      user-select:none;
+      line-height: 1.35;
+      font-size: 14px;
+      opacity: .92;
+    }
+    .con-opt:hover{ border-color: rgba(94,105,89,.45); }
+    .con-opt input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+    .con-mark{
+      width:18px; height:18px;
+      border-radius: 6px;
+      border:2px solid rgba(36,34,26,.35);
+      display:grid;
+      place-items:center;
+      flex:0 0 18px;
+      background: rgba(202,205,198,.75);
+      margin-top: 2px;
+    }
+    .con-mark::after{
+      content:"";
+      width:10px; height:6px;
+      border-left: 3px solid var(--brand);
+      border-bottom: 3px solid var(--brand);
+      transform: rotate(-45deg) scale(0);
+      transition: transform .12s ease;
+    }
+    .con-opt input:checked + .con-mark::after{ transform: rotate(-45deg) scale(1); }
+
+    /* Consent */
+    .con-consent{
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(36,34,26,.14);
+      background: rgba(94,105,89,.12);
+    }
+    .con-small{
+      font-size: 12px;
+      opacity: .75;
+      margin-top: 10px;
+      line-height: 1.45;
+    }
+
+    /* Buttons + status */
+    .con-actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .con-btn{
+      background: var(--brand);
+      font-size:16px;
+      color: var(--body);
+      border:0;
+      border-radius:999px;
+      padding: 12px 18px;
+      font-weight:700;
+      letter-spacing:.06em;
+      cursor:pointer;
+    }
+    .con-btn-ghost{
+      background: transparent;
+      border: 1px solid rgba(36,34,26,.25);
+      color: var(--heading-dark);
+    }
+
+    #status{
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(36,34,26,.14);
+      background: rgba(202,205,198,.40);
+      display:none;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+    #status.success{ display:block; }
+    #status.error{ display:block; }
+
     footer{
       padding: 20px 0 34px;
       text-align:center;
@@ -617,1190 +291,1151 @@ letter-spacing:.02em;
       color: var(--heading-dark);
       opacity:.7;
     }
-    
-/* Mobile */
-@media (max-width: 980px){
 
-  /* Logo left */
-  .nav-inner{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
 
-  .logo{
-    justify-content: flex-start;
-    width: 100%;
-  }
-.brand-main{
-  font-size: 16px;
+    /* Success popup */
+    .success-popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.42);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      z-index:9999;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:opacity .28s ease, visibility .28s ease;
+    }
+    .success-popup.show{
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+    .success-card{
+      width:min(460px, 100%);
+      background:rgba(202,205,198,.98);
+      border:1px solid rgba(36,34,26,.14);
+      border-radius:24px;
+      box-shadow:0 28px 70px rgba(0,0,0,.24);
+      padding:34px 28px;
+      text-align:center;
+      transform:translateY(14px) scale(.98);
+      transition:transform .32s ease;
+    }
+    .success-popup.show .success-card{
+      transform:translateY(0) scale(1);
+    }
+    .success-check{
+      width:72px;
+      height:72px;
+      margin:0 auto 18px;
+      border-radius:999px;
+      background:var(--brand);
+      color:var(--body);
+      display:grid;
+      place-items:center;
+      font-size:34px;
+      font-weight:700;
+      box-shadow:0 12px 28px rgba(94,105,89,.28);
+      transform:scale(.7);
+      opacity:0;
+    }
+    .success-popup.show .success-check{
+      animation:popCheck .5s ease forwards;
+    }
+    .success-card h3{
+      margin:0 0 10px;
+      font-size:28px;
+      line-height:1.2;
+      color:var(--heading-dark);
+    }
+    .success-card p{
+      margin:0;
+      font-size:15px;
+      line-height:1.6;
+      color:var(--heading-dark);
+    }
+    .success-small{
+      margin-top:16px;
+      font-size:13px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      color:var(--heading-muted);
+      opacity:.92;
+    }
+    @keyframes popCheck{
+      0%{ transform:scale(.55); opacity:0; }
+      60%{ transform:scale(1.12); opacity:1; }
+      100%{ transform:scale(1); opacity:1; }
+    }
+
+    @media (max-width: 980px){
+      /* Mobile nav (like your other pages) */
+      .nav-inner{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .logo{ width:100%; justify-content:flex-start; }
+      .nav-links{
+        width: 100%;
+        display:flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 0;
+        font-size: 12px;
+        letter-spacing: .12em;
+      }
+      .nav-links a{ padding: 8px 0; }
+
+      .section-title{ font-size: 42px; }
+
+      .con-grid{ grid-template-columns: 1fr; }
+      .con-options{ grid-template-columns: 1fr; }
+
+      .con-card{ padding: 18px; }
+
+      .con-actions{ flex-direction: column; }
+      .con-btn{ width: 100%; }
+
+      html, body{
+        overflow-x:hidden !important;
+        position:relative;
+      }
+
+      .wrap,
+      .con-card,
+      .con-section,
+      .con-consent,
+      .con-grid,
+      .con-options,
+      .con-input,
+      .con-select,
+      .con-textarea{
+        max-width:100%;
+        min-width:0;
+      }
+
+      #fitz-section > div[style]{
+        display:grid !important;
+        grid-template-columns:1fr;
+        gap:10px !important;
+        align-items:stretch !important;
+      }
+
+      #fitzpatrick_code,
+      #fitzpatrick_label,
+      #open-fitz-btn,
+      #clear-fitz-btn{
+        width:100% !important;
+        flex:unset !important;
+      }
+
+      #consultation{ padding-bottom: 80px; overflow-x:hidden; }
+
+      input,
+      select,
+      textarea,
+      button{
+        font-size:16px !important;
+      }
+
+      .con-textarea{
+        min-height:110px;
+      }
+      .success-popup{
+        padding:18px;
+      }
+
+      .success-card{
+        padding:30px 22px;
+        border-radius:20px;
+      }
+
+      .success-card h3{
+        font-size:24px;
+      }
+
+    }
+     /* FORCE: no underline on logo on desktop + mobile */
+header .logo,
+header .logo:link,
+header .logo:visited,
+header .logo:hover,
+header .logo:active{
+  text-decoration: none !important;
+  color: inherit !important;
 }
 
-.brand-location{
-  font-size: 12px;
+/* also ensure inner text isn't underlined */
+header .logo *{
+  text-decoration: none !important;
 }
- /* Links in ONE ROW under logo */
-.nav-links{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 8px;
-  font-size: 12px;
-  letter-spacing: .12em;
-}
-
-.nav-links .nav-item{
-  flex: 1;
-  text-align: center;
-  padding: 8px 0;
-  white-space: nowrap;
-}
-
-  /* Layout adjustments */
-  .hero-grid{ grid-template-columns: 1fr; }
-  .hero-right{ align-items:center; text-align:center; }
-  .hero-brand{ justify-content:center; }
-
-  .services-grid{ grid-template-columns: 1fr; }
-  .services-cards{ grid-template-columns: 1fr; }
-  .portrait{ height: 360px; max-width: 420px; justify-self:center; }
-  .triple{ grid-template-columns: 1fr; }
-  .panel{ border-right:none; border-bottom: 1px solid rgba(36,34,26,.12); }
-  .panel:last-child{ border-bottom:none; }
-  .price-grid{ grid-template-columns: 1fr; }
-  .contact-grid{ grid-template-columns: 1fr; }
-  .contact-left h2{ font-size: 46px; }
-
-  /* keep hero title readable */
-  .hero-title h1{ font-size: 52px; }
-
-  /* Mobile forms alignment: keep buttons and timing lines aligned */
-  #forms .forms-grid{
-    grid-template-columns:1fr;  /* stack cards on mobile */
-    gap:18px;
-    align-items:stretch;
-    grid-auto-rows:1fr;         /* make both cards the same height */
-  }
-  #forms .forms-card{
-    display:flex;
-    flex-direction:column;
-    height:100%;
-  }
-  #forms .forms-desc{
-    flex:1;                     /* equalise space above the button */
-  }
-  #forms .forms-btn{
-    width:100%;
-  }
-  #forms .forms-small{
-    margin-top:10px;
-  }
-}
-    /* keep hero title readable */
-.hero-title h1{ font-size: 52px; }
-
-/* Floating CTA (Book Consultation) */
-.floating-cta{
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 9999;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border-radius: 999px;
-  background: rgba(94,105,89,.92);
-  color: #cacdc6;
-  text-decoration: none;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  box-shadow: 0 16px 40px rgba(0,0,0,.18);
-  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
-}
-
-
-
-.floating-cta:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 20px 48px rgba(0,0,0,.22);
-}
-
-.floating-cta:active,
-.forms-btn:active{
-  transform: translateY(0);
-  box-shadow: 0 12px 30px rgba(0,0,0,.18);
-}
-.floating-cta .dot{
-  width:10px;
-  height:10px;
-  border-radius:999px;
-  background:#cacdc6;
-}
-
-@media (max-width:980px){
-
-  /* Mobile booking button improvements */
-  .booking-btn{
-    text-align:center;
-    justify-content:center;
-    padding:0 16px;
-    line-height:1.2;
-    white-space:normal;
-  }
-
-  .hero-book-btn{
-    text-align:center;
-    justify-content:center;
-    padding:0 20px;
-    line-height:1.2;
-  }
-
-  .floating-cta{
-    text-align:center;
-    justify-content:center;
-  }
-
-  .floating-cta{
-    left:16px;
-    right:16px;
-    bottom:14px;
-    justify-content:center;
-  }
-}
-    .service-areas{
-  padding:80px 0;
-  text-align:center;
-}
-
-.service-areas h2{
-  font-size:42px;
-  color:#24221a;
-  margin-bottom:20px;
-}
-
-.service-areas p{
-  max-width:650px;
-  margin:auto;
-  color:#878274;
-  line-height:1.6;
-}
-
-.areas-list{
-  margin-top:30px;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:12px;
-}
-
-.areas-list span{
-  background:#5e6959;
-  color:#fff;
-  padding:8px 16px;
-  border-radius:20px;
-  font-size:14px;
-  display:inline-block;
-  white-space:nowrap;
-}
-/* AFTERCARE ALIGNMENT FIX (cards + content aligned) */
-#aftercare .wrap > div{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:22px;
-  align-items:stretch;
-}
-
-/* Make all aftercare cards equal height and tidy spacing */
-#aftercare .forms-card{
-  display:flex;
-  flex-direction:column;
-  height:100%;
-  padding:28px;
-  gap:0;                 /* control spacing via margins for consistent alignment */
-}
-
-/* Force headings to reserve the same space so body text starts aligned */
-#aftercare .forms-card h3{
-  margin:0 0 14px;
-  line-height:1.2;
-  min-height:3.6em;      /* space for up to 3 lines */
-}
-
-/* Make the paragraph fill remaining space evenly */
-#aftercare .forms-desc{
-  margin:0;
-  flex:1;
-  line-height:1.6;
-}
-  
-.hero-trust{
-  margin-top:10px;
-  font-size:14px;
-  letter-spacing:.08em;
-  color:#878274;
-}
-
-
-
-/* Premium button hover lift */
-.forms-btn,
-.floating-cta{
-  transition: transform .25s ease, box-shadow .25s ease, background-color .25s ease, opacity .25s ease;
-  will-change: transform;
-}
-
-
-
-/* PREMIUM NAV + SOCIAL ICON LAYOUT */
-.nav-links{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-
-.nav-social{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-left:24px; /* separates icons from menu */
-}
-
-.nav-social a{
-  display:flex;
-  align-items:center;
-  padding:8px 10px;
-  border-radius:999px;
-  color: var(--heading-muted);
-}
-
-.nav-social a:hover{
-  background: rgba(36,34,26,.07);
-  color: var(--brand);
-}
-
-/* Mobile */
-@media (max-width:980px){
-
-  /* Mobile booking button improvements */
-  .booking-btn{
-    text-align:center;
-    justify-content:center;
-    padding:0 16px;
-    line-height:1.2;
-    white-space:normal;
-  }
-
-  .hero-book-btn{
-    text-align:center;
-    justify-content:center;
-    padding:0 20px;
-    line-height:1.2;
-  }
-
-  .floating-cta{
-    text-align:center;
-    justify-content:center;
-  }
-
-  .nav-links{
-    gap:10px;
-  }
-  .nav-social{
-    margin-left:12px;
-    gap:10px;
-  }
-  .nav-social a{
-    padding:8px 6px;
-  }
-}
-
-
-/* CONTACT ICONS + TRUST STRIP (premium clinic style) */
-.contact-links{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:22px;
-  margin: 6px 0 14px;
-  flex-wrap:wrap;
-}
-.contact-icon{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  color:#cacdc6;
-  text-decoration:none;
-  min-width:78px;
-}
-.contact-icon svg{
-  width:22px;
-  height:22px;
-  fill:currentColor;
-  opacity:.95;
-}
-.contact-icon span{
-  font-size:12px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:#878274;
-}
-.contact-icon:hover{ opacity:.85; }
-
-.contact-trust{
-  text-align:center;
-  color:#878274;
-  font-size:12px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  margin: 6px 0 14px;
-  line-height: 1.35;
-}
-
-
-
-
-/* PREMIUM BOOKING SECTION */
-.booking-shell{
-  margin: 8px 0 22px;
-  padding: 22px;
-  border: 1px solid rgba(202,205,198,.12);
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(202,205,198,.06), rgba(202,205,198,.02));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-}
-.booking-kicker{
-  text-align:center;
-  font-size:12px;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:#878274;
-  margin-bottom:8px;
-}
-.booking-title{
-  text-align:center;
-  color:#cacdc6;
-  font-size:26px;
-  font-weight:600;
-  margin:0 0 8px;
-}
-.booking-intro{
-  text-align:center;
-  color:#cacdc6;
-  opacity:.84;
-  max-width:620px;
-  margin:0 auto 18px;
-  line-height:1.6;
-  font-size:14px;
-}
-.booking-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:16px;
-  justify-items:center;
-  max-width:520px;
-  margin:0 auto;
-}
-.booking-card{
-  width:100%;
-
-  background: rgba(202,205,198,.06);
-  border:1px solid rgba(202,205,198,.14);
-  border-radius:18px;
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  min-height:100%;
-}
-.booking-card-top{
-  font-size:11px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:#878274;
-  margin-bottom:8px;
-}
-.booking-card h3{
-  margin:0 0 10px;
-  color:#cacdc6;
-  font-size:20px;
-  line-height:1.2;
-}
-.booking-card p{
-  margin:0 0 14px;
-  color:#cacdc6;
-  opacity:.84;
-  font-size:14px;
-  line-height:1.6;
-  flex:1;
-}
-.booking-points{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin:0 0 16px;
-}
-.booking-points span{
-  display:inline-flex;
-  align-items:center;
-  padding:7px 12px;
-  border-radius:999px;
-  background: rgba(202,205,198,.08);
-  border:1px solid rgba(202,205,198,.12);
-  color:#cacdc6;
-  font-size:11px;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-}
-.booking-btn{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100%;
-  min-height:54px;
-  padding:0 20px;
-  border-radius:999px;
-  background:#5e6959;
-  color:#cacdc6;
-  font-weight:700;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
-  box-shadow: 0 10px 24px rgba(0,0,0,.18);
-}
-.booking-btn:hover{
-  filter: brightness(.97);
-  transform: translateY(-2px);
-  box-shadow: 0 16px 34px rgba(0,0,0,.22);
-}
-.booking-note{
-  text-align:center;
-  margin-top:16px;
-  color:#878274;
-  font-size:12px;
-  letter-spacing:.08em;
-  line-height:1.6;
-}
-.hero-book-wrap{
-  margin-top:18px;
-  display:flex;
-  justify-content:center;
-}
-.hero-book-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:56px;
-  padding:0 28px;
-  border-radius:999px;
-  background:#5e6959;
-  color:#cacdc6;
-  font-weight:700;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  box-shadow: 0 16px 38px rgba(0,0,0,.18);
-  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
-}
-.hero-book-btn:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 20px 46px rgba(0,0,0,.22);
-  filter: brightness(.97);
-}
-@media (max-width:980px){
-
-  /* Mobile booking button improvements */
-  .booking-btn{
-    text-align:center;
-    justify-content:center;
-    padding:0 16px;
-    line-height:1.2;
-    white-space:normal;
-  }
-
-  .hero-book-btn{
-    text-align:center;
-    justify-content:center;
-    padding:0 20px;
-    line-height:1.2;
-  }
-
-  .floating-cta{
-    text-align:center;
-    justify-content:center;
-  }
-
-  .booking-grid{
-    grid-template-columns:1fr;
-  }
-  .booking-shell{
-    padding:18px;
-  }
-  .booking-title{
-    font-size:24px;
-  }
-  .hero-book-wrap{
-    width:100%;
-  }
-  .hero-book-btn{
-    width:100%;
-    max-width:320px;
-  }
-}
-
-
-</style>
+  </style>
 </head>
 
 <body>
   <header class="nav">
-    <div class="wrap nav-inner">
-     <div class="logo" aria-label="Laser Tattoo Removal Specialist">
-  <div class="brand-top">
-    VTCT Level 5 Certified
-  </div>
-  <div class="brand-main">
-    Laser Tattoo Removal Specialist
-  </div>
-  <div class="brand-location">
-    South Oxfordshire<br>
-    Henley • Wallingford • Didcot
-  </div>
-</div>
-<nav class="nav-links" aria-label="Site navigation">
-  <a class="nav-item" href="#services">Process</a>
-  <a class="nav-item" href="#prices">Price</a>
-  <a class="nav-item" href="#forms" id="nav-forms-link">Forms</a>
-  <a class="nav-item" href="#contact">Contact</a>
-  
-    
+  <div class="wrap nav-inner">
+    <a class="logo" href="index.html" aria-label="BARE by Marlese">
+      <span class="bare">BARE |</span>
+      <span class="by">by Marlese</span>
+    </a>
 
-  <div class="nav-social">
-    <a href="https://www.instagram.com/barebymarlese/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M7.8 2h8.4C19.9 2 22 4.1 22 6.8v8.4c0 2.7-2.1 4.8-4.8 4.8H7.8C5.1 20 3 17.9 3 15.2V6.8C3 4.1 5.1 2 7.8 2zm0 2C6.3 4 5 5.3 5 6.8v8.4C5 16.7 6.3 18 7.8 18h8.4c1.5 0 2.8-1.3 2.8-2.8V6.8C19 5.3 17.7 4 16.2 4H7.8zm9.9 1.5a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-    </svg>
-  </a>
-
-    <a href="https://wa.me/447795650887" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-  <!-- outer circle -->
-  <path d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2z"/>
-  <!-- handset + chat mark (cut-out style) -->
-  <path d="M17.4 14.9c-.2.6-1 1.1-1.6 1.2-.4.1-.9.2-2.9-.6-2.6-1.1-4.3-3.7-4.4-3.9-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.2.5-.3.8-.3h.6c.2 0 .5-.1.7.5.2.6.8 2.1.8 2.3.1.2.1.4 0 .6-.1.2-.2.4-.3.5-.1.1-.3.3-.4.4-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1.1 2.1 1.4 2.5 1.6.3.1.5.1.7-.1.2-.2.8-.9 1-1.2.2-.3.4-.2.7-.1.3.1 1.9.9 2.2 1.1.3.2.5.2.6.4.1.2.1 1-.1 1.6z" fill="var(--bg)"/>
-</svg>
-</a>
+    <nav class="nav-links" aria-label="Site navigation">
+      <a href="index.html#services">Process</a>
+      <a href="index.html#prices">Price</a>
+      <a href="index.html#forms">Forms</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
   </div>
-</nav>
-    </div>
-  </header>
+</header>
 
-  <!-- HERO -->
   <main>
-    <section class="hero" id="top">
+    <section id="consultation">
       <div class="wrap">
-        <!-- ✅ NEW: centered headline (matches Services / Price List centering) -->
-        <div class="hero-title">
-          <h1>
-            <span class="muted">Professional Laser Tattoo Removal</span><br>
-            <span class="dark">South Oxfordshire</span>
-          </h1>
-
-          <p class="hero-trust">
-            Safe • Medical-grade laser • Personalised treatment
-          </p>
-        </div>
-
-        <div class="hero-grid">
-          <div>
-            <div class="hero-card">
-              <img class="hero-torso" src="assets/hero-torso.png" alt="Laser tattoo removal treatment South Oxfordshire clinic" />
-              <div class="hero-tagline">GIVE YOURSELF THE FREEDOM TO BE BARE AGAIN.</div>
-            </div>
-          </div>
-
-   <div class="hero-right">
-
-  <div class="hero-cta">
-
-    <div class="hero-cta-title">
-      Advanced Laser Tattoo Removal
-    </div>
-
-    <div class="hero-cta-sub">
-      Specialist treatment tailored to your skin type.<br>
-      Skin-led • Precision-led • Clinically focused
-    </div>
-
-    <div class="hero-cta-locations">
-      Serving clients across South Oxfordshire<br>
-      Henley • Wallingford • Didcot
-    </div>
-
-   <div class="hero-cta-small">
-Free consultation • Personalised treatment plan
-</div>
-
-
-  <div class="hero-book-wrap">
-    <a class="hero-book-btn" href="consultation.html?reset=1">Book Consultation</a>
-  </div>
-  <div class="hero-book-helper" style="margin-top:8px;font-size:12px;letter-spacing:.08em;text-align:center;color:#878274;">
-    Step 1: Complete consultation form
-  </div>
-
-
-  
-<div style="width:80px;height:1px;background:rgba(36,34,26,.25);margin:14px auto;"></div>
-<div class="hero-cta-trust" style="margin-top:6px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#24221a;opacity:.82;line-height:1.35;text-align:center;">
-VTCT Level 5 Certified • Fully Insured<br>
-Consultation &amp; Patch Test Included
-</div>
-</div>
-
-</div>
-</div>
-      </div>
-    </section>
-
-
-    <!-- SEO INTRO -->
-    <section id="seo-intro" style="padding: 18px 0 10px;">
-      <div class="wrap">
-        <p style="max-width:700px;margin:0 auto;text-align:center;color:#24221a;line-height:1.6;">
-          BARE by Marlese is a VTCT Level 5 certified laser tattoo removal clinic serving clients across South Oxfordshire, 
-          including Henley-on-Thames, Wallingford and Didcot. Using advanced laser technology, treatments are tailored 
-          to your skin type to safely fade or fully remove unwanted tattoos.
+        <h2 class="section-title">CONSULTATION FORM</h2>
+        <p class="subnote">
+          Please complete this form accurately. All information is kept confidential and used only to assess treatment suitability and safety.
         </p>
-      </div>
-    </section>
 
-    <!-- SERVICES -->
-    <section id="services">
-      <div class="wrap">
-        <h2 class="section-title">Process</h2>
-
-        <div class="services-cards" aria-label="Services">
-          <div class="forms-card">
-            <h3 style="margin-top:0;">Personal Consultation</h3>
-            <p class="forms-desc">
-              Every treatment at BARE by Marlese begins with a personalised consultation.
-              Your tattoo, skin type and medical history are carefully assessed to determine
-              whether treatment is suitable for you and to create a safe,
-              tailored treatment plan.
-            </p>
-          </div>
-
-          <div class="forms-card">
-            <h3 style="margin-top:0;">Careful Preparation</h3>
-            <p class="forms-desc">
-              Before treatment, the skin is gently cleansed and the treatment area is carefully prepared.
-              Where appropriate, numbing cream may be applied to maximise comfort during your treatment
-              session.
-            </p>
-          </div>
-
-          <div class="forms-card">
-            <h3 style="margin-top:0;">Advanced Laser Treatment</h3>
-            <p class="forms-desc">
-              Advanced laser technology is used to precisely target tattoo pigment within the skin.
-              The laser breaks the ink into microscopic particles, allowing your body’s natural processes
-              to gradually clear the pigment between laser tattoo removal sessions. Most tattoos require
-              multiple sessions spaced 6–8 weeks apart to achieve optimal fading results.
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- AFTERCARE -->
-<section id="aftercare">
-  <div class="wrap">
-    <h2 class="section-title">AFTERCARE</h2>
-
-    <p class="forms-desc" style="max-width:760px;margin:0 auto 18px;text-align:center;">
-      Proper aftercare supports optimal healing and the best fading results.
-    </p>
-
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:20px;">
-
-      <div class="forms-card">
-        <h3 style="margin-top:0;">Immediately After Treatment</h3>
-        <p class="forms-desc">
-          The treated area may feel warm and appear red or slightly swollen.
-          This is normal and usually settles within 24–48 hours. Keep the area
-          clean and dry and avoid touching unnecessarily.
-        </p>
-      </div>
-
-      <div class="forms-card">
-        <h3 style="margin-top:0;">First Week</h3>
-        <p class="forms-desc">
-          Blistering or scabbing may occur as part of the natural healing process.
-          Do not pick or scratch the area as this may increase the risk of scarring.
-        </p>
-      </div>
-
-      <div class="forms-card">
-        <h3 style="margin-top:0;">Avoid</h3>
-        <p class="forms-desc">
-          Avoid sun exposure, tanning beds, hot baths, saunas and swimming pools
-          for at least two weeks. Avoid intense exercise for the first 24–48 hours.
-        </p>
-      </div>
-
-      <div class="forms-card">
-        <h3 style="margin-top:0;">Healing & Sessions</h3>
-        <p class="forms-desc">
-          Your body gradually clears the ink particles over time.
-          Treatments are typically spaced 6–8 weeks apart to allow the
-          skin to heal and achieve optimal fading results.
-        </p>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-    <section id="faq">
-      <div class="wrap">
-        <h2 class="section-title">FAQ</h2>
-
-        <div class="services-cards" aria-label="Frequently asked questions">
-          <div class="forms-card">
-            <h3 style="margin-top:0;">Does laser tattoo removal hurt?</h3>
-            <p class="forms-desc">
-              Most clients describe the sensation as similar to a quick elastic band snap. Where appropriate,
-              numbing cream can be applied to maximise comfort during treatment.
-            </p>
-          </div>
-
-          <div class="forms-card">
-            <h3 style="margin-top:0;">How many sessions will I need?</h3>
-            <p class="forms-desc">
-              Most tattoos require multiple sessions spaced 6–8 weeks apart. The number of sessions depends on
-              tattoo size, ink colour, depth and your skin type.
-            </p>
-          </div>
-
-          <div class="forms-card">
-            <h3 style="margin-top:0;">Can all tattoo colours be treated?</h3>
-            <p class="forms-desc">
-              Modern laser technology can treat most pigments. During your consultation we assess your tattoo and
-              provide realistic expectations for fading or full removal.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-<!-- PRICE LIST -->
-<section id="prices">
-  <div class="wrap">
-    <h2 class="section-title">PRICE LIST</h2>
-
-    <p class="forms-desc" style="max-width:760px;margin:0 auto 18px;text-align:center;">
-      Pricing depends on tattoo size and complexity. A personalised treatment plan will be discussed during your consultation.
-    </p>
-
-    <div class="price-grid">
-
-     <!-- SINGLE SESSION -->
-  <div class="price-col" aria-label="Single session prices">
-    <div class="single-top">SINGLE SESSION</div>
-
-    <div class="price-row">
-      <div class="price-name">Tiny Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£70</div>
-        <div class="save save-spacer">SAVE £00</div>
-      </div>
-    </div>
-    <div class="price-size">1cm-3cm x 1cm-3cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">Small Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£95</div>
-        <div class="save save-spacer">SAVE £00</div>
-      </div>
-    </div>
-    <div class="price-size">4cm-8cm x 4cm-8cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">Medium Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£120</div>
-        <div class="save save-spacer">SAVE £00</div>
-      </div>
-    </div>
-    <div class="price-size">9cm-13cm x 9cm-13cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">Large Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£160</div>
-        <div class="save save-spacer">SAVE £00</div>
-      </div>
-    </div>
-    <div class="price-size">14cm-20cm x 14cm-20cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">XL Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£200</div>
-        <div class="save save-spacer">SAVE £00</div>
-      </div>
-    </div>
-    <div class="price-size">20cm-24cm x 20cm-24cm</div>
-  </div>
-
-
-  <!-- 6 SESSION BUNDLE -->
-  <div class="price-col" aria-label="6-session bundle">
-    <div class="bundle-top">
-      6-SESSION BUNDLE<br>
-      SOUTH OXFORDSHIRE (COMMIT &amp; SAVE!)
-    </div>
-
-    <div class="price-row">
-      <div class="price-name">Tiny Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£360</div>
-        <div class="save">SAVE £60</div>
-      </div>
-    </div>
-    <div class="price-size">1cm-3cm x 1cm-3cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">Small Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£495</div>
-        <div class="save">SAVE £75</div>
-      </div>
-    </div>
-    <div class="price-size">4cm-8cm x 4cm-8cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">Medium Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£620</div>
-        <div class="save">SAVE £100</div>
-      </div>
-    </div>
-    <div class="price-size">9cm-13cm x 9cm-13cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">Large Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£820</div>
-        <div class="save">SAVE £140</div>
-      </div>
-    </div>
-    <div class="price-size">14cm-20cm x 14cm-20cm</div>
-
-    <div class="price-row" style="margin-top:12px;">
-      <div class="price-name">XL Tattoo</div>
-      <div class="price-amt-stack">
-        <div class="price-amt">£1050</div>
-        <div class="save">SAVE £150</div>
-      </div>
-    </div>
-    <div class="price-size">20cm-24cm x 20cm-24cm</div>
-  </div>
-
-</div>
-
-<!-- TREATMENT POLICIES -->
-<section id="policies">
-  <div class="wrap">
-    <h2 class="section-title policies-title">
-      <span class="policies-main">Laser Tattoo Removal</span>
-      <span class="policies-sub">Treatment Policies & Booking Information</span>
-    </h2>
-
-    <div class="price-note">
-      <p>
-        Tattoo removal is rarely a linear process. Whether your goal is complete removal or fading a tattoo for a cover-up, a personalised treatment plan will be created during your consultation based on your tattoo, skin type, and individual response to treatment.
-      </p>
-
-      <p>
-        A minimum interval of <strong>6 weeks</strong> between treatments is required to allow the skin to heal properly and for the body to gradually clear fragmented tattoo pigment.
-      </p>
-
-      <p>
-        Bundle sessions must be <strong>paid in full at the time of purchase</strong> and are valid for <strong>12 months</strong> from the date of purchase.
-      </p>
-
-      <p>
-        A minimum of <strong>24 hours' notice</strong> is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from the bundle.
-      </p>
-    </div>
-  </div>
-</section>
-
- 
-<!-- FORMS -->
-<section id="forms">
-  <div class="wrap">
-    <h2 class="section-title">FORMS</h2>
-
-    <div class="forms-grid">
-  <div class="forms-card">
-    <div class="forms-title">Consultation &amp; Medical History</div>
-    <div class="forms-desc">
-      Full consultation form including contraindications and medication history.
-    </div>
-    <a class="forms-btn" href="consultation.html?reset=1">Start Consultation</a>
-    <div class="forms-small">~5 minutes · Explicit consent required</div>
-  </div>
-
-  <div class="forms-card">
-    <div class="forms-title">Fitzpatrick Skin Test</div>
-    <div class="forms-desc">
-      Quick pre-screening to estimate skin type and support safe treatment planning.
-    </div>
-    <a class="forms-btn" href="fitzpatrick.html?reset=1">Start Skin Test</a>
-    <div class="forms-small">~2 minutes · Requires consent</div>
-  </div>
-</div>
-
-    <div class="forms-note" style="margin-top:10px;">
-      All forms are securely stored and used only for your treatment consultation.
-    </div>
-
-    <div class="forms-note">
-      By submitting these forms you confirm you have read our
-      <a href="privacy.html">Privacy Policy</a>.
-    </div>
-  </div>
-</section>
-
-
-
-
-
-
-<section id="results" style="padding:56px 0 24px;">
-  <div class="wrap">
-    <h2 class="section-title">RESULTS</h2>
-    <div class="price-note" style="text-align:center;">
-      <p style="margin-bottom:8px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;">Real client progress</p>
-      <p>
-        Tattoo removal is a gradual process. Fading happens over multiple treatments as the body clears
-        fragmented pigment between sessions. Your progress will depend on factors such as ink colour,
-        tattoo depth, placement and your individual response to treatment.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="service-areas">
-  <div class="wrap">
-
-    <h2>Laser Tattoo Removal in South Oxfordshire</h2>
-
-    <p>
-BARE by Marlese provides specialist laser tattoo removal treatments for clients across
-Henley-on-Thames, Wallingford, Didcot and surrounding Oxfordshire areas.
-
-Clients travel from across the region for safe, VTCT Level 5 certified
-tattoo removal consultations and personalised treatment plans.
-    </p>
-
-    <div class="areas-list">
-      <span>Henley-on-Thames</span>
-      <span>Wallingford</span>
-      <span>Didcot</span>
-      <span>South Oxfordshire</span>
-    </div>
-
-  </div>
-</section>
-    
-
-    <!-- GET IN TOUCH -->
-<section id="contact" style="padding:56px 0;">
-
-  <div class="wrap">
-
-    <div style="
-      max-width:720px;
-      margin:0 auto;
-    ">
-
-      <div style="
-        background:#24221a;
-        color:#cacdc6;
-        border-radius:18px;
-        padding:26px;
-        display:flex;
-        flex-direction:column;
-      ">
-
-        <h2 style="
-margin:0 0 14px;
-color:#878274;
-font-size:34px;
-text-align:center;
-">GET IN TOUCH</h2>
-
-
-<div class="contact-links" aria-label="Contact links">
-  <a href="consultation.html?reset=1" class="contact-icon" aria-label="Start Consultation Form">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"/>
-    </svg>
-    <span>Forms</span>
-  </a>
-
-  <a href="https://www.instagram.com/barebymarlese/" target="_blank" rel="noopener noreferrer" class="contact-icon" aria-label="Instagram">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7.8 2h8.4C19.9 2 22 4.1 22 6.8v8.4c0 2.7-2.1 4.8-4.8 4.8H7.8C5.1 20 3 17.9 3 15.2V6.8C3 4.1 5.1 2 7.8 2zm0 2C6.3 4 5 5.3 5 6.8v8.4C5 16.7 6.3 18 7.8 18h8.4c1.5 0 2.8-1.3 2.8-2.8V6.8C19 5.3 17.7 4 16.2 4H7.8zm9.9 1.5a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
-    </svg>
-    <span>Instagram</span>
-  </a>
-
-  <a href="https://wa.me/447795650887" target="_blank" rel="noopener noreferrer" class="contact-icon" aria-label="WhatsApp">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2z"/>
-      <path d="M17.4 14.9c-.2.6-1 1.1-1.6 1.2-.4.1-.9.2-2.9-.6-2.6-1.1-4.3-3.7-4.4-3.9-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.2.5-.3.8-.3h.6c.2 0 .5-.1.7.5.2.6.8 2.1.8 2.3.1.2.1.4 0 .6-.1.2-.2.4-.3.5-.1.1-.3.3-.4.4-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1.1 2.1 1.4 2.5 1.6.3.1.5.1.7-.1.2-.2.8-.9 1-1.2.2-.3.4-.2.7-.1.3.1 1.9.9 2.2 1.1.3.2.5.2.6.4.1.2.1 1-.1 1.6z" fill="var(--bg)"/>
-    </svg>
-    <span>WhatsApp</span>
-  </a>
-</div>
-
-<div class="contact-trust">Safe • Medical-grade laser • Personalised treatment</div>
-
-        <div class="booking-shell">
-          <div class="booking-kicker">Consultation First</div>
-          <h3 class="booking-title">Complete Your Consultation Form First</h3>
-          <p class="booking-intro">
-            Before booking, please complete your Consultation &amp; Medical History form. This allows your medical history, skin type and tattoo characteristics to be reviewed first so your appointment can be booked safely and appropriately.
-          </p>
-
-          <div class="booking-grid">
-            <div class="booking-card">
-              <div class="booking-card-top">New Clients</div>
-              <h3>Consultation &amp; Medical History Form</h3>
-              <p>
-                Complete your required consultation form first, including medical history and treatment information. Once submitted, you can then proceed to book your consultation and patch test appointment.
-              </p>
-              <div class="booking-points">
-                <span>~5 Minutes</span>
-                <span>Required Before Booking</span>
-                <span>Medical History</span>
+        <div class="con-card">
+          <form id="consultation-form" autocomplete="off" action="https://formspree.io/f/mykdryle" method="POST" enctype="multipart/form-data">
+            <!-- Client details -->
+            <div class="con-section">
+              <div class="con-h3">Client Details</div>
+
+              <div class="con-grid">
+                <input class="con-input" type="text" name="full_name" placeholder="Full Name *" required>
+                <input class="con-input" type="email" name="email" placeholder="Email Address *" required>
+                <div class="con-field">
+                  <label class="con-label" for="dob">Date of Birth *</label>
+                  <input class="con-input" type="date" id="dob" name="dob" required>
+                </div>
               </div>
-              <a class="booking-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Consultation</a>
+
+              <label class="con-label">Contact Number</label>
+              <input class="con-input" type="tel" name="phone" placeholder="e.g. 07..." required>
+            </div>
+
+            <!-- Tattoo info -->
+            <div class="con-section">
+              <div class="con-h3">Tattoo Information</div>
+
+              <label class="con-label">Approximate age of tattoo</label>
+              <input class="con-input" type="text" name="tattoo_age" placeholder="e.g. 5 years">
+
+              <label class="con-label">Location on body</label>
+              <input class="con-input" type="text" name="tattoo_location">
+
+              <label class="con-label">Have you attempted removal before? (Laser, saline, creams)</label>
+              <textarea class="con-textarea" name="previous_removal_history" rows="2"></textarea>
             </div>
 
             
-          </div>
+            <!-- Tattoo Characteristics -->
+            <div class="con-section">
+              <div class="con-h3">Tattoo Characteristics</div>
 
-          <div class="booking-note">
-            Please complete your Consultation &amp; Medical History form first • Booking should be made after form submission • 24 hours’ notice required for changes
-          </div>
+              <label class="con-label">Type of tattoo</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Professional">
+                  <span class="con-mark"></span>
+                  <span>Professional</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Amateur">
+                  <span class="con-mark"></span>
+                  <span>Amateur</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Cosmetic / PMU">
+                  <span class="con-mark"></span>
+                  <span>Cosmetic / PMU</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_type" value="Not sure">
+                  <span class="con-mark"></span>
+                  <span>Not sure</span>
+                </label>
+              </div>
+
+              <label class="con-label">What colours are in the tattoo?</label>
+              <div class="con-options" data-none-group="tattoo-colours">
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_black" value="Yes" data-colour-weight="1">
+                  <span class="con-mark"></span>
+                  <span>Black</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_blue" value="Yes" data-colour-weight="2">
+                  <span class="con-mark"></span>
+                  <span>Blue</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_green" value="Yes" data-colour-weight="3">
+                  <span class="con-mark"></span>
+                  <span>Green</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_red" value="Yes" data-colour-weight="3">
+                  <span class="con-mark"></span>
+                  <span>Red</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_yellow" value="Yes" data-colour-weight="4">
+                  <span class="con-mark"></span>
+                  <span>Yellow</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_white" value="Yes" data-colour-weight="4">
+                  <span class="con-mark"></span>
+                  <span>White</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_multicolour" value="Yes" data-colour-weight="5">
+                  <span class="con-mark"></span>
+                  <span>Multi-colour</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="ink_not_sure" value="Yes" data-colour-weight="0">
+                  <span class="con-mark"></span>
+                  <span>Not sure</span>
+                </label>
+              </div>
+
+              <label class="con-label">Is the tattoo raised or scarred?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_raised_scarred" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_raised_scarred" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+
+              <label class="con-label">Have you ever had a reaction to your tattoo ink?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_ink_reaction" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_ink_reaction" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+
+              <label class="con-label">If yes, please describe</label>
+              <textarea class="con-textarea" name="tattoo_ink_reaction_details" rows="2" placeholder="e.g. swelling, itching, rash, raised areas"></textarea>
+
+              <input type="hidden" name="tattoo_colour_score" id="tattoo_colour_score" value="">
+              <input type="hidden" name="tattoo_colour_assessment" id="tattoo_colour_assessment" value="">
+            </div>
+
+            
+            <!-- Fitzpatrick Skin Type -->
+            <div class="con-section" id="fitz-section">
+              <div class="con-h3">Fitzpatrick Skin Type</div>
+              <p class="con-small" style="margin:0 0 10px;">
+                This helps us choose safe laser settings and reduce the risk of pigmentation changes.
+              </p>
+
+              <label class="con-label">Your Fitzpatrick skin type</label>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+  <input class="con-input" type="text" id="fitzpatrick_code" placeholder="Type" readonly style="flex:0 0 110px; text-align:center; font-weight:700; letter-spacing:.06em;">
+  <input class="con-input" type="text" id="fitzpatrick_label" placeholder="Not completed yet" readonly style="flex:1 1 360px;">
+
+  <input type="hidden" name="fitzpatrick" id="fitzpatrick_value" value="">
+  <button type="button" class="con-btn con-btn-ghost" id="open-fitz-btn" style="flex:0 0 auto;">TAKE FITZPATRICK TEST</button>
+  <button type="button" class="con-btn con-btn-ghost" id="clear-fitz-btn" style="flex:0 0 auto;">CLEAR</button>
+</div>
+<div class="con-small" style="margin-top:10px;">
+                Taking the test will open in a new tab. When you finish, your result will automatically fill here.
+              </div>
+
+              <div class="con-consent" style="margin-top:14px;">
+                <div class="con-h3">Consent &amp; Privacy</div>
+
+                <label class="con-opt" style="margin-top:10px;">
+                  <input type="checkbox" name="gdpr_contact_consent" value="Yes" required>
+                  <span class="con-mark"></span>
+                  <span>I consent to BARE by Marlese storing my details to respond to my enquiry.</span>
+                </label>
+
+                <label class="con-opt" style="margin-top:10px;">
+                  <input type="checkbox" name="gdpr_health_consent" value="Yes" required>
+                  <span class="con-mark"></span>
+                  <span>
+                    I give <strong>explicit consent</strong> for BARE by Marlese to collect and process my Fitzpatrick skin type, consultation, and health-related information to assess treatment suitability and safety.
+                    I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+                  </span>
+                </label>
+
+                <div class="con-small">
+                  Please do not submit urgent medical information here. This is for consultation screening only.
+                </div>
+              </div>
+
+              <input type="hidden" name="fitzpatrick_score" id="fitzpatrick_score" value="">
+            </div>
+
+            <!-- Medical history -->
+
+            <div class="con-section">
+              <div class="con-h3">Medical History & Safety</div>
+
+              <div class="con-options" data-none-group="medical-history">
+                <label class="con-opt">
+                  <input type="checkbox" name="medical_history_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="history_keloids" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>History of keloid or hypertrophic scarring</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="pregnant_nursing" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Currently pregnant or breastfeeding</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="sun_exposure" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Recent sun exposure or tanning beds in the last 4 weeks</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="photosensitising_meds" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Using any photosensitising medication or products</span>
+                </label>
+                
+                <label class="con-opt">
+                  <input type="checkbox" name="autoimmune_disease" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Autoimmune disease or immune system condition</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="immunosuppressive_meds" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Immunosuppressive medication (e.g. steroids, biologics)</span>
+                </label>
+<label class="con-opt">
+                  <input type="checkbox" name="moles_lesions_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Moles or suspicious lesions in treatment area</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="vitiligo" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Vitiligo</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="active_infection_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Active infection in treatment area</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="recent_chemical_peel_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Recent chemical peel in treatment area</span>
+                </label>
+
+              </div>
+
+              <label class="con-label">List any autoimmune or skin conditions (e.g. lupus, eczema)</label>
+              <textarea class="con-textarea" name="medical_conditions" rows="2"></textarea>
+            </div>
+
+
+            <!-- Viral & Blood-Borne Conditions -->
+            <div class="con-section">
+              <div class="con-h3">Viral &amp; Blood-Borne Conditions</div>
+
+              <div class="con-options" data-none-group="viral-bloodborne">
+                <label class="con-opt">
+                  <input type="checkbox" name="viral_conditions_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="cold_sores_hsv" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>History of cold sores (Herpes Simplex Virus)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="hepatitis_b" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Hepatitis B</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="hepatitis_c" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Hepatitis C</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="hiv" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>HIV</span>
+                </label>
+              </div>
+
+              <label class="con-label">Other blood-borne condition (please specify)</label>
+              <input class="con-input" type="text" name="other_blood_borne">
+            </div>
+
+            <!-- Chronic Health Conditions -->
+            <div class="con-section">
+              <div class="con-h3">Chronic Health Conditions</div>
+
+              <div class="con-options" data-none-group="chronic-health">
+                <label class="con-opt">
+                  <input type="checkbox" name="chronic_conditions_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="diabetes" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Diabetes (Type I or II)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="epilepsy_seizures" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Epilepsy or history of seizures</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="heart_condition_pacemaker" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Heart condition or pacemaker</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="bleeding_disorder" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Bleeding disorder (e.g. haemophilia)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Allergies -->
+            <div class="con-section">
+              <div class="con-h3">Allergies</div>
+
+              <div class="con-options" data-none-group="allergies">
+                <label class="con-opt">
+                  <input type="checkbox" name="allergies_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>No known allergies</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="tattoo_ink_allergy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Tattoo ink allergy</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="lidocaine_numbing_allergy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Lidocaine / numbing cream allergy</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="latex_allergy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Latex allergy</span>
+                </label>
+              </div>
+
+              <label class="con-label">Other allergies (please specify)</label>
+              <input class="con-input" type="text" name="other_allergies">
+            </div>
+
+
+            <!-- Medications -->
+            <div class="con-section">
+              <div class="con-h3">Medications & Supplements</div>
+
+              <label class="con-label">Have you taken Accutane (Isotretinoin) in the last 6 months?</label>
+              <select class="con-select" name="accutane" required>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+
+
+
+              <div class="con-options" style="margin-top:12px;" data-none-group="medications">
+                <label class="con-opt">
+                  <input type="checkbox" name="medications_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="blood_thinners" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Blood thinners (anticoagulants)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="iron_supplements" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Iron supplements</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="gold_therapy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Gold therapy (for rheumatoid arthritis)</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="antibiotics_last_2_weeks" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Antibiotics taken in the last 2 weeks</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="retinol_retina_area" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Retinol / Retin-A used in treatment area</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="photosensitising_supplements" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>St. John’s Wort or other photosensitising supplements</span>
+                </label>
+              </div>
+
+              <label class="con-label">List all current medications (including herbs, vitamins, supplements)</label>
+              <textarea class="con-textarea" name="current_medications" rows="3" placeholder="Aspirin, St. John's Wort, fish oil, etc."></textarea>
+            </div>
+
+            <!-- Lifestyle Factors -->
+            <div class="con-section">
+              <div class="con-h3">Lifestyle Factors</div>
+
+              <label class="con-label">Do you smoke or vape?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="smoke_vape" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="smoke_vape" value="Cigarettes">
+                  <span class="con-mark"></span>
+                  <span>Yes — cigarettes</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="smoke_vape" value="Vape">
+                  <span class="con-mark"></span>
+                  <span>Yes — vape</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="smoke_vape" value="Both">
+                  <span class="con-mark"></span>
+                  <span>Yes — both</span>
+                </label>
+              </div>
+
+              <label class="con-label">If yes: approximate daily use</label>
+              <input class="con-input" type="text" name="smoke_vape_frequency" placeholder="e.g. 5 cigarettes per day or vape daily">
+
+              <div class="con-small">
+                Smoking and vaping can slow the body’s ability to clear tattoo pigment and may extend the number of sessions required.
+              </div>
+            </div>
+
+            
+            <!-- Photos -->
+            <div class="con-section">
+              <div class="con-h3">Photos</div>
+              <p class="con-small" style="margin:0 0 12px;">
+                 Clear photos help us estimate sessions and treatment suitability before your consultation. 
+                Please avoid filters. Include one close-up and one photo showing the surrounding area.
+              </p>
+
+              <label class="con-label" for="tattoo_photos">Upload tattoo photos (optional)</label>
+              <input class="con-input" id="tattoo_photos" type="file" name="tattoo_photos" accept="image/*" multiple>
+
+              <p class="con-small" style="margin:10px 0 0;">
+                File upload limits: up to 10 files per submission, max 25MB per file.
+              </p>
+            </div>
+
+            <!-- Clinical photo consent -->
+            <div class="con-consent">
+              <div class="con-h3">Clinical Photos</div>
+
+              <label class="con-label" style="margin-top:0;">Clinical photos (optional)</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="photo_consent" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>I consent to clinical photos being taken for treatment monitoring</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="radio" name="photo_consent" value="No">
+                  <span class="con-mark"></span>
+                  <span>No, I do not consent to photos</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Aftercare acknowledgement -->
+            <div class="con-consent" style="margin-top:14px;">
+              <div class="con-h3">Aftercare Acknowledgement</div>
+
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="aftercare_understood" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I confirm I understand that laser tattoo removal requires proper aftercare (including avoiding sun exposure, not picking blisters/scabs, and allowing appropriate healing time between sessions).
+                </span>
+              </label>
+
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="results_vary" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I understand that multiple sessions may be required and results vary depending on ink, depth, location, and individual skin response.
+                </span>
+              </label>
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="sun_avoidance_commitment" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I understand I must avoid sun exposure and tanning (including self-tan on the area) during my treatment course and follow all pre- and post-care instructions.
+                </span>
+              </label>
+
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="patch_test_acknowledgement" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I understand that a patch test may be required before treatment.
+                </span>
+              </label>
+
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="honesty_acknowledgement" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I confirm that I have answered all questions honestly and understand that providing incorrect information may affect treatment safety.
+                </span>
+              </label>
+
+              <label class="con-opt" style="margin-top:10px;">
+                <input type="checkbox" name="medical_accuracy" value="Yes" required>
+                <span class="con-mark"></span>
+                <span>
+                  I confirm the medical, tattoo, and lifestyle information provided is accurate to the best of my knowledge.
+                </span>
+              </label>
+
+              <div class="con-small">
+                You can download the full aftercare guide from the Forms section on the home page.
+              </div>
+            </div>
+
+            <!-- Hidden metadata -->
+            <input type="hidden" name="submitted_at" id="submitted_at">
+            <input type="hidden" name="_subject" id="subject_line">
+
+            <div class="con-actions">
+              <button type="submit" class="con-btn" id="submit-btn">SUBMIT CONSULTATION</button>
+              <button type="button" class="con-btn con-btn-ghost" id="reset-btn">RESET</button>
+            </div>
+
+            <p id="status"></p>
+          </form>
         </div>
-
-        <img src="assets/contact-arm.jpg"
-             alt="Laser tattoo removal fading results consultation South Oxfordshire"
-             style="width:100%;margin-top:8px;border-radius:12px;">
-
       </div>
-
-    </div>
-
-  </div>
-
-</section>
+    </section>
   </main>
 
-<a class="floating-cta" href="consultation.html?reset=1">
-  <span class="dot"></span>
-  Book Consultation
-</a>
+
+  <div id="success-popup" class="success-popup" aria-hidden="true">
+    <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
+      <div class="success-check">✓</div>
+      <h3 id="success-title">Consultation Submitted</h3>
+      <p>Thank you for submitting your consultation.<br>We will contact you shortly.</p>
+      <div class="success-small">Returning you to the website…</div>
+    </div>
+  </div>
+
   <footer>
-  © BARE by Marlese — Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire |
-  <a href="privacy.html" style="color:#878274;">Privacy Policy</a>
-</footer>
+    © BARE by Marlese | <a href="privacy.html">Privacy Policy</a>
+  </footer>
 
+  <script>
+    
+    // Fitzpatrick test integration (auto-fill)
+    const fitzValueEl = document.getElementById("fitzpatrick_value");
+    const fitzScoreEl = document.getElementById("fitzpatrick_score");
+    const openFitzBtn = document.getElementById("open-fitz-btn");
+    const clearFitzBtn = document.getElementById("clear-fitz-btn");
 
-<script>
-(function(){
-  function clearBareFormState(){
+    
+    const fitzLabelMap = {
+      "I": "Type I — Very fair skin, always burns, never tans",
+      "II": "Type II — Fair skin, burns easily, tans minimally",
+      "III": "Type III — Medium skin, sometimes burns, gradually tans",
+      "IV": "Type IV — Olive skin, rarely burns, tans easily",
+      "V": "Type V — Brown skin, very rarely burns",
+      "VI": "Type VI — Dark brown/black skin, never burns"
+    };
+    const fitzDisplayEl = document.getElementById("fitzpatrick_code");
+    const fitzDescEl = document.getElementById("fitzpatrick_label");
+
+    function clearBareStoredFitz(){
+      try{
+        localStorage.removeItem("fitzpatrick_result");
+        localStorage.removeItem("bare_fitz_type");
+        localStorage.removeItem("bare_fitz_score");
+        localStorage.removeItem("bare_fitz_label");
+      }catch(e){}
+    }
+
+    function clearConsultationFormState(){
+      const consultationFormEl = document.getElementById("consultation-form");
+      const statusNode = document.getElementById("status");
+      if(consultationFormEl) consultationFormEl.reset();
+      if(fitzValueEl) fitzValueEl.value = "";
+      if(fitzDisplayEl) fitzDisplayEl.value = "";
+      if(fitzDescEl) fitzDescEl.value = "Not completed yet";
+      if(fitzScoreEl) fitzScoreEl.value = "";
+      clearBareStoredFitz();
+      if(statusNode){
+        statusNode.style.display = "none";
+        statusNode.className = "";
+        statusNode.textContent = "";
+      }
+      if(successPopup){
+        successPopup.classList.remove("show");
+        successPopup.setAttribute("aria-hidden", "true");
+      }
+      try{
+        updateColourScoring();
+      }catch(e){}
+    }
+
+    function resetPageIfRequested(){
+      try{
+        const params = new URLSearchParams(window.location.search);
+        if(params.get("reset") === "1"){
+          clearConsultationFormState();
+          if(window.history && window.history.replaceState){
+            const clean = window.location.pathname + (window.location.hash || "");
+            window.history.replaceState({}, document.title, clean);
+          }
+        }
+      }catch(e){}
+    }
+
+function applyFitzResult(payload){
+      if(!payload) return;
+      const type = (payload.fitz || payload.fitzpatrick || payload.type || "").toString().trim();
+      if(!type) return;
+
+      // Normalise to "I".."VI" if "Type III" is sent
+      let norm = type;
+      const m = type.match(/(I{1,3}|IV|V|VI)\b/i);
+      if(m) norm = m[1].toUpperCase();
+
+      fitzValueEl.value = norm;
+      
+      if(fitzDisplayEl){ fitzDisplayEl.value = norm; }
+      if(fitzDescEl){
+        const lbl = (payload.label || "").toString().trim();
+        fitzDescEl.value = lbl || fitzLabelMap[norm] || ("Type " + norm);
+      }
+if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
+
+      // Persist so refresh doesn't lose it
+      try{
+        localStorage.setItem("bare_fitz_type", norm);
+        const lbl = (payload.label || "").toString().trim();
+        if(lbl) localStorage.setItem("bare_fitz_label", lbl);
+        if(fitzScoreEl.value) localStorage.setItem("bare_fitz_score", fitzScoreEl.value);
+      }catch(e){}
+    }
+
+        resetPageIfRequested();
+
+    // Load saved result (if they did the test earlier)
     try{
-      [
-        "fitzpatrick_result",
-        "bare_fitz_type",
-        "bare_fitz_label",
-        "bare_fitz_score"
-      ].forEach(function(key){ localStorage.removeItem(key); });
+      const savedType = localStorage.getItem("bare_fitz_type");
+      const savedScore = localStorage.getItem("bare_fitz_score");
+      const savedLabel = localStorage.getItem("bare_fitz_label");
+      if(savedType){
+        fitzValueEl.value = savedType;
+        
+        if(fitzDisplayEl){ fitzDisplayEl.value = savedType; }
+        if(fitzDescEl){ fitzDescEl.value = savedLabel || fitzLabelMap[savedType] || ("Type " + savedType); }
+if(savedScore) fitzScoreEl.value = savedScore;
+      }
     }catch(e){}
+
+    // Open the Fitzpatrick test in a new tab and allow it to message back
+    if(openFitzBtn){
+      openFitzBtn.addEventListener("click", () => {
+        // Pass a hint so the test knows it was launched from consultation
+        window.open("fitzpatrick.html?reset=1&from=consultation", "_blank");
+      });
+    }
+
+    if(clearFitzBtn){
+      clearFitzBtn.addEventListener("click", () => {
+        fitzValueEl.value = "";
+        if(fitzDisplayEl){ fitzDisplayEl.value = ""; }
+        if(fitzDescEl){ fitzDescEl.value = "Not completed yet"; }
+        fitzScoreEl.value = "";
+        try{
+          clearBareStoredFitz();
+        }catch(e){}
+      });
+    }
+
+    
+// Receive result from the Fitzpatrick page (popup) OR via localStorage (new tab / mobile)
+window.addEventListener("message", (event) => {
+  const data = event.data;
+  if(!data || typeof data !== "object") return;
+
+  // Accept either of these payloads:
+  // 1) { kind:"bare_fitz_result", fit:"II", label:"Type II — ..." }
+  // 2) { fitzpatrick:"II", label:"Type II — ..." }
+  if(data.kind === "bare_fitz_result" || data.fitzpatrick || data.fitz || data.type){
+    applyFitzResult(data);
   }
+});
 
-  var formsLink = document.getElementById("nav-forms-link");
-  var startSkin = document.querySelector('a.forms-btn[href^="fitzpatrick.html"]');
-  var startConsult = document.querySelector('a.forms-btn[href^="consultation.html"]');
-  var floatingConsult = document.querySelector('a.floating-cta');
+function syncFitzFromStorage(){
+  try{
+    const t = localStorage.getItem("bare_fitz_type") || localStorage.getItem("fitzpatrick_result");
+    const s = localStorage.getItem("bare_fitz_score");
+    const l = localStorage.getItem("bare_fitz_label");
+    if(t){
+      applyFitzResult({ fitz: t, score: (s ? Number(s) : undefined), label: l || (fitzLabelMap[t] || "") });
+    }
+  }catch(e){}
+}
 
-  [formsLink, startSkin, startConsult, floatingConsult].forEach(function(el){
-    if(!el) return;
-    el.addEventListener("click", clearBareFormState);
-  });
+// If the Fitzpatrick test opens in a new tab (common on mobile), postMessage won't work.
+// These listeners ensure the consultation updates as soon as you return.
+window.addEventListener("focus", syncFitzFromStorage);
+document.addEventListener("visibilitychange", () => {
+  if(!document.hidden) syncFitzFromStorage();
+});
 
-  var contactForm = document.getElementById("contact-form");
-  var contactStatus = document.getElementById("contact-status");
-  var successPopup = document.getElementById("success-popup");
-
-  function setContactStatus(msg, type){
-    if(!contactStatus) return;
-    contactStatus.textContent = msg;
-    contactStatus.className = type || "";
-    contactStatus.style.display = "block";
+// If the Fitzpatrick tab writes localStorage, this event fires in THIS tab.
+window.addEventListener("storage", (e) => {
+  if(!e) return;
+  if(["bare_fitz_type","bare_fitz_label","bare_fitz_score","fitzpatrick_result"].includes(e.key)){
+    syncFitzFromStorage();
   }
+});
 
-  if(contactForm){
-    contactForm.addEventListener("submit", async function(e){
+// Run once in case the result was already saved
+syncFitzFromStorage();
+
+    const form = document.getElementById("consultation-form");
+    const statusEl = document.getElementById("status");
+    const resetBtn = document.getElementById("reset-btn");
+    const submittedAt = document.getElementById("submitted_at");
+    const subjectLine = document.getElementById("subject_line");
+    const successPopup = document.getElementById("success-popup");
+
+    function setStatus(msg, type){
+      statusEl.textContent = msg;
+      statusEl.className = type;
+    }
+
+    function setupNoneLogic(){
+      const groups = document.querySelectorAll("[data-none-group]");
+      groups.forEach((group) => {
+        const noneInput = group.querySelector("input[data-none-option]");
+        const otherInputs = [...group.querySelectorAll('input[type="checkbox"]:not([data-none-option])')];
+        if(!noneInput) return;
+
+        noneInput.addEventListener("change", () => {
+          if(noneInput.checked){
+            otherInputs.forEach((input) => {
+              input.checked = false;
+              input.removeAttribute("required");
+            });
+          }
+          if(group.dataset.noneGroup === "tattoo-colours"){
+            updateColourScoring();
+          }
+        });
+
+        otherInputs.forEach((input) => {
+          input.addEventListener("change", () => {
+            if(input.checked){
+              noneInput.checked = false;
+            }
+
+            if(group.dataset.noneGroup === "tattoo-colours"){
+              updateColourScoring();
+            }
+          });
+        });
+      });
+    }
+
+    function updateColourScoring(){
+      const colourInputs = [...document.querySelectorAll('[data-none-group="tattoo-colours"] input[type="checkbox"]')];
+      const selected = colourInputs.filter((input) => input.checked);
+      const scoreField = document.getElementById("tattoo_colour_score");
+      const labelField = document.getElementById("tattoo_colour_assessment");
+      if(!scoreField || !labelField) return;
+
+      if(!selected.length){
+        scoreField.value = "";
+        labelField.value = "";
+        return;
+      }
+
+      const names = selected.map((input) => {
+        const label = input.closest(".con-opt")?.querySelector("span:last-child")?.textContent?.trim();
+        return label || input.value || input.name;
+      });
+
+      const isNone = selected.some((input) => input.hasAttribute("data-none-option"));
+      if(isNone){
+        scoreField.value = "0";
+        labelField.value = "No colour information selected";
+        return;
+      }
+
+      const total = selected.reduce((sum, input) => {
+        const weight = Number(input.dataset.colourWeight || 0);
+        return sum + weight;
+      }, 0);
+
+      let assessment = "Simple";
+      if(total >= 9){
+        assessment = "Advanced";
+      }else if(total >= 4){
+        assessment = "Moderate";
+      }
+
+      scoreField.value = String(total);
+      labelField.value = `${assessment} colour profile — ${names.join(", ")}`;
+    }
+
+    setupNoneLogic();
+    updateColourScoring();
+
+    resetBtn.addEventListener("click", () => {
+      clearConsultationFormState();
+    });
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      setContactStatus("Sending…", "success");
+      // Ensure Fitzpatrick result is completed
+      if(!fitzValueEl || !fitzValueEl.value){
+        setStatus("Please complete the Fitzpatrick Skin Test before submitting.", "error");
+        statusEl.style.display = "block";
+        document.getElementById("fitz-section")?.scrollIntoView({behavior:"smooth", block:"start"});
+        return;
+      }
 
-      var data = new FormData(contactForm);
+      submittedAt.value = new Date().toISOString();
+      subjectLine.value = "Laser Tattoo Removal Consultation — BARE by Marlese";
+
+      setStatus("Sending…", "success");
+      statusEl.style.display = "block";
+
+      const data = new FormData(form);
 
       try{
-        var res = await fetch(contactForm.action, {
+        const res = await fetch(form.action, {
           method: "POST",
           body: data,
           headers: { "Accept": "application/json" }
         });
 
-        if(res.ok){
-          if(contactStatus) contactStatus.style.display = "none";
-          contactForm.reset();
+if(res.ok){
+  statusEl.style.display = "none";
+  form.reset();
+  clearBareStoredFitz();
+  if(fitzValueEl) fitzValueEl.value = "";
+  if(fitzDisplayEl) fitzDisplayEl.value = "";
+  if(fitzDescEl) fitzDescEl.value = "Not completed yet";
+  if(fitzScoreEl) fitzScoreEl.value = "";
 
-          if(successPopup){
-            successPopup.classList.add("show");
-            successPopup.setAttribute("aria-hidden", "false");
-          }
-
-          setTimeout(function(){
-            window.location.href = "index.html";
-          }, 3000);
-        }else{
-          setContactStatus("Oops — there was a problem sending your enquiry. Please try again.", "error");
-        }
-      }catch(err){
-        setContactStatus("Oops — connection error. Please try again.", "error");
-      }
-    });
+  if(successPopup){
+    successPopup.classList.add("show");
+    successPopup.setAttribute("aria-hidden", "false");
   }
-})();
-</script>
 
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 3000);
+
+}else{
+  setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
+}
+
+}catch(err){
+  setStatus("Oops — connection error. Please try again.", "error");
+}
+    });
+  </script>
 </body>
 </html>
