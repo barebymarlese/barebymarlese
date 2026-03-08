@@ -365,6 +365,26 @@
       color:var(--heading-muted);
       opacity:.92;
     }
+    .success-book-wrap{
+      margin-top:20px;
+      display:flex;
+      justify-content:center;
+    }
+    .success-book-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:52px;
+      padding:0 22px;
+      border-radius:999px;
+      background:var(--brand);
+      color:var(--body);
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      text-decoration:none;
+      box-shadow:0 12px 28px rgba(94,105,89,.22);
+    }
     @keyframes popCheck{
       0%{ transform:scale(.55); opacity:0; }
       60%{ transform:scale(1.12); opacity:1; }
@@ -499,6 +519,9 @@ header .logo *{
         <h2 class="section-title">CONSULTATION FORM</h2>
         <p class="subnote">
           Please complete this form accurately. All information is kept confidential and used only to assess treatment suitability and safety.
+        </p>
+        <p class="subnote" style="margin-top:-8px; max-width:700px;">
+          Booking is completed after this form is submitted. Once finished, you will be able to book your consultation appointment.
         </p>
 
         <div class="con-card">
@@ -1110,8 +1133,11 @@ header .logo *{
     <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
       <div class="success-check">✓</div>
       <h3 id="success-title">Consultation Submitted</h3>
-      <p>Thank you for submitting your consultation.<br>We will contact you shortly.</p>
-      <div class="success-small">Returning you to the website…</div>
+      <p>Thank you for submitting your consultation form.<br>You can now book your consultation appointment below.</p>
+      <div class="success-book-wrap">
+        <a class="success-book-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Your Consultation</a>
+      </div>
+      <div class="success-small">Redirecting you to booking…</div>
     </div>
   </div>
 
@@ -1425,8 +1451,8 @@ if(res.ok){
   }
 
   setTimeout(() => {
-    window.location.href = "index.html";
-  }, 3000);
+    window.location.href = "https://calendar.app.google/ArSSzdv4s7CF759Q7";
+  }, 4000);
 
 }else{
   setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
