@@ -566,13 +566,19 @@ header .logo *{
               <div class="con-h3">Tattoo Information</div>
 
               <label class="con-label">Approximate age of tattoo</label>
-              <input class="con-input" type="text" name="tattoo_age" placeholder="e.g. 5 years">
+              <input class="con-input" type="text" name="tattoo_age" placeholder="e.g. 5 years" required>
 
               <label class="con-label">Location on body</label>
               <input class="con-input" type="text" name="tattoo_location">
 
               <label class="con-label">Have you attempted removal before? (Laser, saline, creams)</label>
-              <textarea class="con-textarea" name="previous_removal_history" rows="2"></textarea>
+              <select class="con-select" name="previous_removal" required>
+                <option value="No" selected>No</option>
+                <option value="Yes">Yes</option>
+              </select>
+
+              <label class="con-label">If yes, please describe</label>
+              <textarea class="con-textarea" name="previous_removal_details" rows="2" placeholder="Laser, saline, creams etc."></textarea>
             </div>
 
             
@@ -583,7 +589,7 @@ header .logo *{
               <label class="con-label">Type of tattoo</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="tattoo_type" value="Professional">
+                  <input type="radio" name="tattoo_type" value="Professional" required>
                   <span class="con-mark"></span>
                   <span>Professional</span>
                 </label>
@@ -609,12 +615,6 @@ header .logo *{
 
               <label class="con-label">What colours are in the tattoo?</label>
               <div class="con-options" data-none-group="tattoo-colours">
-                <label class="con-opt">
-                  <input type="checkbox" name="ink_none" value="None" data-none-option>
-                  <span class="con-mark"></span>
-                  <span>None</span>
-                </label>
-
                 <label class="con-opt">
                   <input type="checkbox" name="ink_black" value="Yes" data-colour-weight="1">
                   <span class="con-mark"></span>
@@ -667,7 +667,7 @@ header .logo *{
               <label class="con-label">Is the tattoo raised or scarred?</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="tattoo_raised_scarred" value="No">
+                  <input type="radio" name="tattoo_raised_scarred" value="No" required>
                   <span class="con-mark"></span>
                   <span>No</span>
                 </label>
@@ -682,7 +682,7 @@ header .logo *{
               <label class="con-label">Have you ever had a reaction to your tattoo ink?</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="tattoo_ink_reaction" value="No">
+                  <input type="radio" name="tattoo_ink_reaction" value="No" required>
                   <span class="con-mark"></span>
                   <span>No</span>
                 </label>
@@ -751,21 +751,67 @@ header .logo *{
             <!-- Medical history -->
 
             <div class="con-section">
-              <div class="con-h3">Medical History & Safety</div>
+              <div class="con-h3">Medical History &amp; Safety</div>
 
-              <div class="con-options" data-none-group="medical-history">
+              <label class="con-label">Do you have or have you ever been diagnosed with any of the following conditions?</label>
+              <div class="con-options" data-none-group="medical-history" data-required-group="medical-history">
+                <label class="con-opt">
+                  <input type="checkbox" name="lupus" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Lupus</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="psoriasis" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Psoriasis</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="vitiligo_condition" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Vitiligo</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="eczema_dermatitis" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Eczema / dermatitis</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="keloid_scarring" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Keloid scarring</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="diabetes_condition" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Diabetes</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="autoimmune_disorder" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Autoimmune disorder</span>
+                </label>
+
                 <label class="con-opt">
                   <input type="checkbox" name="medical_history_none" value="None" data-none-option>
                   <span class="con-mark"></span>
-                  <span>None of the above</span>
+                  <span>None</span>
                 </label>
+              </div>
 
-                <label class="con-opt">
-                  <input type="checkbox" name="history_keloids" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>History of keloid or hypertrophic scarring</span>
-                </label>
+              <label class="con-label">Other (please specify)</label>
+              <input class="con-input" type="text" name="autoimmune_other">
+            </div>
 
+            <div class="con-section">
+              <div class="con-h3">Treatment Safety</div>
+
+              <div class="con-options" data-none-group="treatment-safety" data-required-group="treatment-safety">
                 <label class="con-opt">
                   <input type="checkbox" name="pregnant_nursing" value="Yes">
                   <span class="con-mark"></span>
@@ -783,28 +829,11 @@ header .logo *{
                   <span class="con-mark"></span>
                   <span>Using any photosensitising medication or products</span>
                 </label>
-                
-                <label class="con-opt">
-                  <input type="checkbox" name="autoimmune_disease" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Autoimmune disease or immune system condition</span>
-                </label>
 
                 <label class="con-opt">
-                  <input type="checkbox" name="immunosuppressive_meds" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Immunosuppressive medication (e.g. steroids, biologics)</span>
-                </label>
-<label class="con-opt">
                   <input type="checkbox" name="moles_lesions_area" value="Yes">
                   <span class="con-mark"></span>
                   <span>Moles or suspicious lesions in treatment area</span>
-                </label>
-
-                <label class="con-opt">
-                  <input type="checkbox" name="vitiligo" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Vitiligo</span>
                 </label>
 
                 <label class="con-opt">
@@ -819,10 +848,12 @@ header .logo *{
                   <span>Recent chemical peel in treatment area</span>
                 </label>
 
+                <label class="con-opt">
+                  <input type="checkbox" name="treatment_safety_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
               </div>
-
-              <label class="con-label">List any autoimmune or skin conditions (e.g. lupus, eczema)</label>
-              <textarea class="con-textarea" name="medical_conditions" rows="2"></textarea>
             </div>
 
 
@@ -830,13 +861,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Viral &amp; Blood-Borne Conditions</div>
 
-              <div class="con-options" data-none-group="viral-bloodborne">
-                <label class="con-opt">
-                  <input type="checkbox" name="viral_conditions_none" value="None" data-none-option>
-                  <span class="con-mark"></span>
-                  <span>None of the above</span>
-                </label>
-
+              <div class="con-options" data-none-group="viral-bloodborne" data-required-group="viral-bloodborne">
                 <label class="con-opt">
                   <input type="checkbox" name="cold_sores_hsv" value="Yes">
                   <span class="con-mark"></span>
@@ -860,23 +885,23 @@ header .logo *{
                   <span class="con-mark"></span>
                   <span>HIV</span>
                 </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="viral_conditions_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
               </div>
 
               <label class="con-label">Other blood-borne condition (please specify)</label>
               <input class="con-input" type="text" name="other_blood_borne">
             </div>
 
-            <!-- Chronic Health Conditions -->
+<!-- Chronic Health Conditions -->
             <div class="con-section">
               <div class="con-h3">Chronic Health Conditions</div>
 
-              <div class="con-options" data-none-group="chronic-health">
-                <label class="con-opt">
-                  <input type="checkbox" name="chronic_conditions_none" value="None" data-none-option>
-                  <span class="con-mark"></span>
-                  <span>None of the above</span>
-                </label>
-
+              <div class="con-options" data-none-group="chronic-health" data-required-group="chronic-health">
                 <label class="con-opt">
                   <input type="checkbox" name="diabetes" value="Yes">
                   <span class="con-mark"></span>
@@ -900,20 +925,26 @@ header .logo *{
                   <span class="con-mark"></span>
                   <span>Bleeding disorder (e.g. haemophilia)</span>
                 </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="skin_cancer_history" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>History of skin cancer</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="chronic_conditions_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
               </div>
             </div>
 
-            <!-- Allergies -->
+<!-- Allergies -->
             <div class="con-section">
               <div class="con-h3">Allergies</div>
 
-              <div class="con-options" data-none-group="allergies">
-                <label class="con-opt">
-                  <input type="checkbox" name="allergies_none" value="None" data-none-option>
-                  <span class="con-mark"></span>
-                  <span>No known allergies</span>
-                </label>
-
+              <div class="con-options" data-none-group="allergies" data-required-group="allergies">
                 <label class="con-opt">
                   <input type="checkbox" name="tattoo_ink_allergy" value="Yes">
                   <span class="con-mark"></span>
@@ -931,6 +962,12 @@ header .logo *{
                   <span class="con-mark"></span>
                   <span>Latex allergy</span>
                 </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="allergies_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>No known allergies</span>
+                </label>
               </div>
 
               <label class="con-label">Other allergies (please specify)</label>
@@ -938,7 +975,7 @@ header .logo *{
             </div>
 
 
-            <!-- Medications -->
+<!-- Medications -->
             <div class="con-section">
               <div class="con-h3">Medications & Supplements</div>
 
@@ -948,15 +985,7 @@ header .logo *{
                 <option value="Yes">Yes</option>
               </select>
 
-
-
               <div class="con-options" style="margin-top:12px;" data-none-group="medications">
-                <label class="con-opt">
-                  <input type="checkbox" name="medications_none" value="None" data-none-option>
-                  <span class="con-mark"></span>
-                  <span>None of the above</span>
-                </label>
-
                 <label class="con-opt">
                   <input type="checkbox" name="blood_thinners" value="Yes">
                   <span class="con-mark"></span>
@@ -992,20 +1021,26 @@ header .logo *{
                   <span class="con-mark"></span>
                   <span>St. John’s Wort or other photosensitising supplements</span>
                 </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="medications_none" value="None" data-none-option>
+                  <span class="con-mark"></span>
+                  <span>None of the above</span>
+                </label>
               </div>
 
               <label class="con-label">List all current medications (including herbs, vitamins, supplements)</label>
               <textarea class="con-textarea" name="current_medications" rows="3" placeholder="Aspirin, St. John's Wort, fish oil, etc."></textarea>
             </div>
 
-            <!-- Lifestyle Factors -->
+<!-- Lifestyle Factors -->
             <div class="con-section">
               <div class="con-h3">Lifestyle Factors</div>
 
               <label class="con-label">Do you smoke or vape?</label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="smoke_vape" value="No">
+                  <input type="radio" name="smoke_vape" value="No" required>
                   <span class="con-mark"></span>
                   <span>No</span>
                 </label>
@@ -1354,33 +1389,51 @@ syncFitzFromStorage();
       const groups = document.querySelectorAll("[data-none-group]");
       groups.forEach((group) => {
         const noneInput = group.querySelector("input[data-none-option]");
-        const otherInputs = [...group.querySelectorAll('input[type="checkbox"]:not([data-none-option])')];
-        if(!noneInput) return;
+        const checkboxes = [...group.querySelectorAll('input[type="checkbox"]')];
+        const otherInputs = checkboxes.filter((input) => !input.hasAttribute("data-none-option"));
 
-        noneInput.addEventListener("change", () => {
-          if(noneInput.checked){
-            otherInputs.forEach((input) => {
-              input.checked = false;
-              input.removeAttribute("required");
-            });
-          }
-          if(group.dataset.noneGroup === "tattoo-colours"){
-            updateColourScoring();
-          }
-        });
-
-        otherInputs.forEach((input) => {
-          input.addEventListener("change", () => {
-            if(input.checked){
-              noneInput.checked = false;
+        if(noneInput){
+          noneInput.addEventListener("change", () => {
+            if(noneInput.checked){
+              otherInputs.forEach((input) => {
+                input.checked = false;
+              });
             }
-
             if(group.dataset.noneGroup === "tattoo-colours"){
               updateColourScoring();
             }
           });
+        }
+
+        checkboxes.forEach((input) => {
+          if(input !== noneInput){
+            input.addEventListener("change", () => {
+              if(input.checked && noneInput){
+                noneInput.checked = false;
+              }
+              if(group.dataset.noneGroup === "tattoo-colours"){
+                updateColourScoring();
+              }
+            });
+          }
         });
       });
+    }
+
+    function validateRequiredCheckboxGroups(){
+      const requiredGroups = [...document.querySelectorAll("[data-required-group]")];
+      for(const group of requiredGroups){
+        const hasChecked = [...group.querySelectorAll('input[type="checkbox"]')].some((input) => input.checked);
+        if(!hasChecked){
+          const section = group.closest(".con-section");
+          const title = section?.querySelector(".con-h3")?.textContent?.trim() || "this section";
+          setStatus(`Please complete ${title}.`, "error");
+          statusEl.style.display = "block";
+          section?.scrollIntoView({behavior:"smooth", block:"start"});
+          return false;
+        }
+      }
+      return true;
     }
 
     function updateColourScoring(){
@@ -1439,6 +1492,10 @@ syncFitzFromStorage();
         setStatus("Please complete the Fitzpatrick Skin Test before submitting.", "error");
         statusEl.style.display = "block";
         document.getElementById("fitz-section")?.scrollIntoView({behavior:"smooth", block:"start"});
+        return;
+      }
+
+      if(!validateRequiredCheckboxGroups()){
         return;
       }
 
