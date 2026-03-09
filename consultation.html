@@ -365,6 +365,47 @@
       color:var(--heading-muted);
       opacity:.92;
     }
+    .success-step{
+      margin-top:18px;
+      font-size:13px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--heading-muted);
+      font-weight:700;
+    }
+    .success-actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:20px;
+      align-items:center;
+    }
+    .success-book-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      min-height:54px;
+      padding:14px 22px;
+      border-radius:999px;
+      background:var(--brand);
+      color:var(--body);
+      text-decoration:none;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      text-align:center;
+      box-shadow:0 14px 30px rgba(0,0,0,.18);
+      transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
+    }
+    .success-book-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 18px 36px rgba(0,0,0,.22);
+      filter:brightness(.97);
+    }
+    .success-book-btn:active{
+      transform:translateY(0);
+    }
     @keyframes popCheck{
       0%{ transform:scale(.55); opacity:0; }
       60%{ transform:scale(1.12); opacity:1; }
@@ -1109,9 +1150,14 @@ header .logo *{
   <div id="success-popup" class="success-popup" aria-hidden="true">
     <div class="success-card" role="dialog" aria-modal="true" aria-labelledby="success-title">
       <div class="success-check">✓</div>
-      <h3 id="success-title">Consultation Complete</h3>
-      <p>Thank you for completing your consultation form.<br>Please note: your consultation form must be completed before booking.<br>You will now be redirected to the booking calendar to schedule your consultation and patch test appointment.</p>
-      <div class="success-small">Redirecting you to booking…</div>
+      <h3 id="success-title">Consultation Received</h3>
+      <p>Thank you for submitting your consultation form. Your information has been received and will be reviewed.</p>
+      <div class="success-step">Step 2: Book your consultation appointment</div>
+      <p style="margin-top:10px;">Consultations must be completed before booking, and a consultation is required before treatment.</p>
+      <div class="success-actions">
+        <a class="success-book-btn" href="https://calendar.app.google/ArSSzdv4s7CF759Q7" target="_blank" rel="noopener">Book Consultation Appointment</a>
+        <div class="success-small">You can now continue to the booking calendar.</div>
+      </div>
     </div>
   </div>
 
@@ -1424,10 +1470,6 @@ if(res.ok){
     successPopup.classList.add("show");
     successPopup.setAttribute("aria-hidden", "false");
   }
-
-  setTimeout(() => {
-    window.location.replace("https://calendar.app.google/ArSSzdv4s7CF759Q7");
-  }, 4000);
 
 }else{
   setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
