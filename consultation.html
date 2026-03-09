@@ -514,7 +514,14 @@ header .logo:active{
 header .logo *{
   text-decoration: none !important;
 }
-  </style>
+  
+.required-star{
+  color:#c23b3b;
+  margin-left:4px;
+  font-weight:700;
+}
+
+</style>
 </head>
 
 <body>
@@ -541,6 +548,7 @@ header .logo *{
         <p class="subnote">
           Please complete this form accurately. All information is kept confidential and used only to assess treatment suitability and safety.
         </p>
+        <p class="con-small">Fields marked with <span class="required-star">*</span> are required.</p>
 
         <div class="con-card">
           <form id="consultation-form" autocomplete="off" action="https://formspree.io/f/mykdryle" method="POST" enctype="multipart/form-data">
@@ -565,7 +573,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Tattoo Information</div>
 
-              <label class="con-label">Approximate age of tattoo</label>
+              <label class="con-label">Approximate age of tattoo <span class="required-star">*</span></label>
               <input class="con-input" type="text" name="tattoo_age" placeholder="e.g. 5 years" required>
 
               <label class="con-label">Location on body</label>
@@ -586,7 +594,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Tattoo Characteristics</div>
 
-              <label class="con-label">Type of tattoo</label>
+              <label class="con-label">Type of tattoo <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="tattoo_type" value="Professional" required>
@@ -664,7 +672,7 @@ header .logo *{
                 </label>
               </div>
 
-              <label class="con-label">Is the tattoo raised or scarred?</label>
+              <label class="con-label">Is the tattoo raised or scarred? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="tattoo_raised_scarred" value="No" required>
@@ -679,7 +687,7 @@ header .logo *{
                 </label>
               </div>
 
-              <label class="con-label">Have you ever had a reaction to your tattoo ink?</label>
+              <label class="con-label">Have you ever had a reaction to your tattoo ink? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="tattoo_ink_reaction" value="No" required>
@@ -696,26 +704,6 @@ header .logo *{
 
               <label class="con-label">If yes, please describe</label>
               <textarea class="con-textarea" name="tattoo_ink_reaction_details" rows="2" placeholder="e.g. swelling, itching, rash, raised areas"></textarea>
-
-              
-              <label class="con-label">Is this tattoo a cover-up of another tattoo?</label>
-              <div class="con-options">
-                <label class="con-opt">
-                  <input type="radio" name="tattoo_coverup" value="No">
-                  <span class="con-mark"></span>
-                  <span>No</span>
-                </label>
-                <label class="con-opt">
-                  <input type="radio" name="tattoo_coverup" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Yes</span>
-                </label>
-                <label class="con-opt">
-                  <input type="radio" name="tattoo_coverup" value="Not sure">
-                  <span class="con-mark"></span>
-                  <span>Not sure</span>
-                </label>
-              </div>
 
               <input type="hidden" name="tattoo_colour_score" id="tattoo_colour_score" value="">
               <input type="hidden" name="tattoo_colour_assessment" id="tattoo_colour_assessment" value="">
@@ -742,33 +730,27 @@ header .logo *{
                 Taking the test will open in a new tab. When you finish, your result will automatically fill here.
               </div>
 
-              <div class="con-consent" style="margin-top:14px;">
-                <div class="con-h3">Consent &amp; Privacy</div>
+<div class="con-consent" style="margin-top:14px;">
+  <div class="con-h3">Consent &amp; Privacy</div>
 
-                <label class="con-opt" style="margin-top:10px;">
-                  <input type="checkbox" name="gdpr_contact_consent" value="Yes" required>
-                  <span class="con-mark"></span>
-                  <span>I consent to BARE by Marlese storing my details to respond to my enquiry.</span>
-                </label>
+  <label class="con-opt" style="margin-top:10px;">
+    <input type="checkbox" name="gdpr_consent" value="Yes" required>
+    <span class="con-mark"></span>
+    <span>
+      I consent to BARE by Marlese storing and processing my personal and health-related information (including consultation and Fitzpatrick skin type data) to assess treatment suitability and respond to my enquiry. I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+    </span>
+  </label>
 
-                <label class="con-opt" style="margin-top:10px;">
-                  <input type="checkbox" name="gdpr_health_consent" value="Yes" required>
-                  <span class="con-mark"></span>
-                  <span>
-                    I give <strong>explicit consent</strong> for BARE by Marlese to collect and process my Fitzpatrick skin type, consultation, and health-related information to assess treatment suitability and safety.
-                    I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
-                  </span>
-                </label>
-
-                <div class="con-small">
-                  Please do not submit urgent medical information here. This is for consultation screening only.
-                </div>
-              </div>
+  <div class="con-small">
+    Please do not submit urgent medical information here. This is for consultation screening only.
+  </div>
+</div>
 
               <input type="hidden" name="fitzpatrick_score" id="fitzpatrick_score" value="">
             </div>
 
             <!-- Medical history -->
+<p class="con-small" style="margin-top:10px;">Medical screening is required to ensure treatment safety and suitability.</p>
 
             <div class="con-section">
               <div class="con-h3">Medical History &amp; Safety</div>
@@ -815,6 +797,12 @@ header .logo *{
                   <input type="checkbox" name="autoimmune_disorder" value="Yes">
                   <span class="con-mark"></span>
                   <span>Autoimmune disorder</span>
+                </label>
+
+                <label class="con-opt">
+                  <input type="checkbox" name="immunosuppressive_therapy" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Immunosuppressive medication or therapy (e.g. biologics, chemotherapy, steroid therapy)</span>
                 </label>
 
                 <label class="con-opt">
@@ -869,14 +857,13 @@ header .logo *{
                 </label>
 
                 <label class="con-opt">
-                  
-                <label class="con-opt">
-                  <input type="checkbox" name="poor_wound_healing" value="Yes">
+                  <input type="checkbox" name="recent_tattoo_6weeks" value="Yes">
                   <span class="con-mark"></span>
-                  <span>History of poor wound healing or abnormal scarring</span>
+                  <span>Tattoo done within the last 6–8 weeks</span>
                 </label>
 
-                <input type="checkbox" name="treatment_safety_none" value="None" data-none-option>
+                <label class="con-opt">
+                  <input type="checkbox" name="treatment_safety_none" value="None" data-none-option>
                   <span class="con-mark"></span>
                   <span>None of the above</span>
                 </label>
@@ -965,6 +952,9 @@ header .logo *{
                   <span>None of the above</span>
                 </label>
               </div>
+
+              <label class="con-label">Other Chronic Health Conditions (please specify)</label>
+              <input class="con-input" type="text" name="other_chronic_health_conditions">
             </div>
 
 <!-- Allergies -->
@@ -1006,7 +996,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Medications & Supplements</div>
 
-              <label class="con-label">Have you taken Accutane (Isotretinoin) in the last 6 months?</label>
+              <label class="con-label">Have you taken Accutane (Isotretinoin) in the last 6 months? <span class="required-star">*</span></label>
               <select class="con-select" name="accutane" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
@@ -1064,7 +1054,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Lifestyle Factors</div>
 
-              <label class="con-label">Do you smoke or vape?</label>
+              <label class="con-label">Do you smoke or vape? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="smoke_vape" value="No" required>
