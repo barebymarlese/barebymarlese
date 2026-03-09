@@ -705,6 +705,26 @@ header .logo *{
               <label class="con-label">If yes, please describe</label>
               <textarea class="con-textarea" name="tattoo_ink_reaction_details" rows="2" placeholder="e.g. swelling, itching, rash, raised areas"></textarea>
 
+              
+              <label class="con-label">Is this tattoo a cover-up of another tattoo?</label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_coverup" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_coverup" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="tattoo_coverup" value="Not sure">
+                  <span class="con-mark"></span>
+                  <span>Not sure</span>
+                </label>
+              </div>
+
               <input type="hidden" name="tattoo_colour_score" id="tattoo_colour_score" value="">
               <input type="hidden" name="tattoo_colour_assessment" id="tattoo_colour_assessment" value="">
             </div>
@@ -864,7 +884,14 @@ Medical screening helps ensure laser treatment is safe and appropriate for your 
                 </label>
 
                 <label class="con-opt">
-                  <input type="checkbox" name="treatment_safety_none" value="None" data-none-option>
+                  
+                <label class="con-opt">
+                  <input type="checkbox" name="poor_wound_healing" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>History of poor wound healing or abnormal scarring</span>
+                </label>
+
+                <input type="checkbox" name="treatment_safety_none" value="None" data-none-option>
                   <span class="con-mark"></span>
                   <span>None of the above</span>
                 </label>
