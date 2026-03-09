@@ -514,7 +514,14 @@ header .logo:active{
 header .logo *{
   text-decoration: none !important;
 }
-  </style>
+  
+.required-star{
+  color:#c23b3b;
+  margin-left:4px;
+  font-weight:700;
+}
+
+</style>
 </head>
 
 <body>
@@ -541,6 +548,7 @@ header .logo *{
         <p class="subnote">
           Please complete this form accurately. All information is kept confidential and used only to assess treatment suitability and safety.
         </p>
+        <p class="con-small">Fields marked with <span class="required-star">*</span> are required.</p>
 
         <div class="con-card">
           <form id="consultation-form" autocomplete="off" action="https://formspree.io/f/mykdryle" method="POST" enctype="multipart/form-data">
@@ -565,7 +573,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Tattoo Information</div>
 
-              <label class="con-label">Approximate age of tattoo</label>
+              <label class="con-label">Approximate age of tattoo <span class="required-star">*</span></label>
               <input class="con-input" type="text" name="tattoo_age" placeholder="e.g. 5 years" required>
 
               <label class="con-label">Location on body</label>
@@ -586,7 +594,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Tattoo Characteristics</div>
 
-              <label class="con-label">Type of tattoo</label>
+              <label class="con-label">Type of tattoo <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="tattoo_type" value="Professional" required>
@@ -664,7 +672,7 @@ header .logo *{
                 </label>
               </div>
 
-              <label class="con-label">Is the tattoo raised or scarred?</label>
+              <label class="con-label">Is the tattoo raised or scarred? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="tattoo_raised_scarred" value="No" required>
@@ -679,7 +687,7 @@ header .logo *{
                 </label>
               </div>
 
-              <label class="con-label">Have you ever had a reaction to your tattoo ink?</label>
+              <label class="con-label">Have you ever had a reaction to your tattoo ink? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="tattoo_ink_reaction" value="No" required>
@@ -982,7 +990,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Medications & Supplements</div>
 
-              <label class="con-label">Have you taken Accutane (Isotretinoin) in the last 6 months?</label>
+              <label class="con-label">Have you taken Accutane (Isotretinoin) in the last 6 months? <span class="required-star">*</span></label>
               <select class="con-select" name="accutane" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
@@ -1040,7 +1048,7 @@ header .logo *{
             <div class="con-section">
               <div class="con-h3">Lifestyle Factors</div>
 
-              <label class="con-label">Do you smoke or vape?</label>
+              <label class="con-label">Do you smoke or vape? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="smoke_vape" value="No" required>
