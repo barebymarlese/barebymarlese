@@ -104,13 +104,16 @@
       background: rgba(202,205,198,.86);
       border-bottom: 1px solid rgba(36,34,26,.15);
     }
-    .nav-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding: 14px 0;
-    }
+.nav{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:9999;
+  backdrop-filter: blur(8px);
+  background: rgba(202,205,198,.86);
+  border-bottom: 1px solid rgba(36,34,26,.15);
+}
     .logo{
   display:flex;
   flex-direction: column;
