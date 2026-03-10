@@ -36,7 +36,21 @@
        text-decoration:none;
      }
     .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; max-width:100%; }
+    
+.nav{
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  backdrop-filter: blur(8px);
+  background: rgba(202,205,198,.86);
+}
 
+.nav::after{
+  content: "";
+  display: block;
+  height: 1px;
+  background: rgba(36,34,26,.15);
+}
     /* Nav (same feel as your site) */
     .nav-inner{
       display:flex;
