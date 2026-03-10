@@ -690,7 +690,13 @@ letter-spacing:.02em;
 }
     /* keep hero title readable */
 .hero-title h1{ font-size: 52px; }
-
+    
+.aftercare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:20px;
+}
 /* Floating CTA (Book Consultation) */
 .floating-cta{
   position: fixed;
@@ -731,7 +737,11 @@ letter-spacing:.02em;
 }
 
 @media (max-width:980px){
-
+  
+.aftercare-grid{
+  grid-template-columns:1fr;
+}
+  
 /* Mobile nav spacing improvement */
 
 .nav-links{
@@ -1372,7 +1382,7 @@ Consultation &amp; Patch Test Included
     </p>
 
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:20px;">
+   <div class="aftercare-grid">
 
       <div class="forms-card">
         <h3 style="margin-top:0;">Immediately After Treatment</h3>
