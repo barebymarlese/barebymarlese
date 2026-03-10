@@ -40,9 +40,11 @@
 .nav{
   position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
   z-index: 999;
   backdrop-filter: blur(8px);
-  background: rgba(202,205,198,.86);
+  background: rgba(202,205,198,.96);
 }
 
 .nav::after{
@@ -55,7 +57,7 @@
     .nav-inner{
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content:flex-start;
       gap:16px;
       padding: 14px 0;
     }
@@ -69,7 +71,11 @@
     }
     .logo .bare{ color: var(--brand); font-size: 22px; }
     .logo .by{ letter-spacing:.05em; font-weight:500; text-transform:none; color: var(--heading-muted); font-size: 14px; }
-
+    
+/* ADD THIS HERE */
+main{
+  padding-top: 90px;
+}
     .nav-links{
       display:flex;
       gap:18px;
