@@ -1228,6 +1228,55 @@ letter-spacing:.02em;
 }
 
 
+
+
+/* ---------- PREMIUM BUTTON EFFECT ---------- */
+button,
+.btn,
+.cta-button {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: all 0.25s ease;
+}
+
+button:hover,
+.btn:hover,
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+/* ---------- TRUST STRIP ---------- */
+.trust-strip {
+  background: #f5f5f3;
+  padding: 18px 0;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.trust-items {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  font-size: 14px;
+  color: #5e6959;
+  text-align: center;
+}
+
+.trust-items span::before {
+  content: "•";
+  margin-right: 8px;
+  color: #878274;
+}
+
+/* ---------- SECTION DIVIDER ---------- */
+.section-divider {
+  width: 60px;
+  height: 2px;
+  background: #878274;
+  margin: 40px auto;
+  opacity: 0.4;
+}
 </style>
 </head>
 
@@ -1348,6 +1397,17 @@ Consultation &amp; Patch Test Included
 </div>
       </div>
     </section>
+
+<!-- TRUST STRIP -->
+<section class="trust-strip">
+  <div class="wrap trust-items">
+    <span>VTCT Level 5 Laser Certified</span>
+    <span>Fully Insured Practitioner</span>
+    <span>Medical Consultation Required</span>
+    <span>Personalised Treatment Plans</span>
+  </div>
+</section>
+
 
 
 
