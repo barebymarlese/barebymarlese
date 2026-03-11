@@ -1551,9 +1551,13 @@ if(res.ok){
   if(successPopup){
     successPopup.classList.add("show");
     successPopup.setAttribute("aria-hidden", "false");
-  }
 
-  window.location.href = "deposit.html";
+    setTimeout(function(){
+      window.location.href = "deposit.html";
+    }, 2000);
+  } else {
+    window.location.href = "deposit.html";
+  }
 
 }else{
   setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
