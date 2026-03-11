@@ -132,9 +132,20 @@ Return to Homepage
 </a>
 
 </div>
-
 </div>
-
 </div>
+  
+<script>
+window.addEventListener("load", function() {
+  const calendar = document.getElementById("booking-calendar");
+  if(calendar){
+    calendar.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+</script>
+
+<script>
+localStorage.removeItem("depositPaid");
+</script>
 </body>
 </html>
