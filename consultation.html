@@ -1553,9 +1553,7 @@ if(res.ok){
     successPopup.setAttribute("aria-hidden", "false");
   }
 
-  setTimeout(() => {
-    window.location.href = "deposit.html";
-  }, 3000);
+  window.location.href = "deposit.html";
 
 }else{
   setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
