@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+if(localStorage.getItem("depositPaid") !== "yes"){
+  window.location.href = "deposit.html";
+}
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -50,7 +56,7 @@ color:#5e6959;
 font-weight:500;
 }
 
-.steps .complete{
+.steps .completed{
 background:#cacdc6;
 color:#24221a;
 }
@@ -59,6 +65,7 @@ color:#24221a;
 background:#5e6959;
 color:white;
 }
+
 .booking-box{
 background:white;
 padding:20px;
@@ -71,6 +78,7 @@ border:0;
 width:100%;
 height:700px;
 }
+
 .button-row{
 display:flex;
 justify-content:center;
@@ -125,14 +133,12 @@ height="820"
 frameborder="0">
 </iframe>
 
-
 <div class="button-row">
-
 <a class="btn" href="https://barebymarlese.com">
 Return to Homepage
 </a>
-
 </div>
+
 </div>
 </div>
   
