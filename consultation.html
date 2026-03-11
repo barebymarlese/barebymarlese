@@ -1548,16 +1548,7 @@ if(res.ok){
   if(fitzDescEl) fitzDescEl.value = "Not completed yet";
   if(fitzScoreEl) fitzScoreEl.value = "";
 
-  if(successPopup){
-    successPopup.classList.add("show");
-    successPopup.setAttribute("aria-hidden", "false");
-
-    setTimeout(function(){
-      window.location.href = "deposit.html";
-    }, 2000);
-  } else {
-    window.location.href = "deposit.html";
-  }
+  window.location.href = "deposit.html";
 
 }else{
   setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
