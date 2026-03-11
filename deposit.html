@@ -1,56 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<title>Book Your Appointment | BARE by Marlese</title>
-
+<title>Consultation Deposit | BARE by Marlese</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
 body{
-font-family: Montserrat, Arial, sans-serif;
-background:#cacdc6;
-color:#24221a;
-margin:0;
-display:flex;
-align-items:center;
-justify-content:center;
-height:100vh;
+  font-family: Montserrat, Arial, sans-serif;
+  background:#cacdc6;
+  color:#24221a;
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:20px;
+  box-sizing:border-box;
 }
 
 .deposit-card{
-background:white;
-padding:40px;
-border-radius:12px;
-max-width:520px;
-width:90%;
-text-align:center;
-box-shadow:0 15px 35px rgba(0,0,0,0.1);
+  background:white;
+  padding:40px;
+  border-radius:12px;
+  max-width:520px;
+  width:90%;
+  text-align:center;
+  box-shadow:0 15px 35px rgba(0,0,0,0.1);
 }
 
 h1{
-margin-top:0;
-font-size:28px;
+  margin-top:0;
+  font-size:28px;
 }
 
 .notice{
-font-size:15px;
-margin-top:10px;
-color:#444;
+  font-size:15px;
+  margin-top:10px;
+  color:#444;
 }
 
 .paypal-container{
-margin-top:25px;
+  margin-top:25px;
 }
 
 .secure{
-font-size:13px;
-margin-top:15px;
-color:#777;
+  font-size:13px;
+  margin-top:15px;
+  color:#777;
 }
 
+.btn{
+  display:inline-block;
+  margin-top:24px;
+  padding:12px 22px;
+  background:#5e6959;
+  color:#fff;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:600;
+}
 </style>
 </head>
 
@@ -58,67 +67,60 @@ color:#777;
 
 <div class="deposit-card">
 
-<h1>Consultation Deposit</h1>
+  <h1>Consultation Deposit</h1>
 
-<p style="margin-top:10px;font-weight:500;">
-Laser Tattoo Removal Consultation & Patch Test
-</p>
+  <p style="margin-top:10px;font-weight:500;">
+    Laser Tattoo Removal Consultation & Patch Test
+  </p>
 
-<p>
-To secure your consultation appointment, a <strong>£30 deposit</strong> is required.
-</p>
+  <p>
+    To secure your consultation appointment, a <strong>£30 deposit</strong> is required.
+  </p>
 
-<p class="notice">
-This deposit will be <strong>fully deducted from your treatment cost</strong> and is not an additional fee.
-</p>
+  <p class="notice">
+    This deposit will be <strong>fully deducted from your treatment cost</strong> and is not an additional fee.
+  </p>
 
-<p class="notice">
-Deposits help protect appointment availability and reduce missed bookings.
-</p>
+  <p class="notice">
+    Deposits help protect appointment availability and reduce missed bookings.
+  </p>
 
-<p class="notice">
-Deposits are transferable with <strong>24 hours’ notice</strong>.
-</p>
+  <p class="notice">
+    Deposits are transferable with <strong>24 hours’ notice</strong>.
+  </p>
 
-<p class="secure">
-Secure payment via PayPal
-</p>
+  <div class="paypal-container" id="paypal-button-container"></div>
+
+  <p class="secure">
+    Secure payment via PayPal
+  </p>
+
+  <a class="btn" href="https://barebymarlese.com/">Back to BARE by Marlese</a>
 
 </div>
-
 
 <script src="https://www.paypal.com/sdk/js?client-id=AaJWn1sx65Op3OHJvrwuGiw5J1CB8droT7p1ILNBa1_v_AS5E_rks31HOubCarCGg1m3ZzCPc_3fn1Hu&currency=GBP"></script>
 
 <script>
-
 paypal.Buttons({
+  createOrder: function(data, actions) {
+    return actions.order.create({
+      purchase_units: [{
+        amount: {
+          value: '30.00'
+        }
+      }]
+    });
+  },
 
-createOrder: function(data, actions) {
-return actions.order.create({
-purchase_units: [{
-amount: {
-value: '30.00'
-}
-}]
-});
-},
-
-onApprove: function(data, actions) {
-return actions.order.capture().then(function(details) {
-
-localStorage.setItem("depositPaid","yes");
-
-window.location.href = "booking.html";
-
-});
-}
-
+  onApprove: function(data, actions) {
+    return actions.order.capture().then(function(details) {
+      localStorage.setItem("depositPaid", "yes");
+      window.location.href = "booking.html";
+    });
+  }
 }).render('#paypal-button-container');
-
 </script>
-
-<button class="btn">Back to BARE by Marlese</button>
-
 
 </body>
 </html>
