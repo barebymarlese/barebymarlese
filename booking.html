@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
 <script>
-if(localStorage.getItem("depositPaid") !== "yes"){
-  window.location.href = "deposit.html";
-}
+(function(){
+  var allowed = localStorage.getItem("bareDepositGate");
+  var ts = parseInt(localStorage.getItem("bareDepositGateTs") || "0", 10);
+  var twelveHours = 12 * 60 * 60 * 1000;
+  if(allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours){
+    window.location.href = "deposit.html";
+  }
+})();
 </script>
 
 <meta charset="UTF-8">
@@ -120,7 +125,7 @@ opacity:.9;
   <span class="step active">Step 3: Book Appointment</span>
 </div>
 
-<p>Please select your preferred appointment time below.</p>
+<p>Please select your preferred appointment time below. This step is available after your consultation and deposit.</p>
 
 <div class="booking-box">
 
@@ -152,7 +157,11 @@ window.addEventListener("load", function() {
 </script>
 
 <script>
-localStorage.removeItem("depositPaid");
+window.addEventListener("pageshow", function(){
+  setTimeout(function(){
+    localStorage.removeItem("bareDepositGate");
+  }, 1500);
+});
 </script>
 </body>
 </html>
