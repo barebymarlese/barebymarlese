@@ -307,88 +307,71 @@ footer{
 
 <script>
 (function(){
-  const continueBtn = document.getElementById('continue-booking-btn');
-  const payBtn = document.getElementById('pay-deposit-btn');
-  const help = document.getElementById('payment-help');
-  const status = document.getElementById('payment-status');
-  const returnWindowMs = 12 * 60 * 60 * 1000;
 
-  function lockBooking(){
-    continueBtn.disabled = true;
-    continueBtn.style.opacity = '.55';
-    continueBtn.style.cursor = 'not-allowed';
-    continueBtn.textContent = 'Complete Payment First';
-    status.classList.remove('show');
+const payBtn = document.getElementById('pay-deposit-btn');
+const continueBtn = document.getElementById('continue-booking-btn');
+const helpText = document.querySelector('.help');
+
+function initialState(){
+  continueBtn.disabled = true;
+  continueBtn.style.opacity = ".55";
+  continueBtn.style.cursor = "not-allowed";
+}
+
+function activateBooking(){
+  continueBtn.disabled = false;
+  continueBtn.style.opacity = "1";
+  continueBtn.style.cursor = "pointer";
+
+  continueBtn.classList.remove("btn-secondary");
+  continueBtn.classList.add("btn-primary");
+
+  payBtn.style.opacity = ".45";
+  payBtn.style.pointerEvents = "none";
+  payBtn.textContent = "Deposit Paid";
+
+  if(helpText){
+    helpText.textContent = "Payment detected. You can now continue to booking.";
   }
+}
 
-  function unlockBooking(){
-    continueBtn.disabled = false;
-    continueBtn.style.opacity = '1';
-    continueBtn.style.cursor = 'pointer';
-    continueBtn.textContent = 'Continue to Booking';
-    status.classList.add('show');
+initialState();
+
+payBtn.addEventListener("click", function(){
+  localStorage.setItem("barePaymentStarted", "yes");
+  localStorage.setItem("barePaymentStartedTs", Date.now());
+});
+
+function checkReturn(){
+  const started = localStorage.getItem("barePaymentStarted");
+  const ts = parseInt(localStorage.getItem("barePaymentStartedTs") || "0",10);
+
+  if(!started || !ts) return;
+
+  const elapsed = Date.now() - ts;
+
+  if(elapsed > 8000){
+    activateBooking();
   }
+}
 
-  function clearPaymentReturn(){
-    localStorage.removeItem('barePaymentStarted');
-    localStorage.removeItem('barePaymentStartedTs');
-    localStorage.removeItem('barePaymentReturned');
-    localStorage.removeItem('barePaymentReturnedTs');
+window.addEventListener("focus", checkReturn);
+window.addEventListener("pageshow", checkReturn);
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "visible"){
+    checkReturn();
   }
+});
 
-  function hasValidReturn(){
-    const returned = localStorage.getItem('barePaymentReturned');
-    const returnedTs = parseInt(localStorage.getItem('barePaymentReturnedTs') || '0', 10);
-    return returned === 'yes' && returnedTs && (Date.now() - returnedTs) <= returnWindowMs;
-  }
+continueBtn.addEventListener("click", function(){
 
-  function markReturnedFromPayment(){
-    const started = localStorage.getItem('barePaymentStarted');
-    const startedTs = parseInt(localStorage.getItem('barePaymentStartedTs') || '0', 10);
+  localStorage.setItem("bareDepositGate","allowed");
+  localStorage.setItem("bareDepositGateTs", Date.now());
 
-    if(!started || !startedTs) return;
+  window.location.href = "booking.html";
 
-    const elapsed = Date.now() - startedTs;
+});
 
-    if(elapsed > 8000){
-      localStorage.setItem('barePaymentReturned', 'yes');
-      localStorage.setItem('barePaymentReturnedTs', String(Date.now()));
-      unlockBooking();
-      if(help){
-        help.textContent = 'Welcome back. If your Revolut payment has completed successfully, you can now continue to booking.';
-      }
-    }
-  }
-
-  if(hasValidReturn()){
-    unlockBooking();
-  } else {
-    clearPaymentReturn();
-    lockBooking();
-  }
-
-  payBtn.addEventListener('click', function(){
-    localStorage.setItem('barePaymentStarted', 'yes');
-    localStorage.setItem('barePaymentStartedTs', String(Date.now()));
-    localStorage.removeItem('barePaymentReturned');
-    localStorage.removeItem('barePaymentReturnedTs');
-    lockBooking();
-  });
-
-  window.addEventListener('focus', markReturnedFromPayment);
-  window.addEventListener('pageshow', markReturnedFromPayment);
-  document.addEventListener('visibilitychange', function(){
-    if(document.visibilityState === 'visible'){
-      markReturnedFromPayment();
-    }
-  });
-
-  continueBtn.addEventListener('click', function(){
-    if(continueBtn.disabled) return;
-    localStorage.setItem('bareDepositGate', 'allowed');
-    localStorage.setItem('bareDepositGateTs', String(Date.now()));
-    window.location.href = 'booking.html';
-  });
 })();
 </script>
 </body>
