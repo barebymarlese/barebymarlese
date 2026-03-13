@@ -316,12 +316,14 @@ function initialState(){
   continueBtn.disabled = true;
   continueBtn.style.opacity = ".55";
   continueBtn.style.cursor = "not-allowed";
+  continueBtn.textContent = "Complete Payment First";
 }
 
 function activateBooking(){
   continueBtn.disabled = false;
   continueBtn.style.opacity = "1";
   continueBtn.style.cursor = "pointer";
+  continueBtn.textContent = "Continue to Booking";
 
   continueBtn.classList.remove("btn-secondary");
   continueBtn.classList.add("btn-primary");
@@ -364,12 +366,9 @@ document.addEventListener("visibilitychange", function(){
 });
 
 continueBtn.addEventListener("click", function(){
-
   localStorage.setItem("bareDepositGate","allowed");
   localStorage.setItem("bareDepositGateTs", Date.now());
-
   window.location.href = "booking.html";
-
 });
 
 })();
