@@ -158,6 +158,16 @@ h1{
 .btn-primary{background:var(--olive);color:#fff}
 .btn-primary:hover{background:var(--olive-dark)}
 .btn-secondary{background:#eceee9;color:var(--ink);margin-top:12px}
+.confirm{
+  display:flex;gap:10px;align-items:flex-start;
+  margin:18px 0 0;
+  padding:14px;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:14px;
+}
+.confirm input{margin-top:4px;accent-color:var(--olive)}
+.confirm label{font-size:14px;line-height:1.6;color:rgba(36,34,26,.85)}
 .help{
   margin-top:12px;
   font-size:13px;
@@ -174,19 +184,6 @@ h1{
   font-size:13px;
   line-height:1.55;
 }
-.status-pill{
-  display:none;
-  margin-top:14px;
-  padding:12px 14px;
-  border-radius:12px;
-  background:rgba(94,105,89,.12);
-  border:1px solid rgba(94,105,89,.18);
-  color:var(--olive-dark);
-  font-size:13px;
-  line-height:1.55;
-  font-weight:600;
-}
-.status-pill.show{display:block}
 .divider{height:1px;background:var(--line);margin:18px 0}
 .back-link{
   display:inline-block;
@@ -283,18 +280,22 @@ footer{
             <div class="action-wrap">
               <a class="btn btn-primary" href="https://checkout.revolut.com/payment-link/db26ee07-3712-49db-b515-c6ddb1028813" target="_blank" rel="noopener noreferrer" id="pay-deposit-btn">Pay £30 Deposit</a>
 
-              <button class="btn btn-secondary" id="continue-booking-btn" disabled>Complete Payment First</button>
-
-              <div class="help" id="payment-help">
-                The payment opens in secure Revolut checkout. Once you return to this page, booking will unlock automatically so you can continue.
+              <div class="confirm">
+                <input type="checkbox" id="paid-confirm">
+                <label for="paid-confirm">
+                  I confirm I have completed my £30 consultation deposit.
+                  Bookings made without a valid deposit may be cancelled.
+                </label>
               </div>
 
-              <div class="status-pill" id="payment-status">
-                Welcome back. If your Revolut payment has completed successfully, you can now continue to booking.
+              <button class="btn btn-secondary" id="continue-booking-btn" disabled>Continue to Booking</button>
+
+              <div class="help">
+                The payment opens in secure Revolut checkout. After completing payment, return here and tick the confirmation box to continue to booking.
               </div>
 
               <div class="notice">
-                For a clean client journey, booking is only unlocked after the payment step has been opened and you have returned to this page.
+                For a clean client journey, booking is only unlocked after this step has been completed.
               </div>
             </div>
           </div>
@@ -306,123 +307,76 @@ footer{
 </div>
 
 <script>
-(function () {
-  const payBtn = document.getElementById('pay-deposit-btn');
+(function(){
+  const checkbox = document.getElementById('paid-confirm');
   const continueBtn = document.getElementById('continue-booking-btn');
-  const helpText = document.querySelector('.help');
+  const payBtn = document.getElementById('pay-deposit-btn');
 
-  const RETURN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-  let pageWasHidden = false;
-
-  function lockBooking() {
-    continueBtn.disabled = true;
-    continueBtn.style.opacity = ".55";
-    continueBtn.style.cursor = "not-allowed";
-    continueBtn.textContent = "Complete Payment First";
-
-    continueBtn.classList.remove("btn-primary");
-    continueBtn.classList.add("btn-secondary");
-
-    payBtn.style.opacity = "1";
-    payBtn.style.pointerEvents = "auto";
-    payBtn.textContent = "Pay £30 Deposit";
-
-    if (helpText) {
-      helpText.textContent = "The payment opens in secure Revolut checkout. Once you return to this page, booking will unlock automatically so you can continue.";
-    }
+  function syncState(){
+    continueBtn.disabled = !checkbox.checked;
+    continueBtn.style.opacity = checkbox.checked ? '1' : '.55';
+    continueBtn.style.cursor = checkbox.checked ? 'pointer' : 'not-allowed';
   }
 
-  function activateBooking() {
-    continueBtn.disabled = false;
-    continueBtn.style.opacity = "1";
-    continueBtn.style.cursor = "pointer";
-    continueBtn.textContent = "Continue to Booking";
+  syncState();
 
-    continueBtn.classList.remove("btn-secondary");
-    continueBtn.classList.add("btn-primary");
+  checkbox.addEventListener('change', syncState);
 
-    payBtn.style.opacity = ".45";
-    payBtn.style.pointerEvents = "none";
-    payBtn.textContent = "Deposit Paid";
-
-    if (helpText) {
-      helpText.textContent = "Payment detected. You can now continue to booking.";
-    }
-  }
-
-  function clearPaymentFlow() {
-    localStorage.removeItem("barePaymentStarted");
-    localStorage.removeItem("barePaymentStartedTs");
-    localStorage.removeItem("barePaymentReturned");
-    localStorage.removeItem("barePaymentReturnedTs");
-  }
-
-  function hasValidReturn() {
-    const returned = localStorage.getItem("barePaymentReturned");
-    const returnedTs = parseInt(localStorage.getItem("barePaymentReturnedTs") || "0", 10);
-
-    return returned === "yes" &&
-      returnedTs &&
-      (Date.now() - returnedTs) <= RETURN_WINDOW_MS;
-  }
-
-  function markReturnedFromPayment() {
-    const started = localStorage.getItem("barePaymentStarted");
-    const startedTs = parseInt(localStorage.getItem("barePaymentStartedTs") || "0", 10);
-
-    if (started !== "yes" || !startedTs) return;
-    if (!pageWasHidden) return;
-
-    const elapsed = Date.now() - startedTs;
-
-    if (elapsed > 3000 && elapsed <= RETURN_WINDOW_MS) {
-      localStorage.setItem("barePaymentReturned", "yes");
-      localStorage.setItem("barePaymentReturnedTs", String(Date.now()));
-      activateBooking();
-    }
-  }
-
-  if (hasValidReturn()) {
-    activateBooking();
-  } else {
-    clearPaymentFlow();
-    lockBooking();
-  }
-
-  payBtn.addEventListener("click", function () {
-    localStorage.setItem("barePaymentStarted", "yes");
-    localStorage.setItem("barePaymentStartedTs", String(Date.now()));
-    localStorage.removeItem("barePaymentReturned");
-    localStorage.removeItem("barePaymentReturnedTs");
-    pageWasHidden = false;
-    lockBooking();
+  continueBtn.addEventListener('click', function(){
+    if(!checkbox.checked) return;
+    localStorage.setItem('bareDepositGate', 'allowed');
+    localStorage.setItem('bareDepositGateTs', String(Date.now()));
+    window.location.href = 'booking.html';
   });
 
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "hidden") {
-      pageWasHidden = true;
-    } else if (document.visibilityState === "visible") {
-      markReturnedFromPayment();
-    }
-  });
-
-  window.addEventListener("focus", markReturnedFromPayment);
-  window.addEventListener("pageshow", function () {
-    if (hasValidReturn()) {
-      activateBooking();
-    } else {
-      lockBooking();
-    }
-  });
-
-  continueBtn.addEventListener("click", function () {
-    if (continueBtn.disabled) return;
-
-    localStorage.setItem("bareDepositGate", "allowed");
-    localStorage.setItem("bareDepositGateTs", String(Date.now()));
-    window.location.href = "booking.html";
+  // gentle reminder if client has not opened payment yet
+  payBtn.addEventListener('click', function(){
+    localStorage.setItem('bareDepositPageVisited', 'yes');
   });
 })();
 </script>
 </body>
 </html>
+
+<!-- BARE deposit verification upgrade -->
+<section style="margin-top:30px;padding:20px;border:1px solid #e6e6e6;border-radius:12px;background:#fafafa;">
+<h3 style="margin-top:0;">After payment</h3>
+<p>Please complete the details below after paying your deposit. This helps confirm your payment before booking.</p>
+
+<label>Full Name</label><br>
+<input id="clientName" type="text" style="width:100%;padding:10px;margin-bottom:10px;"><br>
+
+<label>Email</label><br>
+<input id="clientEmail" type="email" style="width:100%;padding:10px;margin-bottom:10px;"><br>
+
+<label>Revolut Payment Reference</label><br>
+<input id="paymentRef" type="text" placeholder="Example: REV-12345" style="width:100%;padding:10px;margin-bottom:15px;"><br>
+
+<button id="continueBooking" style="padding:12px 20px;background:#5e6959;color:white;border:none;border-radius:6px;cursor:pointer;">
+Continue to Booking
+</button>
+
+<p style="font-size:13px;color:#555;margin-top:10px;">
+Bookings made without a valid deposit reference may be cancelled.
+</p>
+</section>
+
+<script>
+document.getElementById("continueBooking").addEventListener("click", function(){
+    const name = document.getElementById("clientName").value.trim();
+    const email = document.getElementById("clientEmail").value.trim();
+    const ref = document.getElementById("paymentRef").value.trim();
+
+    if(!name || !email || !ref){
+        alert("Please enter your name, email, and payment reference before continuing.");
+        return;
+    }
+
+    localStorage.setItem("bareDepositName", name);
+    localStorage.setItem("bareDepositEmail", email);
+    localStorage.setItem("bareDepositRef", ref);
+    localStorage.setItem("bareDepositGate", "allowed");
+
+    window.location.href = "booking.html";
+});
+</script>
