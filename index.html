@@ -713,64 +713,59 @@ letter-spacing:.02em;
       opacity:.7;
     }
     
+
 /* Mobile */
 @media (max-width: 980px){
+  .hero-title h1{
+    font-size:34px;
+    line-height:1.15;
+  }
 
-.hero-title h1{
-  font-size:34px;
-  line-height:1.15;
-}
+  .nav-inner{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 10px 0 14px;
+  }
 
-/* Logo left */
-.nav-inner{
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 10px 0 14px;
-}
+  footer{
+    margin-top:4px;
+    padding:6px 0 10px;
+  }
 
-footer{
-  margin-top:4px;
-  padding:6px 0 10px;
-}
+  .logo{
+    justify-content: flex-start;
+    width: 100%;
+    padding-top: 4px;
+  }
 
-.logo{
-  justify-content: flex-start;
-  width: 100%;
-  padding-top: 4px;
-}
+  .brand-main{
+    font-size: 16px;
+  }
 
-.brand-main{
-  font-size: 16px;
-}
+  .brand-location{
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
 
-.brand-location{
-  font-size: 12px;
-  margin-bottom: 4px;
-}
+  .nav-links{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: .12em;
+  }
 
+  .nav-links .nav-item{
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    white-space: nowrap;
+  }
 
-}
- /* Links in ONE ROW under logo */
-.nav-links{
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 8px;
-  font-size: 12px;
-  letter-spacing: .12em;
-}
-
-.nav-links .nav-item{
-  flex: 1;
-  text-align: center;
-  padding: 8px 0;
-  white-space: nowrap;
-}
-
-  /* Layout adjustments */
   .hero-grid{ grid-template-columns: 1fr; }
   .hero-right{ align-items:center; text-align:center; }
   .hero-brand{ justify-content:center; }
@@ -784,13 +779,10 @@ footer{
   .price-grid{ grid-template-columns: 1fr; }
   .contact-grid{ grid-template-columns: 1fr; }
   .contact-left h2{ font-size: 46px; }
-
-  /* keep hero title readable */
-  .hero-title h1{ font-size: 52px; }
 }
-    /* keep hero title readable */
+
 .hero-title h1{ font-size: 52px; }
-    
+
 .aftercare-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -1233,6 +1225,7 @@ text-transform:uppercase;
   box-shadow: 0 20px 46px rgba(0,0,0,.22);
   filter: brightness(.97);
 }
+
 @media (max-width:980px){
 
   /* Mobile booking button improvements */
@@ -1247,15 +1240,17 @@ text-transform:uppercase;
   /* Allow badges to wrap on small screens */
   .booking-points{
     flex-wrap:wrap;
+    justify-content:center;
+    gap:6px;
   }
-
-}
 
   .hero-book-btn{
     text-align:center;
     justify-content:center;
     padding:0 20px;
     line-height:1.2;
+    width:100%;
+    max-width:320px;
   }
 
   .floating-cta{
@@ -1267,104 +1262,103 @@ text-transform:uppercase;
     grid-template-columns:1fr;
     max-width:100%;
   }
+
   .booking-shell{
     padding:20px 16px;
   }
+
   .booking-card{
     padding:20px 16px;
   }
+
   .booking-card h3{
     font-size:18px;
     line-height:1.15;
   }
+
   .booking-card p{
     font-size:15px;
     line-height:1.55;
   }
-  .booking-points{
-    justify-content:center;
-    gap:6px;
-  }
+
   .booking-points span{
     font-size:10px;
     padding:6px 10px;
     white-space:nowrap;
   }
+
   .booking-steps{
     font-size:11px;
   }
+
   .booking-note{
     max-width:100%;
     padding:0 6px;
   }
+
   .booking-title{
     font-size:24px;
   }
+
   .hero-book-wrap{
     width:100%;
-  }
-  .hero-book-btn{
-    width:100%;
-    max-width:320px;
   }
 }
 
-
-/* DESKTOP HERO LAYOUT FIX */
+/* Desktop hero layout */
 @media (min-width: 981px){
   .hero-grid{
-    display:grid !important;
-    grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr) !important;
-    gap: 40px !important;
-    align-items: center !important;
+    display:grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+    gap: 36px;
+    align-items: center;
   }
 
   .hero-card{
-    padding: 16px !important;
+    padding: 16px 16px 14px;
   }
 
   .hero-torso{
-    height: 340px !important;
-    width: 100% !important;
-    object-fit: cover !important;
+    height: 300px;
   }
 
   .hero-right{
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    text-align: left !important;
-    gap: 18px !important;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    text-align:left;
+    gap:18px;
   }
 
   .hero-cta{
-    max-width: 520px !important;
-    margin: 0 !important;
+    width:100%;
+    max-width:540px;
+    margin:0;
+  }
+
+  .hero-cta-title,
+  .hero-cta-sub,
+  .hero-cta-locations,
+  .hero-cta-small,
+  .hero-cta-trust{
+    text-align:left !important;
   }
 
   .hero-book-wrap{
-    width: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    gap:10px !important;
+    width:auto !important;
   }
 
-  .hero-book-btn{
-    width: auto !important;
-    max-width: none !important;
-  }
-
-  .hero-cta-small,
-  .hero-cta-sub,
-  .hero-cta-locations,
-  .hero-cta-trust{
-    text-align: left !important;
+  .hero-right div[style*="text-align:center"]{
+    text-align:left !important;
   }
 
   .hero-right div[style*="margin:18px auto"]{
-    margin: 18px 0 !important;
+    margin:18px 0 !important;
   }
 }
 
