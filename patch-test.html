@@ -107,6 +107,7 @@
             height: 40px;
             line-height: 40px;
             transition: all 0.2s ease;
+            appearance: none; /* Helps with date input styling consistency */
         }
 
         .con-input:focus { border-color: var(--brand); background: #fff; }
@@ -214,6 +215,22 @@
         @media print {
             @page { margin: 0; size: portrait; }
             body { background: var(--bg) !important; padding: 0; }
+            
+            /* Force the grid back to two columns for the PDF */
+            .settings-grid { 
+                grid-template-columns: 1fr 1fr !important; 
+                gap: 8px 30px !important; 
+                display: grid !important;
+            }
+
+            /* FIX: Ensures date input doesn't collapse or resize oddly in PDF */
+            .con-input { 
+                background: rgba(255,255,255,0.8) !important; 
+                border: 1px solid rgba(0,0,0,0.1) !important; 
+                width: 100% !important;
+                display: block !important;
+            }
+
             .con-card { 
                 box-shadow: none !important; 
                 border: none !important; 
@@ -225,7 +242,6 @@
                 transform-origin: top center;
             }
             .no-print { display: none !important; }
-            .con-input { background: rgba(255,255,255,0.8) !important; border: 1px solid rgba(0,0,0,0.1) !important; }
             .pill.selected { background: #5e6959 !important; color: white !important; }
         }
     </style>
