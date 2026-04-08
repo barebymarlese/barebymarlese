@@ -31,7 +31,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            overflow-x: hidden; /* Prevents side-to-side floating */
+            overflow-x: hidden;
             background: var(--bg);
         }
 
@@ -93,18 +93,22 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: var(--brand);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .con-input {
             width: 100%;
             padding: 12px;
-            font-size: 16px; /* 16px prevents iOS zoom on focus */
+            font-size: 16px;
             border-radius: 10px;
             border: 1px solid rgba(36,34,26,.22);
             background: rgba(255, 255, 255, 0.5);
             color: var(--heading-dark);
             font-family: inherit;
             outline: none;
+            height: 45px; /* Ensures consistent height for all inputs */
         }
 
         .settings-grid {
@@ -112,6 +116,17 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px 12px;
             margin-top: 5px;
+            align-items: end;
+        }
+
+        /* Mobile specific grid fix for overlapping date */
+        @media screen and (max-width: 480px) {
+            .settings-grid {
+                grid-template-columns: 1fr; /* Stack vertically on very small screens if needed */
+            }
+            .settings-grid.dual {
+                grid-template-columns: 1fr 1fr; /* Keep side-by-side for specific pairs */
+            }
         }
 
         .signature-wrapper {
@@ -121,7 +136,7 @@
             background: white;
             height: 200px;
             position: relative;
-            touch-action: none; /* Crucial: Locks screen while signing */
+            touch-action: none;
         }
         
         canvas { 
@@ -193,7 +208,7 @@
         <h2 class="section-title">Patch Test Record</h2>
 
         <div class="con-section">
-            <div class="settings-grid">
+            <div class="settings-grid dual">
                 <div>
                     <label class="con-label">Practitioner Name</label>
                     <input type="text" id="practitioner" class="con-input" value="Marlese Rosch Haden">
@@ -207,7 +222,7 @@
             <label class="con-label">Client Name</label>
             <input type="text" id="clientName" class="con-input" placeholder="Full Name">
 
-            <div class="settings-grid">
+            <div class="settings-grid dual">
                 <div>
                     <label class="con-label">Test Area</label>
                     <input type="text" id="testArea" class="con-input" placeholder="e.g. Left Inner Arm">
@@ -226,7 +241,7 @@
                 </div>
             </div>
 
-            <div class="settings-grid">
+            <div class="settings-grid dual">
                 <div>
                     <label class="con-label">Machine Serial No.</label>
                     <input type="text" id="serialNo" class="con-input" placeholder="e.g. SN-12345">
@@ -235,6 +250,9 @@
                     <label class="con-label">Wavelength</label>
                     <input type="text" id="wavelength" class="con-input" placeholder="1064/532nm">
                 </div>
+            </div>
+
+            <div class="settings-grid dual">
                 <div>
                     <label class="con-label">Joules (J/cm²)</label>
                     <input type="text" id="joules" class="con-input" placeholder="e.g. 1.2J">
@@ -243,13 +261,16 @@
                     <label class="con-label">Pulse Width (ms)</label>
                     <input type="text" id="pulse" class="con-input" placeholder="e.g. 20ms">
                 </div>
+            </div>
+
+            <div class="settings-grid dual">
                 <div>
                     <label class="con-label">Spot Size (mm)</label>
                     <input type="text" id="spot" class="con-input" placeholder="e.g. 10mm">
                 </div>
                 <div>
                     <label class="con-label">Immediate Reaction</label>
-                    <input type="text" id="reaction" class="con-input" placeholder="e.g. Normal Erythema">
+                    <input type="text" id="reaction" class="con-input" placeholder="e.g. Normal">
                 </div>
             </div>
 
@@ -290,7 +311,6 @@
         function clearSig() { signaturePad.clear(); }
         document.getElementById('testDate').valueAsDate = new Date();
 
-        // Prevents scrolling when touching the signature area
         canvas.addEventListener("touchstart", function (e) {
             if (e.target == canvas) {
                 e.preventDefault();
