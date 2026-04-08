@@ -30,8 +30,8 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            background: var(--bg);
-            -webkit-text-size-adjust: 100%;
+            min-height: 100%;
+            background: var(--bg) !important;
         }
 
         body {
@@ -39,19 +39,18 @@
             color: var(--heading-dark);
             display: flex;
             justify-content: center;
-            min-height: 100vh;
+            align-items: flex-start;
+            padding: 20px 0;
         }
 
         .con-card {
-            background: rgba(202,205,198,.55);
+            background: rgba(202,205,198,0.7) !important;
             border: 1px solid rgba(36,34,26,.16);
             border-radius: 18px;
             box-shadow: var(--shadow);
             padding: 25px 45px; 
-            max-width: 950px;
+            max-width: 900px;
             width: 95%;
-            margin: 20px auto;
-            height: fit-content;
         }
 
         .logo {
@@ -64,14 +63,14 @@
             justify-content: center;
             margin-bottom: 10px;
         }
-        .logo .bare { color: var(--brand); font-size: 22px; }
-        .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted); font-size: 14px; }
+        .logo .bare { color: var(--brand) !important; font-size: 22px; }
+        .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted) !important; font-size: 14px; }
 
         .section-title {
             text-align: center;
             margin: 0 0 12px;
             font-size: 18px;
-            color: var(--heading-dark);
+            color: var(--heading-dark) !important;
             letter-spacing: .02em;
             font-weight: 700;
             text-transform: uppercase;
@@ -81,7 +80,7 @@
             padding: 20px 30px; 
             border-radius: 16px;
             border: 1px solid rgba(36,34,26,0.14);
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25) !important;
         }
 
         .con-label {
@@ -91,33 +90,28 @@
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--brand);
+            color: var(--brand) !important;
         }
 
         .con-input {
             width: 100%;
-            padding: 0 15px;
+            padding: 0 12px;
             font-size: 14px; 
-            border-radius: 9px;
+            border-radius: 8px;
             border: 1px solid rgba(36,34,26,.22);
-            background: rgba(255, 255, 255, 0.5);
-            color: var(--heading-dark);
+            background: rgba(255, 255, 255, 0.6) !important;
+            color: var(--heading-dark) !important;
             font-family: inherit;
-            outline: none;
             height: 38px;
             line-height: 38px;
-        }
-
-        /* Fix for date input alignment */
-        input[type="date"] {
-            display: flex;
-            align-items: center;
+            outline: none;
+            -webkit-appearance: none;
         }
 
         .settings-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px 25px; 
+            gap: 6px 20px; 
             margin-bottom: 2px;
         }
 
@@ -130,45 +124,33 @@
 
         .pill {
             padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.4) !important;
             border: 1px solid rgba(36,34,26,.15);
             border-radius: 20px;
             font-size: 11px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-            color: var(--heading-dark);
+            color: var(--heading-dark) !important;
         }
 
         .pill.selected {
-            background: var(--brand);
-            color: white;
-            border-color: var(--brand);
+            background: var(--brand) !important;
+            color: white !important;
+            border-color: var(--brand) !important;
         }
 
         .signature-wrapper {
             margin-top: 8px;
             border: 1px solid rgba(36,34,26,.22);
             border-radius: 10px;
-            background: white;
+            background: white !important;
             height: 110px; 
             position: relative;
             touch-action: none;
         }
         
-        canvas { 
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-        }
+        canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 
-        .con-actions {
-            display: flex;
-            gap: 20px;
-            margin-top: 15px;
-        }
+        .con-actions { display: flex; gap: 20px; margin-top: 15px; }
 
         .con-btn {
             flex: 1;
@@ -183,11 +165,7 @@
             cursor: pointer;
         }
 
-        .con-btn-ghost {
-            background: transparent;
-            border: 1px solid rgba(36,34,26,.25);
-            color: var(--heading-dark);
-        }
+        .con-btn-ghost { background: transparent; border: 1px solid rgba(36,34,26,.25); color: var(--heading-dark); }
 
         .disclaimer {
             font-size: 10px;
@@ -195,37 +173,34 @@
             margin: 10px 0;
             padding: 8px 15px;
             border-left: 3px solid var(--brand);
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.15) !important;
         }
 
         #printTimeStamp {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
-            color: var(--brand);
+            color: var(--brand) !important;
             margin-bottom: 4px;
         }
 
+        /* MOBILE FIX */
         @media screen and (max-width: 600px) {
-            body { display: block; padding: 0; }
+            body { padding: 10px 0; display: block; }
             .con-card { 
-                padding: 15px; 
-                width: calc(100% - 20px); 
-                margin: 10px auto; 
-                border-radius: 12px;
+                width: 92vw; 
+                margin: 0 auto;
+                padding: 15px 20px; 
             }
-            .con-section { padding: 15px; }
             .settings-grid { grid-template-columns: 1fr; gap: 0; }
-            .signature-wrapper { height: 140px; }
             .con-input { height: 44px; line-height: 44px; font-size: 16px; }
-            .pill { font-size: 12px; padding: 8px 12px; }
+            .pill { font-size: 12px; padding: 10px; }
+            .signature-wrapper { height: 140px; }
         }
 
+        /* PRINT / PDF FIX */
         @media print {
-            @page { 
-                margin: 0; 
-                size: portrait; 
-            }
-            body { background: white !important; display: block !important; padding: 0; }
+            @page { margin: 0; size: A4 portrait; }
+            body { background: var(--bg) !important; padding: 0; }
             .con-card { 
                 box-shadow: none !important; 
                 border: none !important; 
@@ -233,29 +208,15 @@
                 max-width: 100% !important;
                 padding: 30px !important; 
                 margin: 0 !important;
-                background: white !important;
-                transform: none !important;
+                background: var(--bg) !important;
+                transform: scale(0.98); /* Ensure fits on 1 page */
+                transform-origin: top center;
             }
-            .con-section { 
-                background: rgba(0,0,0,0.02) !important; 
-                border: 1px solid #ddd !important; 
-            }
-            .settings-grid { 
-                grid-template-columns: 1fr 1fr !important; 
-                gap: 5px 20px !important; 
-                display: grid !important;
-            }
+            .con-section { background: rgba(255,255,255,0.3) !important; border: 1px solid rgba(0,0,0,0.1) !important; }
+            .settings-grid { grid-template-columns: 1fr 1fr !important; gap: 5px 20px !important; display: grid !important; }
             .no-print { display: none !important; }
-            .pill { border: 1px solid #ccc !important; }
-            .pill.selected { background: #5e6959 !important; color: white !important; }
-            
-            /* Enforce identical height for all inputs during print */
-            .con-input {
-                background: rgba(255,255,255,0.8) !important;
-                border: 1px solid #bbb !important;
-                height: 32px !important;
-                line-height: 32px !important;
-            }
+            .con-input { background: rgba(255,255,255,0.7) !important; height: 32px !important; line-height: 32px !important; }
+            .pill.selected { background: #5e6959 !important; color: white !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -371,15 +332,12 @@
         }
 
         function updateReactionInput() {
-            const selected = Array.from(document.querySelectorAll('.pill.selected'))
-                                  .map(p => p.innerText);
+            const selected = Array.from(document.querySelectorAll('.pill.selected')).map(p => p.innerText);
             document.getElementById('reactionValues').value = selected.join(', ');
         }
 
         const canvas = document.getElementById('signature-pad');
-        const signaturePad = new SignaturePad(canvas, {
-            backgroundColor: 'rgb(255, 255, 255)'
-        });
+        const signaturePad = new SignaturePad(canvas, { backgroundColor: 'rgb(255, 255, 255)' });
 
         function resizeCanvas() {
             const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -401,19 +359,13 @@
         
         function updateTimeStamp() {
             const now = new Date();
-            const dateStr = now.toLocaleDateString('en-GB', { 
-                day: 'numeric', month: 'short', year: 'numeric', 
-                hour: '2-digit', minute: '2-digit' 
-            });
+            const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             document.getElementById('printTimeStamp').innerText = "Signed: " + dateStr;
         }
 
         function prepareAndPrint() {
             updateTimeStamp();
-            // Small timeout ensures the timestamp renders before the print dialog freezes the UI
-            setTimeout(() => {
-                window.print();
-            }, 100);
+            setTimeout(() => { window.print(); }, 200);
         }
         
         document.getElementById('testDate').valueAsDate = new Date();
