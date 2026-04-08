@@ -20,17 +20,19 @@
             --shadow: 0 18px 45px rgba(0,0,0,.16);
         }
 
+        /* Essential rule for print colors and single-page rendering */
         * { 
             box-sizing: border-box; 
             -webkit-print-color-adjust: exact !important; 
             print-color-adjust: exact !important; 
+            color-adjust: exact !important;
         }
         
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
-            min-height: 100vh;
+            height: 100%;
             background: var(--bg);
         }
 
@@ -38,8 +40,8 @@
             font-family: "Montserrat", sans-serif;
             color: var(--heading-dark);
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
 
         .con-card {
@@ -50,7 +52,7 @@
             padding: 25px 45px; 
             max-width: 950px;
             width: 95%;
-            margin: 20px auto;
+            margin: auto;
         }
 
         .logo {
@@ -103,9 +105,7 @@
             color: var(--heading-dark);
             font-family: inherit;
             outline: none;
-            height: 38px;
-            appearance: none;
-            -webkit-appearance: none;
+            height: 38px; 
         }
 
         .settings-grid {
@@ -193,46 +193,36 @@
         }
 
         #printTimeStamp {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--brand);
+            font-size: 9px;
+            color: var(--heading-muted);
             margin-top: 5px;
             text-align: right;
         }
 
-        /* MOBILE VIEW FIX */
         @media screen and (max-width: 480px) {
-            body { display: block; padding: 10px 0; }
-            .con-card { 
-                padding: 15px; 
-                width: 92%; /* Keeps a small margin so it doesn't touch screen edges */
-                margin: 10px auto; 
-            }
-            .con-section { padding: 15px; }
+            html, body { overflow: auto; height: auto; }
+            body { display: block; padding: 15px 10px; }
+            .con-card { padding: 15px; width: 100%; }
             .settings-grid { grid-template-columns: 1fr; gap: 0; }
             .signature-wrapper { height: 160px; }
             .con-input { height: 46px !important; font-size: 16px !important; }
-            .pill { font-size: 13px; padding: 10px 14px; }
+            .pill { font-size: 13px; padding: 10px 15px; }
         }
 
-        /* PRINT / PDF FIX */
         @media print {
-            body { background: white !important; display: block !important; }
+            body { background: white !important; }
             .con-card { 
                 box-shadow: none !important; 
                 border: none !important; 
                 width: 100% !important; 
-                max-width: 100% !important;
                 padding: 0 !important; 
-                margin: 0 !important;
-                background: transparent !important;
+                height: auto !important; /* Force content into one page */
             }
-            .con-section { background: rgba(0,0,0,0.02) !important; border: 1px solid #ccc !important; }
+            .con-section { background: rgba(0,0,0,0.03) !important; border: 1px solid #eee !important; }
             .settings-grid { grid-template-columns: 1fr 1fr !important; gap: 5px 20px !important; }
             .no-print { display: none !important; }
             .pill { border: 1px solid #ccc !important; }
             .pill.selected { background: #5e6959 !important; color: white !important; }
-            input[type="date"] { background: #fff !important; }
         }
     </style>
 </head>
@@ -326,7 +316,7 @@
                 I acknowledge that a patch test has been performed. I will monitor the area for 24-48 hours and report any adverse reactions before proceeding with full treatment.
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
                 <label class="con-label">Client Signature</label>
                 <div id="printTimeStamp"></div>
             </div>
@@ -373,27 +363,21 @@
             signaturePad.clear(); 
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
             updateReactionInput();
-            document.getElementById('printTimeStamp').innerText = "";
         }
         
         function updateTimeStamp() {
             const now = new Date();
-            const dateStr = now.toLocaleDateString('en-GB', { 
-                day: 'numeric', month: 'short', year: 'numeric', 
-                hour: '2-digit', minute: '2-digit' 
-            });
-            document.getElementById('printTimeStamp').innerText = "Date Signed: " + dateStr;
+            const dateStr = now.toLocaleDateString() + ', ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('printTimeStamp').innerText = "Signed: " + dateStr;
         }
 
         function prepareAndPrint() {
-            if (!signaturePad.isEmpty()) {
-                updateTimeStamp();
-            }
+            updateTimeStamp();
             window.print();
         }
         
-        // Default today's date
         document.getElementById('testDate').valueAsDate = new Date();
+        updateTimeStamp();
     </script>
 </body>
 </html>
