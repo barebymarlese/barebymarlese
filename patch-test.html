@@ -121,3 +121,153 @@
             font-size: 14px;
             color: #fff;
             border: 0;
+            border-radius: 999px;
+            padding: 14px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .con-btn-ghost {
+            background: transparent;
+            border: 1px solid rgba(36,34,26,.25);
+            color: var(--heading-dark);
+        }
+
+        .con-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .disclaimer {
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 20px;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        #statusMsg {
+            text-align: center;
+            font-size: 13px;
+            margin-top: 15px;
+            font-weight: 600;
+            min-height: 20px;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { padding: 0; background: white; }
+            .con-card { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .section-title { font-size: 22px; }
+            .con-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="con-card">
+        <div class="logo">
+            <span class="bare">BARE |</span>
+            <span class="by">by Marlese</span>
+        </div>
+        
+        <h2 class="section-title">Patch Test Record</h2>
+
+        <div class="con-section">
+            <label class="con-label">Client Name</label>
+            <input type="text" id="clientName" class="con-input">
+
+            <label class="con-label">Date of Test</label>
+            <input type="date" id="testDate" class="con-input">
+
+            <label class="con-label">Test Area & Laser Settings</label>
+            <input type="text" id="settings" class="con-input" placeholder="e.g. Left Ankle / 3.5J">
+
+            <div class="disclaimer">
+                I acknowledge that a patch test has been performed. I will monitor the area for 24-48 hours and report any adverse reactions before proceeding with full treatment.
+            </div>
+
+            <label class="con-label">Client Signature</label>
+            <div class="signature-wrapper">
+                <canvas id="signature-pad"></canvas>
+            </div>
+        </div>
+
+        <div class="con-actions no-print">
+            <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear</button>
+            <button class="con-btn" id="submitBtn" onclick="submitToDrive()">Submit to Drive</button>
+        </div>
+        <div id="statusMsg" class="no-print"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('signature-pad');
+        const signaturePad = new SignaturePad(canvas, { backgroundColor: 'rgb(255, 255, 255)' });
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzsoWFRZbtACNWvICdiQy52ZGvuTtKL1tcCi6s4R-2cYww4wx1k8MU0JYwEQIiqN18BgQ/exec';
+
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear();
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        function clearSig() { signaturePad.clear(); }
+        document.getElementById('testDate').valueAsDate = new Date();
+
+        async function submitToDrive() {
+            const name = document.getElementById('clientName').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMsg = document.getElementById('statusMsg');
+
+            if (!name || signaturePad.isEmpty()) {
+                alert("Please enter a Client Name and provide a Signature.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = "SAVING...";
+            statusMsg.style.color = "var(--heading-dark)";
+            statusMsg.innerText = "Sending to Google Drive...";
+
+            const imageData = canvas.toDataURL("image/png");
+            const payload = { name: name, image: imageData };
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    body: JSON.stringify(payload)
+                });
+
+                statusMsg.style.color = "green";
+                statusMsg.innerText = "SUCCESS! Record saved to Drive.";
+                
+                setTimeout(() => {
+                    document.getElementById('clientName').value = '';
+                    document.getElementById('settings').value = '';
+                    signaturePad.clear();
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "SUBMIT TO DRIVE";
+                    statusMsg.innerText = "";
+                }, 3000);
+
+            } catch (error) {
+                statusMsg.style.color = "red";
+                statusMsg.innerText = "Error saving. Please try again.";
+                submitBtn.disabled = false;
+                submitBtn.innerText = "RETRY";
+            }
+        }
+    </script>
+</body>
+</html>
