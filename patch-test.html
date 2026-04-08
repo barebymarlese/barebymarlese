@@ -114,7 +114,6 @@
             margin-bottom: 2px;
         }
 
-        /* Pill Multi-Select Styling */
         .reaction-container {
             display: flex;
             flex-wrap: wrap;
@@ -198,7 +197,25 @@
             .con-card { padding: 15px; width: 100%; }
             .settings-grid { grid-template-columns: 1fr; gap: 0; }
             .signature-wrapper { height: 160px; }
-            .con-input { height: 46px !important; font-size: 16px; }
+            
+            /* Mobile Input Fixes */
+            .con-input { 
+                height: 46px !important; 
+                font-size: 16px !important; 
+                display: block;
+                width: 100%;
+                text-align: left !important; /* Force left align */
+                justify-content: flex-start !important;
+            }
+
+            /* Specifically targeting the date input for mobile browsers */
+            input[type="date"].con-input {
+                text-align: left !important;
+                display: flex;
+                align-items: center;
+                -webkit-appearance: none; /* Removes native mobile centering */
+            }
+
             .pill { font-size: 13px; padding: 10px 15px; }
         }
 
@@ -311,7 +328,6 @@
     </div>
 
     <script>
-        // Reaction Toggle Logic
         function toggleReaction(element) {
             element.classList.toggle('selected');
             updateReactionInput();
@@ -323,7 +339,6 @@
             document.getElementById('reactionValues').value = selected.join(', ');
         }
 
-        // Signature Pad Logic
         const canvas = document.getElementById('signature-pad');
         const signaturePad = new SignaturePad(canvas, {
             backgroundColor: 'rgb(255, 255, 255)'
@@ -342,7 +357,6 @@
 
         function clearSig() { 
             signaturePad.clear(); 
-            // Also clear pills
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
             updateReactionInput();
         }
