@@ -94,8 +94,6 @@
             letter-spacing: 0.05em;
             color: var(--brand);
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .con-input {
@@ -108,7 +106,7 @@
             color: var(--heading-dark);
             font-family: inherit;
             outline: none;
-            height: 45px; /* Ensures consistent height for all inputs */
+            height: 45px;
         }
 
         .settings-grid {
@@ -117,16 +115,6 @@
             gap: 10px 12px;
             margin-top: 5px;
             align-items: end;
-        }
-
-        /* Mobile specific grid fix for overlapping date */
-        @media screen and (max-width: 480px) {
-            .settings-grid {
-                grid-template-columns: 1fr; /* Stack vertically on very small screens if needed */
-            }
-            .settings-grid.dual {
-                grid-template-columns: 1fr 1fr; /* Keep side-by-side for specific pairs */
-            }
         }
 
         .signature-wrapper {
@@ -208,7 +196,7 @@
         <h2 class="section-title">Patch Test Record</h2>
 
         <div class="con-section">
-            <div class="settings-grid dual">
+            <div class="settings-grid">
                 <div>
                     <label class="con-label">Practitioner Name</label>
                     <input type="text" id="practitioner" class="con-input" value="Marlese Rosch Haden">
@@ -222,7 +210,7 @@
             <label class="con-label">Client Name</label>
             <input type="text" id="clientName" class="con-input" placeholder="Full Name">
 
-            <div class="settings-grid dual">
+            <div class="settings-grid">
                 <div>
                     <label class="con-label">Test Area</label>
                     <input type="text" id="testArea" class="con-input" placeholder="e.g. Left Inner Arm">
@@ -241,7 +229,7 @@
                 </div>
             </div>
 
-            <div class="settings-grid dual">
+            <div class="settings-grid">
                 <div>
                     <label class="con-label">Machine Serial No.</label>
                     <input type="text" id="serialNo" class="con-input" placeholder="e.g. SN-12345">
@@ -252,7 +240,7 @@
                 </div>
             </div>
 
-            <div class="settings-grid dual">
+            <div class="settings-grid">
                 <div>
                     <label class="con-label">Joules (J/cm²)</label>
                     <input type="text" id="joules" class="con-input" placeholder="e.g. 1.2J">
@@ -263,14 +251,23 @@
                 </div>
             </div>
 
-            <div class="settings-grid dual">
+            <div class="settings-grid">
                 <div>
                     <label class="con-label">Spot Size (mm)</label>
                     <input type="text" id="spot" class="con-input" placeholder="e.g. 10mm">
                 </div>
                 <div>
                     <label class="con-label">Immediate Reaction</label>
-                    <input type="text" id="reaction" class="con-input" placeholder="e.g. Normal">
+                    <select id="reaction" class="con-input">
+                        <option value="">Select Reaction</option>
+                        <option value="Normal Erythema">Normal Erythema</option>
+                        <option value="Perifollicular Edema">Perifollicular Edema</option>
+                        <option value="Mild Redness">Mild Redness</option>
+                        <option value="Frosting / Icing">Frosting / Icing</option>
+                        <option value="No Reaction">No Reaction</option>
+                        <option value="Urticaria (Hives)">Urticaria (Hives)</option>
+                        <option value="Blistering / Crusting">Blistering / Crusting</option>
+                    </select>
                 </div>
             </div>
 
@@ -312,19 +309,13 @@
         document.getElementById('testDate').valueAsDate = new Date();
 
         canvas.addEventListener("touchstart", function (e) {
-            if (e.target == canvas) {
-                e.preventDefault();
-            }
+            if (e.target == canvas) { e.preventDefault(); }
         }, { passive: false });
         canvas.addEventListener("touchend", function (e) {
-            if (e.target == canvas) {
-                e.preventDefault();
-            }
+            if (e.target == canvas) { e.preventDefault(); }
         }, { passive: false });
         canvas.addEventListener("touchmove", function (e) {
-            if (e.target == canvas) {
-                e.preventDefault();
-            }
+            if (e.target == canvas) { e.preventDefault(); }
         }, { passive: false });
     </script>
 </body>
