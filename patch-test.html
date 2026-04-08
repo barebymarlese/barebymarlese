@@ -1,170 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bare by Marlese | Patch Test</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Patch Test Form | BARE by Marlese</title>
     <meta name="robots" content="noindex">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
     <style>
-        /* EDIT COLORS HERE */
-        :root { 
-            --brand-primary: #a38f85; /* Soft Earth Tone */
-            --brand-dark: #333333;    /* Charcoal Text */
-            --brand-bg: #faf9f6;      /* Off-White/Cream Background */
-            --accent: #d4cdc3;        /* Light Sand */
+        /* Using your exact color variables */
+        :root {
+            --bg: #cacdc6;
+            --heading-muted: #878274;
+            --heading-dark: #24221a;
+            --body: #cacdc6;
+            --brand: #5e6959;
+            --shadow: 0 18px 45px rgba(0,0,0,.16);
         }
 
-        body { 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            background: var(--brand-bg); 
-            color: var(--brand-dark); 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            justify-content: center; 
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: "Montserrat", sans-serif;
+            background: var(--bg);
+            color: var(--heading-dark);
+            display: flex;
+            justify-content: center;
         }
 
-        .app-container { 
-            background: white; 
-            max-width: 500px; 
-            width: 100%; 
-            padding: 40px 30px; 
-            border-radius: 5px; /* Minimalist clean edges */
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+        /* Match your Consultation Form "con-card" style */
+        .con-card {
+            background: rgba(202,205,198,.55);
+            border: 1px solid rgba(36,34,26,.16);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
         }
 
-        .logo-text {
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            letter-spacing: .26em;
+            font-weight: 600;
+            text-transform: uppercase;
+            justify-content: center;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+        .logo .bare { color: var(--brand); font-size: 22px; }
+        .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted); font-size: 14px; }
+
+        .section-title {
             text-align: center;
-            letter-spacing: 3px;
+            margin: 10px 0 30px;
+            font-size: 28px;
+            color: var(--heading-muted);
+            letter-spacing: .02em;
+            font-weight: 600;
             text-transform: uppercase;
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-            color: var(--brand-dark);
         }
 
-        h2 { 
-            margin-top: 0; 
-            color: var(--brand-primary); 
-            font-weight: 300;
-            font-size: 0.9rem; 
-            text-align: center; 
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 30px;
+        .con-section {
+            margin-top: 14px;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(36,34,26,0.14);
+            background: rgba(202,205,198,0.40);
         }
 
-        label { 
-            display: block; 
-            margin-top: 20px; 
-            font-weight: 600; 
-            font-size: 0.75rem; 
+        .con-label {
+            display: block;
+            margin: 15px 0 6px;
+            font-weight: 700;
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #777;
+            letter-spacing: 0.05em;
+            opacity: .9;
         }
 
-        input { 
-            width: 100%; 
-            padding: 12px 0; 
-            margin-top: 5px; 
-            border: none;
-            border-bottom: 1px solid var(--accent);
-            border-radius: 0;
-            box-sizing: border-box; 
-            font-size: 1rem; 
+        .con-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(36,34,26,.22);
+            background: rgba(202,205,198,.65);
+            color: var(--heading-dark);
+            font-family: inherit;
             outline: none;
-            transition: border-color 0.3s;
         }
 
-        input:focus { border-bottom: 1px solid var(--brand-primary); }
+        /* Signature Pad Style */
+        .signature-wrapper {
+            margin-top: 10px;
+            border: 1px solid rgba(36,34,26,.22);
+            border-radius: 12px;
+            background: white;
+            height: 200px;
+            overflow: hidden;
+            touch-action: none;
+        }
+        canvas { width: 100%; height: 100%; cursor: crosshair; }
 
-        .signature-box { 
-            border: 1px solid var(--accent); 
-            background: #fff; 
-            margin-top: 10px; 
-            height: 180px; 
-            touch-action: none; 
+        .con-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
         }
 
-        canvas { width: 100%; height: 100%; }
-
-        .button-group { display: flex; gap: 15px; margin-top: 30px; }
-
-        button { 
-            flex: 1; 
-            padding: 15px; 
-            border: 1px solid var(--brand-primary); 
-            border-radius: 0; 
-            font-weight: bold; 
-            cursor: pointer; 
+        .con-btn {
+            flex: 1;
+            background: var(--brand);
+            font-size: 14px;
+            color: #fff;
+            border: 0;
+            border-radius: 999px;
+            padding: 14px;
+            font-weight: 700;
+            letter-spacing: .08em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        .btn-print { background: var(--brand-primary); color: white; }
-        .btn-clear { background: transparent; color: var(--brand-primary); }
+        .con-btn-ghost {
+            background: transparent;
+            border: 1px solid rgba(36,34,26,.25);
+            color: var(--heading-dark);
+        }
 
-        .disclaimer { 
-            font-size: 0.75rem; 
-            color: #888; 
-            margin-top: 25px; 
-            line-height: 1.6; 
+        .disclaimer {
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 20px;
+            opacity: 0.8;
             font-style: italic;
         }
 
-        @media print { .no-print { display: none; } body { padding: 0; background: white; } .app-container { box-shadow: none; border: none; max-width: 100%; } }
+        @media print {
+            .no-print { display: none; }
+            body { padding: 0; background: white; }
+            .con-card { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .section-title { font-size: 22px; }
+            .con-actions { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="logo-text">BARE BY MARLESE</div>
-    <h2>Laser Tattoo Removal Patch Test</h2>
-    
-    <label>Client Name</label>
-    <input type="text" id="clientName">
+    <div class="con-card">
+        <div class="logo">
+            <span class="bare">BARE |</span>
+            <span class="by">by Marlese</span>
+        </div>
+        
+        <h2 class="section-title">Patch Test Record</h2>
 
-    <label>Date</label>
-    <input type="date" id="testDate">
+        <div class="con-section">
+            <label class="con-label">Client Name</label>
+            <input type="text" id="clientName" class="con-input">
 
-    <label>Test Location & Energy Settings</label>
-    <input type="text" id="settings" placeholder="e.g. Inner Ankle / 3.0 J">
+            <label class="con-label">Date of Test</label>
+            <input type="date" id="testDate" class="con-input">
 
-    <div class="disclaimer">
-        I hereby consent to a laser patch test. I understand that this is a trial to evaluate skin reaction. I will report any adverse effects within 48 hours.
+            <label class="con-label">Test Area & Laser Settings</label>
+            <input type="text" id="settings" class="con-input" placeholder="e.g. Left Ankle / 3.5J">
+
+            <div class="disclaimer">
+                I acknowledge that a patch test has been performed. I will monitor the area for 24-48 hours and report any adverse reactions before proceeding with full treatment.
+            </div>
+
+            <label class="con-label">Client Signature</label>
+            <div class="signature-wrapper">
+                <canvas id="signature-pad"></canvas>
+            </div>
+        </div>
+
+        <div class="con-actions no-print">
+            <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear</button>
+            <button class="con-btn" onclick="window.print()">Save PDF</button>
+        </div>
     </div>
 
-    <label>Client Signature</label>
-    <div class="signature-box">
-        <canvas id="signature-pad"></canvas>
-    </div>
+    <script>
+        const canvas = document.getElementById('signature-pad');
+        const signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)'
+        });
 
-    <div class="button-group no-print">
-        <button class="btn-clear" onclick="clearSig()">Clear</button>
-        <button class="btn-print" onclick="window.print()">Save Record</button>
-    </div>
-</div>
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear();
+        }
 
-<script>
-    const canvas = document.getElementById('signature-pad');
-    const signaturePad = new SignaturePad(canvas);
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
 
-    function resizeCanvas() {
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
-        canvas.width = canvas.offsetWidth * ratio;
-        canvas.height = canvas.offsetHeight * ratio;
-        canvas.getContext("2d").scale(ratio, ratio);
-        signaturePad.clear();
-    }
-
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    function clearSig() { signaturePad.clear(); }
-    document.getElementById('testDate').valueAsDate = new Date();
-</script>
-
+        function clearSig() { signaturePad.clear(); }
+        document.getElementById('testDate').valueAsDate = new Date();
+    </script>
 </body>
 </html>
