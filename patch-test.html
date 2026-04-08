@@ -13,12 +13,10 @@
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
     <style>
-        /* Using your exact color variables */
         :root {
             --bg: #cacdc6;
             --heading-muted: #878274;
             --heading-dark: #24221a;
-            --body: #cacdc6;
             --brand: #5e6959;
             --shadow: 0 18px 45px rgba(0,0,0,.16);
         }
@@ -35,7 +33,6 @@
             justify-content: center;
         }
 
-        /* Match your Consultation Form "con-card" style */
         .con-card {
             background: rgba(202,205,198,.55);
             border: 1px solid rgba(36,34,26,.16);
@@ -55,7 +52,6 @@
             text-transform: uppercase;
             justify-content: center;
             margin-bottom: 20px;
-            text-decoration: none;
         }
         .logo .bare { color: var(--brand); font-size: 22px; }
         .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted); font-size: 14px; }
@@ -85,7 +81,6 @@
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            opacity: .9;
         }
 
         .con-input {
@@ -100,7 +95,6 @@
             outline: none;
         }
 
-        /* Signature Pad Style */
         .signature-wrapper {
             margin-top: 10px;
             border: 1px solid rgba(36,34,26,.22);
@@ -130,7 +124,6 @@
             letter-spacing: .08em;
             text-transform: uppercase;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
 
         .con-btn-ghost {
@@ -147,15 +140,28 @@
             font-style: italic;
         }
 
+        /* PDF PRINT OPTIMIZATION */
         @media print {
-            .no-print { display: none; }
+            .no-print { display: none !important; }
             body { padding: 0; background: white; }
-            .con-card { box-shadow: none; border: none; width: 100%; max-width: 100%; }
-        }
-
-        @media (max-width: 480px) {
-            .section-title { font-size: 22px; }
-            .con-actions { flex-direction: column; }
+            .con-card { 
+                box-shadow: none; 
+                border: none; 
+                width: 100%; 
+                max-width: 100%; 
+                background: white;
+            }
+            .con-section {
+                background: white;
+                border: 1px solid #eee;
+            }
+            .con-input {
+                background: white;
+                border: none;
+                border-bottom: 1px solid #ccc;
+                border-radius: 0;
+                padding-left: 0;
+            }
         }
     </style>
 </head>
@@ -171,7 +177,7 @@
 
         <div class="con-section">
             <label class="con-label">Client Name</label>
-            <input type="text" id="clientName" class="con-input">
+            <input type="text" id="clientName" class="con-input" placeholder="Enter name">
 
             <label class="con-label">Date of Test</label>
             <input type="date" id="testDate" class="con-input">
@@ -190,8 +196,8 @@
         </div>
 
         <div class="con-actions no-print">
-            <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear</button>
-            <button class="con-btn" onclick="window.print()">Save PDF</button>
+            <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear Signature</button>
+            <button class="con-btn" onclick="window.print()">Create PDF Record</button>
         </div>
     </div>
 
