@@ -32,7 +32,6 @@
             width: 100%;
             height: 100%;
             background: var(--bg);
-            overflow: hidden; 
         }
 
         body {
@@ -51,7 +50,7 @@
             padding: 25px 45px; 
             max-width: 950px;
             width: 95%;
-            margin: auto;
+            margin: 20px auto;
         }
 
         .logo {
@@ -191,41 +190,41 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
-        /* Screen Styles for Mobile Only */
-        @media screen and (max-width: 480px) {
-            html, body { overflow: auto; height: auto; }
-            body { display: block; padding: 15px 10px; }
-            .con-card { padding: 15px; width: 100%; }
-            .settings-grid { grid-template-columns: 1fr; gap: 0; }
-            .signature-wrapper { height: 160px; }
-            .con-input { height: 46px !important; font-size: 16px !important; }
-            .pill { font-size: 13px; padding: 10px 15px; }
+        #printTimeStamp {
+            font-size: 9px;
+            color: var(--heading-muted);
+            margin-top: 5px;
+            text-align: right;
         }
 
-        /* FIXES SPECIFICALLY FOR PRINT/PDF */
-        @media print {
-            /* Keep the 2-column grid in PDF even if generated from mobile */
-            .settings-grid { 
-                grid-template-columns: 1fr 1fr !important; 
-                gap: 5px 20px !important; 
-            }
-            
-            /* Remove background colors that might get stripped */
-            body { background: white !important; }
-            .con-card { box-shadow: none !important; border: none !important; width: 100% !important; padding: 0 !important; }
-            
-            /* Force the date input to look like a normal field */
-            input[type="date"] {
-                display: block !important;
-                -webkit-appearance: none !important;
-                min-height: 30px !important;
-                font-size: 11pt !important;
-                background: #f9f9f9 !important;
-            }
+        @media screen and (max-width: 480px) {
+            html, body { overflow: auto; height: auto; }
+            body { display: block; padding: 10px; }
+            .con-card { padding: 15px; width: 100%; margin: 0; }
+            .settings-grid { grid-template-columns: 1fr; gap: 0; }
+            .signature-wrapper { height: 140px; }
+            .con-input { height: 44px !important; font-size: 16px !important; }
+            .pill { font-size: 12px; padding: 8px 12px; }
+        }
 
+        @media print {
+            body { background: white !important; display: block !important; }
+            .con-card { 
+                box-shadow: none !important; 
+                border: none !important; 
+                width: 100% !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                background: transparent !important;
+            }
+            .con-section { background: rgba(0,0,0,0.03) !important; border: 1px solid #eee !important; }
+            .settings-grid { grid-template-columns: 1fr 1fr !important; gap: 5px 20px !important; }
             .no-print { display: none !important; }
             .pill { border: 1px solid #ccc !important; }
             .pill.selected { background: #5e6959 !important; color: white !important; }
+            
+            /* Ensure text inputs don't look like mobile pickers in PDF */
+            input, select { -webkit-appearance: none; border: 1px solid #ddd !important; }
         }
     </style>
 </head>
@@ -319,7 +318,10 @@
                 I acknowledge that a patch test has been performed. I will monitor the area for 24-48 hours and report any adverse reactions before proceeding with full treatment.
             </div>
 
-            <label class="con-label">Client Signature</label>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                <label class="con-label">Client Signature</label>
+                <div id="printTimeStamp"></div>
+            </div>
             <div class="signature-wrapper">
                 <canvas id="signature-pad"></canvas>
             </div>
@@ -327,7 +329,7 @@
 
         <div class="con-actions no-print">
             <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear</button>
-            <button class="con-btn" onclick="window.print()">Create PDF</button>
+            <button class="con-btn" onclick="prepareAndPrint()">Create PDF</button>
         </div>
     </div>
 
@@ -365,8 +367,19 @@
             updateReactionInput();
         }
         
-        // Auto-set today's date
+        function updateTimeStamp() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString() + ', ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('printTimeStamp').innerText = "Signed: " + dateStr;
+        }
+
+        function prepareAndPrint() {
+            updateTimeStamp();
+            window.print();
+        }
+        
         document.getElementById('testDate').valueAsDate = new Date();
+        updateTimeStamp();
     </script>
 </body>
 </html>
