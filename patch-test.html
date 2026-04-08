@@ -351,6 +351,21 @@
     <script>
         const BRAND_TITLE = "Patch Test Form | BARE by Marlese";
 
+        // DESKTOP FIX: Listen for the exact moment the print dialog is triggered
+        window.onbeforeprint = function() {
+            const nameInput = document.getElementById('clientName').value.trim();
+            const clientName = nameInput || "Client";
+            const now = new Date();
+            const dateFormatted = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).replace(/\s/g, '-');
+            
+            document.title = "Patch-Test-" + clientName + "-" + dateFormatted;
+        };
+
+        // Reset title after print window closes
+        window.onafterprint = function() {
+            document.title = BRAND_TITLE;
+        };
+
         function toggleReaction(element) { element.classList.toggle('selected'); }
 
         const canvas = document.getElementById('signature-pad');
@@ -372,7 +387,6 @@
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
             document.getElementById('printTimeStamp').innerText = "";
             document.getElementById('clientName').value = "";
-            // FORCE RESET TITLE
             document.title = BRAND_TITLE;
         }
         
@@ -381,22 +395,12 @@
             const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
             const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('printTimeStamp').innerText = "Signed: " + dateStr + " at " + timeStr;
-            return dateStr.replace(/\s/g, '-');
         }
 
         function prepareAndPrint() {
-            const nameInput = document.getElementById('clientName').value.trim();
-            const clientName = nameInput || "Client";
-            const dateFormatted = updateTimeStamp();
-            
-            // Set the new title
-            document.title = "Patch-Test-" + clientName + "-" + dateFormatted;
-
-            setTimeout(() => { 
-                window.print(); 
-                // Return to brand title shortly after the print dialog is triggered
-                setTimeout(() => { document.title = BRAND_TITLE; }, 2000);
-            }, 250);
+            updateTimeStamp();
+            // window.print() now triggers the onbeforeprint function above automatically
+            window.print(); 
         }
         
         document.getElementById('testDate').valueAsDate = new Date();
