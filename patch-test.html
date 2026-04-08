@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Patch Test Form | BARE by Marlese</title>
+    <title id="originalTitle">Patch Test Form | BARE by Marlese</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,14 +14,13 @@
     <style>
         :root {
             --bg: #cacdc6;
-            --card-bg: #d4d7d1; /* Solid version of card bg for print stability */
+            --card-bg: #d4d7d1;
             --heading-muted: #878274;
             --heading-dark: #24221a;
             --brand: #5e6959;
             --shadow: 0 12px 30px rgba(0,0,0,0.1);
         }
 
-        /* Essential for forcing mobile PDF colors */
         * { 
             box-sizing: border-box; 
             -webkit-print-color-adjust: exact !important; 
@@ -45,7 +44,7 @@
         }
 
         .con-card {
-            background: rgba(212, 215, 209, 0.9); /* Slightly more opaque for desktop */
+            background: rgba(212, 215, 209, 0.9);
             border: 1px solid rgba(255,255,255,0.3);
             border-radius: 24px;
             box-shadow: var(--shadow);
@@ -109,10 +108,9 @@
             outline: none;
             height: 40px;
             transition: all 0.2s ease;
-            appearance: none; /* Uniform look for select/date */
+            appearance: none;
         }
 
-        /* Specific fix for the arrow and date alignment */
         select.con-input {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2324221a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -206,12 +204,6 @@
             text-transform: uppercase;
         }
 
-        /* Desktop specific hover styles */
-        @media screen and (min-width: 601px) {
-            .pill:hover { background: rgba(255,255,255,0.8); }
-            .con-btn:hover { opacity: 0.9; }
-        }
-
         @media screen and (max-width: 600px) {
             body { display: block; padding: 0; }
             .con-card { width: 94vw; margin: 10px auto; padding: 20px; }
@@ -219,7 +211,6 @@
             .con-input { height: 46px; font-size: 16px; }
         }
 
-        /* PRINT / PDF OVERRIDES */
         @media print {
             @page { margin: 0; size: portrait; }
             body { background: #cacdc6 !important; }
@@ -246,10 +237,8 @@
                 background: #ffffff !important; 
                 border: 1px solid #bcbcbc !important; 
             }
-            .disclaimer { background: #e9ebe6 !important; }
-            .pill { background: #e1e4de !important; }
-            .pill.selected { background: #5e6959 !important; color: white !important; }
             .no-print { display: none !important; }
+            .pill.selected { background: #5e6959 !important; color: white !important; }
         }
     </style>
 </head>
@@ -360,6 +349,8 @@
     </div>
 
     <script>
+        const BRAND_TITLE = "Patch Test Form | BARE by Marlese";
+
         function toggleReaction(element) { element.classList.toggle('selected'); }
 
         const canvas = document.getElementById('signature-pad');
@@ -370,7 +361,7 @@
             canvas.width = canvas.offsetWidth * ratio;
             canvas.height = canvas.offsetHeight * ratio;
             canvas.getContext("2d").scale(ratio, ratio);
-             signaturePad.clear();
+            signaturePad.clear();
         }
 
         window.addEventListener("resize", resizeCanvas);
@@ -380,6 +371,9 @@
             signaturePad.clear(); 
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
             document.getElementById('printTimeStamp').innerText = "";
+            document.getElementById('clientName').value = "";
+            // FORCE RESET TITLE
+            document.title = BRAND_TITLE;
         }
         
         function updateTimeStamp() {
@@ -387,23 +381,21 @@
             const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
             const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('printTimeStamp').innerText = "Signed: " + dateStr + " at " + timeStr;
-            return dateStr.replace(/\s/g, '-'); // Return formatted date for filename
+            return dateStr.replace(/\s/g, '-');
         }
 
         function prepareAndPrint() {
-            const clientName = document.getElementById('clientName').value.trim() || "Unnamed-Client";
+            const nameInput = document.getElementById('clientName').value.trim();
+            const clientName = nameInput || "Client";
             const dateFormatted = updateTimeStamp();
             
-            // Store original title
-            const originalTitle = document.title;
-            
-            // Set temporary title (this becomes the PDF filename)
+            // Set the new title
             document.title = "Patch-Test-" + clientName + "-" + dateFormatted;
 
             setTimeout(() => { 
                 window.print(); 
-                // Reset title after a short delay so the tab name returns to normal
-                setTimeout(() => { document.title = originalTitle; }, 1000);
+                // Return to brand title shortly after the print dialog is triggered
+                setTimeout(() => { document.title = BRAND_TITLE; }, 2000);
             }, 250);
         }
         
