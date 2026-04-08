@@ -66,9 +66,9 @@
             text-align: center;
             margin: 5px 0 20px;
             font-size: 24px;
-            color: var(--heading-muted);
+            color: var(--heading-dark);
             letter-spacing: .02em;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
         }
 
@@ -76,7 +76,7 @@
             padding: 20px;
             border-radius: 16px;
             border: 1px solid rgba(36,34,26,0.14);
-            background: rgba(202,205,198,0.40);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .con-label {
@@ -86,6 +86,7 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            color: var(--brand);
         }
 
         .con-input {
@@ -94,25 +95,26 @@
             font-size: 15px;
             border-radius: 10px;
             border: 1px solid rgba(36,34,26,.22);
-            background: rgba(202,205,198,.65);
+            background: rgba(255, 255, 255, 0.5);
             color: var(--heading-dark);
             font-family: inherit;
             outline: none;
         }
 
-        .settings-row {
-            display: flex;
-            gap: 12px;
-            width: 100%;
+        /* Responsive Grid for Settings */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 15px;
+            margin-top: 5px;
         }
-        .settings-col { flex: 1; }
 
         .signature-wrapper {
-            margin-top: 8px;
+            margin-top: 10px;
             border: 1px solid rgba(36,34,26,.22);
             border-radius: 12px;
             background: white;
-            height: 160px;
+            height: 180px;
             overflow: hidden;
             touch-action: none;
         }
@@ -121,7 +123,7 @@
         .con-actions {
             display: flex;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         .con-btn {
@@ -131,7 +133,7 @@
             color: #fff;
             border: 0;
             border-radius: 999px;
-            padding: 14px;
+            padding: 16px;
             font-weight: 700;
             letter-spacing: .08em;
             text-transform: uppercase;
@@ -146,10 +148,12 @@
 
         .disclaimer {
             font-size: 11px;
-            line-height: 1.5;
-            margin-top: 15px;
-            opacity: 0.8;
-            font-style: italic;
+            line-height: 1.6;
+            margin: 20px 0;
+            opacity: 0.9;
+            padding: 12px;
+            border-left: 3px solid var(--brand);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         @media print {
@@ -157,10 +161,10 @@
             body { padding: 0; background: var(--bg) !important; }
             .con-card { 
                 box-shadow: none; 
-                border: 1px solid rgba(36,34,26,.16); 
+                border: none; 
                 width: 100%; 
                 max-width: 100%; 
-                background: rgba(202,205,198,.55) !important;
+                background: var(--bg) !important;
             }
         }
     </style>
@@ -177,22 +181,30 @@
 
         <div class="con-section">
             <label class="con-label">Client Name</label>
-            <input type="text" id="clientName" class="con-input" placeholder="Enter name">
+            <input type="text" id="clientName" class="con-input" placeholder="Full Name">
 
             <label class="con-label">Date of Test</label>
             <input type="date" id="testDate" class="con-input">
 
             <label class="con-label">Test Area</label>
-            <input type="text" id="testArea" class="con-input" placeholder="e.g. Lower Leg">
+            <input type="text" id="testArea" class="con-input" placeholder="e.g. Left Inner Arm">
 
-            <div class="settings-row">
-                <div class="settings-col">
+            <div class="settings-grid">
+                <div>
                     <label class="con-label">Joules (J/cm²)</label>
                     <input type="text" id="joules" class="con-input" placeholder="e.g. 12J">
                 </div>
-                <div class="settings-col">
-                    <label class="con-label">Wavelength / Pulse</label>
-                    <input type="text" id="wavelength" class="con-input" placeholder="e.g. 1064/20ms">
+                <div>
+                    <label class="con-label">Pulse Width (ms)</label>
+                    <input type="text" id="pulse" class="con-input" placeholder="e.g. 1064/20ms">
+                </div>
+                <div>
+                    <label class="con-label">Spot Size (mm)</label>
+                    <input type="text" id="spot" class="con-input" placeholder="e.g. 15mm">
+                </div>
+                <div>
+                    <label class="con-label">Cooling/Wavelength</label>
+                    <input type="text" id="cool" class="con-input" placeholder="e.g. L4 / 755nm">
                 </div>
             </div>
 
@@ -229,4 +241,8 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
-        function
+        function clearSig() { signaturePad.clear(); }
+        document.getElementById('testDate').valueAsDate = new Date();
+    </script>
+</body>
+</html>
