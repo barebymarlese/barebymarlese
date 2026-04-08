@@ -29,7 +29,7 @@
         
         body {
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
             font-family: "Montserrat", sans-serif;
             background: var(--bg);
             color: var(--heading-dark);
@@ -42,7 +42,7 @@
             border: 1px solid rgba(36,34,26,.16);
             border-radius: 18px;
             box-shadow: var(--shadow);
-            padding: 30px;
+            padding: 25px;
             max-width: 600px;
             width: 100%;
         }
@@ -55,15 +55,15 @@
             font-weight: 600;
             text-transform: uppercase;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .logo .bare { color: var(--brand); font-size: 22px; }
         .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted); font-size: 14px; }
 
         .section-title {
             text-align: center;
-            margin: 10px 0 30px;
-            font-size: 28px;
+            margin: 5px 0 20px;
+            font-size: 24px;
             color: var(--heading-muted);
             letter-spacing: .02em;
             font-weight: 600;
@@ -71,7 +71,6 @@
         }
 
         .con-section {
-            margin-top: 14px;
             padding: 20px;
             border-radius: 16px;
             border: 1px solid rgba(36,34,26,0.14);
@@ -80,18 +79,18 @@
 
         .con-label {
             display: block;
-            margin: 15px 0 6px;
+            margin: 12px 0 4px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         .con-input {
             width: 100%;
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 12px;
+            padding: 10px;
+            font-size: 15px;
+            border-radius: 10px;
             border: 1px solid rgba(36,34,26,.22);
             background: rgba(202,205,198,.65);
             color: var(--heading-dark);
@@ -99,20 +98,19 @@
             outline: none;
         }
 
-        /* Flex row for settings */
         .settings-row {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
         }
         .settings-col { flex: 1; }
 
         .signature-wrapper {
-            margin-top: 10px;
+            margin-top: 8px;
             border: 1px solid rgba(36,34,26,.22);
             border-radius: 12px;
             background: white;
-            height: 200px;
+            height: 160px;
             overflow: hidden;
             touch-action: none;
         }
@@ -121,91 +119,3 @@
         .con-actions {
             display: flex;
             gap: 12px;
-            margin-top: 25px;
-        }
-
-        .con-btn {
-            flex: 1;
-            background: var(--brand);
-            font-size: 14px;
-            color: #fff;
-            border: 0;
-            border-radius: 999px;
-            padding: 14px;
-            font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .con-btn-ghost {
-            background: transparent;
-            border: 1px solid rgba(36,34,26,.25);
-            color: var(--heading-dark);
-        }
-
-        .disclaimer {
-            font-size: 12px;
-            line-height: 1.6;
-            margin-top: 20px;
-            opacity: 0.8;
-            font-style: italic;
-        }
-
-        @media print {
-            .no-print { display: none !important; }
-            body { 
-                padding: 0; 
-                background: var(--bg) !important; 
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .con-card { 
-                box-shadow: none; 
-                border: 1px solid rgba(36,34,26,.16); 
-                width: 100%; 
-                max-width: 100%; 
-                background: rgba(202,205,198,.55) !important;
-            }
-            .con-section {
-                background: rgba(202,205,198,0.40) !important;
-                border: 1px solid rgba(36,34,26,0.14);
-            }
-            .con-input {
-                background: rgba(202,205,198,.65) !important;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="con-card">
-        <div class="logo">
-            <span class="bare">BARE |</span>
-            <span class="by">by Marlese</span>
-        </div>
-        
-        <h2 class="section-title">Patch Test Record</h2>
-
-        <div class="con-section">
-            <label class="con-label">Client Name</label>
-            <input type="text" id="clientName" class="con-input" placeholder="Enter name">
-
-            <label class="con-label">Date of Test</label>
-            <input type="date" id="testDate" class="con-input">
-
-            <label class="con-label">Test Area</label>
-            <input type="text" id="testArea" class="con-input" placeholder="e.g. Lower Leg / Inner Arm">
-
-            <div class="settings-row">
-                <div class="settings-col">
-                    <label class="con-label">Joules (J/cm²)</label>
-                    <input type="text" id="joules" class="con-input" placeholder="e.g. 12J">
-                </div>
-                <div class="settings-col">
-                    <label class="con-label">Wavelength / Pulse</label>
-                    <input type="text" id="wavelength" class="con-input" placeholder="e.g. 755nm / 20ms">
-                </div>
-            </div>
-
-            <div
