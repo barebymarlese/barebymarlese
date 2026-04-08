@@ -101,13 +101,17 @@
             font-family: inherit;
             outline: none;
             height: 48px;
+            text-align: left; /* Ensures date is not in the middle */
+            appearance: none; /* Helps with mobile date rendering */
         }
 
+        /* Fixed grid for mobile sizing */
         .settings-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px 12px;
             margin-top: 5px;
+            width: 100%;
         }
 
         .signature-wrapper {
@@ -164,7 +168,11 @@
 
         @media screen and (max-width: 480px) {
             .settings-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* Stacks to 100% width on mobile for consistent size */
+            }
+            .con-input {
+                width: 100% !important;
+                display: block;
             }
         }
     </style>
