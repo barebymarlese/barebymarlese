@@ -191,37 +191,41 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
+        /* Screen Styles for Mobile Only */
         @media screen and (max-width: 480px) {
             html, body { overflow: auto; height: auto; }
             body { display: block; padding: 15px 10px; }
             .con-card { padding: 15px; width: 100%; }
             .settings-grid { grid-template-columns: 1fr; gap: 0; }
             .signature-wrapper { height: 160px; }
-            
-            /* Mobile Input Fixes */
-            .con-input { 
-                height: 46px !important; 
-                font-size: 16px !important; 
-                display: block;
-                width: 100%;
-                text-align: left !important; /* Force left align */
-                justify-content: flex-start !important;
-            }
-
-            /* Specifically targeting the date input for mobile browsers */
-            input[type="date"].con-input {
-                text-align: left !important;
-                display: flex;
-                align-items: center;
-                -webkit-appearance: none; /* Removes native mobile centering */
-            }
-
+            .con-input { height: 46px !important; font-size: 16px !important; }
             .pill { font-size: 13px; padding: 10px 15px; }
         }
 
+        /* FIXES SPECIFICALLY FOR PRINT/PDF */
         @media print {
+            /* Keep the 2-column grid in PDF even if generated from mobile */
+            .settings-grid { 
+                grid-template-columns: 1fr 1fr !important; 
+                gap: 5px 20px !important; 
+            }
+            
+            /* Remove background colors that might get stripped */
+            body { background: white !important; }
+            .con-card { box-shadow: none !important; border: none !important; width: 100% !important; padding: 0 !important; }
+            
+            /* Force the date input to look like a normal field */
+            input[type="date"] {
+                display: block !important;
+                -webkit-appearance: none !important;
+                min-height: 30px !important;
+                font-size: 11pt !important;
+                background: #f9f9f9 !important;
+            }
+
+            .no-print { display: none !important; }
             .pill { border: 1px solid #ccc !important; }
-            .pill.selected { background: #5e6959 !important; color: white !important; -webkit-print-color-adjust: exact; }
+            .pill.selected { background: #5e6959 !important; color: white !important; }
         }
     </style>
 </head>
@@ -361,6 +365,7 @@
             updateReactionInput();
         }
         
+        // Auto-set today's date
         document.getElementById('testDate').valueAsDate = new Date();
     </script>
 </body>
