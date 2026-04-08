@@ -42,8 +42,8 @@
             border: 1px solid rgba(36,34,26,.16);
             border-radius: 18px;
             box-shadow: var(--shadow);
-            padding: 30px;
-            max-width: 600px;
+            padding: 40px;
+            max-width: 650px;
             width: 100%;
         }
 
@@ -55,56 +55,65 @@
             font-weight: 600;
             text-transform: uppercase;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
-        .logo .bare { color: var(--brand); font-size: 22px; }
-        .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted); font-size: 14px; }
+        .logo .bare { color: var(--brand); font-size: 24px; }
+        .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted); font-size: 16px; }
 
         .section-title {
             text-align: center;
-            margin: 10px 0 30px;
-            font-size: 28px;
-            color: var(--heading-muted);
-            letter-spacing: .02em;
-            font-weight: 600;
+            margin: 0 0 35px;
+            font-size: 30px;
+            color: var(--heading-dark);
+            letter-spacing: .05em;
+            font-weight: 700;
             text-transform: uppercase;
         }
 
         .con-section {
-            margin-top: 14px;
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid rgba(36,34,26,0.14);
-            background: rgba(202,205,198,0.40);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(36,34,26,0.12);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
         }
 
         .con-label {
             display: block;
-            margin: 15px 0 6px;
+            margin-bottom: 8px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
+            color: var(--heading-muted);
         }
 
         .con-input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             font-size: 16px;
             border-radius: 12px;
-            border: 1px solid rgba(36,34,26,.22);
-            background: rgba(202,205,198,.65);
+            border: 1px solid rgba(36,34,26,0.15);
+            background: rgba(255, 255, 255, 0.5);
             color: var(--heading-dark);
             font-family: inherit;
             outline: none;
+            transition: border 0.2s;
+        }
+
+        .con-input:focus {
+            border-color: var(--brand);
         }
 
         .signature-wrapper {
             margin-top: 10px;
-            border: 1px solid rgba(36,34,26,.22);
+            border: 1px solid rgba(36,34,26,0.15);
             border-radius: 12px;
             background: white;
-            height: 200px;
+            height: 220px;
             overflow: hidden;
             touch-action: none;
         }
@@ -113,7 +122,7 @@
         .con-actions {
             display: flex;
             gap: 12px;
-            margin-top: 25px;
+            margin-top: 30px;
         }
 
         .con-btn {
@@ -123,49 +132,46 @@
             color: #fff;
             border: 0;
             border-radius: 999px;
-            padding: 14px;
+            padding: 16px;
             font-weight: 700;
-            letter-spacing: .08em;
+            letter-spacing: .1em;
             text-transform: uppercase;
             cursor: pointer;
+            transition: opacity 0.2s;
         }
+
+        .con-btn:active { opacity: 0.8; }
 
         .con-btn-ghost {
             background: transparent;
-            border: 1px solid rgba(36,34,26,.25);
+            border: 1px solid rgba(36,34,26,.2);
             color: var(--heading-dark);
         }
 
         .disclaimer {
             font-size: 12px;
             line-height: 1.6;
-            margin-top: 20px;
+            margin: 25px 0;
             opacity: 0.8;
-            font-style: italic;
+            padding: 15px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            border-left: 3px solid var(--brand);
         }
 
-        /* UPDATED PDF PRINT RULES TO KEEP COLORS */
         @media print {
             .no-print { display: none !important; }
-            body { 
-                padding: 0; 
-                background: var(--bg) !important; 
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
+            body { padding: 0; background: var(--bg) !important; }
             .con-card { 
                 box-shadow: none; 
-                border: 1px solid rgba(36,34,26,.16); 
+                border: none; 
                 width: 100%; 
                 max-width: 100%; 
-                background: rgba(202,205,198,.55) !important;
-            }
-            .con-section {
-                background: rgba(202,205,198,0.40) !important;
-                border: 1px solid rgba(36,34,26,0.14);
+                background: var(--bg) !important;
             }
             .con-input {
-                background: rgba(202,205,198,.65) !important;
+                background: rgba(255, 255, 255, 0.4) !important;
+                border: 1px solid rgba(0,0,0,0.1) !important;
             }
         }
     </style>
@@ -181,27 +187,35 @@
         <h2 class="section-title">Patch Test Record</h2>
 
         <div class="con-section">
-            <label class="con-label">Client Name</label>
-            <input type="text" id="clientName" class="con-input" placeholder="Enter name">
+            <div class="form-group">
+                <label class="con-label">Client Name</label>
+                <input type="text" id="clientName" class="con-input" placeholder="Enter Full Name">
+            </div>
 
-            <label class="con-label">Date of Test</label>
-            <input type="date" id="testDate" class="con-input">
+            <div class="form-group">
+                <label class="con-label">Date of Test</label>
+                <input type="date" id="testDate" class="con-input">
+            </div>
 
-            <label class="con-label">Test Area & Laser Settings</label>
-            <input type="text" id="settings" class="con-input" placeholder="e.g. Left Ankle / 3.5J">
+            <div class="form-group">
+                <label class="con-label">Test Area & Laser Settings</label>
+                <input type="text" id="settings" class="con-input" placeholder="e.g. Left Inner Arm / 12J / 20ms">
+            </div>
 
             <div class="disclaimer">
                 I acknowledge that a patch test has been performed. I will monitor the area for 24-48 hours and report any adverse reactions before proceeding with full treatment.
             </div>
 
-            <label class="con-label">Client Signature</label>
-            <div class="signature-wrapper">
-                <canvas id="signature-pad"></canvas>
+            <div class="form-group">
+                <label class="con-label">Client Signature</label>
+                <div class="signature-wrapper">
+                    <canvas id="signature-pad"></canvas>
+                </div>
             </div>
         </div>
 
         <div class="con-actions no-print">
-            <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear Signature</button>
+            <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear</button>
             <button class="con-btn" onclick="window.print()">Create PDF Record</button>
         </div>
     </div>
@@ -224,6 +238,7 @@
         resizeCanvas();
 
         function clearSig() { signaturePad.clear(); }
+        // Auto-set the date to today
         document.getElementById('testDate').valueAsDate = new Date();
     </script>
 </body>
