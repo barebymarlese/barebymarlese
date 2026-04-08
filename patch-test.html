@@ -93,7 +93,7 @@
         .con-input {
             width: 100%;
             padding: 12px;
-            font-size: 16px; /* Prevents auto-zoom on iPhone */
+            font-size: 16px; 
             border-radius: 10px;
             border: 1px solid rgba(36,34,26,.22);
             background: rgba(255, 255, 255, 0.5);
@@ -101,13 +101,11 @@
             font-family: inherit;
             outline: none;
             height: 48px;
-            appearance: none;
         }
 
-        /* Responsive grid to keep items contained */
         .settings-grid {
             display: grid;
-            grid-template-columns: 1.2fr 0.8fr; /* Gives Practitioner name more room */
+            grid-template-columns: 1fr 1fr;
             gap: 10px 12px;
             margin-top: 5px;
         }
@@ -166,7 +164,7 @@
 
         @media screen and (max-width: 480px) {
             .settings-grid {
-                grid-template-columns: 1fr; /* Stack on tiny screens to avoid overlap */
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -198,28 +196,63 @@
 
             <div class="settings-grid">
                 <div>
+                    <label class="con-label">Test Area</label>
+                    <input type="text" id="testArea" class="con-input" placeholder="e.g. Left Inner Arm">
+                </div>
+                <div>
+                    <label class="con-label">Fitzpatrick Type</label>
+                    <select id="skinType" class="con-input">
+                        <option value="">Select</option>
+                        <option value="1">Type I</option>
+                        <option value="2">Type II</option>
+                        <option value="3">Type III</option>
+                        <option value="4">Type IV</option>
+                        <option value="5">Type V</option>
+                        <option value="6">Type VI</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <div>
                     <label class="con-label">Machine Serial No.</label>
-                    <input type="text" id="serialNo" class="con-input" placeholder="SN-12345">
+                    <input type="text" id="serialNo" class="con-input" placeholder="e.g. SN-12345">
                 </div>
                 <div>
                     <label class="con-label">Wavelength</label>
-                    <input type="text" id="wavelength" class="con-input" placeholder="1064nm">
+                    <input type="text" id="wavelength" class="con-input" placeholder="1064/532nm">
                 </div>
             </div>
 
             <div class="settings-grid">
                 <div>
                     <label class="con-label">Joules (J/cm²)</label>
-                    <input type="text" id="joules" class="con-input" placeholder="1.2J">
+                    <input type="text" id="joules" class="con-input" placeholder="e.g. 1.2J">
                 </div>
                 <div>
                     <label class="con-label">Pulse Width (ms)</label>
-                    <input type="text" id="pulse" class="con-input" placeholder="20ms">
+                    <input type="text" id="pulse" class="con-input" placeholder="e.g. 20ms">
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <div>
+                    <label class="con-label">Spot Size (mm)</label>
+                    <input type="text" id="spot" class="con-input" placeholder="e.g. 10mm">
+                </div>
+                <div>
+                    <label class="con-label">Immediate Reaction</label>
+                    <select id="reaction" class="con-input">
+                        <option value="">Select Reaction</option>
+                        <option value="Normal">Normal Erythema</option>
+                        <option value="Mild">Mild Reaction</option>
+                        <option value="Adverse">Adverse Reaction</option>
+                    </select>
                 </div>
             </div>
 
             <div class="disclaimer">
-                I acknowledge that a patch test has been performed. I will monitor the area for 24-48 hours and report any adverse reactions.
+                I acknowledge that a patch test has been performed. I will monitor the area for 24-48 hours and report any adverse reactions before proceeding with full treatment.
             </div>
 
             <label class="con-label">Client Signature</label>
@@ -252,8 +285,6 @@
         resizeCanvas();
 
         function clearSig() { signaturePad.clear(); }
-        
-        // Auto-set today's date
         document.getElementById('testDate').valueAsDate = new Date();
     </script>
 </body>
