@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Private Patch Test Portal</title>
+    <meta name="robots" content="noindex"> <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .app-container { background: white; max-width: 500px; width: 100%; padding: 25px; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; text-align: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+        label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        .signature-box { border: 2px dashed #cbd5e1; background: #fff; border-radius: 8px; margin-top: 10px; height: 180px; position: relative; touch-action: none; }
+        canvas { width: 100%; height: 100%; border-radius: 8px; }
+        .button-group { display: flex; gap: 10px; margin-top: 20px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
+        .btn-print { background: var(--primary); color: white; }
+        .btn-clear { background: #cbd5e1; color: #475569; }
+        .disclaimer { font-size: 0.8rem; color: #64748b; margin-top: 15px; line-height: 1.4; background: #f1f5f9; padding: 10px; border-radius: 8px; }
+        @media print { .no-print { display: none; } body { padding: 0; background: white; } .app-container { box-shadow: none; border: none; max-width: 100%; } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h2>Patch Test Record</h2>
+    
+    <label>Client Name</label>
+    <input type="text" id="clientName" placeholder="Full Name">
+
+    <label>Date</label>
+    <input type="date" id="testDate">
+
+    <label>Placement & Laser Settings</label>
+    <input type="text" id="settings" placeholder="e.g. Left Wrist - 3.5 J/cm2">
+
+    <div class="disclaimer">
+        I consent to a patch test for laser tattoo removal. I will monitor the area for 24-48 hours. I understand that redness and slight swelling are normal, but will report any unusual reactions.
+    </div>
+
+    <label>Client Signature</label>
+    <div class="signature-box">
+        <canvas id="signature-pad"></canvas>
+    </div>
+
+    <div class="button-group no-print">
+        <button class="btn-clear" onclick="clearSig()">Clear</button>
+        <button class="btn-print" onclick="window.print()">Save PDF</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas, {
+        backgroundColor: 'rgb(255, 255, 255)'
+    });
+
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+        signaturePad.clear();
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function clearSig() {
+        signaturePad.clear();
+    }
+
+    // Set default date to today
+    document.getElementById('testDate').valueAsDate = new Date();
+</script>
+
+</body>
+</html>
