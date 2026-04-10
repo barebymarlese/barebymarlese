@@ -637,18 +637,18 @@ td:nth-child(3) textarea{
     max-width:100% !important;
   }
 
-.section{
-  padding:6px !important;
-  margin-bottom:4px !important;
-  border-radius:6px !important;
-  break-inside:avoid-page;
-  page-break-inside:avoid;
-}
+  .section{
+    padding:6px !important;
+    margin-bottom:4px !important;
+    border-radius:6px !important;
+    break-inside:avoid-page;
+    page-break-inside:avoid;
+  }
 
-.section.register-section{
-  break-inside:auto !important;
-  page-break-inside:auto !important;
-}
+  .section.register-section{
+    break-inside:auto !important;
+    page-break-inside:auto !important;
+  }
 
   .section-title{
     font-size:6.6px !important;
@@ -704,26 +704,34 @@ td:nth-child(3) textarea{
     padding:0 !important;
   }
 
-table{
-  table-layout:auto !important;
-  width:100% !important;
-}
+  table{
+    table-layout:auto !important;
+    width:100% !important;
+  }
 
-th, td{
-  word-break:break-word !important;
-  overflow-wrap:break-word !important;
-  white-space:normal !important;
-}
+  thead{
+    display:table-header-group !important;
+  }
+
+  tbody{
+    display:table-row-group !important;
+  }
 
   tr{
-    break-inside:avoid-page;
-    page-break-inside:avoid;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+
+  th, td{
+    word-break:break-word !important;
+    overflow-wrap:break-word !important;
+    white-space:normal !important;
   }
 
   th{
-    font-size:5.3px !important;
-    padding:3px 2px !important;
-    line-height:1.05 !important;
+    font-size:6px !important;
+    padding:4px 3px !important;
+    line-height:1.08 !important;
     letter-spacing:.01em !important;
   }
 
@@ -731,29 +739,23 @@ th, td{
     padding:0 !important;
   }
 
-  td textarea,
-  td input{
-    height:auto !important;
-    max-height:none !important;
-  }
-
   td textarea{
-    min-height:20px !important;
+    min-height:24px !important;
     height:auto !important;
     max-height:none !important;
-    font-size:5.6px !important;
-    line-height:1.08 !important;
-    padding:3px 4px !important;
+    font-size:6.2px !important;
+    line-height:1.14 !important;
+    padding:4px 5px !important;
     resize:none !important;
     overflow:hidden !important;
   }
 
   td input,
   td input[type="date"]{
-    height:15px !important;
-    min-height:15px !important;
-    line-height:15px !important;
-    font-size:5.5px !important;
+    height:17px !important;
+    min-height:17px !important;
+    line-height:17px !important;
+    font-size:6px !important;
     padding:0 4px !important;
   }
 
