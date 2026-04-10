@@ -100,6 +100,36 @@ li{
   margin-top:14px;
 }
 
+/* BUTTONS */
+.actions{
+  display:flex;
+  gap:12px;
+  margin-top:20px;
+}
+
+.btn{
+  flex:1;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:var(--brand);
+  color:white;
+}
+
+.btn-ghost{
+  background:transparent;
+  border:1px solid rgba(0,0,0,0.2);
+}
+
+/* PRINT */
 @media print{
   @page { size:A4; margin:5mm; }
 
@@ -110,6 +140,8 @@ li{
     width:100%;
     border-radius:0;
   }
+
+  .actions{display:none;}
 
   li{font-size:9px;}
 }
@@ -130,72 +162,91 @@ li{
 <h3>Professional Standards</h3>
 <ul>
 <li>Treatments are carried out by a VTCT Level 5 qualified practitioner.</li>
-<li>All equipment is maintained, serviced, and used in accordance with manufacturer guidelines.</li>
-<li>A full consultation and patch test are completed prior to treatment.</li>
-<li>Treatment is only performed where it is safe and appropriate to do so.</li>
+<li>All equipment is maintained and used according to manufacturer guidelines.</li>
+<li>A consultation and patch test are completed prior to treatment.</li>
+<li>Treatment is only performed where safe and appropriate.</li>
 </ul>
 </div>
 
 <div class="section">
 <h3>Hygiene & Infection Control</h3>
 <ul>
-<li>All treatment areas are cleaned and disinfected before and after every client.</li>
-<li>Single-use consumables are used wherever possible.</li>
-<li>Hands are sanitised before and after every treatment.</li>
-<li>Gloves and appropriate PPE are worn where required.</li>
-<li>Cross-contamination prevention procedures are strictly followed.</li>
+<li>All surfaces are disinfected between clients.</li>
+<li>Single-use consumables are used where possible.</li>
+<li>Hands are sanitised before and after treatments.</li>
+<li>PPE is used where required.</li>
+<li>Strict cross-contamination protocols are followed.</li>
 </ul>
 </div>
 
 <div class="section">
 <h3>Laser Safety</h3>
 <ul>
-<li>Laser treatments are performed in a controlled environment.</li>
-<li>Protective eyewear is worn by both practitioner and client at all times.</li>
-<li>Only appropriate settings are used based on skin type and treatment area.</li>
-<li>Equipment is operated in line with safety protocols.</li>
+<li>Laser is operated in a controlled treatment environment.</li>
+<li>Protective eyewear is worn by practitioner and client.</li>
+<li>Settings are tailored to skin type and treatment area.</li>
+<li>Equipment is used in line with safety standards.</li>
 </ul>
 </div>
 
 <div class="section">
 <h3>Treatment Risks</h3>
 <ul>
-<li>Redness, swelling, and sensitivity are common temporary effects.</li>
-<li>Blistering, scabbing, or pigment changes may occur.</li>
+<li>Temporary redness, swelling, and sensitivity are common.</li>
+<li>Blistering or pigmentation changes may occur.</li>
 <li>There is a small risk of scarring or infection.</li>
-<li>Multiple sessions are required; complete removal cannot be guaranteed.</li>
+<li>Multiple sessions are required; full removal is not guaranteed.</li>
 </ul>
 </div>
 
 <div class="section">
 <h3>Client Responsibilities</h3>
 <ul>
-<li>Follow all aftercare instructions provided.</li>
-<li>Avoid sun exposure and use SPF where required.</li>
-<li>Inform the practitioner of any medical changes.</li>
-<li>Report any unusual or severe reactions promptly.</li>
+<li>Follow all aftercare instructions.</li>
+<li>Avoid sun exposure and use SPF.</li>
+<li>Report any unusual reactions.</li>
+<li>Inform practitioner of medical changes.</li>
 </ul>
 </div>
 
 <div class="section">
 <h3>Home Clinic Environment</h3>
 <ul>
-<li>Treatments are carried out in a clean, dedicated treatment space.</li>
-<li>Appointments are managed to maintain a safe and controlled environment.</li>
-<li>No more than limited clients are treated per week to ensure quality and safety.</li>
+<li>Treatment is performed in a dedicated clean space.</li>
+<li>Appointments are controlled to maintain safety.</li>
+<li>Low client volume ensures proper care and hygiene.</li>
 </ul>
 </div>
 
 <div class="note">
 <strong>Important</strong><br>
-Laser tattoo removal carries risks. Individual results vary. By proceeding with treatment, clients acknowledge they have received consultation, understand the risks, and agree to follow all safety and aftercare guidance.
+Laser tattoo removal carries risks including scarring and pigmentation changes. Results vary. By proceeding, clients acknowledge understanding of risks and agree to follow all guidance.
 </div>
 
 <div class="footer">
 BARE by Marlese | Professional Laser Tattoo Removal
 </div>
 
+<div class="actions">
+  <button class="btn btn-ghost" onclick="window.print()">Print</button>
+  <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
 </div>
+
+</div>
+
+<script>
+function downloadPDF(){
+  const originalTitle = document.title;
+  document.title = "BARE-Health-Safety-Leaflet";
+  
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1500);
+  }, 200);
+}
+</script>
 
 </body>
 </html>
