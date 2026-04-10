@@ -100,15 +100,14 @@ li{
   margin-top:14px;
 }
 
-/* BUTTONS */
+/* BUTTON */
 .actions{
   display:flex;
-  gap:12px;
   margin-top:20px;
 }
 
 .btn{
-  flex:1;
+  width:100%;
   padding:14px;
   border-radius:12px;
   border:none;
@@ -117,16 +116,8 @@ li{
   letter-spacing:.1em;
   text-transform:uppercase;
   cursor:pointer;
-}
-
-.btn-primary{
   background:var(--brand);
   color:white;
-}
-
-.btn-ghost{
-  background:transparent;
-  border:1px solid rgba(0,0,0,0.2);
 }
 
 /* PRINT */
@@ -228,8 +219,7 @@ BARE by Marlese | Professional Laser Tattoo Removal
 </div>
 
 <div class="actions">
-  <button class="btn btn-ghost" onclick="window.print()">Print</button>
-  <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+  <button class="btn" onclick="downloadPDF()">Download PDF</button>
 </div>
 
 </div>
