@@ -1125,6 +1125,12 @@ window.addEventListener('resize', resizeMobileRegister);
 document.querySelectorAll('.mobile-register textarea').forEach((el)=>{
   el.addEventListener('input', resizeMobileRegister);
 });
+
+window.addEventListener('beforeprint', () => {
+  document.querySelectorAll('textarea').forEach((el) => {
+    el.style.height = 'auto';
+  });
+});
 </script>
 
 </body>
