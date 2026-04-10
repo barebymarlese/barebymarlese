@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title id="originalTitle">Patch Test Form | BARE by Marlese</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
     <style>
@@ -27,7 +27,7 @@
             print-color-adjust: exact !important; 
             color-adjust: exact !important;
         }
-        
+
         html, body {
             margin: 0;
             padding: 0;
@@ -161,7 +161,7 @@
             position: relative;
             touch-action: none;
         }
-        
+
         canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 
         .con-actions { display: flex; gap: 20px; margin-top: 20px; }
@@ -347,7 +347,7 @@
             <span class="bare">BARE |</span>
             <span class="by">by Marlese</span>
         </div>
-        
+
         <h2 class="section-title">Patch Test Record</h2>
 
         <div class="con-section">
@@ -368,12 +368,16 @@
                     <input type="text" id="clientName" class="con-input" placeholder="Full Name">
                 </div>
                 <div>
-                    <label class="con-label">Test Area</label>
-                    <input type="text" id="testArea" class="con-input" placeholder="e.g. Left Inner Arm">
+                    <label class="con-label">Date of Birth</label>
+                    <input type="date" id="dateOfBirth" class="con-input">
                 </div>
             </div>
 
             <div class="settings-grid">
+                <div>
+                    <label class="con-label">Test Area</label>
+                    <input type="text" id="testArea" class="con-input" placeholder="Exact location + size (e.g. 2cm area, left inner forearm)">
+                </div>
                 <div>
                     <label class="con-label">Fitzpatrick Type</label>
                     <select id="skinType" class="con-input">
@@ -386,32 +390,47 @@
                         <option value="6">Type VI</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="settings-grid">
                 <div>
                     <label class="con-label">Machine Serial No.</label>
                     <input type="text" id="serialNo" class="con-input" placeholder="e.g. SN-12345">
+                </div>
+                <div>
+                    <label class="con-label">Wavelength</label>
+                    <input type="text" id="wavelength" class="con-input" placeholder="1064/532nm">
                 </div>
             </div>
 
             <div class="settings-grid">
                 <div>
-                    <label class="con-label">Wavelength</label>
-                    <input type="text" id="wavelength" class="con-input" placeholder="1064/532nm">
-                </div>
-                <div>
                     <label class="con-label">Joules (J/cm²)</label>
                     <input type="text" id="joules" class="con-input" placeholder="e.g. 1.2J">
+                </div>
+                <div>
+                    <label class="con-label">Pulse Width (ms)</label>
+                    <input type="text" id="pulse" class="con-input" placeholder="e.g. 20ms">
                 </div>
             </div>
 
             <div class="settings-grid" style="margin-bottom: 15px;">
                 <div>
-                    <label class="con-label">Pulse Width (ms)</label>
-                    <input type="text" id="pulse" class="con-input" placeholder="e.g. 20ms">
-                </div>
-                <div>
                     <label class="con-label">Spot Size (mm)</label>
                     <input type="text" id="spot" class="con-input" placeholder="e.g. 10mm">
                 </div>
+                <div>
+                    <label class="con-label">Number of Test Shots</label>
+                    <input type="text" id="testShots" class="con-input" placeholder="e.g. 3 pulses">
+                </div>
+            </div>
+
+            <div class="settings-grid" style="margin-bottom: 15px;">
+                <div>
+                    <label class="con-label">Earliest Safe Treatment Date</label>
+                    <input type="date" id="earliestTreatmentDate" class="con-input">
+                </div>
+                <div></div>
             </div>
 
             <label class="con-label">Immediate Reaction (Select all that apply)</label>
@@ -438,7 +457,7 @@
                 <strong style="text-transform: uppercase; letter-spacing: 0.05em;">Declaration & Consent</strong>
                 <ul style="margin: 8px 0 0 0; padding-left: 18px; list-style-type: disc;">
                     <li>I acknowledge that a patch test has been performed to test for adverse reactions or pigment changes.</li>
-                    <li>I understand that <strong>tattoo inks are not regulated</strong> in the same way as pharmaceuticals and that reactions can occur due to the specific chemical composition of the pigment.</li>
+                    <li>Laser tattoo removal carries risks including blistering, scarring, and pigmentation changes. Results vary and complete removal cannot be guaranteed.</li>
                     <li>I will monitor the area for <strong>24-48 hours</strong> and report any adverse reactions (e.g. excessive swelling, blistering, or signs of infection) before proceeding with full treatment.</li>
                     <li>I consent to <strong>photographs</strong> being taken of the treated area for my clinical records and insurance purposes.</li>
                     <li>I confirm that I have received and understood the <strong>aftercare instructions</strong> and agree to follow them to minimize the risk of complications.</li>
@@ -487,10 +506,21 @@
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
             document.getElementById('printTimeStamp').innerText = "";
             document.getElementById('clientName').value = "";
+            document.getElementById('dateOfBirth').value = "";
+            document.getElementById('testArea').value = "";
+            document.getElementById('skinType').value = "";
+            document.getElementById('serialNo').value = "";
+            document.getElementById('wavelength').value = "";
+            document.getElementById('joules').value = "";
+            document.getElementById('pulse').value = "";
+            document.getElementById('spot').value = "";
+            document.getElementById('testShots').value = "";
+            document.getElementById('earliestTreatmentDate').value = "";
             document.getElementById('eyePro').checked = true;
             document.title = BRAND_TITLE;
+            document.getElementById('testDate').valueAsDate = new Date();
         }
-        
+
         function updateTimeStamp() {
             const now = new Date();
             const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -503,7 +533,7 @@
             const nameInput = document.getElementById('clientName').value.trim();
             const clientName = nameInput || "Client";
             const dateFormatted = updateTimeStamp();
-            
+
             document.title = "Patch-Test-" + clientName + "-" + dateFormatted;
 
             setTimeout(() => { 
@@ -511,7 +541,7 @@
                 setTimeout(() => { document.title = BRAND_TITLE; }, 2000);
             }, 250);
         }
-        
+
         document.getElementById('testDate').valueAsDate = new Date();
     </script>
 </body>
