@@ -44,11 +44,12 @@ body{
 .page-shell{
   width:100%;
   max-width:100%;
-  padding:20px 0;
+  overflow-x:hidden;
+  padding:16px 12px 20px;
 }
 
 .card{
-  width:min(95%, 980px);
+  width:100%;
   max-width:980px;
   margin:0 auto;
   padding:30px 34px;
@@ -160,7 +161,6 @@ textarea.textarea{
   grid-column:1 / -1;
 }
 
-/* DATE INPUT ALIGNMENT */
 input[type="date"].input{
   appearance:none;
   -webkit-appearance:none;
@@ -264,7 +264,6 @@ td input[type="date"]{
   -moz-appearance:none;
 }
 
-/* DESKTOP TABLE BALANCE */
 th:nth-child(1){width:13%;}
 th:nth-child(2){width:12%;}
 th:nth-child(3){width:25%;}
@@ -325,9 +324,11 @@ th:nth-child(7){width:16%;}
   cursor:pointer;
 }
 
-/* LOCKED MOBILE */
+/* MOBILE: LOCKED, NO FLOATING, SAME STRUCTURE */
 @media screen and (max-width: 760px){
   html, body{
+    width:100%;
+    max-width:100%;
     overflow-x:hidden !important;
   }
 
@@ -336,15 +337,21 @@ th:nth-child(7){width:16%;}
   }
 
   .page-shell{
-    padding:10px 0 18px;
+    width:100%;
+    max-width:100%;
+    padding:0;
+    overflow-x:hidden;
   }
 
   .card{
-    width:94vw;
-    max-width:94vw;
-    margin:0 auto;
-    padding:18px 16px;
-    border-radius:18px;
+    width:100%;
+    max-width:100%;
+    margin:0;
+    border-radius:0;
+    padding:18px 14px 20px;
+    box-shadow:none;
+    border-left:none;
+    border-right:none;
   }
 
   .logo{
@@ -367,7 +374,7 @@ th:nth-child(7){width:16%;}
   }
 
   .section{
-    padding:14px 14px;
+    padding:14px 12px;
     border-radius:14px;
     margin-bottom:12px;
   }
@@ -412,11 +419,6 @@ th:nth-child(7){width:16%;}
     border-radius:14px;
   }
 
-  table{
-    table-layout:fixed;
-  }
-
-  /* MOBILE TABLE HEADER CLEANUP */
   th{
     font-size:6.3px;
     padding:7px 4px;
@@ -449,14 +451,13 @@ th:nth-child(7){width:16%;}
     padding:0 4px;
   }
 
-  /* BETTER MOBILE COLUMN BALANCE */
-  th:nth-child(1){width:14%;}
-  th:nth-child(2){width:13%;}
-  th:nth-child(3){width:24%;}
+  th:nth-child(1){width:13%;}
+  th:nth-child(2){width:12%;}
+  th:nth-child(3){width:25%;}
   th:nth-child(4){width:18%;}
-  th:nth-child(5){width:9%;}
+  th:nth-child(5){width:8%;}
   th:nth-child(6){width:8%;}
-  th:nth-child(7){width:14%;}
+  th:nth-child(7){width:16%;}
 
   .checklist li,
   .note,
@@ -465,7 +466,7 @@ th:nth-child(7){width:16%;}
   }
 }
 
-/* PRINT */
+/* SINGLE PRINT LAYOUT FOR DESKTOP + MOBILE */
 @media print{
   @page{
     size:A4 portrait;
@@ -488,6 +489,8 @@ th:nth-child(7){width:16%;}
 
   .page-shell{
     padding:0 !important;
+    width:100% !important;
+    max-width:100% !important;
   }
 
   .card{
