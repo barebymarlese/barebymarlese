@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Risk Assessment | BARE by Marlese</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -39,6 +39,29 @@ body{
   color:var(--text);
   display:block;
   min-height:100vh;
+}
+
+
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  outline:2px solid rgba(94,105,89,0.18);
+  outline-offset:0;
+}
+
+.th-format{
+  display:block;
+  font-size:.9em;
+  letter-spacing:.02em;
+  text-transform:none;
+  font-weight:600;
+  margin-top:2px;
 }
 
 .page-shell{
@@ -422,6 +445,8 @@ th:nth-child(7){width:16%;}
     font-size:16px !important;
     line-height:44px !important;
     border-radius:10px !important;
+    transform:none !important;
+    zoom:1 !important;
   }
 
   input[type="date"].input{
@@ -453,34 +478,52 @@ th:nth-child(7){width:16%;}
     border-radius:10px !important;
   }
 
+  table{
+    table-layout:fixed !important;
+  }
+
   th{
-    font-size:5.9px !important;
-    padding:6px 3px !important;
-    line-height:1.08 !important;
+    font-size:6.2px !important;
+    padding:6px 4px !important;
+    line-height:1.12 !important;
     letter-spacing:.03em !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
   }
 
   td textarea{
-    min-height:64px !important;
-    padding:5px 4px !important;
-    font-size:7.4px !important;
-    line-height:1.18 !important;
+    min-height:68px !important;
+    padding:6px 5px !important;
+    font-size:8px !important;
+    line-height:1.22 !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
   }
 
   td input{
-    height:30px !important;
-    line-height:30px !important;
-    padding:0 4px !important;
-    font-size:7.4px !important;
+    height:32px !important;
+    line-height:32px !important;
+    padding:0 5px !important;
+    font-size:8px !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
   }
 
   td input[type="date"]{
-    height:30px !important;
-    min-height:30px !important;
-    line-height:30px !important;
-    padding:0 3px !important;
-    font-size:6.3px !important;
+    height:32px !important;
+    min-height:32px !important;
+    line-height:32px !important;
+    padding:0 4px !important;
+    font-size:16px !important;
   }
+
+  th:nth-child(1){width:13% !important;}
+  th:nth-child(2){width:13% !important;}
+  th:nth-child(3){width:24% !important;}
+  th:nth-child(4){width:18% !important;}
+  th:nth-child(5){width:9% !important;}
+  th:nth-child(6){width:9% !important;}
+  th:nth-child(7){width:14% !important;}
 
   .note,
   .checklist li,
@@ -717,7 +760,7 @@ th:nth-child(7){width:16%;}
       </div>
       <div class="field wide">
         <label>Premises Address / Treatment Room</label>
-        <input class="input" type="text" placeholder="Home clinic treatment room">
+        <input class="input" type="text" value="2 Hagbourne Close, Woodcote, RG8 0RZ">
       </div>
       <div class="field">
         <label>Assessment Date</label>
@@ -764,7 +807,7 @@ th:nth-child(7){width:16%;}
             <th>Further Action Needed</th>
             <th>Risk Level</th>
             <th>Owner</th>
-            <th>Due / Review</th>
+            <th>Due / Review<br><span class="th-format">dd/mm/yyyy</span></th>
           </tr>
         </thead>
         <tbody>
@@ -775,7 +818,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Skin burn / adverse skin reaction</textarea></td>
@@ -784,7 +827,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Cross-contamination / infection</textarea></td>
@@ -793,7 +836,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Exposure to cleaning chemicals / disinfectants</textarea></td>
@@ -802,7 +845,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Electrical fault / shock / fire from equipment</textarea></td>
@@ -811,7 +854,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Fire / emergency evacuation</textarea></td>
@@ -820,7 +863,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Trips, slips, and manual handling</textarea></td>
@@ -829,7 +872,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Check cable routing each clinic day; review room layout if equipment changes.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Poor ventilation / heat build-up / client discomfort</textarea></td>
@@ -838,7 +881,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review ventilation in warm weather and when room layout changes.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Waste handling / contaminated materials</textarea></td>
@@ -847,7 +890,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Confirm current disposal route and retain waste paperwork where applicable.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Lone working / personal safety</textarea></td>
@@ -856,7 +899,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Consider check-in procedure for late appointments or new clients.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>First aid / incident response</textarea></td>
@@ -865,7 +908,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review contents of first aid kit routinely and after any use.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Client unsuitability / contraindications / legal consent issues</textarea></td>
@@ -874,7 +917,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review insurer conditions and update forms if scope of treatment changes.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
         </tbody>
       </table>
@@ -950,6 +993,19 @@ function downloadPDF(){
 
 document.getElementById('assessmentDate').valueAsDate = new Date();
 document.getElementById('signDate').valueAsDate = new Date();
+
+
+function formatDateToDDMMYYYY(date){
+  const d = String(date.getDate()).padStart(2,'0');
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}
+
+document.querySelectorAll('input[type="date"]').forEach((el) => {
+  el.setAttribute('title','dd/mm/yyyy');
+  el.setAttribute('aria-label', (el.previousElementSibling && el.previousElementSibling.textContent ? el.previousElementSibling.textContent + ' dd/mm/yyyy' : 'dd/mm/yyyy'));
+});
 </script>
 
 </body>
