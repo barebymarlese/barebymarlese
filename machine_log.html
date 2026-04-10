@@ -1,53 +1,150 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Inspection Log | BARE by Marlese</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
-  font-family: "Montserrat", sans-serif;
+  font-family:"Montserrat",sans-serif;
   background:#cacdc6;
   color:#24221a;
   display:flex;
   justify-content:center;
 }
+
 .card{
-  max-width:800px;
-  width:95%;
   background:#d4d7d1;
+  width:95%;
+  max-width:900px;
   margin:20px;
   padding:30px;
   border-radius:20px;
 }
+
 h1{
   text-align:center;
   letter-spacing:.15em;
+  margin-bottom:20px;
 }
-p, li{
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+th{
+  background:#5e6959;
+  color:#fff;
+  padding:12px;
+  font-size:13px;
+  letter-spacing:.08em;
+}
+
+td{
+  border:1px solid #999;
+  padding:10px;
+  height:50px;
+}
+
+input{
+  width:100%;
+  border:none;
+  background:transparent;
+  font-family:inherit;
   font-size:14px;
-  line-height:1.6;
+  outline:none;
 }
-ul{padding-left:18px;}
+
 .print-btn{
   margin-top:20px;
-  display:block;
   text-align:center;
 }
+
 button{
-  padding:12px 20px;
+  padding:14px 22px;
   background:#5e6959;
   color:white;
   border:none;
   border-radius:10px;
+  font-weight:600;
   cursor:pointer;
 }
+
 @media print{
   button{display:none;}
 }
 </style>
-</head><body>
+</head>
+
+<body>
+
 <div class="card">
-<h1>MACHINE INSPECTION LOG</h1>
-<table border="1" width="100%" style="border-collapse:collapse;">
-<tr><th>Date</th><th>Check</th><th>Status</th><th>Notes</th></tr>
-<tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr>
-</table>
-<div class="print-btn"><button onclick="window.print()">Download PDF</button></div>
-</div></body></html>
+  <h1>MACHINE INSPECTION LOG</h1>
+
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Check Performed</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- Rows will auto generate -->
+    </tbody>
+  </table>
+
+  <div class="print-btn">
+    <button onclick="window.print()">Download PDF</button>
+  </div>
+</div>
+
+<script>
+const tbody = document.querySelector("#logTable tbody");
+
+// Create 10 editable rows
+for(let i = 0; i < 10; i++){
+  const row = document.createElement("tr");
+
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-GB');
+
+  row.innerHTML = `
+    <td><input value="${dateStr}" readonly></td>
+    <td><input class="time-field" placeholder="Auto"></td>
+    <td><input placeholder="e.g. Handpiece check"></td>
+    <td><input placeholder="OK / Issue"></td>
+    <td><input placeholder="Notes"></td>
+  `;
+
+  tbody.appendChild(row);
+}
+
+// Auto timestamp when user types in a row
+document.addEventListener("input", function(e){
+  if(e.target.closest("tr")){
+    const row = e.target.closest("tr");
+    const timeField = row.querySelector(".time-field");
+
+    if(timeField && !timeField.value){
+      const now = new Date();
+      timeField.value = now.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+  }
+});
+</script>
+
+</body>
+</html>
