@@ -299,7 +299,7 @@ td input[type="date"]{
 
 th:nth-child(1){width:12%;}
 th:nth-child(2){width:13%;}
-th:nth-child(3){width:30%;} /* Existing Controls */
+th:nth-child(3){width:30%;}
 th:nth-child(4){width:20%;}
 th:nth-child(5){width:7%;}
 th:nth-child(6){width:7%;}
@@ -424,6 +424,10 @@ td:nth-child(3) textarea{
   resize:none !important;
   overflow:hidden !important;
   min-height:auto !important;
+}
+
+.page-break{
+  display:none;
 }
 
 /* MOBILE */
@@ -579,13 +583,17 @@ td:nth-child(3) textarea{
   .footer{
     font-size:11px;
   }
+
+  .page-break{
+    display:none !important;
+  }
 }
 
-/* PRINT: FIT TO 2 PAGES ON DESKTOP */
+/* PRINT */
 @media print{
   @page{
     size:A4 landscape;
-    margin:5mm;
+    margin:6mm;
   }
 
   html, body{
@@ -597,8 +605,8 @@ td:nth-child(3) textarea{
   }
 
   body{
-    font-size:9.5px !important;
-    line-height:1.12 !important;
+    font-size:10px !important;
+    line-height:1.18 !important;
   }
 
   .page-shell{
@@ -611,47 +619,42 @@ td:nth-child(3) textarea{
     width:100% !important;
     max-width:100% !important;
     margin:0 !important;
-    padding:9px 9px !important;
+    padding:8px 8px !important;
     background:#d4d7d1 !important;
-    border-radius:6px !important;
+    border-radius:0 !important;
   }
 
   .logo{
-    gap:7px !important;
+    gap:8px !important;
     margin-bottom:2px !important;
   }
 
-  .logo .bare{font-size:15px !important;}
-  .logo .by{font-size:9px !important;}
+  .logo .bare{font-size:17px !important;}
+  .logo .by{font-size:10px !important;}
 
   h1{
-    font-size:9px !important;
-    margin:0 0 3px !important;
+    font-size:10px !important;
+    margin:0 0 4px !important;
     letter-spacing:.1em !important;
   }
 
   .intro{
-    font-size:6.2px !important;
-    line-height:1.15 !important;
-    margin:0 auto 5px !important;
+    font-size:6.8px !important;
+    line-height:1.18 !important;
+    margin:0 auto 6px !important;
     max-width:100% !important;
   }
 
   .section{
     padding:6px !important;
-    margin-bottom:4px !important;
+    margin-bottom:5px !important;
     border-radius:6px !important;
     break-inside:avoid-page;
     page-break-inside:avoid;
   }
 
-  .section.register-section{
-    break-inside:auto !important;
-    page-break-inside:auto !important;
-  }
-
   .section-title{
-    font-size:6.6px !important;
+    font-size:6.8px !important;
     margin:0 0 4px !important;
     letter-spacing:.07em !important;
   }
@@ -661,7 +664,7 @@ td:nth-child(3) textarea{
   }
 
   .field label{
-    font-size:5.6px !important;
+    font-size:5.8px !important;
     margin:0 0 2px !important;
   }
 
@@ -670,7 +673,7 @@ td:nth-child(3) textarea{
     height:18px !important;
     min-height:18px !important;
     line-height:18px !important;
-    font-size:6.8px !important;
+    font-size:7px !important;
     padding:0 5px !important;
     border-radius:5px !important;
   }
@@ -682,8 +685,8 @@ td:nth-child(3) textarea{
     min-height:22px !important;
     height:auto !important;
     max-height:none !important;
-    font-size:6.2px !important;
-    line-height:1.12 !important;
+    font-size:6.4px !important;
+    line-height:1.16 !important;
     padding:3px 5px !important;
     resize:none !important;
     overflow:hidden !important;
@@ -740,11 +743,11 @@ td:nth-child(3) textarea{
   }
 
   td textarea{
-    min-height:24px !important;
+    min-height:22px !important;
     height:auto !important;
     max-height:none !important;
-    font-size:6.2px !important;
-    line-height:1.14 !important;
+    font-size:6px !important;
+    line-height:1.12 !important;
     padding:4px 5px !important;
     resize:none !important;
     overflow:hidden !important;
@@ -752,47 +755,53 @@ td:nth-child(3) textarea{
 
   td input,
   td input[type="date"]{
-    height:17px !important;
-    min-height:17px !important;
-    line-height:17px !important;
-    font-size:6px !important;
+    height:16px !important;
+    min-height:16px !important;
+    line-height:16px !important;
+    font-size:5.8px !important;
     padding:0 4px !important;
   }
 
   .checklist{
-    padding-left:11px !important;
+    padding-left:12px !important;
     margin:0 !important;
   }
 
   .checklist li{
-    font-size:5.9px !important;
-    line-height:1.12 !important;
+    font-size:6.3px !important;
+    line-height:1.16 !important;
     margin:0 0 2px !important;
   }
 
   .note{
-    margin-top:3px !important;
+    margin-top:4px !important;
     padding:5px 6px !important;
-    font-size:5.9px !important;
-    line-height:1.12 !important;
+    font-size:6.3px !important;
+    line-height:1.16 !important;
   }
 
   .footer{
-    margin-top:2px !important;
-    font-size:5.5px !important;
-    line-height:1.05 !important;
+    margin-top:3px !important;
+    font-size:5.8px !important;
+    line-height:1.08 !important;
   }
 
   .actions{
     display:none !important;
+  }
+
+  .page-break{
+    display:block !important;
+    break-before:page !important;
+    page-break-before:always !important;
+    height:0 !important;
   }
 }
 </style>
 </head>
 <body>
 <div class="page-shell">
-
-  <div class="card print-page">
+<div class="card">
 
   <div class="logo">
     <span class="bare">BARE |</span>
@@ -863,8 +872,8 @@ td:nth-child(3) textarea{
     </div>
   </div>
 
-<div class="section register-section">
-  <h2 class="section-title">Risk Assessment Register</h2>
+  <div class="section register-section">
+    <h2 class="section-title">Risk Assessment Register</h2>
 
     <div class="table-wrap desktop-register">
       <table>
@@ -925,6 +934,30 @@ td:nth-child(3) textarea{
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <div class="section register-section">
+    <h2 class="section-title">Risk Assessment Register (Continued)</h2>
+
+    <div class="table-wrap desktop-register">
+      <table>
+        <thead>
+          <tr>
+            <th>Hazard</th>
+            <th>Who Might Be Harmed</th>
+            <th>Existing Controls</th>
+            <th>Further Action Needed</th>
+            <th>Risk Level</th>
+            <th>Owner</th>
+            <th>Due / Review</th>
+          </tr>
+        </thead>
+        <tbody>
           <tr>
             <td><textarea>Fire / emergency evacuation</textarea></td>
             <td><textarea>Client, practitioner, household occupants, visitors</textarea></td>
