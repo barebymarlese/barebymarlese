@@ -1,55 +1,678 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Risk Assessment | BARE by Marlese</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-body{
+:root {
+  --bg:#cacdc6;
+  --card:#d4d7d1;
+  --brand:#5e6959;
+  --text:#24221a;
+  --muted:#878274;
+  --line:rgba(36,34,26,0.12);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  color-adjust: exact !important;
+}
+
+html, body{
   margin:0;
-  font-family: "Montserrat", sans-serif;
-  background:#cacdc6;
-  color:#24221a;
+  padding:0;
+  width:100%;
+  background:var(--bg);
+}
+
+body{
+  font-family:"Montserrat",sans-serif;
+  color:var(--text);
   display:flex;
   justify-content:center;
+  min-height:100vh;
 }
+
 .card{
-  max-width:800px;
   width:95%;
-  background:#d4d7d1;
+  max-width:980px;
   margin:20px;
-  padding:30px;
-  border-radius:20px;
+  padding:30px 34px;
+  background:rgba(212,215,209,0.94);
+  border-radius:24px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.10);
+  border:1px solid rgba(255,255,255,0.35);
 }
+
+.logo{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:12px;
+  letter-spacing:.26em;
+  font-weight:600;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.logo .bare{color:var(--brand);font-size:24px;}
+.logo .by{
+  color:var(--muted);
+  font-size:15px;
+  font-weight:500;
+  text-transform:none;
+  letter-spacing:.05em;
+}
+
 h1{
   text-align:center;
+  margin:0 0 8px;
+  font-size:16px;
   letter-spacing:.15em;
+  text-transform:uppercase;
 }
-p, li{
-  font-size:14px;
+
+.intro{
+  text-align:center;
+  font-size:12px;
+  line-height:1.7;
+  max-width:700px;
+  margin:0 auto 18px;
+}
+
+.section{
+  padding:18px 20px;
+  border-radius:18px;
+  background:linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.12));
+  border:1px solid rgba(255,255,255,0.42);
+  box-shadow:inset 0 1px 3px rgba(255,255,255,0.2);
+  margin-bottom:16px;
+}
+
+.section-title{
+  margin:0 0 12px;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--brand);
+  font-weight:700;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px 18px;
+}
+
+.field label{
+  display:block;
+  margin:0 0 5px;
+  font-size:9px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-weight:700;
+  color:var(--brand);
+}
+
+.input, .textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.78);
+  border-radius:10px;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+}
+
+.input{
+  height:40px;
+  padding:0 12px;
+  font-size:13px;
+}
+
+.textarea{
+  min-height:78px;
+  padding:10px 12px;
+  font-size:12px;
+  line-height:1.5;
+  resize:vertical;
+}
+
+.textarea.small{
+  min-height:60px;
+}
+
+.wide{
+  grid-column:1 / -1;
+}
+
+.table-wrap{
+  overflow-x:auto;
+  border-radius:14px;
+  background:rgba(255,255,255,0.22);
+  border:1px solid rgba(36,34,26,0.08);
+}
+
+table{
+  width:100%;
+  min-width:920px;
+  border-collapse:collapse;
+}
+
+th, td{
+  border:1px solid rgba(36,34,26,0.10);
+  vertical-align:top;
+  padding:0;
+}
+
+th{
+  background:rgba(255,255,255,0.44);
+  color:var(--brand);
+  font-size:9px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:10px 8px;
+  text-align:left;
+}
+
+td textarea, td input{
+  border:0;
+  border-radius:0;
+  background:transparent;
+  width:100%;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+}
+
+td textarea{
+  min-height:92px;
+  padding:10px 10px;
+  font-size:11px;
+  line-height:1.45;
+  resize:vertical;
+}
+
+td input{
+  height:42px;
+  padding:0 10px;
+  font-size:11px;
+}
+
+.note{
+  margin-top:10px;
+  padding:14px 16px;
+  border-left:5px solid var(--brand);
+  border-radius:4px 12px 12px 4px;
+  background:rgba(255,255,255,0.26);
+  font-size:11px;
   line-height:1.6;
 }
-ul{padding-left:18px;}
-.print-btn{
-  margin-top:20px;
-  display:block;
-  text-align:center;
+
+.note strong{
+  text-transform:uppercase;
+  letter-spacing:.05em;
 }
-button{
-  padding:12px 20px;
-  background:#5e6959;
-  color:white;
+
+.checklist{
+  margin:0;
+  padding-left:18px;
+}
+
+.checklist li{
+  font-size:11px;
+  line-height:1.55;
+  margin:0 0 7px;
+}
+
+.footer{
+  text-align:center;
+  margin-top:12px;
+  font-size:10px;
+  line-height:1.6;
+}
+
+.actions{
+  display:flex;
+  margin-top:18px;
+}
+
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
   border:none;
-  border-radius:10px;
+  background:var(--brand);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
   cursor:pointer;
 }
+
+@media screen and (max-width: 760px){
+  body{display:block;}
+  .card{
+    width:94vw;
+    margin:10px auto;
+    padding:20px;
+  }
+  .grid{
+    grid-template-columns:1fr;
+  }
+  .intro, .note, .checklist li{
+    font-size:13px;
+  }
+  .input{
+    height:46px;
+    font-size:16px;
+  }
+  .textarea{
+    font-size:14px;
+  }
+}
+
 @media print{
-  button{display:none;}
+  @page{size:A4 portrait; margin:5mm;}
+
+  html, body{
+    background:#cacdc6 !important;
+  }
+
+  body{
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+    min-height:auto !important;
+  }
+
+  .card{
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:18px 20px !important;
+    border:none !important;
+    border-radius:18px !important;
+    box-shadow:none !important;
+    background:#d4d7d1 !important;
+  }
+
+  .logo .bare{font-size:22px !important;}
+  .logo .by{font-size:13px !important;}
+
+  h1{
+    font-size:14px !important;
+    margin-bottom:6px !important;
+  }
+
+  .intro{
+    font-size:9.5px !important;
+    line-height:1.5 !important;
+    margin-bottom:12px !important;
+  }
+
+  .section{
+    padding:14px 14px !important;
+    border-radius:14px !important;
+    margin-bottom:10px !important;
+    background:#e2e4df !important;
+    box-shadow:none !important;
+  }
+
+  .section-title{
+    font-size:8.5px !important;
+    margin-bottom:8px !important;
+  }
+
+  .field label{
+    font-size:7.7px !important;
+    margin-bottom:3px !important;
+  }
+
+  .input{
+    height:33px !important;
+    font-size:10px !important;
+    padding:0 9px !important;
+    background:#fff !important;
+  }
+
+  .textarea{
+    min-height:60px !important;
+    font-size:9.2px !important;
+    padding:8px 9px !important;
+    background:#fff !important;
+  }
+
+  th{
+    font-size:7.6px !important;
+    padding:8px 6px !important;
+  }
+
+  td textarea{
+    min-height:72px !important;
+    font-size:8.8px !important;
+    padding:8px !important;
+  }
+
+  td input{
+    height:34px !important;
+    font-size:8.8px !important;
+    padding:0 8px !important;
+  }
+
+  .checklist li{
+    font-size:8.9px !important;
+    line-height:1.4 !important;
+    margin-bottom:4px !important;
+  }
+
+  .note{
+    font-size:8.8px !important;
+    line-height:1.45 !important;
+    padding:10px 12px !important;
+    margin-top:8px !important;
+  }
+
+  .footer{
+    font-size:8px !important;
+    margin-top:8px !important;
+  }
+
+  .actions{
+    display:none !important;
+  }
 }
 </style>
-</head><body>
+</head>
+<body>
+
 <div class="card">
-<h1>LASER RISK ASSESSMENT</h1>
-<ul>
-<li><strong>Eye Injury:</strong> Protective eyewear worn at all times</li>
-<li><strong>Skin Burns:</strong> Patch testing and controlled settings</li>
-<li><strong>Infection:</strong> Strict cleaning protocol</li>
-<li><strong>Fire Risk:</strong> Equipment checks and safe environment</li>
-</ul>
-<div class="print-btn"><button onclick="window.print()">Download PDF</button></div>
-</div></body></html>
+
+  <div class="logo">
+    <span class="bare">BARE |</span>
+    <span class="by">by Marlese</span>
+  </div>
+
+  <h1>Risk Assessment</h1>
+
+  <p class="intro">
+    Home-based laser tattoo removal risk assessment for a dedicated treatment area.
+    This document is intended to support safe working practice, council inspection readiness,
+    insurer expectations, and regular review of hazards, controls, and further actions.
+  </p>
+
+  <div class="section">
+    <h2 class="section-title">Assessment Details</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Business Name</label>
+        <input class="input" type="text" value="BARE by Marlese">
+      </div>
+      <div class="field">
+        <label>Assessment Reference</label>
+        <input class="input" type="text" placeholder="e.g. RA-001">
+      </div>
+      <div class="field">
+        <label>Assessor Name</label>
+        <input class="input" type="text" value="Marlese Rosch Haden">
+      </div>
+      <div class="field">
+        <label>Role</label>
+        <input class="input" type="text" value="Practitioner / Sole Trader">
+      </div>
+      <div class="field">
+        <label>Premises Address / Treatment Room</label>
+        <input class="input" type="text" placeholder="Home clinic treatment room">
+      </div>
+      <div class="field">
+        <label>Assessment Date</label>
+        <input class="input" type="date" id="assessmentDate">
+      </div>
+      <div class="field">
+        <label>Review Date</label>
+        <input class="input" type="date">
+      </div>
+      <div class="field">
+        <label>Machine / Equipment Covered</label>
+        <input class="input" type="text" placeholder="Laser system, eyewear, couch, trolley, sharps bin, cleaning products">
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Scope & People at Risk</h2>
+    <div class="grid">
+      <div class="field wide">
+        <label>Activities Covered</label>
+        <textarea class="textarea small">Client consultation, patch testing, laser tattoo removal treatment, cleaning and disinfection, waste handling, equipment checks, record keeping, and client exit / aftercare issue.</textarea>
+      </div>
+      <div class="field">
+        <label>People at Risk</label>
+        <textarea class="textarea small">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
+      </div>
+      <div class="field">
+        <label>General Risk Rating Method</label>
+        <textarea class="textarea small">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Risk Assessment Register</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:15%;">Hazard</th>
+            <th style="width:14%;">Who Might Be Harmed</th>
+            <th style="width:28%;">Existing Controls</th>
+            <th style="width:20%;">Further Action Needed</th>
+            <th style="width:9%;">Risk Level</th>
+            <th style="width:7%;">Owner</th>
+            <th style="width:7%;">Due / Review</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><textarea>Laser beam / accidental exposure to eyes</textarea></td>
+            <td><textarea>Practitioner, client, visitor</textarea></td>
+            <td><textarea>Controlled treatment area used; wavelength-specific protective eyewear worn by practitioner and client; no treatment unless eyewear is in place; access restricted during treatment; machine used according to manufacturer instructions and training.</textarea></td>
+            <td><textarea>Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Skin burn / adverse skin reaction</textarea></td>
+            <td><textarea>Client</textarea></td>
+            <td><textarea>Consultation completed; contraindications screened; patch test completed where appropriate; settings selected according to skin type, tattoo characteristics, and manufacturer guidance; treatment only proceeds where suitable; aftercare explained and documented.</textarea></td>
+            <td><textarea>Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></td>
+            <td><input type="text" value="Medium"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Cross-contamination / infection</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea>Dedicated clean treatment area; hand hygiene before and after treatment; gloves worn as appropriate; single-use consumables used where possible; treatment couch and contact surfaces disinfected between clients; clean and used items kept separate; no treatment on infected or unsuitable skin.</textarea></td>
+            <td><textarea>Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Exposure to cleaning chemicals / disinfectants</textarea></td>
+            <td><textarea>Practitioner, client</textarea></td>
+            <td><textarea>COSHH information retained for products used; products kept in labelled containers; used to manufacturer directions; incompatible products not mixed; gloves used if required; products stored securely away from children and treatment food/drink areas.</textarea></td>
+            <td><textarea>Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Electrical fault / shock / fire from equipment</textarea></td>
+            <td><textarea>Practitioner, client, household occupants</textarea></td>
+            <td><textarea>Electrical equipment visually checked before use; damaged cables/plugs removed from service; equipment maintained to prevent danger; machine installed and operated on suitable supply; liquids kept away from electrical equipment; service records retained.</textarea></td>
+            <td><textarea>Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Fire / emergency evacuation</textarea></td>
+            <td><textarea>Client, practitioner, household occupants, visitors</textarea></td>
+            <td><textarea>Clear exit route maintained; treatment room kept tidy; ignition sources controlled; no smoking; emergency contact phone available; appointments managed so area is supervised; fire precautions checked as part of routine premises safety review.</textarea></td>
+            <td><textarea>Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Trips, slips, and manual handling</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea>Floor area kept free from clutter and trailing cables; spills cleaned promptly; adequate lighting maintained; treatment bed and trolley positioned to avoid awkward lifting and overreaching; client assisted as needed.</textarea></td>
+            <td><textarea>Check cable routing each clinic day; review room layout if equipment changes.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Poor ventilation / heat build-up / client discomfort</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea>Treatment room ventilated before and after appointments; fresh air available in enclosed area; room temperature monitored for comfort and safe working; treatment paused if environment becomes unsuitable.</textarea></td>
+            <td><textarea>Review ventilation in warm weather and when room layout changes.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Waste handling / contaminated materials</textarea></td>
+            <td><textarea>Practitioner, waste carrier, household occupants</textarea></td>
+            <td><textarea>Business waste separated from domestic waste; waste stored securely; transfers made using appropriate collection arrangements; records kept where required; treatment-related waste not left accessible to children or pets.</textarea></td>
+            <td><textarea>Confirm current disposal route and retain waste paperwork where applicable.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Lone working / personal safety</textarea></td>
+            <td><textarea>Practitioner</textarea></td>
+            <td><textarea>Appointments by prior booking only; client details recorded in advance; phone available; session times managed; practitioner aware of emergency contact process; treatment not carried out if practitioner feels unsafe.</textarea></td>
+            <td><textarea>Consider check-in procedure for late appointments or new clients.</textarea></td>
+            <td><input type="text" value="Medium"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>First aid / incident response</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea>Suitable first aid kit available; emergency phone accessible; incidents, adverse reactions, and near misses recorded; practitioner stops treatment and escalates appropriately if reaction exceeds expected response.</textarea></td>
+            <td><textarea>Review contents of first aid kit routinely and after any use.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+
+          <tr>
+            <td><textarea>Client unsuitability / contraindications / legal consent issues</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea>Medical screening and consent completed before treatment; treatment refused or deferred where contraindicated; photographic and treatment records kept securely; practitioner only treats within training, competence, and insurance cover.</textarea></td>
+            <td><textarea>Review insurer conditions and update forms if scope of treatment changes.</textarea></td>
+            <td><input type="text" value="Medium"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="text" placeholder="Date"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Supporting Control Measures Checklist</h2>
+    <ul class="checklist">
+      <li>Consultation, consent, and treatment records completed and stored securely.</li>
+      <li>Patch testing / suitability checks used where clinically appropriate.</li>
+      <li>Manufacturer instructions, training evidence, and service records retained.</li>
+      <li>Protective eyewear available, clean, and suitable for the equipment used.</li>
+      <li>Cleaning products and disinfectants used according to label and COSHH information.</li>
+      <li>Treatment room kept clean, ventilated, and free of avoidable trip hazards.</li>
+      <li>Business waste handled separately and disposed of through appropriate arrangements.</li>
+      <li>Incidents, near misses, and complaints reviewed to improve controls.</li>
+      <li>Assessment reviewed after incidents, equipment changes, layout changes, or updated guidance.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Important</strong><br>
+      This risk assessment should be reviewed whenever there is a change in equipment, treatment scope,
+      products used, room layout, insurer requirements, local council conditions, or after any accident,
+      near miss, or significant complaint. Add your own machine-specific, premises-specific, and insurer-specific controls before relying on it operationally.
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Assessment Sign-Off</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Assessor Signature</label>
+        <input class="input" type="text" placeholder="Type full name or print after signing">
+      </div>
+      <div class="field">
+        <label>Date Signed</label>
+        <input class="input" type="date" id="signDate">
+      </div>
+      <div class="field">
+        <label>Next Review Trigger</label>
+        <input class="input" type="text" placeholder="Annual review / incident / machine change / insurer request">
+      </div>
+      <div class="field">
+        <label>Version</label>
+        <input class="input" type="text" value="1.0">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    BARE by Marlese | Home-Based Laser Tattoo Removal Risk Assessment
+  </div>
+
+  <div class="actions">
+    <button class="btn" onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+</div>
+
+<script>
+function downloadPDF(){
+  const originalTitle = document.title;
+  document.title = "BARE-Risk-Assessment";
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1500);
+  }, 200);
+}
+
+document.getElementById('assessmentDate').valueAsDate = new Date();
+document.getElementById('signDate').valueAsDate = new Date();
+</script>
+
+</body>
+</html>
