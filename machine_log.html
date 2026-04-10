@@ -6,6 +6,7 @@
 <title>Machine Inspection Log | BARE by Marlese</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
 <style>
 body{
@@ -49,6 +50,7 @@ td{
   border:1px solid #999;
   padding:8px;
   height:55px;
+  vertical-align:middle;
 }
 
 input{
@@ -64,9 +66,12 @@ input[type="date"]{
   font-size:13px;
 }
 
-.signature{
+.sig-pad{
+  width:100%;
+  height:50px;
   border-bottom:1px solid #24221a;
-  height:30px;
+  background:#fff;
+  display:block;
 }
 
 .print-btn{
@@ -93,26 +98,26 @@ button{
 <body>
 
 <div class="card">
-  
-  <div style="text-align:center; margin-bottom:10px;">
-  <div style="
-    font-size:22px;
-    letter-spacing:.25em;
-    font-weight:600;
-    color:#5e6959;
-  ">
-    BARE |
-  </div>
 
-  <div style="
-    font-size:14px;
-    letter-spacing:.08em;
-    color:#878274;
-    margin-top:2px;
-  ">
-    by Marlese
+  <div style="text-align:center; margin-bottom:10px;">
+    <div style="
+      font-size:22px;
+      letter-spacing:.25em;
+      font-weight:600;
+      color:#5e6959;
+    ">
+      BARE |
+    </div>
+
+    <div style="
+      font-size:14px;
+      letter-spacing:.08em;
+      color:#878274;
+      margin-top:2px;
+    ">
+      by Marlese
+    </div>
   </div>
-</div>
 
   <h1>MACHINE INSPECTION LOG</h1>
 
@@ -150,9 +155,8 @@ for(let i = 0; i < 10; i++){
     <td><input placeholder="e.g. Handpiece check"></td>
     <td><input placeholder="OK / Issue"></td>
     <td><input placeholder="Notes"></td>
-<td>
-  <canvas class="sig-pad"></canvas>
-</td>
+    <td><canvas class="sig-pad"></canvas></td>
+  `;
 
   tbody.appendChild(row);
 }
@@ -172,6 +176,26 @@ document.addEventListener("input", function(e){
     }
   }
 });
+
+// Signature pads
+const pads = [];
+
+function setupSignaturePads(){
+  document.querySelectorAll(".sig-pad").forEach(canvas => {
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+
+    const pad = new SignaturePad(canvas, {
+      penColor: "rgb(36,34,26)"
+    });
+
+    pads.push(pad);
+  });
+}
+
+setupSignaturePads();
 </script>
 
 </body>
