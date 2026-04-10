@@ -1,57 +1,201 @@
-<!DOCTYPE html><html><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Health & Safety | BARE by Marlese</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+:root {
+  --bg:#cacdc6;
+  --card:#d4d7d1;
+  --brand:#5e6959;
+  --text:#24221a;
+  --muted:#878274;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
 body{
   margin:0;
-  font-family: "Montserrat", sans-serif;
-  background:#cacdc6;
-  color:#24221a;
+  font-family:"Montserrat",sans-serif;
+  background:var(--bg);
+  color:var(--text);
   display:flex;
   justify-content:center;
 }
+
 .card{
-  max-width:800px;
   width:95%;
-  background:#d4d7d1;
+  max-width:900px;
   margin:20px;
-  padding:30px;
-  border-radius:20px;
+  padding:30px 40px;
+  background:var(--card);
+  border-radius:22px;
 }
+
+.logo{
+  text-align:center;
+  letter-spacing:.25em;
+  font-weight:600;
+  text-transform:uppercase;
+}
+.logo span:first-child{color:var(--brand);}
+.logo span:last-child{
+  letter-spacing:.05em;
+  text-transform:none;
+  color:var(--muted);
+}
+
 h1{
   text-align:center;
+  font-size:16px;
   letter-spacing:.15em;
+  margin:10px 0 20px;
 }
-p, li{
-  font-size:14px;
+
+.section{
+  margin-bottom:18px;
+  padding:16px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.35);
+}
+
+.section h3{
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--brand);
+  margin-bottom:8px;
+}
+
+ul{
+  margin:0;
+  padding-left:18px;
+}
+
+li{
+  font-size:11px;
   line-height:1.6;
+  margin-bottom:6px;
 }
-ul{padding-left:18px;}
-.print-btn{
-  margin-top:20px;
-  display:block;
+
+.note{
+  margin-top:10px;
+  padding:12px;
+  border-left:4px solid var(--brand);
+  background:rgba(255,255,255,0.3);
+  font-size:11px;
+}
+
+.footer{
   text-align:center;
+  font-size:10px;
+  margin-top:14px;
 }
-button{
-  padding:12px 20px;
-  background:#5e6959;
-  color:white;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-}
+
 @media print{
-  button{display:none;}
+  @page { size:A4; margin:5mm; }
+
+  body{display:block;}
+
+  .card{
+    margin:0;
+    width:100%;
+    border-radius:0;
+  }
+
+  li{font-size:9px;}
 }
 </style>
-</head><body>
+</head>
+
+<body>
+
 <div class="card">
-<h1>HEALTH & SAFETY POLICY</h1>
-<p>BARE by Marlese is committed to providing a safe and professional treatment environment.</p>
+
+<div class="logo">
+  <span>BARE |</span> <span>by Marlese</span>
+</div>
+
+<h1>Health & Safety Information</h1>
+
+<div class="section">
+<h3>Professional Standards</h3>
 <ul>
-<li>All treatments are carried out using approved laser equipment.</li>
-<li>Protective eyewear is worn by practitioner and client at all times.</li>
-<li>Equipment is checked regularly before use.</li>
-<li>All incidents are recorded and reviewed.</li>
-<li>A clean and hygienic workspace is maintained at all times.</li>
+<li>Treatments are carried out by a VTCT Level 5 qualified practitioner.</li>
+<li>All equipment is maintained, serviced, and used in accordance with manufacturer guidelines.</li>
+<li>A full consultation and patch test are completed prior to treatment.</li>
+<li>Treatment is only performed where it is safe and appropriate to do so.</li>
 </ul>
-<div class="print-btn"><button onclick="window.print()">Download PDF</button></div>
-</div></body></html>
+</div>
+
+<div class="section">
+<h3>Hygiene & Infection Control</h3>
+<ul>
+<li>All treatment areas are cleaned and disinfected before and after every client.</li>
+<li>Single-use consumables are used wherever possible.</li>
+<li>Hands are sanitised before and after every treatment.</li>
+<li>Gloves and appropriate PPE are worn where required.</li>
+<li>Cross-contamination prevention procedures are strictly followed.</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Laser Safety</h3>
+<ul>
+<li>Laser treatments are performed in a controlled environment.</li>
+<li>Protective eyewear is worn by both practitioner and client at all times.</li>
+<li>Only appropriate settings are used based on skin type and treatment area.</li>
+<li>Equipment is operated in line with safety protocols.</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Treatment Risks</h3>
+<ul>
+<li>Redness, swelling, and sensitivity are common temporary effects.</li>
+<li>Blistering, scabbing, or pigment changes may occur.</li>
+<li>There is a small risk of scarring or infection.</li>
+<li>Multiple sessions are required; complete removal cannot be guaranteed.</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Client Responsibilities</h3>
+<ul>
+<li>Follow all aftercare instructions provided.</li>
+<li>Avoid sun exposure and use SPF where required.</li>
+<li>Inform the practitioner of any medical changes.</li>
+<li>Report any unusual or severe reactions promptly.</li>
+</ul>
+</div>
+
+<div class="section">
+<h3>Home Clinic Environment</h3>
+<ul>
+<li>Treatments are carried out in a clean, dedicated treatment space.</li>
+<li>Appointments are managed to maintain a safe and controlled environment.</li>
+<li>No more than limited clients are treated per week to ensure quality and safety.</li>
+</ul>
+</div>
+
+<div class="note">
+<strong>Important</strong><br>
+Laser tattoo removal carries risks. Individual results vary. By proceeding with treatment, clients acknowledge they have received consultation, understand the risks, and agree to follow all safety and aftercare guidance.
+</div>
+
+<div class="footer">
+BARE by Marlese | Professional Laser Tattoo Removal
+</div>
+
+</div>
+
+</body>
+</html>
