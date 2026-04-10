@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root {
+:root{
   --bg:#cacdc6;
   --card:#d4d7d1;
   --brand:#5e6959;
@@ -20,9 +20,9 @@
 
 *{
   box-sizing:border-box;
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
-  color-adjust: exact !important;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+  color-adjust:exact !important;
 }
 
 html, body{
@@ -30,33 +30,33 @@ html, body{
   padding:0;
   width:100%;
   max-width:100%;
-  overflow-x:hidden;
+  overflow-x:hidden !important;
   background:var(--bg);
 }
 
 body{
   font-family:"Montserrat",sans-serif;
   color:var(--text);
-  min-height:100vh;
   display:block;
+  min-height:100vh;
 }
 
 .page-shell{
   width:100%;
   max-width:100%;
   overflow-x:hidden;
-  padding:16px 12px 20px;
+  padding:0;
 }
 
 .card{
   width:100%;
   max-width:980px;
   margin:0 auto;
-  padding:30px 34px;
+  padding:28px 30px;
   background:rgba(212,215,209,0.94);
-  border-radius:24px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.10);
-  border:1px solid rgba(255,255,255,0.35);
+  border-radius:0;
+  box-shadow:none;
+  border:none;
 }
 
 .logo{
@@ -89,22 +89,24 @@ h1{
 .intro{
   text-align:center;
   font-size:12px;
-  line-height:1.7;
+  line-height:1.6;
   max-width:700px;
-  margin:0 auto 18px;
+  margin:0 auto 16px;
 }
 
 .section{
-  padding:18px 20px;
-  border-radius:18px;
+  padding:16px 16px;
+  border-radius:14px;
   background:linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.12));
   border:1px solid rgba(255,255,255,0.42);
-  box-shadow:inset 0 1px 3px rgba(255,255,255,0.2);
-  margin-bottom:16px;
+  box-shadow:none;
+  margin-bottom:12px;
+  width:100%;
+  max-width:100%;
 }
 
 .section-title{
-  margin:0 0 12px;
+  margin:0 0 10px;
   font-size:11px;
   letter-spacing:.12em;
   text-transform:uppercase;
@@ -115,7 +117,13 @@ h1{
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px 18px;
+  gap:8px 14px;
+  width:100%;
+}
+
+.field{
+  width:100%;
+  min-width:0;
 }
 
 .field label{
@@ -128,33 +136,39 @@ h1{
   color:var(--brand);
 }
 
-.input, .textarea{
+.input,
+.textarea{
   width:100%;
+  max-width:100%;
   border:1px solid var(--line);
-  background:rgba(255,255,255,0.78);
+  background:rgba(255,255,255,0.82);
   border-radius:10px;
   font-family:inherit;
   color:var(--text);
   outline:none;
+  margin:0;
 }
 
 .input{
   height:40px;
+  min-height:40px;
   padding:0 12px;
   font-size:13px;
   line-height:40px;
+  display:block;
 }
 
 textarea.textarea{
-  min-height:78px;
+  min-height:70px;
   padding:10px 12px;
   font-size:12px;
-  line-height:1.5;
+  line-height:1.45;
   resize:vertical;
+  display:block;
 }
 
 .textarea.small{
-  min-height:60px;
+  min-height:56px;
 }
 
 .wide{
@@ -167,10 +181,10 @@ input[type="date"].input{
   -moz-appearance:none;
   height:40px;
   min-height:40px;
-  line-height:normal;
+  line-height:40px;
   padding:0 12px;
-  display:flex;
-  align-items:center;
+  border-radius:10px;
+  display:block;
 }
 
 input[type="date"]::-webkit-date-and-time-value{
@@ -178,16 +192,17 @@ input[type="date"]::-webkit-date-and-time-value{
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator{
-  opacity:.8;
-  cursor:pointer;
+  opacity:.85;
 }
 
 .table-wrap{
+  width:100%;
+  max-width:100%;
   overflow:visible;
-  border-radius:16px;
+  border-radius:12px;
   background:rgba(255,255,255,0.18);
   border:1px solid rgba(36,34,26,0.08);
-  padding:2px;
+  padding:1px;
 }
 
 table{
@@ -195,8 +210,8 @@ table{
   border-collapse:separate;
   border-spacing:0;
   table-layout:fixed;
-  background:rgba(255,255,255,0.12);
-  border-radius:14px;
+  background:rgba(255,255,255,0.14);
+  border-radius:10px;
   overflow:hidden;
 }
 
@@ -207,8 +222,8 @@ th, td{
   border-bottom:1px solid var(--line-soft);
 }
 
-th:last-child, td:last-child{ border-right:none; }
-tbody tr:last-child td{ border-bottom:none; }
+th:last-child, td:last-child{border-right:none;}
+tbody tr:last-child td{border-bottom:none;}
 
 th{
   background:rgba(255,255,255,0.46);
@@ -216,24 +231,20 @@ th{
   font-size:8px;
   font-weight:700;
   text-transform:uppercase;
-  letter-spacing:.08em;
-  padding:10px 7px;
+  letter-spacing:.06em;
+  padding:8px 5px;
   text-align:left;
-  line-height:1.3;
-  vertical-align:middle;
+  line-height:1.18;
   word-break:break-word;
   overflow-wrap:anywhere;
+  vertical-align:middle;
 }
 
-tbody tr:nth-child(even) td{
-  background:rgba(255,255,255,0.12);
-}
+tbody tr:nth-child(even) td{background:rgba(255,255,255,0.12);}
+tbody tr:nth-child(odd) td{background:rgba(255,255,255,0.22);}
 
-tbody tr:nth-child(odd) td{
-  background:rgba(255,255,255,0.22);
-}
-
-td textarea, td input{
+td textarea,
+td input{
   border:0;
   border-radius:0;
   background:transparent;
@@ -241,27 +252,35 @@ td textarea, td input{
   font-family:inherit;
   color:var(--text);
   outline:none;
+  margin:0;
 }
 
 td textarea{
-  min-height:88px;
-  padding:9px 8px;
-  font-size:10px;
-  line-height:1.42;
+  min-height:72px;
+  padding:7px 6px;
+  font-size:9px;
+  line-height:1.26;
   resize:vertical;
+  display:block;
 }
 
 td input{
-  height:40px;
-  padding:0 8px;
-  font-size:10px;
+  height:32px;
+  padding:0 6px;
+  font-size:8.8px;
+  line-height:32px;
+  display:block;
 }
 
 td input[type="date"]{
-  min-width:0;
   appearance:none;
   -webkit-appearance:none;
   -moz-appearance:none;
+  height:32px;
+  min-height:32px;
+  line-height:32px;
+  padding:0 4px;
+  font-size:7.2px;
 }
 
 th:nth-child(1){width:13%;}
@@ -273,13 +292,13 @@ th:nth-child(6){width:8%;}
 th:nth-child(7){width:16%;}
 
 .note{
-  margin-top:10px;
-  padding:14px 16px;
-  border-left:5px solid var(--brand);
+  margin-top:8px;
+  padding:12px 14px;
+  border-left:4px solid var(--brand);
   border-radius:4px 12px 12px 4px;
   background:rgba(255,255,255,0.26);
   font-size:11px;
-  line-height:1.6;
+  line-height:1.5;
 }
 
 .note strong{
@@ -294,20 +313,20 @@ th:nth-child(7){width:16%;}
 
 .checklist li{
   font-size:11px;
-  line-height:1.55;
-  margin:0 0 7px;
+  line-height:1.45;
+  margin:0 0 5px;
 }
 
 .footer{
   text-align:center;
-  margin-top:12px;
+  margin-top:10px;
   font-size:10px;
-  line-height:1.6;
+  line-height:1.5;
 }
 
 .actions{
   display:flex;
-  margin-top:18px;
+  margin-top:14px;
 }
 
 .btn{
@@ -324,34 +343,27 @@ th:nth-child(7){width:16%;}
   cursor:pointer;
 }
 
-/* MOBILE: LOCKED, NO FLOATING, SAME STRUCTURE */
-@media screen and (max-width: 760px){
+/* MOBILE: FLUSH, NO FLOATING ANYWHERE */
+@media screen and (max-width:760px){
   html, body{
-    width:100%;
-    max-width:100%;
     overflow-x:hidden !important;
-  }
-
-  body{
-    display:block !important;
+    width:100% !important;
+    max-width:100% !important;
   }
 
   .page-shell{
-    width:100%;
-    max-width:100%;
-    padding:0;
-    overflow-x:hidden;
+    padding:0 !important;
+    overflow-x:hidden !important;
   }
 
   .card{
-    width:100%;
-    max-width:100%;
-    margin:0;
-    border-radius:0;
-    padding:18px 14px 20px;
-    box-shadow:none;
-    border-left:none;
-    border-right:none;
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 !important;
+    padding:16px 12px 18px !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    border:none !important;
   }
 
   .logo{
@@ -369,19 +381,31 @@ th:nth-child(7){width:16%;}
 
   .intro{
     font-size:12px;
-    line-height:1.55;
-    margin-bottom:14px;
-  }
-
-  .section{
-    padding:14px 12px;
-    border-radius:14px;
+    line-height:1.5;
     margin-bottom:12px;
   }
 
+  .section{
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 0 10px 0 !important;
+    padding:12px 10px !important;
+    border-radius:12px !important;
+    box-shadow:none !important;
+  }
+
   .grid{
-    grid-template-columns:1fr;
-    gap:8px;
+    grid-template-columns:1fr !important;
+    gap:7px !important;
+    width:100% !important;
+  }
+
+  .field,
+  .field.wide{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    grid-column:auto !important;
   }
 
   .field label{
@@ -390,87 +414,86 @@ th:nth-child(7){width:16%;}
   }
 
   .input{
-    height:44px;
-    min-height:44px;
-    font-size:16px;
-    line-height:44px;
-    padding:0 12px;
-    border-radius:10px;
+    width:100% !important;
+    max-width:100% !important;
+    height:44px !important;
+    min-height:44px !important;
+    padding:0 12px !important;
+    font-size:16px !important;
+    line-height:44px !important;
+    border-radius:10px !important;
   }
 
   input[type="date"].input{
-    height:44px;
-    min-height:44px;
-    line-height:normal;
-    padding:0 12px;
-    display:flex;
-    align-items:center;
+    height:44px !important;
+    min-height:44px !important;
+    line-height:44px !important;
+    padding:0 12px !important;
+    border-radius:10px !important;
   }
 
   textarea.textarea{
-    font-size:14px;
-    min-height:70px;
-    padding:10px 12px;
+    width:100% !important;
+    max-width:100% !important;
+    min-height:70px !important;
+    padding:10px 12px !important;
+    font-size:14px !important;
+    line-height:1.35 !important;
+    border-radius:10px !important;
+  }
+
+  .textarea.small{
+    min-height:62px !important;
   }
 
   .table-wrap{
-    overflow:visible;
-    padding:1px;
-    border-radius:14px;
+    width:100% !important;
+    max-width:100% !important;
+    overflow:visible !important;
+    border-radius:10px !important;
   }
 
   th{
-    font-size:6.3px;
-    padding:7px 4px;
-    line-height:1.18;
-    letter-spacing:.04em;
-    text-align:left;
-    vertical-align:middle;
-    white-space:normal;
-    word-break:break-word;
-    overflow-wrap:anywhere;
+    font-size:5.9px !important;
+    padding:6px 3px !important;
+    line-height:1.08 !important;
+    letter-spacing:.03em !important;
   }
 
   td textarea{
-    font-size:8px;
-    min-height:72px;
-    padding:6px 5px;
-    line-height:1.25;
+    min-height:64px !important;
+    padding:5px 4px !important;
+    font-size:7.4px !important;
+    line-height:1.18 !important;
   }
 
   td input{
-    font-size:8px;
-    height:34px;
-    padding:0 5px;
+    height:30px !important;
+    line-height:30px !important;
+    padding:0 4px !important;
+    font-size:7.4px !important;
   }
 
   td input[type="date"]{
-    height:34px;
-    min-height:34px;
-    font-size:7.2px;
-    padding:0 4px;
+    height:30px !important;
+    min-height:30px !important;
+    line-height:30px !important;
+    padding:0 3px !important;
+    font-size:6.3px !important;
   }
 
-  th:nth-child(1){width:13%;}
-  th:nth-child(2){width:12%;}
-  th:nth-child(3){width:25%;}
-  th:nth-child(4){width:18%;}
-  th:nth-child(5){width:8%;}
-  th:nth-child(6){width:8%;}
-  th:nth-child(7){width:16%;}
-
-  .checklist li,
   .note,
+  .checklist li,
   .footer{
     font-size:11px;
   }
 }
 
-/* SINGLE PRINT LAYOUT FOR DESKTOP + MOBILE */
+/* PRINT: COMPRESSED TO 2 PAGES */
 @media print{
   @page{
     size:A4 portrait;
-    margin:4mm;
+    margin:3.5mm;
   }
 
   html, body{
@@ -497,166 +520,157 @@ th:nth-child(7){width:16%;}
     width:100% !important;
     max-width:none !important;
     margin:0 !important;
-    padding:14px 16px !important;
+    padding:11px 12px !important;
     border:none !important;
-    border-radius:16px !important;
+    border-radius:14px !important;
     box-shadow:none !important;
     background:#d4d7d1 !important;
   }
 
   .logo{
-    margin-bottom:2px !important;
-    gap:10px !important;
+    margin-bottom:1px !important;
+    gap:8px !important;
   }
 
-  .logo .bare{font-size:20px !important;}
-  .logo .by{font-size:12px !important;}
+  .logo .bare{font-size:18px !important;}
+  .logo .by{font-size:11px !important;}
 
   h1{
-    font-size:12.5px !important;
-    margin:0 0 4px !important;
-    letter-spacing:.12em !important;
+    font-size:11.2px !important;
+    margin:0 0 3px !important;
+    letter-spacing:.10em !important;
   }
 
   .intro{
-    font-size:8.3px !important;
-    line-height:1.35 !important;
-    margin:0 auto 8px !important;
+    font-size:7.3px !important;
+    line-height:1.22 !important;
+    margin:0 auto 5px !important;
     max-width:620px !important;
   }
 
   .section{
-    padding:10px 10px !important;
-    border-radius:12px !important;
-    margin-bottom:6px !important;
+    padding:7px 7px !important;
+    border-radius:10px !important;
+    margin-bottom:4px !important;
     background:#e2e4df !important;
-    box-shadow:none !important;
-    break-inside:avoid;
     page-break-inside:avoid;
+    break-inside:avoid;
   }
 
   .section-title{
-    font-size:7.4px !important;
-    margin:0 0 6px !important;
-    letter-spacing:.09em !important;
+    font-size:6.7px !important;
+    margin:0 0 4px !important;
+    letter-spacing:.07em !important;
   }
 
   .grid{
-    gap:6px 10px !important;
+    gap:4px 7px !important;
   }
 
   .field label{
-    font-size:6.7px !important;
-    margin-bottom:2px !important;
+    font-size:5.9px !important;
+    margin-bottom:1px !important;
   }
 
   .input{
-    height:27px !important;
-    font-size:8.1px !important;
-    padding:0 7px !important;
+    height:22px !important;
+    min-height:22px !important;
+    font-size:7px !important;
+    line-height:22px !important;
+    padding:0 5px !important;
     background:#fff !important;
     border:1px solid #bdbdbd !important;
-    border-radius:7px !important;
-    line-height:27px !important;
+    border-radius:6px !important;
   }
 
   input[type="date"].input{
-    height:27px !important;
-    min-height:27px !important;
-    line-height:normal !important;
-    padding:0 7px !important;
+    height:22px !important;
+    min-height:22px !important;
+    line-height:22px !important;
+    padding:0 5px !important;
   }
 
   .textarea{
-    min-height:42px !important;
-    font-size:7.5px !important;
-    padding:6px 7px !important;
+    min-height:30px !important;
+    font-size:6.4px !important;
+    line-height:1.12 !important;
+    padding:4px 5px !important;
     background:#fff !important;
     border:1px solid #bdbdbd !important;
-    border-radius:7px !important;
-    line-height:1.25 !important;
+    border-radius:6px !important;
   }
 
   .textarea.small{
-    min-height:36px !important;
+    min-height:26px !important;
   }
 
   .table-wrap{
-    border-radius:10px !important;
+    border-radius:8px !important;
     padding:1px !important;
-    background:rgba(255,255,255,0.20) !important;
-    overflow:visible !important;
-    page-break-inside:auto;
+    background:rgba(255,255,255,0.18) !important;
   }
 
   table{
-    border-radius:9px !important;
+    border-radius:7px !important;
   }
 
   th{
-    font-size:5.7px !important;
-    padding:5px 3px !important;
-    line-height:1.08 !important;
+    font-size:4.8px !important;
+    padding:4px 2px !important;
+    line-height:1.02 !important;
     background:#eef0ec !important;
-    border-right:1px solid rgba(36,34,26,0.08) !important;
-    border-bottom:1px solid rgba(36,34,26,0.08) !important;
-    vertical-align:middle !important;
-  }
-
-  tbody tr:nth-child(even) td{
-    background:#f8f8f6 !important;
-  }
-
-  tbody tr:nth-child(odd) td{
-    background:#ffffff !important;
   }
 
   td{
-    border-right:1px solid rgba(36,34,26,0.06) !important;
-    border-bottom:1px solid rgba(36,34,26,0.06) !important;
+    border-right:1px solid rgba(36,34,26,0.05) !important;
+    border-bottom:1px solid rgba(36,34,26,0.05) !important;
   }
 
   td textarea{
-    min-height:44px !important;
-    font-size:6.6px !important;
-    padding:4px 4px !important;
-    line-height:1.16 !important;
+    min-height:31px !important;
+    font-size:5.5px !important;
+    line-height:1.04 !important;
+    padding:3px 3px !important;
     resize:none !important;
   }
 
   td input{
-    height:22px !important;
-    font-size:6.6px !important;
-    padding:0 4px !important;
+    height:18px !important;
+    line-height:18px !important;
+    font-size:5.4px !important;
+    padding:0 2px !important;
   }
 
   td input[type="date"]{
-    font-size:6.1px !important;
+    height:18px !important;
+    min-height:18px !important;
+    line-height:18px !important;
+    font-size:4.9px !important;
+    padding:0 1px !important;
   }
 
   .checklist{
-    padding-left:12px !important;
-    margin:0 !important;
+    padding-left:10px !important;
   }
 
   .checklist li{
-    font-size:7.1px !important;
-    line-height:1.22 !important;
-    margin:0 0 2px !important;
+    font-size:6px !important;
+    line-height:1.08 !important;
+    margin:0 0 1px !important;
   }
 
   .note{
-    font-size:7px !important;
-    line-height:1.24 !important;
-    padding:8px 9px !important;
-    margin-top:5px !important;
+    font-size:5.9px !important;
+    line-height:1.1 !important;
+    padding:6px 7px !important;
+    margin-top:4px !important;
     border-left-width:3px !important;
   }
 
   .footer{
-    font-size:6.9px !important;
-    margin-top:5px !important;
-    line-height:1.22 !important;
+    font-size:5.8px !important;
+    margin-top:4px !important;
+    line-height:1.08 !important;
   }
 
   .actions{
@@ -763,7 +777,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Skin burn / adverse skin reaction</textarea></td>
             <td><textarea>Client</textarea></td>
@@ -773,7 +786,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Cross-contamination / infection</textarea></td>
             <td><textarea>Client, practitioner</textarea></td>
@@ -783,7 +795,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Exposure to cleaning chemicals / disinfectants</textarea></td>
             <td><textarea>Practitioner, client</textarea></td>
@@ -793,7 +804,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Electrical fault / shock / fire from equipment</textarea></td>
             <td><textarea>Practitioner, client, household occupants</textarea></td>
@@ -803,7 +813,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Fire / emergency evacuation</textarea></td>
             <td><textarea>Client, practitioner, household occupants, visitors</textarea></td>
@@ -813,7 +822,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Trips, slips, and manual handling</textarea></td>
             <td><textarea>Client, practitioner</textarea></td>
@@ -823,7 +831,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Poor ventilation / heat build-up / client discomfort</textarea></td>
             <td><textarea>Client, practitioner</textarea></td>
@@ -833,7 +840,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Waste handling / contaminated materials</textarea></td>
             <td><textarea>Practitioner, waste carrier, household occupants</textarea></td>
@@ -843,7 +849,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Lone working / personal safety</textarea></td>
             <td><textarea>Practitioner</textarea></td>
@@ -853,7 +858,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>First aid / incident response</textarea></td>
             <td><textarea>Client, practitioner</textarea></td>
@@ -863,7 +867,6 @@ th:nth-child(7){width:16%;}
             <td><input type="text" value="Marlese"></td>
             <td><input type="date"></td>
           </tr>
-
           <tr>
             <td><textarea>Client unsuitability / contraindications / legal consent issues</textarea></td>
             <td><textarea>Client, practitioner</textarea></td>
@@ -941,8 +944,8 @@ function downloadPDF(){
     window.print();
     setTimeout(() => {
       document.title = originalTitle;
-    }, 1500);
-  }, 200);
+    }, 1200);
+  }, 150);
 }
 
 document.getElementById('assessmentDate').valueAsDate = new Date();
