@@ -141,9 +141,10 @@ h1{
   height:40px;
   padding:0 12px;
   font-size:13px;
+  line-height:40px;
 }
 
-.textarea{
+textarea.textarea{
   min-height:78px;
   padding:10px 12px;
   font-size:12px;
@@ -157,6 +158,28 @@ h1{
 
 .wide{
   grid-column:1 / -1;
+}
+
+/* DATE INPUT ALIGNMENT */
+input[type="date"].input{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  height:40px;
+  min-height:40px;
+  line-height:normal;
+  padding:0 12px;
+  display:flex;
+  align-items:center;
+}
+
+input[type="date"]::-webkit-date-and-time-value{
+  text-align:left;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator{
+  opacity:.8;
+  cursor:pointer;
 }
 
 .table-wrap{
@@ -194,9 +217,12 @@ th{
   font-weight:700;
   text-transform:uppercase;
   letter-spacing:.08em;
-  padding:9px 6px;
+  padding:10px 7px;
   text-align:left;
-  line-height:1.25;
+  line-height:1.3;
+  vertical-align:middle;
+  word-break:break-word;
+  overflow-wrap:anywhere;
 }
 
 tbody tr:nth-child(even) td{
@@ -233,7 +259,19 @@ td input{
 
 td input[type="date"]{
   min-width:0;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
 }
+
+/* DESKTOP TABLE BALANCE */
+th:nth-child(1){width:13%;}
+th:nth-child(2){width:12%;}
+th:nth-child(3){width:25%;}
+th:nth-child(4){width:18%;}
+th:nth-child(5){width:8%;}
+th:nth-child(6){width:8%;}
+th:nth-child(7){width:16%;}
 
 .note{
   margin-top:10px;
@@ -341,41 +379,84 @@ td input[type="date"]{
 
   .field label{
     font-size:8px;
+    margin-bottom:4px;
   }
 
   .input{
     height:44px;
+    min-height:44px;
     font-size:16px;
+    line-height:44px;
+    padding:0 12px;
+    border-radius:10px;
   }
 
-  .textarea{
+  input[type="date"].input{
+    height:44px;
+    min-height:44px;
+    line-height:normal;
+    padding:0 12px;
+    display:flex;
+    align-items:center;
+  }
+
+  textarea.textarea{
     font-size:14px;
     min-height:70px;
+    padding:10px 12px;
   }
 
   .table-wrap{
     overflow:visible;
     padding:1px;
+    border-radius:14px;
   }
 
+  table{
+    table-layout:fixed;
+  }
+
+  /* MOBILE TABLE HEADER CLEANUP */
   th{
-    font-size:6.8px;
-    padding:6px 4px;
-    line-height:1.15;
+    font-size:6.3px;
+    padding:7px 4px;
+    line-height:1.18;
+    letter-spacing:.04em;
+    text-align:left;
+    vertical-align:middle;
+    white-space:normal;
+    word-break:break-word;
+    overflow-wrap:anywhere;
   }
 
   td textarea{
-    font-size:8.6px;
-    min-height:74px;
+    font-size:8px;
+    min-height:72px;
     padding:6px 5px;
-    line-height:1.3;
+    line-height:1.25;
   }
 
   td input{
-    font-size:8.6px;
+    font-size:8px;
     height:34px;
     padding:0 5px;
   }
+
+  td input[type="date"]{
+    height:34px;
+    min-height:34px;
+    font-size:7.2px;
+    padding:0 4px;
+  }
+
+  /* BETTER MOBILE COLUMN BALANCE */
+  th:nth-child(1){width:14%;}
+  th:nth-child(2){width:13%;}
+  th:nth-child(3){width:24%;}
+  th:nth-child(4){width:18%;}
+  th:nth-child(5){width:9%;}
+  th:nth-child(6){width:8%;}
+  th:nth-child(7){width:14%;}
 
   .checklist li,
   .note,
@@ -384,7 +465,7 @@ td input[type="date"]{
   }
 }
 
-/* PRINT: TARGET 2 PAGES */
+/* PRINT */
 @media print{
   @page{
     size:A4 portrait;
@@ -473,6 +554,14 @@ td input[type="date"]{
     background:#fff !important;
     border:1px solid #bdbdbd !important;
     border-radius:7px !important;
+    line-height:27px !important;
+  }
+
+  input[type="date"].input{
+    height:27px !important;
+    min-height:27px !important;
+    line-height:normal !important;
+    padding:0 7px !important;
   }
 
   .textarea{
@@ -504,10 +593,11 @@ td input[type="date"]{
   th{
     font-size:5.7px !important;
     padding:5px 3px !important;
-    line-height:1.05 !important;
+    line-height:1.08 !important;
     background:#eef0ec !important;
     border-right:1px solid rgba(36,34,26,0.08) !important;
     border-bottom:1px solid rgba(36,34,26,0.08) !important;
+    vertical-align:middle !important;
   }
 
   tbody tr:nth-child(even) td{
@@ -651,13 +741,13 @@ td input[type="date"]{
       <table>
         <thead>
           <tr>
-            <th style="width:13%;">Hazard</th>
-            <th style="width:12%;">Who Might Be Harmed</th>
-            <th style="width:25%;">Existing Controls</th>
-            <th style="width:18%;">Further Action Needed</th>
-            <th style="width:8%;">Risk Level</th>
-            <th style="width:8%;">Owner</th>
-            <th style="width:16%;">Due / Review</th>
+            <th>Hazard</th>
+            <th>Who Might Be Harmed</th>
+            <th>Existing Controls</th>
+            <th>Further Action Needed</th>
+            <th>Risk Level</th>
+            <th>Owner</th>
+            <th>Due / Review</th>
           </tr>
         </thead>
         <tbody>
