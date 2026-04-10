@@ -713,6 +713,21 @@ td input[type="date"]{
   font-size:13px !important;
 }
 
+
+/* AUTOSIZE LOCK FOR EXISTING CONTROLS */
+textarea.autosize-lock{
+  resize:none !important;
+  overflow:hidden !important;
+}
+
+
+/* EXISTING CONTROLS COLUMN FIX (3rd column only) */
+td:nth-child(3) textarea{
+  resize:none !important;
+  overflow:hidden !important;
+  min-height:auto !important;
+}
+
 </style>
 </head>
 <body>
@@ -805,109 +820,109 @@ td input[type="date"]{
         </thead>
         <tbody>
           <tr>
-            <td><textarea>Laser beam / accidental exposure to eyes</textarea></td>
-            <td><textarea>Practitioner, client, visitor</textarea></td>
-            <td><textarea>Controlled treatment area used; wavelength-specific protective eyewear worn by practitioner and client; no treatment unless eyewear is in place; access restricted during treatment; machine used according to manufacturer instructions and training.</textarea></td>
-            <td><textarea>Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></td>
+            <td><textarea >Laser beam / accidental exposure to eyes</textarea></td>
+            <td><textarea >Practitioner, client, visitor</textarea></td>
+            <td><textarea >Controlled treatment area used; wavelength-specific protective eyewear worn by practitioner and client; no treatment unless eyewear is in place; access restricted during treatment; machine used according to manufacturer instructions and training.</textarea></td>
+            <td><textarea >Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Skin burn / adverse skin reaction</textarea></td>
-            <td><textarea>Client</textarea></td>
-            <td><textarea>Consultation completed; contraindications screened; patch test completed where appropriate; settings selected according to skin type, tattoo characteristics, and manufacturer guidance; treatment only proceeds where suitable; aftercare explained and documented.</textarea></td>
-            <td><textarea>Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></td>
+            <td><textarea >Skin burn / adverse skin reaction</textarea></td>
+            <td><textarea >Client</textarea></td>
+            <td><textarea >Consultation completed; contraindications screened; patch test completed where appropriate; settings selected according to skin type, tattoo characteristics, and manufacturer guidance; treatment only proceeds where suitable; aftercare explained and documented.</textarea></td>
+            <td><textarea >Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Cross-contamination / infection</textarea></td>
-            <td><textarea>Client, practitioner</textarea></td>
-            <td><textarea>Dedicated clean treatment area; hand hygiene before and after treatment; gloves worn as appropriate; single-use consumables used where possible; treatment couch and contact surfaces disinfected between clients; clean and used items kept separate; no treatment on infected or unsuitable skin.</textarea></td>
-            <td><textarea>Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></td>
+            <td><textarea >Cross-contamination / infection</textarea></td>
+            <td><textarea >Client, practitioner</textarea></td>
+            <td><textarea >Dedicated clean treatment area; hand hygiene before and after treatment; gloves worn as appropriate; single-use consumables used where possible; treatment couch and contact surfaces disinfected between clients; clean and used items kept separate; no treatment on infected or unsuitable skin.</textarea></td>
+            <td><textarea >Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Exposure to cleaning chemicals / disinfectants</textarea></td>
-            <td><textarea>Practitioner, client</textarea></td>
-            <td><textarea>COSHH information retained for products used; products kept in labelled containers; used to manufacturer directions; incompatible products not mixed; gloves used if required; products stored securely away from children and treatment food/drink areas.</textarea></td>
-            <td><textarea>Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></td>
+            <td><textarea >Exposure to cleaning chemicals / disinfectants</textarea></td>
+            <td><textarea >Practitioner, client</textarea></td>
+            <td><textarea >COSHH information retained for products used; products kept in labelled containers; used to manufacturer directions; incompatible products not mixed; gloves used if required; products stored securely away from children and treatment food/drink areas.</textarea></td>
+            <td><textarea >Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Electrical fault / shock / fire from equipment</textarea></td>
-            <td><textarea>Practitioner, client, household occupants</textarea></td>
-            <td><textarea>Electrical equipment visually checked before use; damaged cables/plugs removed from service; equipment maintained to prevent danger; machine installed and operated on suitable supply; liquids kept away from electrical equipment; service records retained.</textarea></td>
-            <td><textarea>Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></td>
+            <td><textarea >Electrical fault / shock / fire from equipment</textarea></td>
+            <td><textarea >Practitioner, client, household occupants</textarea></td>
+            <td><textarea >Electrical equipment visually checked before use; damaged cables/plugs removed from service; equipment maintained to prevent danger; machine installed and operated on suitable supply; liquids kept away from electrical equipment; service records retained.</textarea></td>
+            <td><textarea >Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Fire / emergency evacuation</textarea></td>
-            <td><textarea>Client, practitioner, household occupants, visitors</textarea></td>
-            <td><textarea>Clear exit route maintained; treatment room kept tidy; ignition sources controlled; no smoking; emergency contact phone available; appointments managed so area is supervised; fire precautions checked as part of routine premises safety review.</textarea></td>
-            <td><textarea>Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></td>
+            <td><textarea >Fire / emergency evacuation</textarea></td>
+            <td><textarea >Client, practitioner, household occupants, visitors</textarea></td>
+            <td><textarea >Clear exit route maintained; treatment room kept tidy; ignition sources controlled; no smoking; emergency contact phone available; appointments managed so area is supervised; fire precautions checked as part of routine premises safety review.</textarea></td>
+            <td><textarea >Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Trips, slips, and manual handling</textarea></td>
-            <td><textarea>Client, practitioner</textarea></td>
-            <td><textarea>Floor area kept free from clutter and trailing cables; spills cleaned promptly; adequate lighting maintained; treatment bed and trolley positioned to avoid awkward lifting and overreaching; client assisted as needed.</textarea></td>
-            <td><textarea>Check cable routing each clinic day; review room layout if equipment changes.</textarea></td>
+            <td><textarea >Trips, slips, and manual handling</textarea></td>
+            <td><textarea >Client, practitioner</textarea></td>
+            <td><textarea >Floor area kept free from clutter and trailing cables; spills cleaned promptly; adequate lighting maintained; treatment bed and trolley positioned to avoid awkward lifting and overreaching; client assisted as needed.</textarea></td>
+            <td><textarea >Check cable routing each clinic day; review room layout if equipment changes.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Poor ventilation / heat build-up / client discomfort</textarea></td>
-            <td><textarea>Client, practitioner</textarea></td>
-            <td><textarea>Treatment room ventilated before and after appointments; fresh air available in enclosed area; room temperature monitored for comfort and safe working; treatment paused if environment becomes unsuitable.</textarea></td>
-            <td><textarea>Review ventilation in warm weather and when room layout changes.</textarea></td>
+            <td><textarea >Poor ventilation / heat build-up / client discomfort</textarea></td>
+            <td><textarea >Client, practitioner</textarea></td>
+            <td><textarea >Treatment room ventilated before and after appointments; fresh air available in enclosed area; room temperature monitored for comfort and safe working; treatment paused if environment becomes unsuitable.</textarea></td>
+            <td><textarea >Review ventilation in warm weather and when room layout changes.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Waste handling / contaminated materials</textarea></td>
-            <td><textarea>Practitioner, waste carrier, household occupants</textarea></td>
-            <td><textarea>Business waste separated from domestic waste; waste stored securely; transfers made using appropriate collection arrangements; records kept where required; treatment-related waste not left accessible to children or pets.</textarea></td>
-            <td><textarea>Confirm current disposal route and retain waste paperwork where applicable.</textarea></td>
+            <td><textarea >Waste handling / contaminated materials</textarea></td>
+            <td><textarea >Practitioner, waste carrier, household occupants</textarea></td>
+            <td><textarea >Business waste separated from domestic waste; waste stored securely; transfers made using appropriate collection arrangements; records kept where required; treatment-related waste not left accessible to children or pets.</textarea></td>
+            <td><textarea >Confirm current disposal route and retain waste paperwork where applicable.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Lone working / personal safety</textarea></td>
-            <td><textarea>Practitioner</textarea></td>
-            <td><textarea>Appointments by prior booking only; client details recorded in advance; phone available; session times managed; practitioner aware of emergency contact process; treatment not carried out if practitioner feels unsafe.</textarea></td>
-            <td><textarea>Consider check-in procedure for late appointments or new clients.</textarea></td>
+            <td><textarea >Lone working / personal safety</textarea></td>
+            <td><textarea >Practitioner</textarea></td>
+            <td><textarea >Appointments by prior booking only; client details recorded in advance; phone available; session times managed; practitioner aware of emergency contact process; treatment not carried out if practitioner feels unsafe.</textarea></td>
+            <td><textarea >Consider check-in procedure for late appointments or new clients.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>First aid / incident response</textarea></td>
-            <td><textarea>Client, practitioner</textarea></td>
-            <td><textarea>Suitable first aid kit available; emergency phone accessible; incidents, adverse reactions, and near misses recorded; practitioner stops treatment and escalates appropriately if reaction exceeds expected response.</textarea></td>
-            <td><textarea>Review contents of first aid kit routinely and after any use.</textarea></td>
+            <td><textarea >First aid / incident response</textarea></td>
+            <td><textarea >Client, practitioner</textarea></td>
+            <td><textarea >Suitable first aid kit available; emergency phone accessible; incidents, adverse reactions, and near misses recorded; practitioner stops treatment and escalates appropriately if reaction exceeds expected response.</textarea></td>
+            <td><textarea >Review contents of first aid kit routinely and after any use.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea>Client unsuitability / contraindications / legal consent issues</textarea></td>
-            <td><textarea>Client, practitioner</textarea></td>
-            <td><textarea>Medical screening and consent completed before treatment; treatment refused or deferred where contraindicated; photographic and treatment records kept securely; practitioner only treats within training, competence, and insurance cover.</textarea></td>
-            <td><textarea>Review insurer conditions and update forms if scope of treatment changes.</textarea></td>
+            <td><textarea >Client unsuitability / contraindications / legal consent issues</textarea></td>
+            <td><textarea >Client, practitioner</textarea></td>
+            <td><textarea >Medical screening and consent completed before treatment; treatment refused or deferred where contraindicated; photographic and treatment records kept securely; practitioner only treats within training, competence, and insurance cover.</textarea></td>
+            <td><textarea >Review insurer conditions and update forms if scope of treatment changes.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
@@ -1012,6 +1027,26 @@ function autosizeTextarea(el){
     el.addEventListener('input', () => autosizeTextarea(el));
   }
 });
+
+document.querySelectorAll('.autosize-lock').forEach(el=>{
+  const resize=()=>{
+    el.style.height='auto';
+    el.style.height=el.scrollHeight+'px';
+  };
+  resize();
+  el.addEventListener('input',resize);
+});
+
+
+document.querySelectorAll('td:nth-child(3) textarea').forEach(el=>{
+  const resize=()=>{
+    el.style.height='auto';
+    el.style.height=el.scrollHeight+'px';
+  };
+  resize();
+  el.addEventListener('input',resize);
+});
+
 </script>
 
 </body>
