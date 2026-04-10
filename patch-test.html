@@ -211,35 +211,49 @@
             .con-input { height: 46px; font-size: 16px; }
         }
 
-        @media print {
-            @page { margin: 0; size: portrait; }
-            body { background: #cacdc6 !important; }
-            .con-card { 
-                background: #d4d7d1 !important; 
-                box-shadow: none !important; 
-                border: none !important; 
-                width: 100% !important; 
-                padding: 40px !important; 
-                margin: 0 !important;
-                zoom: 0.92;
-               
-            }
-            .con-section {
-                background: #e2e4df !important;
-                border: 1px solid rgba(255,255,255,0.5) !important;
-            }
-            .settings-grid { 
-                display: grid !important; 
-                grid-template-columns: 1fr 1fr !important; 
-                gap: 8px 30px !important; 
-            }
-            .con-input { 
-                background: #ffffff !important; 
-                border: 1px solid #bcbcbc !important; 
-            }
-            .no-print { display: none !important; }
-            .pill.selected { background: #5e6959 !important; color: white !important; }
-        }
+@media print {
+    @page { margin: 0; size: portrait; }
+    body { background: #cacdc6 !important; }
+
+    .con-card { 
+        background: #d4d7d1 !important; 
+        box-shadow: none !important; 
+        border: none !important; 
+        width: 100% !important; 
+        padding: 40px !important; 
+        margin: 0 !important;
+        zoom: 0.92;
+    }
+
+    .con-section {
+        background: #e2e4df !important;
+        border: 1px solid rgba(255,255,255,0.5) !important;
+    }
+
+    .settings-grid { 
+        display: grid !important; 
+        grid-template-columns: 1fr 1fr !important; 
+        gap: 8px 30px !important; 
+    }
+
+    .con-input { 
+        background: #ffffff !important; 
+        border: 1px solid #bcbcbc !important; 
+    }
+
+    .no-print { display: none !important; }
+
+    .pill.selected { 
+        background: #5e6959 !important; 
+        color: white !important; 
+    }
+
+    .website-link {
+        margin-top: 10px !important;
+        font-size: 10px !important;
+        page-break-inside: avoid;
+    }
+}
     </style>
 </head>
 <body>
