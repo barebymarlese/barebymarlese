@@ -1,193 +1,522 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Machine Inspection Log | BARE by Marlese</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title id="originalTitle">Machine Inspection Log | BARE by Marlese</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-body{
-  margin:0;
-  font-family:"Montserrat",sans-serif;
-  background:#cacdc6;
-  color:#24221a;
-  display:flex;
-  justify-content:center;
-}
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
-.card{
-  background:#d4d7d1;
-  width:95%;
-  max-width:1000px;
-  margin:20px;
-  padding:30px;
-  border-radius:20px;
-}
+    <style>
+        :root {
+            --bg: #cacdc6;
+            --card-bg: #d4d7d1;
+            --heading-muted: #878274;
+            --heading-dark: #24221a;
+            --brand: #5e6959;
+            --shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
 
-h1{
-  text-align:center;
-  letter-spacing:.15em;
-  margin-bottom:20px;
-}
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+        }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-}
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background: var(--bg);
+        }
 
-th{
-  background:#5e6959;
-  color:#fff;
-  padding:12px;
-  font-size:13px;
-  letter-spacing:.08em;
-}
+        body {
+            font-family: "Montserrat", sans-serif;
+            color: var(--heading-dark);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-td{
-  border:1px solid #999;
-  padding:8px;
-  height:55px;
-  vertical-align:middle;
-}
+        .con-card {
+            background: rgba(212, 215, 209, 0.92);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 30px 46px;
+            max-width: 900px;
+            width: 95%;
+            margin: 20px auto;
+        }
 
-input{
-  width:100%;
-  border:none;
-  background:transparent;
-  font-family:inherit;
-  font-size:14px;
-  outline:none;
-}
+        .logo {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: .26em;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            white-space: nowrap;
+        }
 
-input[type="date"]{
-  font-size:13px;
-}
+        .logo .bare { color: var(--brand); font-size: 24px; }
+        .logo .by { letter-spacing: .05em; font-weight: 500; text-transform: none; color: var(--heading-muted); font-size: 15px; }
 
-.sig-pad{
-  width:100%;
-  height:50px;
-  border-bottom:1px solid #24221a;
-  background:#fff;
-  display:block;
-}
+        .section-title {
+            text-align: center;
+            margin: 0 0 20px;
+            font-size: 16px;
+            color: var(--heading-dark);
+            letter-spacing: .15em;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.85;
+        }
 
-.print-btn{
-  margin-top:20px;
-  text-align:center;
-}
+        .con-section {
+            padding: 26px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.4);
+            background: linear-gradient(145deg, rgba(255,255,255,0.32), rgba(255,255,255,0.12));
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.2);
+        }
 
-button{
-  padding:14px 22px;
-  background:#5e6959;
-  color:white;
-  border:none;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
-}
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 24px;
+            margin-bottom: 12px;
+        }
 
-@media print{
-  button{display:none;}
-}
-</style>
+        .con-label {
+            display: block;
+            margin: 0 0 5px;
+            font-weight: 700;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--brand);
+        }
+
+        .con-input,
+        .con-textarea {
+            width: 100%;
+            font-size: 13px;
+            border-radius: 10px;
+            border: 1px solid rgba(36,34,26,0.12);
+            background: rgba(255, 255, 255, 0.78);
+            color: var(--heading-dark);
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .con-input {
+            height: 42px;
+            padding: 0 14px;
+            appearance: none;
+        }
+
+        .con-textarea {
+            padding: 12px 14px;
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .con-input:focus,
+        .con-textarea:focus {
+            border-color: var(--brand);
+            background: #fff;
+        }
+
+        select.con-input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2324221a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .check-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px 18px;
+            margin: 6px 0 4px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.32);
+            border: 1px solid rgba(36,34,26,0.08);
+            border-radius: 12px;
+            padding: 11px 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .check-item input[type="checkbox"] {
+            accent-color: var(--brand);
+            transform: scale(1.15);
+            flex: 0 0 auto;
+        }
+
+        .signature-grid {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 18px;
+            align-items: end;
+            margin-top: 8px;
+        }
+
+        .signature-wrapper {
+            border: 1px solid rgba(36,34,26,0.15);
+            border-radius: 12px;
+            background: #fff;
+            height: 150px;
+            position: relative;
+            touch-action: none;
+        }
+
+        canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .micro-note {
+            font-size: 10px;
+            color: var(--heading-muted);
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .con-actions {
+            display: flex;
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .con-btn {
+            flex: 1;
+            background: var(--brand);
+            font-size: 12px;
+            color: #fff;
+            border: 0;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+        }
+
+        .con-btn-ghost {
+            background: transparent;
+            border: 1px solid rgba(36,34,26,0.2);
+            color: var(--heading-dark);
+        }
+
+        .website-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 11px;
+            color: var(--brand);
+            font-weight: 600;
+            text-decoration: none;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        @media screen and (max-width: 680px) {
+            body { display: block; }
+            .con-card { width: 94vw; margin: 10px auto; padding: 20px; }
+            .settings-grid,
+            .check-grid,
+            .signature-grid { grid-template-columns: 1fr; }
+            .con-input { height: 46px; font-size: 16px; }
+            .con-textarea { font-size: 16px; }
+            .logo { letter-spacing: .18em; gap: 8px; }
+            .logo .bare { font-size: 21px; }
+            .logo .by { font-size: 13px; }
+        }
+
+        @media print {
+            @page { size: A4 portrait; margin: 4mm; }
+
+            html, body {
+                width: 100%;
+                height: auto;
+                background: #cacdc6 !important;
+            }
+
+            body {
+                display: block !important;
+                min-height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .con-card {
+                background: #d4d7d1 !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-radius: 22px !important;
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 22px 24px !important;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .con-section {
+                background: #e2e4df !important;
+                box-shadow: none !important;
+                border-radius: 18px !important;
+                padding: 18px 20px !important;
+            }
+
+            .logo .bare { font-size: 24px !important; }
+            .logo .by { font-size: 15px !important; }
+            .section-title { font-size: 15px !important; margin-bottom: 14px !important; }
+            .settings-grid { gap: 7px 18px !important; margin-bottom: 10px !important; }
+            .con-label { font-size: 8.2px !important; margin-bottom: 3px !important; }
+            .con-input {
+                height: 35px !important;
+                font-size: 11.5px !important;
+                padding: 0 10px !important;
+                border-radius: 8px !important;
+                background: #fff !important;
+                border: 1px solid #bcbcbc !important;
+            }
+            .con-textarea {
+                min-height: 92px !important;
+                font-size: 11.3px !important;
+                padding: 10px 11px !important;
+                border-radius: 8px !important;
+                background: #fff !important;
+                border: 1px solid #bcbcbc !important;
+            }
+            .check-grid { gap: 7px 12px !important; }
+            .check-item {
+                font-size: 9.8px !important;
+                border-radius: 10px !important;
+                padding: 8px 10px !important;
+            }
+            .signature-wrapper { height: 118px !important; }
+            .micro-note { font-size: 8.5px !important; }
+            .website-link { font-size: 8.5px !important; margin-top: 8px !important; }
+            .no-print { display: none !important; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="card">
+    <div class="con-card">
+        <div class="logo">
+            <span class="bare">BARE |</span>
+            <span class="by">by Marlese</span>
+        </div>
 
-<div style="
-  text-align:center;
-  font-size:18px;
-  letter-spacing:.18em;
-  font-weight:600;
-  color:#5e6959;
-  margin-bottom:12px;
-">
-  BARE <span style="color:#878274; font-weight:500; letter-spacing:.08em;">| by Marlese</span>
-</div>
+        <h2 class="section-title">Machine Inspection Log</h2>
 
-  <h1>MACHINE INSPECTION LOG</h1>
+        <div class="con-section">
+            <div class="settings-grid">
+                <div>
+                    <label class="con-label">Inspection Date</label>
+                    <input type="date" id="inspectionDate" class="con-input">
+                </div>
+                <div>
+                    <label class="con-label">Inspection Time</label>
+                    <input type="time" id="inspectionTime" class="con-input">
+                </div>
+            </div>
 
-  <table id="logTable">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Check Performed</th>
-        <th>Status</th>
-        <th>Notes</th>
-        <th>Signature</th>
-      </tr>
-    </thead>
+            <div class="settings-grid">
+                <div>
+                    <label class="con-label">Practitioner / Inspector</label>
+                    <input type="text" id="inspectorName" class="con-input" value="Marlese Rosch Haden">
+                </div>
+                <div>
+                    <label class="con-label">Machine / Device Name</label>
+                    <input type="text" id="machineName" class="con-input" placeholder="e.g. Laser Tattoo Removal Machine">
+                </div>
+            </div>
 
-    <tbody>
-    </tbody>
-  </table>
+            <div class="settings-grid">
+                <div>
+                    <label class="con-label">Machine Serial Number</label>
+                    <input type="text" id="serialNo" class="con-input" placeholder="e.g. SN-12345">
+                </div>
+                <div>
+                    <label class="con-label">Location</label>
+                    <input type="text" id="location" class="con-input" placeholder="Treatment room / clinic location">
+                </div>
+            </div>
 
-  <div class="print-btn">
-    <button onclick="window.print()">Download PDF</button>
-  </div>
-</div>
+            <div class="settings-grid">
+                <div>
+                    <label class="con-label">Inspection Type</label>
+                    <select id="inspectionType" class="con-input">
+                        <option value="">Select</option>
+                        <option>Weekly Inspection</option>
+                        <option>Pre-Use Inspection</option>
+                        <option>Post-Service Inspection</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="con-label">Overall Status</label>
+                    <select id="overallStatus" class="con-input">
+                        <option value="">Select</option>
+                        <option>Pass - Safe for Use</option>
+                        <option>Pass with Notes</option>
+                        <option>Fail - Do Not Use</option>
+                    </select>
+                </div>
+            </div>
 
-<script>
-const tbody = document.querySelector("#logTable tbody");
+            <label class="con-label">Checks Performed</label>
+            <div class="check-grid">
+                <label class="check-item"><input type="checkbox"> Power supply and cables checked</label>
+                <label class="check-item"><input type="checkbox"> Handpiece / applicator inspected</label>
+                <label class="check-item"><input type="checkbox"> Emergency stop tested</label>
+                <label class="check-item"><input type="checkbox"> Foot pedal / controls functioning</label>
+                <label class="check-item"><input type="checkbox"> Display / settings panel working</label>
+                <label class="check-item"><input type="checkbox"> Cooling system checked</label>
+                <label class="check-item"><input type="checkbox"> Safety signage / eyewear present</label>
+                <label class="check-item"><input type="checkbox"> Exterior clean and undamaged</label>
+            </div>
 
-// Create rows
-for(let i = 0; i < 10; i++){
-  const row = document.createElement("tr");
+            <div style="margin-top:14px;">
+                <label class="con-label">Check Performed / Inspection Summary</label>
+                <textarea id="checkPerformed" class="con-textarea" placeholder="Record what was inspected, any functional tests completed, and any observations noted during this inspection."></textarea>
+            </div>
 
-  row.innerHTML = `
-    <td><input type="date"></td>
-    <td><input class="time-field" placeholder="Auto"></td>
-    <td><input placeholder="e.g. Handpiece check"></td>
-    <td><input placeholder="OK / Issue"></td>
-    <td><input placeholder="Notes"></td>
-    <td><canvas class="sig-pad"></canvas></td>
-  `;
+            <div style="margin-top:14px;">
+                <label class="con-label">Notes / Corrective Action</label>
+                <textarea id="notes" class="con-textarea" placeholder="Add faults found, maintenance needed, corrective action taken, parts replaced, or follow-up required."></textarea>
+            </div>
 
-  tbody.appendChild(row);
-}
+            <div class="settings-grid" style="margin-top:14px; margin-bottom:0;">
+                <div>
+                    <label class="con-label">Next Inspection Due</label>
+                    <input type="date" id="nextInspectionDate" class="con-input">
+                </div>
+                <div>
+                    <label class="con-label">Service Engineer / Escalation Contact</label>
+                    <input type="text" id="serviceContact" class="con-input" placeholder="Optional">
+                </div>
+            </div>
 
-// Auto timestamp when typing
-document.addEventListener("input", function(e){
-  if(e.target.closest("tr")){
-    const row = e.target.closest("tr");
-    const timeField = row.querySelector(".time-field");
+            <div class="signature-grid">
+                <div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                        <label class="con-label">Inspector Signature</label>
+                        <div id="printTimeStamp" class="micro-note"></div>
+                    </div>
+                    <div class="signature-wrapper">
+                        <canvas id="signature-pad"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <label class="con-label">Printed Name</label>
+                    <input type="text" id="printedName" class="con-input" value="Marlese Rosch Haden">
+                    <div style="height:12px;"></div>
+                    <label class="con-label">Date Signed</label>
+                    <input type="date" id="dateSigned" class="con-input">
+                </div>
+            </div>
+        </div>
 
-    if(timeField && !timeField.value){
-      const now = new Date();
-      timeField.value = now.toLocaleTimeString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
-  }
-});
+        <a href="#" class="website-link">Machine Inspection Form | BARE by Marlese</a>
 
-// Signature pads
-const pads = [];
+        <div class="con-actions no-print">
+            <button class="con-btn con-btn-ghost" onclick="clearForm()">Clear</button>
+            <button class="con-btn" onclick="prepareAndPrint()">Create PDF</button>
+        </div>
+    </div>
 
-function setupSignaturePads(){
-  document.querySelectorAll(".sig-pad").forEach(canvas => {
-    const ratio = Math.max(window.devicePixelRatio || 1, 1);
-    canvas.width = canvas.offsetWidth * ratio;
-    canvas.height = canvas.offsetHeight * ratio;
-    canvas.getContext("2d").scale(ratio, ratio);
+    <script>
+        const BRAND_TITLE = "Machine Inspection Log | BARE by Marlese";
+        const canvas = document.getElementById('signature-pad');
+        const signaturePad = new SignaturePad(canvas, { penColor: 'rgb(36, 34, 26)' });
 
-    const pad = new SignaturePad(canvas, {
-      penColor: "rgb(36,34,26)"
-    });
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext('2d').scale(ratio, ratio);
+            signaturePad.clear();
+        }
 
-    pads.push(pad);
-  });
-}
+        function formatForFilename(value) {
+            return (value || 'Inspection').trim().replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '');
+        }
 
-setupSignaturePads();
-</script>
+        function updateTimeStamp() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('printTimeStamp').innerText = 'Signed: ' + dateStr + ' at ' + timeStr;
+            return now.toLocaleDateString('en-CA');
+        }
 
+        function setDefaults() {
+            const now = new Date();
+            document.getElementById('inspectionDate').value = now.toLocaleDateString('en-CA');
+            document.getElementById('inspectionTime').value = now.toTimeString().slice(0,5);
+            document.getElementById('dateSigned').value = now.toLocaleDateString('en-CA');
+
+            const next = new Date(now);
+            next.setDate(next.getDate() + 7);
+            document.getElementById('nextInspectionDate').value = next.toLocaleDateString('en-CA');
+        }
+
+        function clearForm() {
+            signaturePad.clear();
+            document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+            document.getElementById('machineName').value = '';
+            document.getElementById('serialNo').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('inspectionType').value = '';
+            document.getElementById('overallStatus').value = '';
+            document.getElementById('checkPerformed').value = '';
+            document.getElementById('notes').value = '';
+            document.getElementById('serviceContact').value = '';
+            document.getElementById('printTimeStamp').innerText = '';
+            document.getElementById('inspectorName').value = 'Marlese Rosch Haden';
+            document.getElementById('printedName').value = 'Marlese Rosch Haden';
+            document.title = BRAND_TITLE;
+            setDefaults();
+        }
+
+        function prepareAndPrint() {
+            const fileDate = updateTimeStamp();
+            const machine = formatForFilename(document.getElementById('machineName').value || 'Machine');
+            document.title = 'Machine-Inspection-' + machine + '-' + fileDate;
+
+            setTimeout(() => {
+                window.print();
+                setTimeout(() => {
+                    document.title = BRAND_TITLE;
+                }, 1500);
+            }, 200);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        setDefaults();
+    </script>
 </body>
 </html>
