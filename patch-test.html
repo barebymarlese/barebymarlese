@@ -184,13 +184,13 @@
 
         .disclaimer {
             font-size: 11px;
-            line-height: 1.5;
-            margin: 15px 0;
-            padding: 12px 18px;
-            border-radius: 10px;
-            border-left: 4px solid var(--brand);
-            background: rgba(255, 255, 255, 0.15);
-            /* font-style: italic;  <-- Removed this */
+            line-height: 1.6;
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-radius: 4px 12px 12px 4px;
+            border-left: 5px solid var(--brand);
+            background: rgba(255, 255, 255, 0.25);
+            color: var(--heading-dark);
         }
 
         .website-link {
@@ -317,7 +317,7 @@
             </div>
 
             <label class="con-label">Immediate Reaction (Select all that apply)</label>
-            <div class="reaction-container" id="reactionContainer">
+            <div class="reaction-container" id="reactionContainer" style="margin-bottom: 20px;">
                 <div class="pill" onclick="toggleReaction(this)">Normal Erythema</div>
                 <div class="pill" onclick="toggleReaction(this)">Perifollicular Edema</div>
                 <div class="pill" onclick="toggleReaction(this)">Urticaria (Hives)</div>
@@ -327,17 +327,26 @@
                 <div class="pill" onclick="toggleReaction(this)">No Significant Reaction</div>
             </div>
 
-<div class="disclaimer">
-    <strong style="text-transform: uppercase; letter-spacing: 0.05em;">Declaration & Consent</strong>
-    <ul style="margin: 8px 0 0 0; padding-left: 18px; list-style-type: disc;">
-        <li>I acknowledge that a patch test has been performed to test for adverse reactions or pigment changes.</li>
-        <li>I understand that <strong>tattoo inks are not regulated</strong> in the same way as pharmaceuticals and that reactions can occur due to the specific chemical composition of the pigment.</li>
-        <li>I will monitor the area for <strong>24-48 hours</strong> and report any adverse reactions (e.g. excessive swelling, blistering, or signs of infection) before proceeding with full treatment.</li>
-        <li>I consent to <strong>photographs</strong> being taken of the treated area for my clinical records and insurance purposes.</li>
-        <li>I confirm that I have received and understood the <strong>aftercare instructions</strong> and agree to follow them to minimize the risk of complications.</li>
-        <li>I confirm there have been no changes to my medical history, medication, or recent sun exposure since my initial consultation.</li>
-    </ul>
-</div>
+            <div style="margin-bottom: 20px;">
+                <label class="con-label">Safety Compliance</label>
+                <div style="display: flex; gap: 15px; align-items: center; background: rgba(255,255,255,0.3); padding: 10px 15px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.05);">
+                    <label style="font-size: 11px; display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+                        <input type="checkbox" id="eyePro" checked style="accent-color: var(--brand); transform: scale(1.2);"> Laser Eye Protection Worn (Practitioner & Client)
+                    </label>
+                </div>
+            </div>
+
+            <div class="disclaimer">
+                <strong style="text-transform: uppercase; letter-spacing: 0.05em;">Declaration & Consent</strong>
+                <ul style="margin: 8px 0 0 0; padding-left: 18px; list-style-type: disc;">
+                    <li>I acknowledge that a patch test has been performed to test for adverse reactions or pigment changes.</li>
+                    <li>I understand that <strong>tattoo inks are not regulated</strong> in the same way as pharmaceuticals and that reactions can occur due to the specific chemical composition of the pigment.</li>
+                    <li>I will monitor the area for <strong>24-48 hours</strong> and report any adverse reactions (e.g. excessive swelling, blistering, or signs of infection) before proceeding with full treatment.</li>
+                    <li>I consent to <strong>photographs</strong> being taken of the treated area for my clinical records and insurance purposes.</li>
+                    <li>I confirm that I have received and understood the <strong>aftercare instructions</strong> and agree to follow them to minimize the risk of complications.</li>
+                    <li>I confirm there have been no changes to my medical history, medication, or recent sun exposure since my initial consultation.</li>
+                </ul>
+            </div>
 
             <div style="display:flex; justify-content:space-between; align-items:flex-end;">
                 <label class="con-label">Client Signature</label>
@@ -380,7 +389,7 @@
             document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
             document.getElementById('printTimeStamp').innerText = "";
             document.getElementById('clientName').value = "";
-            // FORCE RESET TITLE
+            document.getElementById('eyePro').checked = true;
             document.title = BRAND_TITLE;
         }
         
@@ -397,12 +406,10 @@
             const clientName = nameInput || "Client";
             const dateFormatted = updateTimeStamp();
             
-            // Set the new title
             document.title = "Patch-Test-" + clientName + "-" + dateFormatted;
 
             setTimeout(() => { 
                 window.print(); 
-                // Return to brand title shortly after the print dialog is triggered
                 setTimeout(() => { document.title = BRAND_TITLE; }, 2000);
             }, 250);
         }
