@@ -54,15 +54,6 @@ select:focus{
   outline-offset:0;
 }
 
-.th-format{
-  display:block;
-  font-size:.9em;
-  letter-spacing:.02em;
-  text-transform:none;
-  font-weight:600;
-  margin-top:2px;
-}
-
 .page-shell{
   width:100%;
   max-width:100%;
@@ -213,6 +204,7 @@ input[type="date"].input{
   padding:0 12px;
   border-radius:10px;
   display:block;
+  font-size:13px !important;
 }
 
 input[type="date"]::-webkit-date-and-time-value{
@@ -220,7 +212,8 @@ input[type="date"]::-webkit-date-and-time-value{
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator{
-  opacity:.85;
+  opacity:.7;
+  margin-right:6px;
 }
 
 .table-wrap{
@@ -300,6 +293,10 @@ td input{
   display:block;
 }
 
+td input[type="date"]{
+  font-size:13px !important;
+}
+
 th:nth-child(1){width:13%;}
 th:nth-child(2){width:12%;}
 th:nth-child(3){width:25%;}
@@ -372,17 +369,9 @@ th:nth-child(7){width:16%;}
   margin-bottom:10px;
 }
 
-.register-card:last-child{
-  margin-bottom:0;
-}
-
-.register-item{
-  margin-bottom:8px;
-}
-
-.register-item:last-child{
-  margin-bottom:0;
-}
+.register-card:last-child{margin-bottom:0;}
+.register-item{margin-bottom:8px;}
+.register-item:last-child{margin-bottom:0;}
 
 .register-label{
   display:block;
@@ -428,6 +417,7 @@ th:nth-child(7){width:16%;}
   appearance:none;
   -webkit-appearance:none;
   -moz-appearance:none;
+  font-size:13px !important;
 }
 
 td:nth-child(3) textarea{
@@ -436,7 +426,7 @@ td:nth-child(3) textarea{
   min-height:auto !important;
 }
 
-/* MOBILE: RESTORE STACKED REGISTER */
+/* MOBILE */
 @media screen and (max-width:760px){
   html, body{
     overflow-x:hidden !important;
@@ -515,8 +505,6 @@ td:nth-child(3) textarea{
     font-size:16px !important;
     line-height:44px !important;
     border-radius:10px !important;
-    transform:none !important;
-    zoom:1 !important;
   }
 
   input[type="date"].input{
@@ -525,6 +513,7 @@ td:nth-child(3) textarea{
     line-height:44px !important;
     padding:0 12px !important;
     border-radius:10px !important;
+    font-size:16px !important;
   }
 
   textarea.textarea{
@@ -582,6 +571,7 @@ td:nth-child(3) textarea{
     width:100% !important;
     max-width:100% !important;
     box-sizing:border-box !important;
+    font-size:16px !important;
   }
 
   .note,
@@ -591,22 +581,7 @@ td:nth-child(3) textarea{
   }
 }
 
-/* DATE FIELDS */
-input[type="date"].input{
-  font-size:13px !important;
-}
-
-td input[type="date"]{
-  font-size:13px !important;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator{
-  opacity:0.7;
-  margin-right:6px;
-}
-
-/* PRINT: TIGHT 2-PAGE LAYOUT */
-/* PRINT: READABLE 2-PAGE LANDSCAPE PDF */
+/* PRINT: BALANCED LANDSCAPE, NO FORCED EXTRA BREAK */
 @media print{
   @page{
     size:A4 landscape;
@@ -655,7 +630,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{
 
   .intro{
     font-size:6.8px !important;
-    line-height:1.2 !important;
+    line-height:1.18 !important;
     margin:0 auto 5px !important;
     max-width:100% !important;
   }
@@ -664,6 +639,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{
     padding:6px !important;
     margin-bottom:5px !important;
     border-radius:8px !important;
+    break-inside:avoid-page;
     page-break-inside:avoid;
   }
 
@@ -696,8 +672,8 @@ input[type="date"]::-webkit-calendar-picker-indicator{
   .textarea.small,
   textarea.stack-match{
     min-height:24px !important;
-    font-size:6.8px !important;
-    line-height:1.15 !important;
+    font-size:6.7px !important;
+    line-height:1.14 !important;
     padding:4px 6px !important;
     resize:none !important;
     overflow:hidden !important;
@@ -713,26 +689,31 @@ input[type="date"]::-webkit-calendar-picker-indicator{
   }
 
   .table-wrap{
-    page-break-inside:auto !important;
     overflow:visible !important;
     border-radius:8px !important;
   }
 
   table{
     table-layout:fixed !important;
+    width:100% !important;
+  }
+
+  tr{
+    break-inside:avoid-page;
+    page-break-inside:avoid;
   }
 
   th{
     font-size:5.8px !important;
     padding:4px 3px !important;
-    line-height:1.12 !important;
+    line-height:1.1 !important;
     letter-spacing:.02em !important;
   }
 
   td textarea{
     min-height:24px !important;
     font-size:6px !important;
-    line-height:1.12 !important;
+    line-height:1.1 !important;
     padding:3px 4px !important;
     resize:none !important;
     overflow:hidden !important;
@@ -748,34 +729,30 @@ input[type="date"]::-webkit-calendar-picker-indicator{
 
   .checklist{
     padding-left:13px !important;
+    margin-top:0 !important;
   }
 
   .checklist li{
-    font-size:6.6px !important;
-    line-height:1.18 !important;
+    font-size:6.5px !important;
+    line-height:1.16 !important;
     margin:0 0 2px !important;
   }
 
   .note{
     margin-top:4px !important;
     padding:6px 7px !important;
-    font-size:6.6px !important;
-    line-height:1.18 !important;
+    font-size:6.5px !important;
+    line-height:1.16 !important;
   }
 
   .footer{
     margin-top:3px !important;
     font-size:6.2px !important;
-    line-height:1.15 !important;
+    line-height:1.12 !important;
   }
 
   .actions{
     display:none !important;
-  }
-
-  /* Put checklist/sign-off on page 2 cleanly */
-  .section:nth-of-type(4){
-    page-break-before:always !important;
   }
 }
 </style>
@@ -983,125 +960,18 @@ input[type="date"]::-webkit-calendar-picker-indicator{
     </div>
 
     <div class="mobile-register">
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Laser beam / accidental exposure to eyes</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, client, visitor</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Controlled treatment area used; wavelength-specific protective eyewear worn by practitioner and client; no treatment unless eyewear is in place; access restricted during treatment; machine used according to manufacturer instructions and training.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Skin burn / adverse skin reaction</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Consultation completed; contraindications screened; patch test completed where appropriate; settings selected according to skin type, tattoo characteristics, and manufacturer guidance; treatment only proceeds where suitable; aftercare explained and documented.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Medium"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Cross-contamination / infection</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Dedicated clean treatment area; hand hygiene before and after treatment; gloves worn as appropriate; single-use consumables used where possible; treatment couch and contact surfaces disinfected between clients; clean and used items kept separate; no treatment on infected or unsuitable skin.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Exposure to cleaning chemicals / disinfectants</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, client</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>COSHH information retained for products used; products kept in labelled containers; used to manufacturer directions; incompatible products not mixed; gloves used if required; products stored securely away from children and treatment food/drink areas.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Electrical fault / shock / fire from equipment</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, client, household occupants</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Electrical equipment visually checked before use; damaged cables/plugs removed from service; equipment maintained to prevent danger; machine installed and operated on suitable supply; liquids kept away from electrical equipment; service records retained.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Fire / emergency evacuation</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner, household occupants, visitors</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Clear exit route maintained; treatment room kept tidy; ignition sources controlled; no smoking; emergency contact phone available; appointments managed so area is supervised; fire precautions checked as part of routine premises safety review.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Trips, slips, and manual handling</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Floor area kept free from clutter and trailing cables; spills cleaned promptly; adequate lighting maintained; treatment bed and trolley positioned to avoid awkward lifting and overreaching; client assisted as needed.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Check cable routing each clinic day; review room layout if equipment changes.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Poor ventilation / heat build-up / client discomfort</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Treatment room ventilated before and after appointments; fresh air available in enclosed area; room temperature monitored for comfort and safe working; treatment paused if environment becomes unsuitable.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review ventilation in warm weather and when room layout changes.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Waste handling / contaminated materials</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, waste carrier, household occupants</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Business waste separated from domestic waste; waste stored securely; transfers made using appropriate collection arrangements; records kept where required; treatment-related waste not left accessible to children or pets.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Confirm current disposal route and retain waste paperwork where applicable.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Lone working / personal safety</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Appointments by prior booking only; client details recorded in advance; phone available; session times managed; practitioner aware of emergency contact process; treatment not carried out if practitioner feels unsafe.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Consider check-in procedure for late appointments or new clients.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Medium"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>First aid / incident response</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Suitable first aid kit available; emergency phone accessible; incidents, adverse reactions, and near misses recorded; practitioner stops treatment and escalates appropriately if reaction exceeds expected response.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review contents of first aid kit routinely and after any use.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
-
-      <div class="register-card">
-        <div class="register-item"><label class="register-label">Hazard</label><textarea>Client unsuitability / contraindications / legal consent issues</textarea></div>
-        <div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div>
-        <div class="register-item"><label class="register-label">Existing Controls</label><textarea>Medical screening and consent completed before treatment; treatment refused or deferred where contraindicated; photographic and treatment records kept securely; practitioner only treats within training, competence, and insurance cover.</textarea></div>
-        <div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review insurer conditions and update forms if scope of treatment changes.</textarea></div>
-        <div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Medium"></div>
-        <div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div>
-        <div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div>
-      </div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Laser beam / accidental exposure to eyes</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, client, visitor</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Controlled treatment area used; wavelength-specific protective eyewear worn by practitioner and client; no treatment unless eyewear is in place; access restricted during treatment; machine used according to manufacturer instructions and training.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Skin burn / adverse skin reaction</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Consultation completed; contraindications screened; patch test completed where appropriate; settings selected according to skin type, tattoo characteristics, and manufacturer guidance; treatment only proceeds where suitable; aftercare explained and documented.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Medium"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Cross-contamination / infection</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Dedicated clean treatment area; hand hygiene before and after treatment; gloves worn as appropriate; single-use consumables used where possible; treatment couch and contact surfaces disinfected between clients; clean and used items kept separate; no treatment on infected or unsuitable skin.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Exposure to cleaning chemicals / disinfectants</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, client</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>COSHH information retained for products used; products kept in labelled containers; used to manufacturer directions; incompatible products not mixed; gloves used if required; products stored securely away from children and treatment food/drink areas.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Electrical fault / shock / fire from equipment</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, client, household occupants</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Electrical equipment visually checked before use; damaged cables/plugs removed from service; equipment maintained to prevent danger; machine installed and operated on suitable supply; liquids kept away from electrical equipment; service records retained.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Fire / emergency evacuation</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner, household occupants, visitors</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Clear exit route maintained; treatment room kept tidy; ignition sources controlled; no smoking; emergency contact phone available; appointments managed so area is supervised; fire precautions checked as part of routine premises safety review.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Trips, slips, and manual handling</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Floor area kept free from clutter and trailing cables; spills cleaned promptly; adequate lighting maintained; treatment bed and trolley positioned to avoid awkward lifting and overreaching; client assisted as needed.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Check cable routing each clinic day; review room layout if equipment changes.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Poor ventilation / heat build-up / client discomfort</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Treatment room ventilated before and after appointments; fresh air available in enclosed area; room temperature monitored for comfort and safe working; treatment paused if environment becomes unsuitable.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review ventilation in warm weather and when room layout changes.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Waste handling / contaminated materials</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner, waste carrier, household occupants</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Business waste separated from domestic waste; waste stored securely; transfers made using appropriate collection arrangements; records kept where required; treatment-related waste not left accessible to children or pets.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Confirm current disposal route and retain waste paperwork where applicable.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Lone working / personal safety</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Practitioner</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Appointments by prior booking only; client details recorded in advance; phone available; session times managed; practitioner aware of emergency contact process; treatment not carried out if practitioner feels unsafe.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Consider check-in procedure for late appointments or new clients.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Medium"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>First aid / incident response</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Suitable first aid kit available; emergency phone accessible; incidents, adverse reactions, and near misses recorded; practitioner stops treatment and escalates appropriately if reaction exceeds expected response.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review contents of first aid kit routinely and after any use.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Low"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
+      <div class="register-card"><div class="register-item"><label class="register-label">Hazard</label><textarea>Client unsuitability / contraindications / legal consent issues</textarea></div><div class="register-item"><label class="register-label">Who Might Be Harmed</label><textarea>Client, practitioner</textarea></div><div class="register-item"><label class="register-label">Existing Controls</label><textarea>Medical screening and consent completed before treatment; treatment refused or deferred where contraindicated; photographic and treatment records kept securely; practitioner only treats within training, competence, and insurance cover.</textarea></div><div class="register-item"><label class="register-label">Further Action Needed</label><textarea>Review insurer conditions and update forms if scope of treatment changes.</textarea></div><div class="register-item"><label class="register-label">Risk Level</label><input type="text" value="Medium"></div><div class="register-item"><label class="register-label">Owner</label><input type="text" value="Marlese"></div><div class="register-item"><label class="register-label">Due / Review</label><input type="date" placeholder="dd/mm/yyyy"></div></div>
     </div>
   </div>
 
@@ -1174,13 +1044,6 @@ function downloadPDF(){
 
 document.getElementById('assessmentDate').valueAsDate = new Date();
 document.getElementById('signDate').valueAsDate = new Date();
-
-function formatDateToDDMMYYYY(date){
-  const d = String(date.getDate()).padStart(2,'0');
-  const m = String(date.getMonth()+1).padStart(2,'0');
-  const y = date.getFullYear();
-  return `${d}/${m}/${y}`;
-}
 
 document.querySelectorAll('input[type="date"]').forEach((el) => {
   el.setAttribute('title','dd/mm/yyyy');
