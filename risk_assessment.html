@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -581,7 +581,7 @@ td:nth-child(3) textarea{
   }
 }
 
-/* PRINT */
+/* PRINT: BALANCED LANDSCAPE, NO FORCED EXTRA BREAK */
 @media print{
   @page{
     size:A4 landscape;
@@ -686,36 +686,6 @@ td:nth-child(3) textarea{
 
   .desktop-register{
     display:block !important;
-  }
-
-  body.mobile-print .desktop-register{
-    display:none !important;
-  }
-
-  body.mobile-print .mobile-register{
-    display:block !important;
-  }
-
-  body.mobile-print .register-card{
-    break-inside:avoid-page;
-    page-break-inside:avoid;
-    margin-bottom:6px !important;
-    padding:8px !important;
-  }
-
-  body.mobile-print .register-card textarea{
-    min-height:42px !important;
-    font-size:8px !important;
-    line-height:1.2 !important;
-    padding:6px 8px !important;
-  }
-
-  body.mobile-print .register-card input{
-    height:24px !important;
-    min-height:24px !important;
-    line-height:24px !important;
-    font-size:8px !important;
-    padding:0 8px !important;
   }
 
   .table-wrap{
@@ -1061,16 +1031,7 @@ td:nth-child(3) textarea{
 </div>
 
 <script>
-function setPrintMode(){
-  if(window.innerWidth <= 760){
-    document.body.classList.add('mobile-print');
-  } else {
-    document.body.classList.remove('mobile-print');
-  }
-}
-
 function downloadPDF(){
-  setPrintMode();
   const originalTitle = document.title;
   document.title = "BARE-Risk-Assessment";
   setTimeout(() => {
@@ -1132,18 +1093,6 @@ window.addEventListener('resize', resizeMobileRegister);
 document.querySelectorAll('.mobile-register textarea').forEach((el)=>{
   el.addEventListener('input', resizeMobileRegister);
 });
-
-window.addEventListener('load', setPrintMode);
-window.addEventListener('resize', setPrintMode);
-
-if (window.matchMedia) {
-  const mediaQueryList = window.matchMedia('print');
-  mediaQueryList.addEventListener('change', (mql) => {
-    if (mql.matches) {
-      setPrintMode();
-    }
-  });
-}
 </script>
 
 </body>
