@@ -20,7 +20,7 @@ body{
 .card{
   background:#d4d7d1;
   width:95%;
-  max-width:900px;
+  max-width:1000px;
   margin:20px;
   padding:30px;
   border-radius:20px;
@@ -35,7 +35,6 @@ h1{
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:10px;
 }
 
 th{
@@ -48,8 +47,8 @@ th{
 
 td{
   border:1px solid #999;
-  padding:10px;
-  height:50px;
+  padding:8px;
+  height:55px;
 }
 
 input{
@@ -59,6 +58,15 @@ input{
   font-family:inherit;
   font-size:14px;
   outline:none;
+}
+
+input[type="date"]{
+  font-size:13px;
+}
+
+.signature{
+  border-bottom:1px solid #24221a;
+  height:30px;
 }
 
 .print-btn{
@@ -95,11 +103,11 @@ button{
         <th>Check Performed</th>
         <th>Status</th>
         <th>Notes</th>
+        <th>Signature</th>
       </tr>
     </thead>
 
     <tbody>
-      <!-- Rows will auto generate -->
     </tbody>
   </table>
 
@@ -111,25 +119,23 @@ button{
 <script>
 const tbody = document.querySelector("#logTable tbody");
 
-// Create 10 editable rows
+// Create rows
 for(let i = 0; i < 10; i++){
   const row = document.createElement("tr");
 
-  const today = new Date();
-  const dateStr = today.toLocaleDateString('en-GB');
-
   row.innerHTML = `
-    <td><input value="${dateStr}" readonly></td>
+    <td><input type="date"></td>
     <td><input class="time-field" placeholder="Auto"></td>
     <td><input placeholder="e.g. Handpiece check"></td>
     <td><input placeholder="OK / Issue"></td>
     <td><input placeholder="Notes"></td>
+    <td><div class="signature"></div></td>
   `;
 
   tbody.appendChild(row);
 }
 
-// Auto timestamp when user types in a row
+// Auto timestamp when typing
 document.addEventListener("input", function(e){
   if(e.target.closest("tr")){
     const row = e.target.closest("tr");
