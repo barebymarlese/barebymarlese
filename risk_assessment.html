@@ -634,6 +634,37 @@ input[type="date"]::-webkit-calendar-picker-indicator{
     display:none !important;
   }
 }
+
+/* FORCE 2 PAGE PRINT OPTIMISATION */
+@media print{
+  @page{ margin:5mm; }
+
+  .section{
+    margin-bottom:4px !important;
+    padding:6px !important;
+  }
+
+  .textarea{
+    min-height:32px !important;
+    font-size:7px !important;
+    padding:4px !important;
+  }
+
+  td textarea{
+    min-height:30px !important;
+    font-size:6.5px !important;
+  }
+
+  td input{
+    height:20px !important;
+    font-size:6.5px !important;
+  }
+
+  .section:nth-of-type(3){
+    page-break-after:always;
+  }
+}
+
 </style>
 </head>
 <body>
