@@ -1,0 +1,55 @@
+<!DOCTYPE html><html><head>
+<style>
+body{
+  margin:0;
+  font-family: "Montserrat", sans-serif;
+  background:#cacdc6;
+  color:#24221a;
+  display:flex;
+  justify-content:center;
+}
+.card{
+  max-width:800px;
+  width:95%;
+  background:#d4d7d1;
+  margin:20px;
+  padding:30px;
+  border-radius:20px;
+}
+h1{
+  text-align:center;
+  letter-spacing:.15em;
+}
+p, li{
+  font-size:14px;
+  line-height:1.6;
+}
+ul{padding-left:18px;}
+.print-btn{
+  margin-top:20px;
+  display:block;
+  text-align:center;
+}
+button{
+  padding:12px 20px;
+  background:#5e6959;
+  color:white;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+@media print{
+  button{display:none;}
+}
+</style>
+</head><body>
+<div class="card">
+<h1>LASER RISK ASSESSMENT</h1>
+<ul>
+<li><strong>Eye Injury:</strong> Protective eyewear worn at all times</li>
+<li><strong>Skin Burns:</strong> Patch testing and controlled settings</li>
+<li><strong>Infection:</strong> Strict cleaning protocol</li>
+<li><strong>Fire Risk:</strong> Equipment checks and safe environment</li>
+</ul>
+<div class="print-btn"><button onclick="window.print()">Download PDF</button></div>
+</div></body></html>
