@@ -16,8 +16,6 @@
   --muted:#878274;
   --line:rgba(36,34,26,0.10);
   --line-soft:rgba(36,34,26,0.06);
-  --white-soft:rgba(255,255,255,0.82);
-  --white-faint:rgba(255,255,255,0.22);
 }
 
 *{
@@ -43,13 +41,27 @@ body{
   min-height:100vh;
 }
 
-input, textarea, select{
+
+input,
+textarea,
+select{
   font:inherit;
 }
 
-input:focus, textarea:focus, select:focus{
+input:focus,
+textarea:focus,
+select:focus{
   outline:2px solid rgba(94,105,89,0.18);
   outline-offset:0;
+}
+
+.th-format{
+  display:block;
+  font-size:.9em;
+  letter-spacing:.02em;
+  text-transform:none;
+  font-weight:600;
+  margin-top:2px;
 }
 
 .page-shell{
@@ -106,7 +118,7 @@ h1{
 }
 
 .section{
-  padding:16px;
+  padding:16px 16px;
   border-radius:14px;
   background:linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.12));
   border:1px solid rgba(255,255,255,0.42);
@@ -114,7 +126,6 @@ h1{
   margin-bottom:12px;
   width:100%;
   max-width:100%;
-  overflow:hidden;
 }
 
 .section-title{
@@ -153,7 +164,7 @@ h1{
   width:100%;
   max-width:100%;
   border:1px solid var(--line);
-  background:var(--white-soft);
+  background:rgba(255,255,255,0.82);
   border-radius:10px;
   font-family:inherit;
   color:var(--text);
@@ -179,23 +190,38 @@ textarea.textarea{
   display:block;
 }
 
-.textarea.small{ min-height:56px; }
+.textarea.small{
+  min-height:56px;
+}
 
-.wide{ grid-column:1 / -1; }
+.wide{
+  grid-column:1 / -1;
+}
 
-input[type="date"].input,
-.risk-mobile-card input[type="date"],
-td input[type="date"]{
-  appearance:auto;
-  -webkit-appearance:auto;
-  -moz-appearance:auto;
+input[type="date"].input{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  height:40px;
+  min-height:40px;
+  line-height:40px;
+  padding:0 12px;
+  border-radius:10px;
+  display:block;
+}
+
+input[type="date"]::-webkit-date-and-time-value{
+  text-align:left;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator{
+  opacity:.85;
 }
 
 .table-wrap{
   width:100%;
   max-width:100%;
-  overflow-x:auto;
-  overflow-y:visible;
+  overflow:visible;
   border-radius:12px;
   background:rgba(255,255,255,0.18);
   border:1px solid rgba(36,34,26,0.08);
@@ -204,7 +230,6 @@ td input[type="date"]{
 
 table{
   width:100%;
-  min-width:900px;
   border-collapse:separate;
   border-spacing:0;
   table-layout:fixed;
@@ -230,9 +255,9 @@ th{
   font-weight:700;
   text-transform:uppercase;
   letter-spacing:.06em;
-  padding:9px 6px;
+  padding:8px 5px;
   text-align:left;
-  line-height:1.2;
+  line-height:1.18;
   word-break:break-word;
   overflow-wrap:anywhere;
   vertical-align:middle;
@@ -241,7 +266,8 @@ th{
 tbody tr:nth-child(even) td{background:rgba(255,255,255,0.12);}
 tbody tr:nth-child(odd) td{background:rgba(255,255,255,0.22);}
 
-td textarea, td input{
+td textarea,
+td input{
   border:0;
   border-radius:0;
   background:transparent;
@@ -253,22 +279,23 @@ td textarea, td input{
 }
 
 td textarea{
-  min-height:88px;
-  padding:8px 7px;
+  min-height:72px;
+  padding:7px 6px;
   font-size:9px;
-  line-height:1.32;
-  resize:none;
+  line-height:1.26;
+  resize:vertical;
   display:block;
-  overflow:hidden;
 }
 
 td input{
-  height:36px;
-  padding:0 7px;
-  font-size:9px;
-  line-height:36px;
+  height:32px;
+  padding:0 6px;
+  font-size:8.8px;
+  line-height:32px;
   display:block;
 }
+
+
 
 th:nth-child(1){width:13%;}
 th:nth-child(2){width:12%;}
@@ -277,73 +304,6 @@ th:nth-child(4){width:18%;}
 th:nth-child(5){width:8%;}
 th:nth-child(6){width:8%;}
 th:nth-child(7){width:16%;}
-
-.risk-mobile-list{
-  display:none;
-}
-
-.risk-mobile-card{
-  background:rgba(255,255,255,0.26);
-  border:1px solid rgba(36,34,26,0.08);
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:10px;
-}
-
-.risk-mobile-card:last-child{
-  margin-bottom:0;
-}
-
-.risk-mobile-card-title{
-  margin:0 0 10px;
-  font-size:10px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:var(--brand);
-  font-weight:700;
-}
-
-.risk-mobile-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:8px;
-}
-
-.risk-mobile-field label{
-  display:block;
-  margin:0 0 4px;
-  font-size:8px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  font-weight:700;
-  color:var(--brand);
-}
-
-.risk-mobile-card textarea,
-.risk-mobile-card input{
-  width:100%;
-  border:1px solid var(--line);
-  background:var(--white-soft);
-  border-radius:10px;
-  color:var(--text);
-  font-family:inherit;
-}
-
-.risk-mobile-card textarea{
-  min-height:72px;
-  padding:10px 12px;
-  font-size:13px;
-  line-height:1.35;
-  resize:none;
-  overflow:hidden;
-}
-
-.risk-mobile-card input{
-  height:44px;
-  padding:0 12px;
-  font-size:15px;
-  line-height:44px;
-}
 
 .note{
   margin-top:8px;
@@ -397,7 +357,7 @@ th:nth-child(7){width:16%;}
   cursor:pointer;
 }
 
-/* MOBILE */
+/* MOBILE: FLUSH, NO FLOATING ANYWHERE */
 @media screen and (max-width:760px){
   html, body{
     overflow-x:hidden !important;
@@ -420,7 +380,11 @@ th:nth-child(7){width:16%;}
     border:none !important;
   }
 
-  .logo{ gap:10px; margin-bottom:4px; }
+  .logo{
+    gap:10px;
+    margin-bottom:4px;
+  }
+
   .logo .bare{font-size:21px;}
   .logo .by{font-size:13px;}
 
@@ -472,27 +436,79 @@ th:nth-child(7){width:16%;}
     font-size:16px !important;
     line-height:44px !important;
     border-radius:10px !important;
+    transform:none !important;
+    zoom:1 !important;
+  }
+
+  input[type="date"].input{
+    height:44px !important;
+    min-height:44px !important;
+    line-height:44px !important;
+    padding:0 12px !important;
+    border-radius:10px !important;
   }
 
   textarea.textarea{
     width:100% !important;
     max-width:100% !important;
-    min-height:72px !important;
+    min-height:70px !important;
     padding:10px 12px !important;
     font-size:14px !important;
     line-height:1.35 !important;
     border-radius:10px !important;
   }
 
-  .textarea.small{ min-height:62px !important; }
+  .textarea.small{
+    min-height:62px !important;
+  }
 
   .table-wrap{
-    display:none !important;
+    width:100% !important;
+    max-width:100% !important;
+    overflow:visible !important;
+    border-radius:10px !important;
   }
 
-  .risk-mobile-list{
-    display:block !important;
+  table{
+    table-layout:fixed !important;
   }
+
+  th{
+    font-size:6.2px !important;
+    padding:6px 4px !important;
+    line-height:1.12 !important;
+    letter-spacing:.03em !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  td textarea{
+    min-height:68px !important;
+    padding:6px 5px !important;
+    font-size:8px !important;
+    line-height:1.22 !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  td input{
+    height:32px !important;
+    line-height:32px !important;
+    padding:0 5px !important;
+    font-size:8px !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  
+
+  th:nth-child(1){width:13% !important;}
+  th:nth-child(2){width:13% !important;}
+  th:nth-child(3){width:24% !important;}
+  th:nth-child(4){width:18% !important;}
+  th:nth-child(5){width:9% !important;}
+  th:nth-child(6){width:9% !important;}
+  th:nth-child(7){width:14% !important;}
 
   .note,
   .checklist li,
@@ -501,17 +517,47 @@ th:nth-child(7){width:16%;}
   }
 }
 
-/* PRINT */
+
+/* FIX DATE FIELDS ON MOBILE */
+input[type="date"].input,
+td input[type="date"]{
+  width:100% !important;
+  max-width:100% !important;
+
+  height:44px !important;
+  min-height:44px !important;
+  line-height:44px !important;
+
+  padding:0 12px !important;
+
+  font-size:16px !important;
+
+  border-radius:10px !important;
+
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  -moz-appearance:none !important;
+
+  box-sizing:border-box !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator{
+  opacity:0.7;
+  margin-right:6px;
+}
+
+
+/* PRINT: COMPRESSED TO 2 PAGES */
 @media print{
   @page{
     size:A4 portrait;
-    margin:8mm;
+    margin:6mm; /* tighter but still readable */
   }
 
   html, body{
     background:#cacdc6 !important;
     width:100% !important;
-    overflow:visible !important;
+    zoom:1 !important;
   }
 
   body{
@@ -519,114 +565,83 @@ th:nth-child(7){width:16%;}
     padding:0 !important;
   }
 
-  .page-shell, .card, .section, .table-wrap{
-    overflow:visible !important;
-  }
-
   .card{
     width:100% !important;
-    max-width:none !important;
-    padding:12px !important;
+    padding:14px 14px !important;
     background:#d4d7d1 !important;
-    border-radius:8px !important;
+    border-radius:10px !important;
   }
 
-  .logo .bare{font-size:19px !important;}
-  .logo .by{font-size:12px !important;}
-
   h1{
-    font-size:13px !important;
+    font-size:12.5px !important;
     margin-bottom:6px !important;
   }
 
   .intro{
-    font-size:9px !important;
-    line-height:1.35 !important;
-    margin-bottom:8px !important;
+    font-size:8.5px !important;
+    line-height:1.3 !important;
+    margin-bottom:6px !important;
   }
 
   .section{
     padding:8px !important;
     margin-bottom:6px !important;
     page-break-inside:avoid;
-    break-inside:avoid;
   }
 
   .section-title{
     font-size:8.5px !important;
-    margin-bottom:5px !important;
+    margin-bottom:4px !important;
   }
 
   .field label{
-    font-size:6.8px !important;
-    margin-bottom:3px !important;
+    font-size:7px !important;
   }
 
   .input{
     height:24px !important;
-    min-height:24px !important;
     font-size:8px !important;
-    line-height:24px !important;
     padding:0 6px !important;
-    border-radius:6px !important;
   }
 
   .textarea{
-    min-height:34px !important;
-    font-size:7.3px !important;
-    line-height:1.25 !important;
-    padding:5px 6px !important;
-    border-radius:6px !important;
-    resize:none !important;
-    overflow:visible !important;
+    min-height:38px !important;
+    font-size:7.5px !important;
+    padding:5px !important;
   }
 
-  .table-wrap{
-    display:block !important;
-    border-radius:8px !important;
-    overflow:visible !important;
-  }
-
-  table{
-    width:100% !important;
-    min-width:0 !important;
-    table-layout:fixed !important;
-  }
-
+  /* TABLE TUNED (THIS IS THE KEY) */
   th{
-    font-size:6.2px !important;
-    padding:4px 3px !important;
-    line-height:1.15 !important;
+    font-size:6.5px !important;
+    padding:5px 3px !important;
   }
 
   td textarea{
-    min-height:28px !important;
-    font-size:6.7px !important;
-    line-height:1.18 !important;
-    padding:4px 4px !important;
-    resize:none !important;
-    overflow:visible !important;
-    height:auto !important;
+    font-size:7px !important;
+    min-height:38px !important;
+    padding:4px !important;
+    line-height:1.15 !important;
   }
 
   td input{
+    font-size:7px !important;
     height:22px !important;
-    line-height:22px !important;
-    font-size:6.8px !important;
-    padding:0 4px !important;
   }
 
-  .risk-mobile-list{
-    display:none !important;
+  /* CONTROL PAGE BREAK EXACTLY */
+  .table-wrap{
+    page-break-before:avoid;
+    page-break-after:auto;
   }
 
+  /* FORCE SECOND PAGE START AT CHECKLIST */
+  .section:nth-of-type(4){
+    page-break-before:always;
+  }
+
+  /* REMOVE BUTTON */
   .actions{
     display:none !important;
-  }
-
-  .footer{
-    font-size:8px !important;
-    margin-top:6px !important;
   }
 }
 </style>
@@ -706,9 +721,8 @@ th:nth-child(7){width:16%;}
 
   <div class="section">
     <h2 class="section-title">Risk Assessment Register</h2>
-
-    <div class="table-wrap" id="riskTableWrap">
-      <table id="riskTable">
+    <div class="table-wrap">
+      <table>
         <thead>
           <tr>
             <th>Hazard</th>
@@ -728,7 +742,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Skin burn / adverse skin reaction</textarea></td>
@@ -737,7 +751,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Cross-contamination / infection</textarea></td>
@@ -746,7 +760,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Exposure to cleaning chemicals / disinfectants</textarea></td>
@@ -755,7 +769,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Electrical fault / shock / fire from equipment</textarea></td>
@@ -764,7 +778,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Fire / emergency evacuation</textarea></td>
@@ -773,7 +787,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Trips, slips, and manual handling</textarea></td>
@@ -782,7 +796,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Check cable routing each clinic day; review room layout if equipment changes.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Poor ventilation / heat build-up / client discomfort</textarea></td>
@@ -791,7 +805,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review ventilation in warm weather and when room layout changes.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Waste handling / contaminated materials</textarea></td>
@@ -800,7 +814,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Confirm current disposal route and retain waste paperwork where applicable.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Lone working / personal safety</textarea></td>
@@ -809,7 +823,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Consider check-in procedure for late appointments or new clients.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>First aid / incident response</textarea></td>
@@ -818,7 +832,7 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review contents of first aid kit routinely and after any use.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
             <td><textarea>Client unsuitability / contraindications / legal consent issues</textarea></td>
@@ -827,13 +841,11 @@ th:nth-child(7){width:16%;}
             <td><textarea>Review insurer conditions and update forms if scope of treatment changes.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="date"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
         </tbody>
       </table>
     </div>
-
-    <div class="risk-mobile-list" id="riskMobileList"></div>
   </div>
 
   <div class="section">
@@ -892,6 +904,21 @@ th:nth-child(7){width:16%;}
 </div>
 
 <script>
+function downloadPDF(){
+  const originalTitle = document.title;
+  document.title = "BARE-Risk-Assessment";
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1200);
+  }, 150);
+}
+
+document.getElementById('assessmentDate').valueAsDate = new Date();
+document.getElementById('signDate').valueAsDate = new Date();
+
+
 function formatDateToDDMMYYYY(date){
   const d = String(date.getDate()).padStart(2,'0');
   const m = String(date.getMonth()+1).padStart(2,'0');
@@ -899,147 +926,10 @@ function formatDateToDDMMYYYY(date){
   return `${d}/${m}/${y}`;
 }
 
-function autoGrow(el){
-  if(!el || el.tagName !== 'TEXTAREA') return;
-  el.style.height = 'auto';
-  el.style.height = Math.max(el.scrollHeight, 28) + 'px';
-}
-
-function autoGrowAll(scope=document){
-  scope.querySelectorAll('textarea').forEach(autoGrow);
-}
-
-function buildMobileRiskCards(){
-  const table = document.getElementById('riskTable');
-  const mobileList = document.getElementById('riskMobileList');
-  if(!table || !mobileList) return;
-
-  mobileList.innerHTML = '';
-  const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
-  const rows = Array.from(table.querySelectorAll('tbody tr'));
-
-  rows.forEach((row, rowIndex) => {
-    const card = document.createElement('div');
-    card.className = 'risk-mobile-card';
-
-    const title = document.createElement('h3');
-    title.className = 'risk-mobile-card-title';
-    title.textContent = `Risk Item ${rowIndex + 1}`;
-    card.appendChild(title);
-
-    const grid = document.createElement('div');
-    grid.className = 'risk-mobile-grid';
-
-    const cells = Array.from(row.children);
-    cells.forEach((cell, cellIndex) => {
-      const sourceControl = cell.querySelector('textarea, input');
-      if(!sourceControl) return;
-
-      const wrap = document.createElement('div');
-      wrap.className = 'risk-mobile-field';
-
-      const label = document.createElement('label');
-      label.textContent = headers[cellIndex];
-      wrap.appendChild(label);
-
-      const clone = sourceControl.cloneNode(true);
-      clone.removeAttribute('id');
-      clone.dataset.row = rowIndex;
-      clone.dataset.col = cellIndex;
-      clone.classList.add('mobile-sync');
-
-      if(clone.tagName === 'TEXTAREA'){
-        clone.value = sourceControl.value;
-      }else{
-        clone.value = sourceControl.value;
-      }
-
-      wrap.appendChild(clone);
-      grid.appendChild(wrap);
-    });
-
-    card.appendChild(grid);
-    mobileList.appendChild(card);
-  });
-
-  mobileList.querySelectorAll('.mobile-sync').forEach(control => {
-    control.addEventListener('input', function(){
-      const row = Number(this.dataset.row);
-      const col = Number(this.dataset.col);
-      const source = table.querySelectorAll('tbody tr')[row].children[col].querySelector('textarea, input');
-      if(source){
-        source.value = this.value;
-        if(source.tagName === 'TEXTAREA') autoGrow(source);
-      }
-      if(this.tagName === 'TEXTAREA') autoGrow(this);
-    });
-  });
-
-  autoGrowAll(mobileList);
-}
-
-function syncDesktopToMobile(){
-  const table = document.getElementById('riskTable');
-  const mobileList = document.getElementById('riskMobileList');
-  if(!table || !mobileList) return;
-
-  table.querySelectorAll('tbody tr').forEach((row, rowIndex) => {
-    Array.from(row.children).forEach((cell, cellIndex) => {
-      const source = cell.querySelector('textarea, input');
-      const target = mobileList.querySelector(`[data-row="${rowIndex}"][data-col="${cellIndex}"]`);
-      if(source && target && target.value !== source.value){
-        target.value = source.value;
-        if(target.tagName === 'TEXTAREA') autoGrow(target);
-      }
-    });
-  });
-}
-
-function prepareForPrint(){
-  autoGrowAll(document);
-  document.querySelectorAll('td textarea').forEach(area => {
-    area.style.height = 'auto';
-    area.style.height = area.scrollHeight + 'px';
-  });
-}
-
-function downloadPDF(){
-  const originalTitle = document.title;
-  prepareForPrint();
-  document.title = "BARE-Risk-Assessment";
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => {
-      document.title = originalTitle;
-    }, 800);
-  }, 120);
-}
-
-document.getElementById('assessmentDate').valueAsDate = new Date();
-document.getElementById('signDate').valueAsDate = new Date();
-
 document.querySelectorAll('input[type="date"]').forEach((el) => {
   el.setAttribute('title','dd/mm/yyyy');
-  const labelText = (el.closest('.field, .risk-mobile-field, td')?.querySelector('label')?.textContent || 'Date');
-  el.setAttribute('aria-label', labelText + ' dd/mm/yyyy');
+  el.setAttribute('aria-label', (el.previousElementSibling && el.previousElementSibling.textContent ? el.previousElementSibling.textContent + ' dd/mm/yyyy' : 'dd/mm/yyyy'));
 });
-
-document.querySelectorAll('#riskTable textarea').forEach(area => {
-  area.addEventListener('input', () => {
-    autoGrow(area);
-    syncDesktopToMobile();
-  });
-});
-
-document.querySelectorAll('#riskTable input').forEach(input => {
-  input.addEventListener('input', syncDesktopToMobile);
-});
-
-buildMobileRiskCards();
-autoGrowAll(document);
-
-window.addEventListener('beforeprint', prepareForPrint);
-window.addEventListener('resize', () => autoGrowAll(document));
 </script>
 
 </body>
