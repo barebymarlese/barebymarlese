@@ -337,6 +337,94 @@
             }
 
             .no-print { display: none !important; }
+
+
+            body.mobile-print .con-card {
+                padding: 18px 20px !important;
+                border-radius: 18px !important;
+            }
+
+            body.mobile-print .logo {
+                margin-bottom: 2px !important;
+                gap: 10px !important;
+            }
+
+            body.mobile-print .logo .bare { font-size: 22px !important; }
+            body.mobile-print .logo .by { font-size: 13px !important; }
+
+            body.mobile-print .section-title {
+                margin: 0 0 10px !important;
+                font-size: 13.5px !important;
+                letter-spacing: .12em !important;
+            }
+
+            body.mobile-print .con-section {
+                padding: 16px 16px !important;
+                border-radius: 14px !important;
+            }
+
+            body.mobile-print .settings-grid {
+                gap: 4px 14px !important;
+                margin-bottom: 1px !important;
+            }
+
+            body.mobile-print .con-label {
+                margin: 4px 0 2px !important;
+                font-size: 7.6px !important;
+                letter-spacing: 0.06em !important;
+            }
+
+            body.mobile-print .con-input {
+                font-size: 10.5px !important;
+                height: 32px !important;
+                padding: 0 9px !important;
+                border-radius: 7px !important;
+            }
+
+            body.mobile-print .reaction-container {
+                gap: 4px !important;
+                margin-top: 3px !important;
+                margin-bottom: 9px !important;
+            }
+
+            body.mobile-print .pill {
+                padding: 3px 8px !important;
+                font-size: 8px !important;
+                border-radius: 14px !important;
+            }
+
+            body.mobile-print .disclaimer {
+                font-size: 8.5px !important;
+                line-height: 1.28 !important;
+                margin: 9px 0 !important;
+                padding: 9px 10px !important;
+                border-left-width: 3px !important;
+            }
+
+            body.mobile-print .disclaimer ul {
+                margin-top: 4px !important;
+                padding-left: 12px !important;
+            }
+
+            body.mobile-print .disclaimer li {
+                margin-bottom: 1px !important;
+            }
+
+            body.mobile-print .signature-wrapper {
+                margin-top: 4px !important;
+                height: 68px !important;
+                border-radius: 8px !important;
+            }
+
+            body.mobile-print #printTimeStamp {
+                font-size: 7.6px !important;
+                margin-bottom: 1px !important;
+            }
+
+            body.mobile-print .website-link {
+                margin-top: 6px !important;
+                font-size: 7.8px !important;
+            }
         }
     </style>
 </head>
@@ -529,16 +617,29 @@
             return dateStr.replace(/\s/g, '-');
         }
 
+        function syncMobilePrintMode() {
+            document.body.classList.toggle('mobile-print', window.innerWidth <= 600);
+        }
+
+        window.addEventListener('beforeprint', syncMobilePrintMode);
+        window.addEventListener('afterprint', () => {
+            document.body.classList.remove('mobile-print');
+        });
+
         function prepareAndPrint() {
             const nameInput = document.getElementById('clientName').value.trim();
             const clientName = nameInput || "Client";
             const dateFormatted = updateTimeStamp();
 
+            syncMobilePrintMode();
             document.title = "Patch-Test-" + clientName + "-" + dateFormatted;
 
             setTimeout(() => { 
                 window.print(); 
-                setTimeout(() => { document.title = BRAND_TITLE; }, 2000);
+                setTimeout(() => { 
+                    document.title = BRAND_TITLE;
+                    document.body.classList.remove('mobile-print');
+                }, 2000);
             }, 250);
         }
 
