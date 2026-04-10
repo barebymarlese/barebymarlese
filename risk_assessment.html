@@ -14,7 +14,9 @@
   --brand:#5e6959;
   --text:#24221a;
   --muted:#878274;
-  --line:rgba(36,34,26,0.12);
+  --line:rgba(36,34,26,0.10);
+  --line-soft:rgba(36,34,26,0.06);
+  --white-soft:rgba(255,255,255,0.62);
 }
 
 *{
@@ -153,33 +155,50 @@ h1{
 
 .table-wrap{
   overflow:visible;
-  border-radius:14px;
-  background:rgba(255,255,255,0.22);
+  border-radius:16px;
+  background:rgba(255,255,255,0.18);
   border:1px solid rgba(36,34,26,0.08);
+  padding:2px;
 }
 
 table{
   width:100%;
-  border-collapse:collapse;
+  border-collapse:separate;
+  border-spacing:0;
   table-layout:fixed;
+  background:rgba(255,255,255,0.12);
+  border-radius:14px;
+  overflow:hidden;
 }
 
 th, td{
-  border:1px solid rgba(36,34,26,0.10);
   vertical-align:top;
   padding:0;
+  border-right:1px solid var(--line-soft);
+  border-bottom:1px solid var(--line-soft);
 }
 
+th:last-child, td:last-child{ border-right:none; }
+tbody tr:last-child td{ border-bottom:none; }
+
 th{
-  background:rgba(255,255,255,0.44);
+  background:rgba(255,255,255,0.46);
   color:var(--brand);
   font-size:8px;
   font-weight:700;
   text-transform:uppercase;
-  letter-spacing:.06em;
-  padding:8px 6px;
+  letter-spacing:.08em;
+  padding:9px 6px;
   text-align:left;
   line-height:1.25;
+}
+
+tbody tr:nth-child(even) td{
+  background:rgba(255,255,255,0.12);
+}
+
+tbody tr:nth-child(odd) td{
+  background:rgba(255,255,255,0.22);
 }
 
 td textarea, td input{
@@ -194,9 +213,9 @@ td textarea, td input{
 
 td textarea{
   min-height:88px;
-  padding:8px 8px;
+  padding:9px 8px;
   font-size:10px;
-  line-height:1.4;
+  line-height:1.42;
   resize:vertical;
 }
 
@@ -282,18 +301,15 @@ td input[type="date"]{
   .textarea{
     font-size:14px;
   }
-
   th{
     font-size:7px;
     padding:6px 4px;
   }
-
   td textarea{
     font-size:9px;
     min-height:78px;
     padding:6px;
   }
-
   td input{
     font-size:9px;
     height:36px;
@@ -319,94 +335,150 @@ td input[type="date"]{
     width:100% !important;
     max-width:none !important;
     margin:0 !important;
-    padding:18px 20px !important;
+    padding:16px 18px !important;
     border:none !important;
     border-radius:18px !important;
     box-shadow:none !important;
     background:#d4d7d1 !important;
   }
 
-  .logo .bare{font-size:22px !important;}
+  .logo{
+    margin-bottom:3px !important;
+  }
+
+  .logo .bare{font-size:21px !important;}
   .logo .by{font-size:13px !important;}
 
   h1{
-    font-size:14px !important;
-    margin-bottom:6px !important;
+    font-size:13.5px !important;
+    margin:0 0 5px !important;
+    letter-spacing:.13em !important;
   }
 
   .intro{
-    font-size:9.5px !important;
-    line-height:1.5 !important;
-    margin-bottom:12px !important;
+    font-size:9px !important;
+    line-height:1.45 !important;
+    margin:0 auto 10px !important;
+    max-width:620px !important;
   }
 
   .section{
-    padding:14px 14px !important;
+    padding:12px 12px !important;
     border-radius:14px !important;
-    margin-bottom:10px !important;
+    margin-bottom:8px !important;
     background:#e2e4df !important;
     box-shadow:none !important;
+    page-break-inside:avoid;
+    break-inside:avoid;
   }
 
   .section-title{
-    font-size:8.5px !important;
-    margin-bottom:8px !important;
+    font-size:8.1px !important;
+    margin:0 0 7px !important;
+    letter-spacing:.10em !important;
+  }
+
+  .grid{
+    gap:7px 12px !important;
   }
 
   .field label{
-    font-size:7.7px !important;
+    font-size:7.2px !important;
     margin-bottom:3px !important;
   }
 
   .input{
-    height:33px !important;
-    font-size:10px !important;
-    padding:0 9px !important;
+    height:31px !important;
+    font-size:9.2px !important;
+    padding:0 8px !important;
     background:#fff !important;
+    border:1px solid #bebebe !important;
+    border-radius:8px !important;
   }
 
   .textarea{
-    min-height:60px !important;
-    font-size:9.2px !important;
-    padding:8px 9px !important;
+    min-height:54px !important;
+    font-size:8.7px !important;
+    padding:7px 8px !important;
     background:#fff !important;
+    border:1px solid #bebebe !important;
+    border-radius:8px !important;
+    line-height:1.35 !important;
+  }
+
+  .table-wrap{
+    border-radius:12px !important;
+    padding:1px !important;
+    background:rgba(255,255,255,0.20) !important;
+    page-break-inside:auto;
+  }
+
+  table{
+    border-radius:10px !important;
   }
 
   th{
-    font-size:6.5px !important;
+    font-size:6.2px !important;
     padding:6px 4px !important;
     line-height:1.15 !important;
+    background:#eef0ec !important;
+    border-right:1px solid rgba(36,34,26,0.08) !important;
+    border-bottom:1px solid rgba(36,34,26,0.08) !important;
+  }
+
+  tbody tr:nth-child(even) td{
+    background:#f8f8f6 !important;
+  }
+
+  tbody tr:nth-child(odd) td{
+    background:#ffffff !important;
+  }
+
+  td{
+    border-right:1px solid rgba(36,34,26,0.06) !important;
+    border-bottom:1px solid rgba(36,34,26,0.06) !important;
   }
 
   td textarea{
-    min-height:64px !important;
-    font-size:7.8px !important;
-    padding:6px !important;
-    line-height:1.3 !important;
+    min-height:60px !important;
+    font-size:7.4px !important;
+    padding:6px 5px !important;
+    line-height:1.28 !important;
+    resize:none !important;
   }
 
   td input{
-    height:30px !important;
-    font-size:7.8px !important;
-    padding:0 6px !important;
+    height:28px !important;
+    font-size:7.4px !important;
+    padding:0 5px !important;
+  }
+
+  td input[type="date"]{
+    font-size:7px !important;
+  }
+
+  .checklist{
+    padding-left:14px !important;
   }
 
   .checklist li{
-    font-size:8.9px !important;
-    line-height:1.4 !important;
-    margin-bottom:4px !important;
+    font-size:8.2px !important;
+    line-height:1.35 !important;
+    margin:0 0 3px !important;
   }
 
   .note{
-    font-size:8.8px !important;
-    line-height:1.45 !important;
-    padding:10px 12px !important;
-    margin-top:8px !important;
+    font-size:8.1px !important;
+    line-height:1.38 !important;
+    padding:9px 10px !important;
+    margin-top:7px !important;
+    border-left-width:4px !important;
   }
 
   .footer{
-    font-size:8px !important;
-    margin-top:8px !important;
+    font-size:7.6px !important;
+    margin-top:7px !important;
+    line-height:1.35 !important;
   }
 
   .actions{
