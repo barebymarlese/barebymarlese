@@ -41,7 +41,6 @@ body{
   min-height:100vh;
 }
 
-
 input,
 textarea,
 select{
@@ -198,6 +197,12 @@ textarea.textarea{
   grid-column:1 / -1;
 }
 
+textarea.stack-match{
+  min-height:56px;
+  resize:none;
+  overflow:hidden;
+}
+
 input[type="date"].input{
   appearance:none;
   -webkit-appearance:none;
@@ -294,8 +299,6 @@ td input{
   line-height:32px;
   display:block;
 }
-
-
 
 th:nth-child(1){width:13%;}
 th:nth-child(2){width:12%;}
@@ -458,7 +461,8 @@ th:nth-child(7){width:16%;}
     border-radius:10px !important;
   }
 
-  .textarea.small{
+  .textarea.small,
+  textarea.stack-match{
     min-height:62px !important;
   }
 
@@ -500,8 +504,6 @@ th:nth-child(7){width:16%;}
     overflow-wrap:anywhere !important;
   }
 
-  
-
   th:nth-child(1){width:13% !important;}
   th:nth-child(2){width:13% !important;}
   th:nth-child(3){width:24% !important;}
@@ -517,27 +519,20 @@ th:nth-child(7){width:16%;}
   }
 }
 
-
 /* FIX DATE FIELDS ON MOBILE */
 input[type="date"].input,
 td input[type="date"]{
   width:100% !important;
   max-width:100% !important;
-
   height:44px !important;
   min-height:44px !important;
   line-height:44px !important;
-
   padding:0 12px !important;
-
   font-size:16px !important;
-
   border-radius:10px !important;
-
   appearance:none !important;
   -webkit-appearance:none !important;
   -moz-appearance:none !important;
-
   box-sizing:border-box !important;
 }
 
@@ -546,12 +541,11 @@ input[type="date"]::-webkit-calendar-picker-indicator{
   margin-right:6px;
 }
 
-
 /* PRINT: COMPRESSED TO 2 PAGES */
 @media print{
   @page{
     size:A4 portrait;
-    margin:6mm; /* tighter but still readable */
+    margin:6mm;
   }
 
   html, body{
@@ -610,7 +604,6 @@ input[type="date"]::-webkit-calendar-picker-indicator{
     padding:5px !important;
   }
 
-  /* TABLE TUNED (THIS IS THE KEY) */
   th{
     font-size:6.5px !important;
     padding:5px 3px !important;
@@ -628,18 +621,15 @@ input[type="date"]::-webkit-calendar-picker-indicator{
     height:22px !important;
   }
 
-  /* CONTROL PAGE BREAK EXACTLY */
   .table-wrap{
     page-break-before:avoid;
     page-break-after:auto;
   }
 
-  /* FORCE SECOND PAGE START AT CHECKLIST */
   .section:nth-of-type(4){
     page-break-before:always;
   }
 
-  /* REMOVE BUTTON */
   .actions{
     display:none !important;
   }
@@ -708,13 +698,13 @@ input[type="date"]::-webkit-calendar-picker-indicator{
         <label>Activities Covered</label>
         <textarea class="textarea small">Client consultation, patch testing, laser tattoo removal treatment, cleaning and disinfection, waste handling, equipment checks, record keeping, and client exit / aftercare issue.</textarea>
       </div>
-      <div class="field">
+      <div class="field wide">
         <label>People at Risk</label>
-        <textarea class="textarea small">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
+        <textarea class="textarea small stack-match" id="peopleAtRisk">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
       </div>
-      <div class="field">
+      <div class="field wide">
         <label>General Risk Rating Method</label>
-        <textarea class="textarea small">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
+        <textarea class="textarea small stack-match" id="generalRiskRating">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
       </div>
     </div>
   </div>
@@ -918,7 +908,6 @@ function downloadPDF(){
 document.getElementById('assessmentDate').valueAsDate = new Date();
 document.getElementById('signDate').valueAsDate = new Date();
 
-
 function formatDateToDDMMYYYY(date){
   const d = String(date.getDate()).padStart(2,'0');
   const m = String(date.getMonth()+1).padStart(2,'0');
@@ -929,6 +918,20 @@ function formatDateToDDMMYYYY(date){
 document.querySelectorAll('input[type="date"]').forEach((el) => {
   el.setAttribute('title','dd/mm/yyyy');
   el.setAttribute('aria-label', (el.previousElementSibling && el.previousElementSibling.textContent ? el.previousElementSibling.textContent + ' dd/mm/yyyy' : 'dd/mm/yyyy'));
+});
+
+function autosizeTextarea(el){
+  if(!el) return;
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+['peopleAtRisk','generalRiskRating'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el){
+    autosizeTextarea(el);
+    el.addEventListener('input', () => autosizeTextarea(el));
+  }
 });
 </script>
 
