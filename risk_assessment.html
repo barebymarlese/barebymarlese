@@ -582,11 +582,10 @@ td:nth-child(3) textarea{
 }
 
 /* PRINT: BALANCED LANDSCAPE, NO FORCED EXTRA BREAK */
-/* PRINT: 2-PAGE STRUCTURED LAYOUT */
 @media print{
   @page{
     size:A4 landscape;
-    margin:5mm;
+    margin:6mm;
   }
 
   html, body{
@@ -611,7 +610,7 @@ td:nth-child(3) textarea{
     width:100% !important;
     max-width:100% !important;
     margin:0 !important;
-    padding:8px !important;
+    padding:10px 10px !important;
     background:#d4d7d1 !important;
     border-radius:8px !important;
   }
@@ -621,61 +620,64 @@ td:nth-child(3) textarea{
     margin-bottom:2px !important;
   }
 
-  .logo .bare{font-size:15px !important;}
-  .logo .by{font-size:9px !important;}
+  .logo .bare{font-size:16px !important;}
+  .logo .by{font-size:10px !important;}
 
   h1{
-    font-size:9.5px !important;
-    margin:0 0 2px !important;
+    font-size:10px !important;
+    margin:0 0 3px !important;
   }
 
   .intro{
-    display:none !important;
+    font-size:6.8px !important;
+    line-height:1.18 !important;
+    margin:0 auto 5px !important;
+    max-width:100% !important;
   }
 
   .section{
-    padding:5px !important;
-    margin-bottom:4px !important;
+    padding:6px !important;
+    margin-bottom:5px !important;
     border-radius:8px !important;
     break-inside:avoid-page;
     page-break-inside:avoid;
   }
 
   .section-title{
-    font-size:6.8px !important;
-    margin:0 0 3px !important;
+    font-size:7px !important;
+    margin:0 0 4px !important;
   }
 
   .grid{
-    gap:3px 5px !important;
+    gap:4px 6px !important;
   }
 
   .field label{
-    font-size:5.8px !important;
+    font-size:6px !important;
     margin:0 0 2px !important;
   }
 
   .input,
   input[type="date"].input{
-    height:18px !important;
-    min-height:18px !important;
-    line-height:18px !important;
-    font-size:6.4px !important;
-    padding:0 5px !important;
-    border-radius:5px !important;
+    height:20px !important;
+    min-height:20px !important;
+    line-height:20px !important;
+    font-size:7.2px !important;
+    padding:0 6px !important;
+    border-radius:6px !important;
   }
 
   .textarea,
   textarea.textarea,
   .textarea.small,
   textarea.stack-match{
-    min-height:20px !important;
-    font-size:6px !important;
-    line-height:1.08 !important;
-    padding:3px 4px !important;
+    min-height:24px !important;
+    font-size:6.7px !important;
+    line-height:1.14 !important;
+    padding:4px 6px !important;
     resize:none !important;
     overflow:hidden !important;
-    border-radius:5px !important;
+    border-radius:6px !important;
   }
 
   .mobile-register{
@@ -684,25 +686,6 @@ td:nth-child(3) textarea{
 
   .desktop-register{
     display:block !important;
-  }
-
-  /* PAGE 1 TOP: put first two sections side by side */
-  .section:nth-of-type(1),
-  .section:nth-of-type(2){
-    display:inline-block !important;
-    width:49.2% !important;
-    vertical-align:top !important;
-    margin-right:1% !important;
-  }
-
-  .section:nth-of-type(2){
-    margin-right:0 !important;
-  }
-
-  .section:nth-of-type(1) .grid,
-  .section:nth-of-type(2) .grid{
-    grid-template-columns:1fr !important;
-    gap:3px !important;
   }
 
   .table-wrap{
@@ -721,67 +704,51 @@ td:nth-child(3) textarea{
   }
 
   th{
-    font-size:5.3px !important;
-    padding:3px 2px !important;
-    line-height:1.05 !important;
-    letter-spacing:.01em !important;
+    font-size:5.8px !important;
+    padding:4px 3px !important;
+    line-height:1.1 !important;
+    letter-spacing:.02em !important;
   }
 
   td textarea{
-    min-height:20px !important;
-    font-size:5.3px !important;
-    line-height:1.06 !important;
-    padding:2px 3px !important;
+    min-height:24px !important;
+    font-size:6px !important;
+    line-height:1.1 !important;
+    padding:3px 4px !important;
     resize:none !important;
     overflow:hidden !important;
   }
 
   td input,
   td input[type="date"]{
-    height:15px !important;
-    line-height:15px !important;
-    font-size:5.4px !important;
-    padding:0 3px !important;
-  }
-
-  /* PAGE 2 BOTTOM: checklist + sign-off side by side */
-  .section:nth-of-type(4),
-  .section:nth-of-type(5){
-    display:inline-block !important;
-    width:49.2% !important;
-    vertical-align:top !important;
-    margin-right:1% !important;
-  }
-
-  .section:nth-of-type(5){
-    margin-right:0 !important;
-  }
-
-  .section:nth-of-type(5) .grid{
-    grid-template-columns:1fr 1fr !important;
-    gap:3px 5px !important;
+    height:18px !important;
+    line-height:18px !important;
+    font-size:6.2px !important;
+    padding:0 4px !important;
   }
 
   .checklist{
-    padding-left:12px !important;
-    margin:0 !important;
+    padding-left:13px !important;
+    margin-top:0 !important;
   }
 
   .checklist li{
-    font-size:5.9px !important;
-    line-height:1.1 !important;
-    margin:0 0 1px !important;
+    font-size:6.5px !important;
+    line-height:1.16 !important;
+    margin:0 0 2px !important;
   }
 
   .note{
-    margin-top:3px !important;
-    padding:5px 6px !important;
-    font-size:5.9px !important;
-    line-height:1.1 !important;
+    margin-top:4px !important;
+    padding:6px 7px !important;
+    font-size:6.5px !important;
+    line-height:1.16 !important;
   }
 
   .footer{
-    display:none !important;
+    margin-top:3px !important;
+    font-size:6.2px !important;
+    line-height:1.12 !important;
   }
 
   .actions{
