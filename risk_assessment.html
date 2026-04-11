@@ -736,8 +736,126 @@ th:nth-child(7){width:16%;}
 
 /* mobile print helper */
 @media print and (max-width:760px){
+  @page{
+    size:A4 portrait;
+    margin:7mm;
+  }
+
+  .card{
+    padding:12px 12px !important;
+  }
+
+  .logo{
+    margin-bottom:3px !important;
+  }
+
+  h1{
+    font-size:12px !important;
+    margin-bottom:4px !important;
+  }
+
+  .intro{
+    font-size:8px !important;
+    line-height:1.28 !important;
+    margin-bottom:5px !important;
+  }
+
+  .section{
+    padding:8px !important;
+    margin-bottom:5px !important;
+  }
+
+  .section-title{
+    font-size:8.2px !important;
+    margin-bottom:4px !important;
+  }
+
+  .grid{
+    gap:5px !important;
+  }
+
+  .field label{
+    font-size:6.8px !important;
+    margin-bottom:3px !important;
+  }
+
+  .input{
+    height:24px !important;
+    min-height:24px !important;
+    line-height:24px !important;
+    font-size:8px !important;
+    padding:0 7px !important;
+    border-radius:8px !important;
+  }
+
+  input[type="date"].input{
+    height:24px !important;
+    min-height:24px !important;
+    line-height:24px !important;
+    font-size:8px !important;
+  }
+
+  textarea.textarea,
+  .textarea.small{
+    min-height:auto !important;
+    font-size:7.5px !important;
+    line-height:1.28 !important;
+    padding:6px 7px !important;
+    border-radius:8px !important;
+  }
+
+  .fixed-activities{
+    height:46px !important;
+    min-height:46px !important;
+    max-height:46px !important;
+  }
+
+  .fixed-people{
+    height:38px !important;
+    min-height:38px !important;
+    max-height:38px !important;
+  }
+
+  .fixed-method{
+    height:28px !important;
+    min-height:28px !important;
+    max-height:28px !important;
+  }
+
+  .checklist-box{
+    margin-top:5px !important;
+    padding:9px 10px !important;
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+  }
+
+  .checklist{
+    padding-left:14px !important;
+  }
+
+  .checklist li{
+    font-size:7.2px !important;
+    line-height:1.28 !important;
+    margin:0 0 3px !important;
+  }
+
+  .note{
+    margin-top:5px !important;
+    padding:8px 10px !important;
+    font-size:7.2px !important;
+    line-height:1.3 !important;
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+  }
+
+  #assessment-details-section,
   #scope-section{
-    margin-top:6px !important;
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+  }
+
+  #scope-section{
+    margin-top:5px !important;
     page-break-before:auto !important;
     break-before:auto !important;
   }
@@ -745,6 +863,11 @@ th:nth-child(7){width:16%;}
   #assessment-details-section{
     page-break-after:avoid !important;
     break-after:avoid !important;
+  }
+
+  #risk-register-section{
+    page-break-before:always !important;
+    break-before:page !important;
   }
 
   #mobile-print-scope-anchor{
@@ -853,7 +976,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="risk-register-section">
     <h2 class="section-title">Risk Assessment Register</h2>
     <div class="table-wrap">
       <table>
