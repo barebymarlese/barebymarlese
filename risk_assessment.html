@@ -312,6 +312,11 @@ td textarea{
   display:block;
 }
 
+td textarea.auto-grow-cell{
+  min-height:0;
+  height:auto;
+}
+
 td input{
   height:32px;
   padding:0 6px;
@@ -556,6 +561,10 @@ th:nth-child(7){width:16%;}
     overflow:hidden !important;
   }
 
+  td textarea.auto-grow-cell{
+    min-height:0 !important;
+  }
+
   td input{
     height:32px !important;
     line-height:32px !important;
@@ -704,6 +713,10 @@ th:nth-child(7){width:16%;}
     line-height:1.15 !important;
     resize:none !important;
     overflow:hidden !important;
+  }
+
+  td textarea.auto-grow-cell{
+    min-height:0 !important;
   }
 
   td input{
@@ -1007,8 +1020,26 @@ document.querySelectorAll('input[type="date"]').forEach((el) => {
 });
 
 function autoGrowTextarea(el){
-  el.style.height = 'auto';
-  el.style.height = el.scrollHeight + 'px';
+  el.style.height = '0px';
+  el.style.height = (el.scrollHeight + 2) + 'px';
+}
+
+function autoGrowAllTextareas(){
+  document.querySelectorAll('.auto-grow-cell').forEach((el) => {
+    autoGrowTextarea(el);
+  });
+}
+
+let autoGrowResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(autoGrowResizeTimer);
+  autoGrowResizeTimer = setTimeout(autoGrowAllTextareas, 120);
+});
+
+window.addEventListener('load', autoGrowAllTextareas);
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(autoGrowAllTextareas);
 }
 
 document.querySelectorAll('.auto-grow-cell').forEach((el) => {
