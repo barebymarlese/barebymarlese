@@ -542,19 +542,19 @@ th:nth-child(7){width:16%;}
   }
 
   th{
-    font-size:5.8px !important;
-    padding:5px 3px !important;
-    line-height:1.08 !important;
-    letter-spacing:.02em !important;
+    font-size:6.2px !important;
+    padding:6px 4px !important;
+    line-height:1.12 !important;
+    letter-spacing:.03em !important;
     word-break:break-word !important;
     overflow-wrap:anywhere !important;
   }
 
   td textarea{
-    min-height:44px !important;
-    padding:4px 4px !important;
-    font-size:7px !important;
-    line-height:1.12 !important;
+    min-height:68px !important;
+    padding:6px 5px !important;
+    font-size:8px !important;
+    line-height:1.22 !important;
     word-break:break-word !important;
     overflow-wrap:anywhere !important;
     resize:none !important;
@@ -563,24 +563,23 @@ th:nth-child(7){width:16%;}
 
   td textarea.auto-grow-cell{
     min-height:0 !important;
-    height:auto !important;
   }
 
   td input{
-    height:24px !important;
-    line-height:24px !important;
-    padding:0 4px !important;
-    font-size:7px !important;
+    height:32px !important;
+    line-height:32px !important;
+    padding:0 5px !important;
+    font-size:8px !important;
     word-break:break-word !important;
     overflow-wrap:anywhere !important;
   }
 
   td input[type="date"]{
-    height:24px !important;
-    min-height:24px !important;
-    line-height:24px !important;
-    padding:0 3px !important;
-    font-size:7px !important;
+    height:32px !important;
+    min-height:32px !important;
+    line-height:32px !important;
+    padding:0 4px !important;
+    font-size:16px !important;
   }
 
   th:nth-child(1){width:13% !important;}
@@ -734,6 +733,28 @@ th:nth-child(7){width:16%;}
     display:none !important;
   }
 }
+
+/* mobile print helper */
+@media print and (max-width:760px){
+  #scope-section{
+    margin-top:6px !important;
+    page-break-before:auto !important;
+    break-before:auto !important;
+  }
+
+  #assessment-details-section{
+    page-break-after:avoid !important;
+    break-after:avoid !important;
+  }
+
+  #mobile-print-scope-anchor{
+    display:block !important;
+    height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -753,7 +774,7 @@ th:nth-child(7){width:16%;}
     insurer expectations, and regular review of hazards, controls, and further actions.
   </p>
 
-  <div class="section">
+  <div class="section" id="assessment-details-section">
     <h2 class="section-title">Assessment Details</h2>
     <div class="grid">
       <div class="field">
@@ -788,10 +809,11 @@ th:nth-child(7){width:16%;}
         <label>Machine / Equipment Covered</label>
         <textarea class="textarea small">Laser system, eyewear, couch, trolley, sharps bin, cleaning products</textarea>
       </div>
+      <div id="mobile-print-scope-anchor"></div>
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="scope-section">
     <h2 class="section-title">Scope & People at Risk</h2>
     <div class="grid">
       <div class="field wide">
@@ -1022,8 +1044,7 @@ document.querySelectorAll('input[type="date"]').forEach((el) => {
 
 function autoGrowTextarea(el){
   el.style.height = '0px';
-  const isMobile = window.innerWidth <= 760;
-  el.style.height = (el.scrollHeight + (isMobile ? 0 : 2)) + 'px';
+  el.style.height = (el.scrollHeight + 2) + 'px';
 }
 
 function autoGrowAllTextareas(){
@@ -1048,6 +1069,32 @@ document.querySelectorAll('.auto-grow-cell').forEach((el) => {
   autoGrowTextarea(el);
   el.addEventListener('input', () => autoGrowTextarea(el));
 });
+
+
+const scopeSection = document.getElementById('scope-section');
+const assessmentDetailsSection = document.getElementById('assessment-details-section');
+const mobilePrintScopeAnchor = document.getElementById('mobile-print-scope-anchor');
+let originalScopeParent = scopeSection ? scopeSection.parentNode : null;
+let originalScopeNextSibling = scopeSection ? scopeSection.nextSibling : null;
+
+function moveScopeForMobilePrint(){
+  if (!scopeSection || !mobilePrintScopeAnchor) return;
+  if (window.innerWidth <= 760) {
+    mobilePrintScopeAnchor.insertAdjacentElement('afterend', scopeSection);
+  }
+}
+
+function restoreScopeAfterPrint(){
+  if (!scopeSection || !originalScopeParent) return;
+  if (originalScopeNextSibling && originalScopeNextSibling.parentNode === originalScopeParent) {
+    originalScopeParent.insertBefore(scopeSection, originalScopeNextSibling);
+  } else {
+    originalScopeParent.appendChild(scopeSection);
+  }
+}
+
+window.addEventListener('beforeprint', moveScopeForMobilePrint);
+window.addEventListener('afterprint', restoreScopeAfterPrint);
 
 </script>
 
