@@ -197,19 +197,29 @@ textarea.textarea{
   grid-column:1 / -1;
 }
 
+/* LOCKED BOXES - NO INTERNAL SCROLL */
 .fixed-box{
   resize:none !important;
-  overflow:auto;
+  overflow:hidden !important;
 }
 
+/* desktop */
 .fixed-activities{
+  height:72px;
+  min-height:72px;
+  max-height:72px;
+}
+
+.fixed-people{
   height:58px;
   min-height:58px;
+  max-height:58px;
 }
 
-.fixed-risk{
-  height:50px;
-  min-height:50px;
+.fixed-method{
+  height:42px;
+  min-height:42px;
+  max-height:42px;
 }
 
 input[type="date"].input{
@@ -380,7 +390,6 @@ th:nth-child(7){width:16%;}
   cursor:pointer;
 }
 
-/* MOBILE: FLUSH, NO FLOATING ANYWHERE */
 @media screen and (max-width:760px){
   html, body{
     overflow-x:hidden !important;
@@ -480,20 +489,30 @@ th:nth-child(7){width:16%;}
     line-height:1.35 !important;
     border-radius:10px !important;
     resize:none !important;
+    overflow:hidden !important;
   }
 
   .textarea.small{
     min-height:62px !important;
   }
 
+  /* mobile exact heights for these 3 boxes */
   .fixed-activities{
-    height:72px !important;
-    min-height:72px !important;
+    height:92px !important;
+    min-height:92px !important;
+    max-height:92px !important;
   }
 
-  .fixed-risk{
+  .fixed-people{
+    height:78px !important;
+    min-height:78px !important;
+    max-height:78px !important;
+  }
+
+  .fixed-method{
     height:58px !important;
     min-height:58px !important;
+    max-height:58px !important;
   }
 
   .table-wrap{
@@ -557,7 +576,6 @@ th:nth-child(7){width:16%;}
   }
 }
 
-/* PRINT: COMPRESSED TO 2 PAGES */
 @media print{
   @page{
     size:A4 portrait;
@@ -619,16 +637,25 @@ th:nth-child(7){width:16%;}
     font-size:7.5px !important;
     padding:5px !important;
     resize:none !important;
+    overflow:hidden !important;
   }
 
   .fixed-activities{
-    height:42px !important;
-    min-height:42px !important;
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
   }
 
-  .fixed-risk{
-    height:34px !important;
-    min-height:34px !important;
+  .fixed-people{
+    height:36px !important;
+    min-height:36px !important;
+    max-height:36px !important;
+  }
+
+  .fixed-method{
+    height:28px !important;
+    min-height:28px !important;
+    max-height:28px !important;
   }
 
   th{
@@ -727,11 +754,11 @@ th:nth-child(7){width:16%;}
       </div>
       <div class="field wide">
         <label>People at Risk</label>
-        <textarea class="textarea small fixed-box fixed-risk">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
+        <textarea class="textarea small fixed-box fixed-people">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
       </div>
       <div class="field wide">
         <label>General Risk Rating Method</label>
-        <textarea class="textarea small fixed-box fixed-risk">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
+        <textarea class="textarea small fixed-box fixed-method">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
       </div>
     </div>
   </div>
