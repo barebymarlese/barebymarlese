@@ -41,7 +41,6 @@ body{
   min-height:100vh;
 }
 
-
 input,
 textarea,
 select{
@@ -186,7 +185,7 @@ textarea.textarea{
   padding:10px 12px;
   font-size:12px;
   line-height:1.45;
-  resize:vertical;
+  resize:none;
   display:block;
 }
 
@@ -196,6 +195,21 @@ textarea.textarea{
 
 .wide{
   grid-column:1 / -1;
+}
+
+.fixed-box{
+  resize:none !important;
+  overflow:auto;
+}
+
+.fixed-activities{
+  height:58px;
+  min-height:58px;
+}
+
+.fixed-risk{
+  height:50px;
+  min-height:50px;
 }
 
 input[type="date"].input{
@@ -465,10 +479,21 @@ th:nth-child(7){width:16%;}
     font-size:14px !important;
     line-height:1.35 !important;
     border-radius:10px !important;
+    resize:none !important;
   }
 
   .textarea.small{
     min-height:62px !important;
+  }
+
+  .fixed-activities{
+    height:72px !important;
+    min-height:72px !important;
+  }
+
+  .fixed-risk{
+    height:58px !important;
+    min-height:58px !important;
   }
 
   .table-wrap{
@@ -536,7 +561,7 @@ th:nth-child(7){width:16%;}
 @media print{
   @page{
     size:A4 portrait;
-    margin:6mm; /* tighter but still readable */
+    margin:6mm;
   }
 
   html, body{
@@ -593,9 +618,19 @@ th:nth-child(7){width:16%;}
     min-height:38px !important;
     font-size:7.5px !important;
     padding:5px !important;
+    resize:none !important;
   }
 
-  /* TABLE TUNED (THIS IS THE KEY) */
+  .fixed-activities{
+    height:42px !important;
+    min-height:42px !important;
+  }
+
+  .fixed-risk{
+    height:34px !important;
+    min-height:34px !important;
+  }
+
   th{
     font-size:6.5px !important;
     padding:5px 3px !important;
@@ -613,18 +648,15 @@ th:nth-child(7){width:16%;}
     height:22px !important;
   }
 
-  /* CONTROL PAGE BREAK EXACTLY */
   .table-wrap{
     page-break-before:avoid;
     page-break-after:auto;
   }
 
-  /* FORCE SECOND PAGE START AT CHECKLIST */
   .section:nth-of-type(4){
     page-break-before:always;
   }
 
-  /* REMOVE BUTTON */
   .actions{
     display:none !important;
   }
@@ -691,20 +723,20 @@ th:nth-child(7){width:16%;}
     <div class="grid">
       <div class="field wide">
         <label>Activities Covered</label>
-        <textarea class="textarea small">Client consultation, patch testing, laser tattoo removal treatment, cleaning and disinfection, waste handling, equipment checks, record keeping, and client exit / aftercare issue.</textarea>
+        <textarea class="textarea small fixed-box fixed-activities">Client consultation, patch testing, laser tattoo removal treatment, cleaning and disinfection, waste handling, equipment checks, record keeping, and client exit / aftercare issue.</textarea>
       </div>
-      <div class="field">
+      <div class="field wide">
         <label>People at Risk</label>
-        <textarea class="textarea small">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
+        <textarea class="textarea small fixed-box fixed-risk">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
       </div>
-      <div class="field">
+      <div class="field wide">
         <label>General Risk Rating Method</label>
-        <textarea class="textarea small">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
+        <textarea class="textarea small fixed-box fixed-risk">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
       </div>
     </div>
   </div>
 
-    <div class="section">
+  <div class="section">
     <h2 class="section-title">Supporting Control Measures Checklist</h2>
     <ul class="checklist">
       <li>Consultation, consent, and treatment records completed and stored securely.</li>
@@ -902,7 +934,6 @@ function downloadPDF(){
 
 document.getElementById('assessmentDate').valueAsDate = new Date();
 document.getElementById('signDate').valueAsDate = new Date();
-
 
 function formatDateToDDMMYYYY(date){
   const d = String(date.getDate()).padStart(2,'0');
