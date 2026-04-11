@@ -605,11 +605,16 @@ th:nth-child(7){width:16%;}
     padding:0 !important;
   }
 
+  .page-shell{
+    background:#cacdc6 !important;
+  }
+
   .card{
     width:100% !important;
     padding:14px 14px !important;
     background:#d4d7d1 !important;
     border-radius:10px !important;
+    box-shadow:none !important;
   }
 
   h1{
@@ -627,6 +632,9 @@ th:nth-child(7){width:16%;}
     padding:8px !important;
     margin-bottom:6px !important;
     page-break-inside:avoid;
+    background:#d0d3cd !important;
+    background-image:none !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
   }
 
   .section-title{
@@ -642,6 +650,7 @@ th:nth-child(7){width:16%;}
     height:24px !important;
     font-size:8px !important;
     padding:0 6px !important;
+    background:rgba(255,255,255,0.72) !important;
   }
 
   .textarea{
@@ -650,6 +659,7 @@ th:nth-child(7){width:16%;}
     padding:5px !important;
     resize:none !important;
     overflow:hidden !important;
+    background:rgba(255,255,255,0.72) !important;
   }
 
   .fixed-activities{
@@ -668,6 +678,18 @@ th:nth-child(7){width:16%;}
     height:28px !important;
     min-height:28px !important;
     max-height:28px !important;
+  }
+
+  .checklist-box,
+  .note{
+    background:rgba(255,255,255,0.18) !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
+    page-break-inside:avoid !important;
+  }
+
+  .note{
+    border-left:none !important;
+    border-radius:12px !important;
   }
 
   th{
@@ -690,12 +712,8 @@ th:nth-child(7){width:16%;}
   }
 
   .table-wrap{
-    page-break-before:avoid;
+    page-break-before:auto !important;
     page-break-after:auto;
-  }
-
-  .section:nth-of-type(3){
-    page-break-before:always;
   }
 
   .actions{
