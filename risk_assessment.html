@@ -1030,6 +1030,10 @@ function downloadPDF(){
 document.getElementById('assessmentDate').valueAsDate = new Date();
 document.getElementById('signDate').valueAsDate = new Date();
 
+document.querySelectorAll('tbody input[type="date"]').forEach((el) => {
+  el.valueAsDate = new Date();
+});
+
 function formatDateToDDMMYYYY(date){
   const d = String(date.getDate()).padStart(2,'0');
   const m = String(date.getMonth()+1).padStart(2,'0');
