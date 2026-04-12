@@ -691,7 +691,7 @@ function autoGrowAllTextareas(){
 function updateSignDateTime(){
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  document.getElementById('coshhSign').value = now.toISOString().slice(0,16);
+  document.getElementById('coshhSign').value = now.toISOString().slice(0,19);
 }
 
 window.addEventListener('load', () => {
