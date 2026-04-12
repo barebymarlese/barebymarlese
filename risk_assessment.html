@@ -598,12 +598,6 @@ th:nth-child(7){width:16%;}
 }
 
 @media print{
-  /* Page 3 spacing + rounded top for sign-off */
-  #signoff-section{
-    margin-top:12mm !important;
-    border-radius:18px 18px 12px 12px !important;
-  }
-
   @page{
     size:A4 portrait;
     margin:6mm;
@@ -758,35 +752,6 @@ th:nth-child(7){width:16%;}
     height:0 !important;
     margin:0 !important;
     padding:0 !important;
-  }
-}
-
-
-/* Tighter text wrapping in boxes */
-.textarea,
-td textarea{
-  padding:4px 6px !important;
-  line-height:1.2 !important;
-}
-
-.input,
-td input{
-  padding:0 6px !important;
-  line-height:1.2 !important;
-}
-
-/* Print specific tightening */
-@media print{
-  .textarea,
-  td textarea{
-    padding:3px 4px !important;
-    line-height:1.1 !important;
-  }
-
-  .input,
-  td input{
-    padding:0 4px !important;
-    line-height:1.1 !important;
   }
 }
 
@@ -1017,7 +982,7 @@ td input{
     </div>
   </div>
 
-  <div class="section" id="signoff-section">
+  <div class="section">
     <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
@@ -1064,6 +1029,10 @@ function downloadPDF(){
 
 document.getElementById('assessmentDate').valueAsDate = new Date();
 document.getElementById('signDate').valueAsDate = new Date();
+
+document.querySelectorAll('tbody input[type="date"]').forEach((el) => {
+  el.valueAsDate = new Date();
+});
 
 function formatDateToDDMMYYYY(date){
   const d = String(date.getDate()).padStart(2,'0');
