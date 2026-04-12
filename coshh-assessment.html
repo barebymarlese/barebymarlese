@@ -676,9 +676,15 @@ function autoGrowTextarea(el){
 }
 
 function autoGrowAllTextareas(){
-  document.querySelectorAll('textarea').forEach((textarea) => {
-    autoGrowTextarea(textarea);
-    textarea.addEventListener('input', () => autoGrowTextarea(textarea));
+  document.querySelectorAll('textarea').forEach((el) => {
+    autoGrowTextarea(el);
+
+    if (!el.dataset.autogrowBound) {
+      el.addEventListener('input', function(){
+        autoGrowTextarea(this);
+      });
+      el.dataset.autogrowBound = 'true';
+    }
   });
 }
 
@@ -693,7 +699,6 @@ window.addEventListener('load', () => {
   updateSignDateTime();
   autoGrowAllTextareas();
 
-  // update live on web every second
   setInterval(updateSignDateTime, 1000);
 });
 
