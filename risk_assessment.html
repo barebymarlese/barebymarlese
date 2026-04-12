@@ -600,22 +600,18 @@ td textarea.auto-grow-cell{
 @media print{
   @page{
     size:A4 portrait;
-    margin:4mm;
+    margin:6mm;
   }
 
   html, body{
     background:#cacdc6 !important;
     width:100% !important;
     zoom:1 !important;
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
   }
 
   body{
     margin:0 !important;
     padding:0 !important;
-    color:#1a1a1a !important;
-    font-family:"Montserrat",sans-serif !important;
   }
 
   .page-shell{
@@ -624,164 +620,106 @@ td textarea.auto-grow-cell{
 
   .card{
     width:100% !important;
-    max-width:none !important;
-    margin:0 !important;
-    padding:10px 10px !important;
+    padding:14px 14px !important;
     background:#d4d7d1 !important;
-    border-radius:8px !important;
+    border-radius:10px !important;
     box-shadow:none !important;
-  }
-
-  .logo .bare{
-    font-size:22px !important;
-    letter-spacing:.22em !important;
-    color:#586252 !important;
-  }
-
-  .logo .by{
-    font-size:13px !important;
-    color:#6f6b60 !important;
   }
 
   h1{
-    font-size:14px !important;
-    margin:0 0 6px !important;
-    letter-spacing:.14em !important;
-    color:#222 !important;
+    font-size:12.5px !important;
+    margin-bottom:6px !important;
   }
 
   .intro{
-    font-size:9.5px !important;
-    line-height:1.42 !important;
-    margin:0 auto 8px !important;
-    color:#2a2a2a !important;
+    font-size:8.5px !important;
+    line-height:1.3 !important;
+    margin-bottom:6px !important;
   }
 
   .section{
-    padding:7px !important;
-    margin-bottom:5px !important;
-    page-break-inside:avoid !important;
-    background:#cfd2cc !important;
-    border:1px solid rgba(36,34,26,0.12) !important;
-    box-shadow:none !important;
+    padding:8px !important;
+    margin-bottom:6px !important;
+    page-break-inside:avoid;
+    background:#d0d3cd !important;
+    background-image:none !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
   }
 
   .section-title{
-    font-size:8.8px !important;
-    margin:0 0 5px !important;
-    letter-spacing:.1em !important;
-    color:#55604f !important;
-  }
-
-  .grid{
-    gap:6px 10px !important;
+    font-size:8.5px !important;
+    margin-bottom:4px !important;
   }
 
   .field label{
-    font-size:7.2px !important;
-    margin-bottom:3px !important;
-    color:#55604f !important;
+    font-size:7px !important;
   }
 
   .input{
     height:24px !important;
-    min-height:24px !important;
-    padding:0 7px !important;
-    font-size:8.8px !important;
-    line-height:24px !important;
-    background:#f7f7f7 !important;
-    border:1px solid rgba(36,34,26,0.12) !important;
-    color:#1a1a1a !important;
+    font-size:8px !important;
+    padding:0 6px !important;
+    background:rgba(255,255,255,0.72) !important;
   }
 
   .textarea{
-    min-height:40px !important;
-    padding:5px 7px !important;
-    font-size:8.4px !important;
-    line-height:1.34 !important;
-    background:#f7f7f7 !important;
-    border:1px solid rgba(36,34,26,0.12) !important;
-    color:#1a1a1a !important;
+    min-height:38px !important;
+    font-size:7.5px !important;
+    padding:5px !important;
     resize:none !important;
     overflow:hidden !important;
+    background:rgba(255,255,255,0.72) !important;
   }
 
   .fixed-activities{
-    height:46px !important;
-    min-height:46px !important;
-    max-height:46px !important;
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
   }
 
   .fixed-people{
-    height:38px !important;
-    min-height:38px !important;
-    max-height:38px !important;
+    height:36px !important;
+    min-height:36px !important;
+    max-height:36px !important;
   }
 
   .fixed-method{
-    height:30px !important;
-    min-height:30px !important;
-    max-height:30px !important;
+    height:28px !important;
+    min-height:28px !important;
+    max-height:28px !important;
   }
 
   .checklist-box,
   .note{
-    background:rgba(255,255,255,0.28) !important;
-    border:1px solid rgba(36,34,26,0.10) !important;
+    background:rgba(255,255,255,0.18) !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
     page-break-inside:avoid !important;
   }
 
-  .checklist li{
-    font-size:8.4px !important;
-    line-height:1.35 !important;
-    margin:0 0 3px !important;
-    color:#222 !important;
-  }
-
   .note{
-    font-size:8.4px !important;
-    line-height:1.35 !important;
-    color:#222 !important;
     border-left:none !important;
+    border-radius:12px !important;
   }
 
-  .table-wrap{
-    overflow:visible !important;
-    border-radius:10px !important;
-    background:rgba(255,255,255,0.18) !important;
-    border:1px solid rgba(36,34,26,0.10) !important;
-    page-break-inside:auto !important;
-  }
+th{
+  font-size:6.5px !important;
+  padding:5px 3px !important;
+}
 
-  table{
-    width:100% !important;
-    table-layout:fixed !important;
-    border-collapse:separate !important;
-    border-spacing:0 !important;
-    background:rgba(255,255,255,0.10) !important;
-  }
-
-  th{
-    font-size:7.8px !important;
-    padding:6px 4px !important;
-    line-height:1.2 !important;
-    letter-spacing:.03em !important;
-    color:#3f4a3a !important;
-    background:rgba(255,255,255,0.55) !important;
-    word-break:break-word !important;
-    overflow-wrap:anywhere !important;
-  }
-
-  td{
-    vertical-align:top !important;
-  }
+/* ADD THIS HERE */
+th:nth-child(1){width:11% !important;}
+th:nth-child(2){width:10% !important;}
+th:nth-child(3){width:33% !important;}
+th:nth-child(4){width:17% !important;}
+th:nth-child(5){width:6% !important;}
+th:nth-child(6){width:7% !important;}
+th:nth-child(7){width:14% !important;}
 
   td textarea{
-    font-size:8px !important;
-    min-height:44px !important;
-    padding:5px 4px !important;
-    line-height:1.28 !important;
-    color:#1a1a1a !important;
+    font-size:7px !important;
+    min-height:38px !important;
+    padding:4px !important;
+    line-height:1.15 !important;
     resize:none !important;
     overflow:hidden !important;
   }
@@ -791,36 +729,20 @@ td textarea.auto-grow-cell{
   }
 
   td input{
-    height:24px !important;
-    line-height:24px !important;
-    padding:0 4px !important;
-    font-size:7.8px !important;
-    color:#1a1a1a !important;
+    font-size:7px !important;
+    height:22px !important;
   }
 
-  td input[type="date"]{
-    font-size:7.4px !important;
-  }
-
-  th:nth-child(1){width:12% !important;}
-  th:nth-child(2){width:11% !important;}
-  th:nth-child(3){width:31% !important;}
-  th:nth-child(4){width:18% !important;}
-  th:nth-child(5){width:7% !important;}
-  th:nth-child(6){width:7% !important;}
-  th:nth-child(7){width:14% !important;}
-
-  .footer{
-    font-size:8.2px !important;
-    line-height:1.3 !important;
-    margin-top:7px !important;
-    color:#2a2a2a !important;
+  .table-wrap{
+    page-break-before:auto !important;
+    page-break-after:auto;
   }
 
   .actions{
     display:none !important;
   }
 }
+
 @media print and (max-width:760px){
   #scope-section{
     margin-top:6px !important;
