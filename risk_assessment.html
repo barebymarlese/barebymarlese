@@ -386,12 +386,6 @@ th:nth-child(7){width:16%;}
   line-height:1.5;
 }
 
-
-.signoff-section{
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.20) 18%, rgba(255,255,255,0.12) 100%);
-}
-
 .actions{
   display:flex;
   margin-top:14px;
@@ -604,6 +598,12 @@ th:nth-child(7){width:16%;}
 }
 
 @media print{
+  /* Page 3 spacing + rounded top for sign-off */
+  #signoff-section{
+    margin-top:12mm !important;
+    border-radius:18px 18px 12px 12px !important;
+  }
+
   @page{
     size:A4 portrait;
     margin:6mm;
@@ -737,26 +737,6 @@ th:nth-child(7){width:16%;}
 
   .actions{
     display:none !important;
-  }
-
-  #signoff-section{
-    break-before:page !important;
-    page-break-before:always !important;
-    margin-top:8mm !important;
-    padding-top:10px !important;
-    border-radius:18px 18px 14px 14px !important;
-    background:linear-gradient(180deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.22) 18%, rgba(255,255,255,0.12) 100%) !important;
-    overflow:hidden !important;
-  }
-
-  #signoff-section .section-title{
-    margin-bottom:6px !important;
-  }
-
-  #signoff-section::before{
-    content:"";
-    display:block;
-    height:3mm;
   }
 }
 
@@ -1008,7 +988,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section signoff-section" id="signoff-section">
+  <div class="section" id="signoff-section">
     <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
