@@ -669,37 +669,16 @@ function downloadPDF(){
   }, 150);
 }
 
-<script>
-function downloadPDF(){
-  const originalTitle = document.title;
-  document.title = "BARE-Risk-Assessment";
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => {
-      document.title = originalTitle;
-    }, 1200);
-  }, 150);
-}
+document.getElementById('coshhDate').valueAsDate = new Date();
 
-function updateSignDateTime(){
+function updateTime(){
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   document.getElementById('coshhSign').value = now.toISOString().slice(0,16);
 }
 
-window.addEventListener('load', () => {
-  document.getElementById('coshhDate').valueAsDate = new Date();
-
-  updateSignDateTime();
-
-  // 🔥 live update on web every minute
-  setInterval(updateSignDateTime, 60000);
-});
-
-// 🔥 ensures correct time on PDF
-window.addEventListener('beforeprint', () => {
-  updateSignDateTime();
-});
+updateTime();
+window.addEventListener('beforeprint', updateTime);
 </script>
 
 </body>
