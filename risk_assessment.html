@@ -386,6 +386,12 @@ th:nth-child(7){width:16%;}
   line-height:1.5;
 }
 
+
+.signoff-section{
+  border-radius:18px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.20) 18%, rgba(255,255,255,0.12) 100%);
+}
+
 .actions{
   display:flex;
   margin-top:14px;
@@ -598,12 +604,6 @@ th:nth-child(7){width:16%;}
 }
 
 @media print{
-  /* Page 3 spacing + rounded top for sign-off */
-  #signoff-section{
-    margin-top:12mm !important;
-    border-radius:18px 18px 12px 12px !important;
-  }
-
   @page{
     size:A4 portrait;
     margin:6mm;
@@ -738,6 +738,26 @@ th:nth-child(7){width:16%;}
   .actions{
     display:none !important;
   }
+
+  #signoff-section{
+    break-before:page !important;
+    page-break-before:always !important;
+    margin-top:8mm !important;
+    padding-top:10px !important;
+    border-radius:18px 18px 14px 14px !important;
+    background:linear-gradient(180deg, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0.22) 18%, rgba(255,255,255,0.12) 100%) !important;
+    overflow:hidden !important;
+  }
+
+  #signoff-section .section-title{
+    margin-bottom:6px !important;
+  }
+
+  #signoff-section::before{
+    content:"";
+    display:block;
+    height:3mm;
+  }
 }
 
 /* mobile print helper */
@@ -758,63 +778,6 @@ th:nth-child(7){width:16%;}
     height:0 !important;
     margin:0 !important;
     padding:0 !important;
-  }
-}
-
-
-/* Tighter text wrapping in boxes */
-.textarea,
-td textarea{
-  padding:4px 6px !important;
-  line-height:1.2 !important;
-}
-
-.input,
-td input{
-  padding:0 6px !important;
-  line-height:1.2 !important;
-}
-
-/* Print specific tightening */
-@media print{
-  .textarea,
-  td textarea{
-    padding:3px 4px !important;
-    line-height:1.1 !important;
-  }
-
-  .input,
-  td input{
-    padding:0 4px !important;
-    line-height:1.1 !important;
-  }
-}
-
-
-@media print{
-  /* REMOVE forced heights so text wraps tight */
-  td textarea{
-    min-height:auto !important;
-    height:auto !important;
-    padding:2px 3px !important;
-    line-height:1.05 !important;
-  }
-
-  .textarea{
-    min-height:auto !important;
-    height:auto !important;
-    padding:3px !important;
-    line-height:1.05 !important;
-  }
-
-  /* tighten rows */
-  td{
-    height:auto !important;
-  }
-
-  /* remove extra spacing between rows */
-  tr{
-    height:auto !important;
   }
 }
 
@@ -1045,7 +1008,7 @@ td input{
     </div>
   </div>
 
-  <div class="section" id="signoff-section">
+  <div class="section signoff-section" id="signoff-section">
     <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
