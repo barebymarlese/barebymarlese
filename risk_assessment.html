@@ -310,11 +310,9 @@ td textarea{
   resize:none;
   overflow:hidden;
   display:block;
-  field-sizing:content;
 }
 
-td textarea.auto-grow-cell,
-td textarea.cell-fit{
+td textarea.auto-grow-cell{
   min-height:0;
   height:auto;
 }
@@ -605,16 +603,6 @@ th:nth-child(7){width:16%;}
     margin:6mm;
   }
 
-  .print-page-break-before{
-    page-break-before:always !important;
-    break-before:page !important;
-  }
-
-  .print-page-break-after{
-    page-break-after:always !important;
-    break-after:page !important;
-  }
-
   html, body{
     background:#cacdc6 !important;
     width:100% !important;
@@ -720,18 +708,15 @@ th:nth-child(7){width:16%;}
 
   td textarea{
     font-size:7px !important;
-    min-height:0 !important;
-    height:auto !important;
-    padding:3px 4px !important;
-    line-height:1.12 !important;
+    min-height:38px !important;
+    padding:4px !important;
+    line-height:1.15 !important;
     resize:none !important;
     overflow:hidden !important;
   }
 
-  td textarea.auto-grow-cell,
-  td textarea.cell-fit{
+  td textarea.auto-grow-cell{
     min-height:0 !important;
-    height:auto !important;
   }
 
   td input{
@@ -742,8 +727,6 @@ th:nth-child(7){width:16%;}
   .table-wrap{
     page-break-before:auto !important;
     page-break-after:auto;
-    page-break-inside:avoid !important;
-    break-inside:avoid !important;
   }
 
   .actions{
@@ -870,7 +853,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section print-page-break-before">
+  <div class="section">
     <h2 class="section-title">Risk Assessment Register</h2>
     <div class="table-wrap">
       <table>
@@ -887,8 +870,8 @@ th:nth-child(7){width:16%;}
         </thead>
         <tbody>
           <tr>
-            <td><textarea class="cell-fit">Laser beam / accidental exposure to eyes</textarea></td>
-            <td><textarea class="cell-fit">Practitioner, client, visitor</textarea></td>
+            <td><textarea>Laser beam / accidental exposure to eyes</textarea></td>
+            <td><textarea>Practitioner, client, visitor</textarea></td>
             <td><textarea class="auto-grow-cell">Controlled treatment area used; wavelength-specific protective eyewear worn by practitioner and client; no treatment unless eyewear is in place; access restricted during treatment; machine used according to manufacturer instructions and training.</textarea></td>
             <td><textarea class="auto-grow-cell">Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -896,8 +879,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Skin burn / adverse skin reaction</textarea></td>
-            <td><textarea class="cell-fit">Client</textarea></td>
+            <td><textarea>Skin burn / adverse skin reaction</textarea></td>
+            <td><textarea>Client</textarea></td>
             <td><textarea class="auto-grow-cell">Consultation completed; contraindications screened; patch test completed where appropriate; settings selected according to skin type, tattoo characteristics, and manufacturer guidance; treatment only proceeds where suitable; aftercare explained and documented.</textarea></td>
             <td><textarea class="auto-grow-cell">Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></td>
             <td><input type="text" value="Medium"></td>
@@ -905,8 +888,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Cross-contamination / infection</textarea></td>
-            <td><textarea class="cell-fit">Client, practitioner</textarea></td>
+            <td><textarea>Cross-contamination / infection</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
             <td><textarea class="auto-grow-cell">Dedicated clean treatment area; hand hygiene before and after treatment; gloves worn as appropriate; single-use consumables used where possible; treatment couch and contact surfaces disinfected between clients; clean and used items kept separate; no treatment on infected or unsuitable skin.</textarea></td>
             <td><textarea class="auto-grow-cell">Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -914,8 +897,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Exposure to cleaning chemicals / disinfectants</textarea></td>
-            <td><textarea class="cell-fit">Practitioner, client</textarea></td>
+            <td><textarea>Exposure to cleaning chemicals / disinfectants</textarea></td>
+            <td><textarea>Practitioner, client</textarea></td>
             <td><textarea class="auto-grow-cell">COSHH information retained for products used; products kept in labelled containers; used to manufacturer directions; incompatible products not mixed; gloves used if required; products stored securely away from children and treatment food/drink areas.</textarea></td>
             <td><textarea class="auto-grow-cell">Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -923,8 +906,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Electrical fault / shock / fire from equipment</textarea></td>
-            <td><textarea class="cell-fit">Practitioner, client, household occupants</textarea></td>
+            <td><textarea>Electrical fault / shock / fire from equipment</textarea></td>
+            <td><textarea>Practitioner, client, household occupants</textarea></td>
             <td><textarea class="auto-grow-cell">Electrical equipment visually checked before use; damaged cables/plugs removed from service; equipment maintained to prevent danger; machine installed and operated on suitable supply; liquids kept away from electrical equipment; service records retained.</textarea></td>
             <td><textarea class="auto-grow-cell">Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -932,8 +915,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Fire / emergency evacuation</textarea></td>
-            <td><textarea class="cell-fit">Client, practitioner, household occupants, visitors</textarea></td>
+            <td><textarea>Fire / emergency evacuation</textarea></td>
+            <td><textarea>Client, practitioner, household occupants, visitors</textarea></td>
             <td><textarea class="auto-grow-cell">Clear exit route maintained; treatment room kept tidy; ignition sources controlled; no smoking; emergency contact phone available; appointments managed so area is supervised; fire precautions checked as part of routine premises safety review.</textarea></td>
             <td><textarea class="auto-grow-cell">Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -941,8 +924,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Trips, slips, and manual handling</textarea></td>
-            <td><textarea class="cell-fit">Client, practitioner</textarea></td>
+            <td><textarea>Trips, slips, and manual handling</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
             <td><textarea class="auto-grow-cell">Floor area kept free from clutter and trailing cables; spills cleaned promptly; adequate lighting maintained; treatment bed and trolley positioned to avoid awkward lifting and overreaching; client assisted as needed.</textarea></td>
             <td><textarea class="auto-grow-cell">Check cable routing each clinic day; review room layout if equipment changes.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -950,8 +933,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Poor ventilation / heat build-up / client discomfort</textarea></td>
-            <td><textarea class="cell-fit">Client, practitioner</textarea></td>
+            <td><textarea>Poor ventilation / heat build-up / client discomfort</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
             <td><textarea class="auto-grow-cell">Treatment room ventilated before and after appointments; fresh air available in enclosed area; room temperature monitored for comfort and safe working; treatment paused if environment becomes unsuitable.</textarea></td>
             <td><textarea class="auto-grow-cell">Review ventilation in warm weather and when room layout changes.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -959,8 +942,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Waste handling / contaminated materials</textarea></td>
-            <td><textarea class="cell-fit">Practitioner, waste carrier, household occupants</textarea></td>
+            <td><textarea>Waste handling / contaminated materials</textarea></td>
+            <td><textarea>Practitioner, waste carrier, household occupants</textarea></td>
             <td><textarea class="auto-grow-cell">Business waste separated from domestic waste; waste stored securely; transfers made using appropriate collection arrangements; records kept where required; treatment-related waste not left accessible to children or pets.</textarea></td>
             <td><textarea class="auto-grow-cell">Confirm current disposal route and retain waste paperwork where applicable.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -968,8 +951,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Lone working / personal safety</textarea></td>
-            <td><textarea class="cell-fit">Practitioner</textarea></td>
+            <td><textarea>Lone working / personal safety</textarea></td>
+            <td><textarea>Practitioner</textarea></td>
             <td><textarea class="auto-grow-cell">Appointments by prior booking only; client details recorded in advance; phone available; session times managed; practitioner aware of emergency contact process; treatment not carried out if practitioner feels unsafe.</textarea></td>
             <td><textarea class="auto-grow-cell">Consider check-in procedure for late appointments or new clients.</textarea></td>
             <td><input type="text" value="Medium"></td>
@@ -977,8 +960,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">First aid / incident response</textarea></td>
-            <td><textarea class="cell-fit">Client, practitioner</textarea></td>
+            <td><textarea>First aid / incident response</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
             <td><textarea class="auto-grow-cell">Suitable first aid kit available; emergency phone accessible; incidents, adverse reactions, and near misses recorded; practitioner stops treatment and escalates appropriately if reaction exceeds expected response.</textarea></td>
             <td><textarea class="auto-grow-cell">Review contents of first aid kit routinely and after any use.</textarea></td>
             <td><input type="text" value="Low"></td>
@@ -986,8 +969,8 @@ th:nth-child(7){width:16%;}
             <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="cell-fit">Client unsuitability / contraindications / legal consent issues</textarea></td>
-            <td><textarea class="cell-fit">Client, practitioner</textarea></td>
+            <td><textarea>Client unsuitability / contraindications / legal consent issues</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
             <td><textarea class="auto-grow-cell">Medical screening and consent completed before treatment; treatment refused or deferred where contraindicated; photographic and treatment records kept securely; practitioner only treats within training, competence, and insurance cover.</textarea></td>
             <td><textarea class="auto-grow-cell">Review insurer conditions and update forms if scope of treatment changes.</textarea></td>
             <td><input type="text" value="Medium"></td>
@@ -999,7 +982,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section print-page-break-before">
+  <div class="section">
     <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
@@ -1063,55 +1046,30 @@ document.querySelectorAll('input[type="date"]').forEach((el) => {
   el.setAttribute('aria-label', (el.previousElementSibling && el.previousElementSibling.textContent ? el.previousElementSibling.textContent + ' dd/mm/yyyy' : 'dd/mm/yyyy'));
 });
 
-function autoGrowTextarea(el, extra = 2){
-  const previousMinHeight = el.style.minHeight;
-  el.style.minHeight = '0px';
+function autoGrowTextarea(el){
   el.style.height = '0px';
-  el.style.height = (el.scrollHeight + extra) + 'px';
-  el.style.minHeight = previousMinHeight;
+  el.style.height = (el.scrollHeight + 2) + 'px';
 }
 
-function autoGrowAllTextareas(selector = '.auto-grow-cell, .cell-fit'){
-  document.querySelectorAll(selector).forEach((el) => {
+function autoGrowAllTextareas(){
+  document.querySelectorAll('.auto-grow-cell').forEach((el) => {
     autoGrowTextarea(el);
   });
-}
-
-function sizeRegisterRowsForPrint(){
-  document.querySelectorAll('tbody textarea').forEach((el) => {
-    autoGrowTextarea(el, 1);
-  });
-}
-
-function resetRegisterRowsAfterPrint(){
-  document.querySelectorAll('tbody textarea').forEach((el) => {
-    el.style.height = '';
-  });
-  autoGrowAllTextareas();
 }
 
 let autoGrowResizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(autoGrowResizeTimer);
-  autoGrowResizeTimer = setTimeout(() => {
-    autoGrowAllTextareas();
-    if (window.matchMedia('print').matches) sizeRegisterRowsForPrint();
-  }, 120);
+  autoGrowResizeTimer = setTimeout(autoGrowAllTextareas, 120);
 });
 
-window.addEventListener('load', () => {
-  autoGrowAllTextareas();
-  sizeRegisterRowsForPrint();
-});
+window.addEventListener('load', autoGrowAllTextareas);
 
 if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => {
-    autoGrowAllTextareas();
-    sizeRegisterRowsForPrint();
-  });
+  document.fonts.ready.then(autoGrowAllTextareas);
 }
 
-document.querySelectorAll('.auto-grow-cell, .cell-fit').forEach((el) => {
+document.querySelectorAll('.auto-grow-cell').forEach((el) => {
   autoGrowTextarea(el);
   el.addEventListener('input', () => autoGrowTextarea(el));
 });
@@ -1139,14 +1097,8 @@ function restoreScopeAfterPrint(){
   }
 }
 
-window.addEventListener('beforeprint', () => {
-  sizeRegisterRowsForPrint();
-  moveScopeForMobilePrint();
-});
-window.addEventListener('afterprint', () => {
-  restoreScopeAfterPrint();
-  resetRegisterRowsAfterPrint();
-});
+window.addEventListener('beforeprint', moveScopeForMobilePrint);
+window.addEventListener('afterprint', restoreScopeAfterPrint);
 
 </script>
 
