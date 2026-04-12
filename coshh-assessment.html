@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,6 @@
   --card:#d4d7d1;
   --brand:#5e6959;
   --text:#24221a;
-  --muted:#878274;
   --line:rgba(36,34,26,0.10);
 }
 
@@ -30,18 +30,6 @@ body{
   padding:28px;
   background:var(--card);
 }
-
-/* 🔥 BRAND HEADER */
-.logo{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  letter-spacing:.25em;
-  text-transform:uppercase;
-  margin-bottom:6px;
-}
-.logo .bare{color:var(--brand);font-size:22px;font-weight:600;}
-.logo .by{color:var(--muted);font-size:14px;text-transform:none;}
 
 h1{
   text-align:center;
@@ -109,23 +97,6 @@ td textarea{
   font-size:11px;
 }
 
-/* 🔥 BUTTON */
-.actions{
-  margin-top:16px;
-}
-.btn{
-  width:100%;
-  padding:14px;
-  border:none;
-  background:var(--brand);
-  color:#fff;
-  font-weight:700;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  border-radius:10px;
-  cursor:pointer;
-}
-
 @media print{
   body{
     background:white !important;
@@ -133,21 +104,12 @@ td textarea{
   .card{
     background:white !important;
   }
-  .actions{
-    display:none;
-  }
 }
 </style>
 </head>
 
 <body>
 <div class="card">
-
-<!-- 🔥 LOGO -->
-<div class="logo">
-  <span class="bare">BARE |</span>
-  <span class="by">by Marlese</span>
-</div>
 
 <h1>COSHH Assessment</h1>
 
@@ -190,13 +152,48 @@ td textarea{
       <tr>
         <td><textarea>Disinfectant (Clinic Grade)</textarea></td>
         <td><textarea>Skin/eye irritation</textarea></td>
-        <td><textarea>Use as directed, ventilated area</textarea></td>
+        <td><textarea>Use as directed, avoid contact with eyes, ventilated area</textarea></td>
         <td><textarea>Gloves</textarea></td>
-        <td><textarea>Closed container</textarea></td>
-        <td><textarea>Rinse with water</textarea></td>
+        <td><textarea>Closed container, away from children</textarea></td>
+        <td><textarea>Rinse with water, seek medical advice if needed</textarea></td>
+      </tr>
+
+      <tr>
+        <td><textarea>Cooling Gel</textarea></td>
+        <td><textarea>Low hazard</textarea></td>
+        <td><textarea>Use clean applicator, avoid contamination</textarea></td>
+        <td><textarea>None</textarea></td>
+        <td><textarea>Room temperature</textarea></td>
+        <td><textarea>Wash off if irritation occurs</textarea></td>
+      </tr>
+
+      <tr>
+        <td><textarea>Cleaning Spray</textarea></td>
+        <td><textarea>Inhalation / skin irritation</textarea></td>
+        <td><textarea>Use in ventilated area, avoid inhalation</textarea></td>
+        <td><textarea>Gloves</textarea></td>
+        <td><textarea>Locked storage</textarea></td>
+        <td><textarea>Fresh air, rinse skin</textarea></td>
       </tr>
     </tbody>
   </table>
+</div>
+
+<div class="section">
+  <div class="section-title">General Control Measures</div>
+  <textarea>
+Products used according to manufacturer instructions. COSHH data sheets retained. 
+No mixing of incompatible chemicals. Stored safely away from children. 
+Spill management procedures in place. Treatment area ventilated.
+  </textarea>
+</div>
+
+<div class="section">
+  <div class="section-title">Disposal</div>
+  <textarea>
+Waste disposed of in accordance with local authority and waste contractor guidance. 
+No hazardous substances disposed of via domestic waste where restricted.
+  </textarea>
 </div>
 
 <div class="section">
@@ -213,25 +210,9 @@ td textarea{
   </div>
 </div>
 
-<!-- 🔥 DOWNLOAD BUTTON -->
-<div class="actions">
-  <button class="btn" onclick="downloadPDF()">Download PDF</button>
-</div>
-
 </div>
 
 <script>
-function downloadPDF(){
-  const originalTitle = document.title;
-  document.title = "BARE-COSHH";
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => {
-      document.title = originalTitle;
-    }, 1200);
-  }, 150);
-}
-
 document.getElementById('coshhDate').valueAsDate = new Date();
 
 function updateTime(){
