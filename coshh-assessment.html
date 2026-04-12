@@ -691,11 +691,13 @@ function autoGrowAllTextareas(){
 function updateSignDateTime(){
   const now = new Date();
 
-  now.setSeconds(0, 0); // remove seconds completely
+  // adjust timezone
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
 
-  document.getElementById('coshhSign').value =
-    now.toISOString().slice(0,16);
+  const date = now.toISOString().slice(0,10); // YYYY-MM-DD
+  const time = now.toTimeString().slice(0,5); // HH:MM
+
+  document.getElementById('coshhSign').value = `${date}T${time}`;
 }
 
 window.addEventListener('load', () => {
