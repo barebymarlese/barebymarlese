@@ -1123,6 +1123,7 @@ function autoGrowAllTextareas(){
 function prepareTableForPrint(){
   document.querySelectorAll('tbody textarea').forEach((el) => {
     el.style.height = 'auto';
+    el.style.overflow = 'hidden';
     el.style.height = el.scrollHeight + 'px';
   });
 }
