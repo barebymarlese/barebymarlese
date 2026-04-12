@@ -1055,8 +1055,8 @@ document.querySelectorAll('input[type="date"]').forEach((el) => {
 });
 
 function autoGrowTextarea(el){
-  el.style.height = '0px';
-  el.style.height = (el.scrollHeight + 2) + 'px';
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
 }
 
 function autoGrowAllTextareas(){
