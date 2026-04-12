@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>COSHH Assessment | BARE by Marlese</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,205 +13,662 @@
   --card:#d4d7d1;
   --brand:#5e6959;
   --text:#24221a;
+  --muted:#878274;
   --line:rgba(36,34,26,0.10);
+  --line-soft:rgba(36,34,26,0.06);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+  color-adjust:exact !important;
+}
+
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+  background:var(--bg);
 }
 
 body{
-  margin:0;
   font-family:"Montserrat",sans-serif;
-  background:var(--bg);
   color:var(--text);
+  display:block;
+  min-height:100vh;
+}
+
+input,
+textarea,
+select,
+button{
+  font:inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  outline:2px solid rgba(94,105,89,0.18);
+  outline-offset:0;
+}
+
+.page-shell{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+  padding:0;
 }
 
 .card{
+  width:100%;
   max-width:980px;
   margin:0 auto;
-  padding:28px;
-  background:var(--card);
+  padding:28px 30px;
+  background:rgba(212,215,209,0.94);
+  border-radius:0;
+  box-shadow:none;
+  border:none;
+}
+
+.logo{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:12px;
+  letter-spacing:.26em;
+  font-weight:600;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.logo .bare{color:var(--brand);font-size:24px;}
+.logo .by{
+  color:var(--muted);
+  font-size:15px;
+  font-weight:500;
+  text-transform:none;
+  letter-spacing:.05em;
 }
 
 h1{
   text-align:center;
+  margin:0 0 8px;
   font-size:16px;
   letter-spacing:.15em;
   text-transform:uppercase;
 }
 
+.intro{
+  text-align:center;
+  font-size:12px;
+  line-height:1.6;
+  max-width:700px;
+  margin:0 auto 16px;
+}
+
 .section{
-  margin-top:14px;
-  padding:14px;
-  background:rgba(255,255,255,0.3);
-  border-radius:12px;
+  padding:16px 16px;
+  border-radius:14px;
+  background:linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.12));
+  border:1px solid rgba(255,255,255,0.42);
+  box-shadow:none;
+  margin-bottom:12px;
+  width:100%;
+  max-width:100%;
 }
 
 .section-title{
+  margin:0 0 10px;
   font-size:11px;
+  letter-spacing:.12em;
   text-transform:uppercase;
-  letter-spacing:.1em;
   color:var(--brand);
   font-weight:700;
-  margin-bottom:8px;
-}
-
-input, textarea{
-  width:100%;
-  padding:8px;
-  border-radius:8px;
-  border:1px solid var(--line);
-  font-family:inherit;
-}
-
-textarea{
-  min-height:60px;
 }
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:8px 14px;
+  width:100%;
+}
+
+.field{
+  width:100%;
+  min-width:0;
+}
+
+.field label{
+  display:block;
+  margin:0 0 5px;
+  font-size:9px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-weight:700;
+  color:var(--brand);
+}
+
+.input,
+.textarea{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.82);
+  border-radius:10px;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+  margin:0;
+  display:block;
+}
+
+.input{
+  height:40px;
+  min-height:40px;
+  padding:0 12px;
+  font-size:13px;
+  line-height:40px;
+}
+
+textarea.textarea{
+  min-height:72px;
+  padding:10px 12px;
+  font-size:12px;
+  line-height:1.45;
+  resize:vertical;
+}
+
+.textarea.small{
+  min-height:62px;
 }
 
 .wide{
   grid-column:1 / -1;
 }
 
+input[type="date"].input,
+input[type="datetime-local"].input{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+}
+
+.table-wrap{
+  width:100%;
+  max-width:100%;
+  overflow:visible;
+  border-radius:12px;
+  background:rgba(255,255,255,0.18);
+  border:1px solid rgba(36,34,26,0.08);
+  padding:1px;
+}
+
 table{
   width:100%;
-  border-collapse:collapse;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:fixed;
+  background:rgba(255,255,255,0.14);
+  border-radius:10px;
+  overflow:hidden;
 }
 
 th, td{
-  border:1px solid var(--line);
-  padding:6px;
+  vertical-align:top;
+  padding:0;
+  border-right:1px solid var(--line-soft);
+  border-bottom:1px solid var(--line-soft);
 }
+
+th:last-child, td:last-child{border-right:none;}
+tbody tr:last-child td{border-bottom:none;}
 
 th{
-  background:#eee;
-  font-size:10px;
+  background:rgba(255,255,255,0.46);
+  color:var(--brand);
+  font-size:8px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  padding:8px 5px;
+  text-align:left;
+  line-height:1.18;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  vertical-align:middle;
 }
 
+tbody tr:nth-child(even) td{background:rgba(255,255,255,0.12);}
+tbody tr:nth-child(odd) td{background:rgba(255,255,255,0.22);}
+
 td textarea{
-  border:none;
+  border:0;
+  border-radius:0;
   background:transparent;
+  width:100%;
+  min-width:0;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+  margin:0;
+  min-height:96px;
+  padding:8px 7px;
+  font-size:10.5px;
+  line-height:1.28;
+  resize:vertical;
+  overflow:auto;
+  display:block;
+}
+
+.note{
+  margin-top:8px;
+  padding:12px 14px;
+  border-left:4px solid var(--brand);
+  border-radius:4px 12px 12px 4px;
+  background:rgba(255,255,255,0.26);
   font-size:11px;
+  line-height:1.5;
+}
+
+.footer{
+  text-align:center;
+  margin-top:10px;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.actions{
+  display:flex;
+  margin-top:14px;
+}
+
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  background:var(--brand);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+th:nth-child(1){width:16%;}
+th:nth-child(2){width:12%;}
+th:nth-child(3){width:24%;}
+th:nth-child(4){width:12%;}
+th:nth-child(5){width:16%;}
+th:nth-child(6){width:20%;}
+
+@media screen and (max-width:760px){
+  html, body{
+    overflow-x:hidden !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  .page-shell{
+    padding:0 !important;
+    overflow-x:hidden !important;
+  }
+
+  .card{
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 !important;
+    padding:16px 12px 18px !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    border:none !important;
+  }
+
+  .logo{
+    gap:10px;
+    margin-bottom:4px;
+  }
+
+  .logo .bare{font-size:21px;}
+  .logo .by{font-size:13px;}
+
+  h1{
+    font-size:14px;
+    margin-bottom:6px;
+  }
+
+  .intro{
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:12px;
+  }
+
+  .section{
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 0 10px 0 !important;
+    padding:12px 10px !important;
+    border-radius:12px !important;
+    box-shadow:none !important;
+  }
+
+  .grid{
+    grid-template-columns:1fr !important;
+    gap:7px !important;
+    width:100% !important;
+  }
+
+  .field,
+  .field.wide{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    grid-column:auto !important;
+  }
+
+  .field label{
+    font-size:8px;
+    margin-bottom:4px;
+  }
+
+  .input{
+    width:100% !important;
+    max-width:100% !important;
+    height:44px !important;
+    min-height:44px !important;
+    padding:0 12px !important;
+    font-size:16px !important;
+    line-height:44px !important;
+    border-radius:10px !important;
+  }
+
+  textarea.textarea{
+    width:100% !important;
+    max-width:100% !important;
+    min-height:78px !important;
+    padding:10px 12px !important;
+    font-size:14px !important;
+    line-height:1.35 !important;
+    border-radius:10px !important;
+  }
+
+  .table-wrap{
+    width:100% !important;
+    max-width:100% !important;
+    overflow:visible !important;
+    border-radius:10px !important;
+  }
+
+  table{
+    table-layout:fixed !important;
+  }
+
+  th{
+    font-size:6.2px !important;
+    padding:6px 4px !important;
+    line-height:1.12 !important;
+    letter-spacing:.03em !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  td textarea{
+    min-height:88px !important;
+    padding:6px 5px !important;
+    font-size:8.2px !important;
+    line-height:1.24 !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+    resize:vertical !important;
+    overflow:auto !important;
+  }
+
+  th:nth-child(1){width:17% !important;}
+  th:nth-child(2){width:12% !important;}
+  th:nth-child(3){width:24% !important;}
+  th:nth-child(4){width:12% !important;}
+  th:nth-child(5){width:16% !important;}
+  th:nth-child(6){width:19% !important;}
+
+  .note,
+  .footer{
+    font-size:11px;
+  }
 }
 
 @media print{
-  body{
-    background:white !important;
+  @page{
+    size:A4 portrait;
+    margin:6mm;
   }
+
+  html, body{
+    background:#cacdc6 !important;
+    width:100% !important;
+    zoom:1 !important;
+  }
+
+  body{
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  .page-shell{
+    background:#cacdc6 !important;
+  }
+
   .card{
-    background:white !important;
+    width:100% !important;
+    padding:14px 14px !important;
+    background:#d4d7d1 !important;
+    border-radius:10px !important;
+    box-shadow:none !important;
+  }
+
+  h1{
+    font-size:12.5px !important;
+    margin-bottom:6px !important;
+  }
+
+  .intro{
+    font-size:8.5px !important;
+    line-height:1.3 !important;
+    margin-bottom:6px !important;
+  }
+
+  .section{
+    padding:8px !important;
+    margin-bottom:6px !important;
+    page-break-inside:avoid;
+    background:#d0d3cd !important;
+    background-image:none !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
+  }
+
+  .section-title{
+    font-size:8.5px !important;
+    margin-bottom:4px !important;
+  }
+
+  .field label{
+    font-size:7px !important;
+  }
+
+  .input{
+    height:24px !important;
+    font-size:8px !important;
+    padding:0 6px !important;
+    background:rgba(255,255,255,0.72) !important;
+  }
+
+  .textarea{
+    min-height:42px !important;
+    font-size:7.8px !important;
+    padding:5px !important;
+    resize:none !important;
+    overflow:hidden !important;
+    background:rgba(255,255,255,0.72) !important;
+  }
+
+  th{
+    font-size:6.1px !important;
+    padding:5px 3px !important;
+  }
+
+  td textarea{
+    font-size:7px !important;
+    min-height:54px !important;
+    padding:4px !important;
+    line-height:1.18 !important;
+    resize:none !important;
+    overflow:hidden !important;
+  }
+
+  .actions{
+    display:none !important;
   }
 }
 </style>
 </head>
-
 <body>
+<div class="page-shell">
 <div class="card">
 
-<h1>COSHH Assessment</h1>
+  <div class="logo">
+    <span class="bare">BARE |</span>
+    <span class="by">by Marlese</span>
+  </div>
 
-<div class="section">
-  <div class="section-title">Assessment Details</div>
-  <div class="grid">
-    <div>
-      <label>Business Name</label>
-      <input type="text" value="BARE by Marlese">
-    </div>
-    <div>
-      <label>Assessor</label>
-      <input type="text" value="Marlese Rosch Haden">
-    </div>
-    <div>
-      <label>Assessment Date</label>
-      <input type="date" id="coshhDate">
-    </div>
-    <div>
-      <label>Review Date</label>
-      <input type="date">
+  <h1>COSHH Assessment</h1>
+
+  <p class="intro">
+    Home-based COSHH assessment covering cleaning products, disinfectants, gels and other treatment-related substances used within the treatment area. This document supports safe handling, storage, disposal, council inspection readiness and insurer expectations.
+  </p>
+
+  <div class="section">
+    <h2 class="section-title">Assessment Details</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Business Name</label>
+        <input class="input" type="text" value="BARE by Marlese">
+      </div>
+      <div class="field">
+        <label>Assessor</label>
+        <input class="input" type="text" value="Marlese Rosch Haden">
+      </div>
+      <div class="field">
+        <label>Assessment Date</label>
+        <input class="input" type="date" id="coshhDate">
+      </div>
+      <div class="field">
+        <label>Review Date</label>
+        <input class="input" type="date">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="section">
-  <div class="section-title">Substance Details</div>
-  <table>
-    <thead>
-      <tr>
-        <th>Product / Substance</th>
-        <th>Hazard</th>
-        <th>Control Measures</th>
-        <th>PPE Required</th>
-        <th>Storage</th>
-        <th>First Aid / Emergency</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><textarea>Disinfectant (Clinic Grade)</textarea></td>
-        <td><textarea>Skin/eye irritation</textarea></td>
-        <td><textarea>Use as directed, avoid contact with eyes, ventilated area</textarea></td>
-        <td><textarea>Gloves</textarea></td>
-        <td><textarea>Closed container, away from children</textarea></td>
-        <td><textarea>Rinse with water, seek medical advice if needed</textarea></td>
-      </tr>
+  <div class="section">
+    <h2 class="section-title">Substance Details</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Product / Substance</th>
+            <th>Hazard</th>
+            <th>Control Measures</th>
+            <th>PPE Required</th>
+            <th>Storage</th>
+            <th>First Aid / Emergency</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><textarea>Disinfectant (Clinic Grade)</textarea></td>
+            <td><textarea>Skin and eye irritation</textarea></td>
+            <td><textarea>Use according to manufacturer instructions, avoid direct contact with eyes, keep treatment area ventilated and do not mix with incompatible cleaning products.</textarea></td>
+            <td><textarea>Gloves where appropriate</textarea></td>
+            <td><textarea>Store sealed in original container, upright and away from children, pets and direct heat.</textarea></td>
+            <td><textarea>Rinse affected area with plenty of water and seek medical advice if irritation continues.</textarea></td>
+          </tr>
 
-      <tr>
-        <td><textarea>Cooling Gel</textarea></td>
-        <td><textarea>Low hazard</textarea></td>
-        <td><textarea>Use clean applicator, avoid contamination</textarea></td>
-        <td><textarea>None</textarea></td>
-        <td><textarea>Room temperature</textarea></td>
-        <td><textarea>Wash off if irritation occurs</textarea></td>
-      </tr>
+          <tr>
+            <td><textarea>Cooling Gel</textarea></td>
+            <td><textarea>Low hazard, possible irritation in sensitive individuals</textarea></td>
+            <td><textarea>Use with clean applicator or clean hands, keep container closed between clients and avoid contamination.</textarea></td>
+            <td><textarea>None normally required</textarea></td>
+            <td><textarea>Store clean, dry and at room temperature in line with product guidance.</textarea></td>
+            <td><textarea>Remove product, rinse skin and discontinue use if irritation occurs.</textarea></td>
+          </tr>
 
-      <tr>
-        <td><textarea>Cleaning Spray</textarea></td>
-        <td><textarea>Inhalation / skin irritation</textarea></td>
-        <td><textarea>Use in ventilated area, avoid inhalation</textarea></td>
-        <td><textarea>Gloves</textarea></td>
-        <td><textarea>Locked storage</textarea></td>
-        <td><textarea>Fresh air, rinse skin</textarea></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="section">
-  <div class="section-title">General Control Measures</div>
-  <textarea>
-Products used according to manufacturer instructions. COSHH data sheets retained. 
-No mixing of incompatible chemicals. Stored safely away from children. 
-Spill management procedures in place. Treatment area ventilated.
-  </textarea>
-</div>
-
-<div class="section">
-  <div class="section-title">Disposal</div>
-  <textarea>
-Waste disposed of in accordance with local authority and waste contractor guidance. 
-No hazardous substances disposed of via domestic waste where restricted.
-  </textarea>
-</div>
-
-<div class="section">
-  <div class="section-title">Sign Off</div>
-  <div class="grid">
-    <div>
-      <label>Signature</label>
-      <input type="text">
-    </div>
-    <div>
-      <label>Date Signed</label>
-      <input type="datetime-local" id="coshhSign">
+          <tr>
+            <td><textarea>Cleaning Spray</textarea></td>
+            <td><textarea>Possible inhalation, skin or eye irritation</textarea></td>
+            <td><textarea>Use in ventilated area, avoid direct inhalation, follow dilution and contact-time guidance and keep away from treatment food or drink areas.</textarea></td>
+            <td><textarea>Gloves where required by label</textarea></td>
+            <td><textarea>Store securely in labelled container away from children and incompatible substances.</textarea></td>
+            <td><textarea>Move to fresh air if affected and rinse skin or eyes thoroughly with water.</textarea></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
 
+  <div class="section">
+    <h2 class="section-title">General Control Measures</h2>
+    <textarea class="textarea">Products are used according to manufacturer instructions. Safety data sheets are retained where applicable. Incompatible substances are not mixed. Products are kept securely away from children, pets and food preparation areas. Spill response and routine cleaning arrangements are in place. The treatment area is kept ventilated during use.</textarea>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Disposal</h2>
+    <textarea class="textarea small">Waste is handled in accordance with local authority guidance, manufacturer instructions and any applicable waste contractor arrangements. No product is disposed of in domestic waste where restrictions apply.</textarea>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Sign Off</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Signature</label>
+        <input class="input" type="text" placeholder="Type full name or print after signing">
+      </div>
+      <div class="field">
+        <label>Date Signed</label>
+        <input class="input" type="datetime-local" id="coshhSign">
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Important</strong><br>
+    Review this COSHH assessment whenever products change, new substances are introduced, a safety data sheet is updated, storage arrangements change, or after any incident, spill, reaction or insurer / council request.
+  </div>
+
+  <div class="footer">
+    BARE by Marlese | Home-Based COSHH Assessment
+  </div>
+
+  <div class="actions">
+    <button class="btn" onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+</div>
 </div>
 
 <script>
+function downloadPDF(){
+  const originalTitle = document.title;
+  document.title = "BARE-COSHH-Assessment";
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1200);
+  }, 150);
+}
+
 document.getElementById('coshhDate').valueAsDate = new Date();
 
 function updateTime(){
