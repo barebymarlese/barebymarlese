@@ -178,7 +178,8 @@ textarea.textarea{
   padding:10px 12px;
   font-size:12px;
   line-height:1.45;
-  resize:vertical;
+  resize:none;
+  overflow:hidden;
 }
 
 .textarea.small{
@@ -258,8 +259,8 @@ td textarea{
   padding:8px 7px;
   font-size:10.5px;
   line-height:1.28;
-  resize:vertical;
-  overflow:auto;
+  resize:none;
+  overflow:hidden;
   display:block;
 }
 
@@ -423,8 +424,8 @@ th:nth-child(6){width:20%;}
     line-height:1.24 !important;
     word-break:break-word !important;
     overflow-wrap:anywhere !important;
-    resize:vertical !important;
-    overflow:auto !important;
+    resize:none !important;
+    overflow:hidden !important;
   }
 
   th:nth-child(1){width:17% !important;}
@@ -669,16 +670,38 @@ function downloadPDF(){
   }, 150);
 }
 
-document.getElementById('coshhDate').valueAsDate = new Date();
+function autoGrowTextarea(el){
+  if(!el) return;
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
 
-function updateTime(){
+function autoGrowAllTextareas(){
+  document.querySelectorAll('textarea').forEach((textarea) => {
+    autoGrowTextarea(textarea);
+    textarea.addEventListener('input', () => autoGrowTextarea(textarea));
+  });
+}
+
+function updateSignDateTime(){
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   document.getElementById('coshhSign').value = now.toISOString().slice(0,16);
 }
 
-updateTime();
-window.addEventListener('beforeprint', updateTime);
+window.addEventListener('load', () => {
+  document.getElementById('coshhDate').valueAsDate = new Date();
+  updateSignDateTime();
+  autoGrowAllTextareas();
+
+  // update live on web every second
+  setInterval(updateSignDateTime, 1000);
+});
+
+window.addEventListener('beforeprint', () => {
+  updateSignDateTime();
+  autoGrowAllTextareas();
+});
 </script>
 
 </body>
