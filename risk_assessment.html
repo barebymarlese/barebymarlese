@@ -761,6 +761,35 @@ th:nth-child(7){width:16%;}
   }
 }
 
+
+/* Tighter text wrapping in boxes */
+.textarea,
+td textarea{
+  padding:4px 6px !important;
+  line-height:1.2 !important;
+}
+
+.input,
+td input{
+  padding:0 6px !important;
+  line-height:1.2 !important;
+}
+
+/* Print specific tightening */
+@media print{
+  .textarea,
+  td textarea{
+    padding:3px 4px !important;
+    line-height:1.1 !important;
+  }
+
+  .input,
+  td input{
+    padding:0 4px !important;
+    line-height:1.1 !important;
+  }
+}
+
 </style>
 </head>
 <body>
