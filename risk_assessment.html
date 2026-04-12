@@ -598,6 +598,12 @@ th:nth-child(7){width:16%;}
 }
 
 @media print{
+  /* Page 3 spacing + rounded top for sign-off */
+  #signoff-section{
+    margin-top:12mm !important;
+    border-radius:18px 18px 12px 12px !important;
+  }
+
   @page{
     size:A4 portrait;
     margin:6mm;
@@ -620,74 +626,73 @@ th:nth-child(7){width:16%;}
 
   .card{
     width:100% !important;
-    padding:12px 12px !important;
+    padding:14px 14px !important;
     background:#d4d7d1 !important;
     border-radius:10px !important;
     box-shadow:none !important;
   }
 
   h1{
-    font-size:12px !important;
-    margin-bottom:5px !important;
+    font-size:12.5px !important;
+    margin-bottom:6px !important;
   }
 
   .intro{
-    font-size:8px !important;
-    line-height:1.25 !important;
-    margin-bottom:5px !important;
+    font-size:8.5px !important;
+    line-height:1.3 !important;
+    margin-bottom:6px !important;
   }
 
   .section{
-    padding:7px !important;
-    margin-bottom:5px !important;
-    page-break-inside:avoid !important;
+    padding:8px !important;
+    margin-bottom:6px !important;
+    page-break-inside:avoid;
     background:#d0d3cd !important;
     background-image:none !important;
     border:1px solid rgba(36,34,26,0.08) !important;
   }
 
   .section-title{
-    font-size:8px !important;
+    font-size:8.5px !important;
     margin-bottom:4px !important;
   }
 
   .field label{
-    font-size:6.8px !important;
+    font-size:7px !important;
   }
 
   .input{
-    height:22px !important;
-    font-size:7.5px !important;
+    height:24px !important;
+    font-size:8px !important;
     padding:0 6px !important;
     background:rgba(255,255,255,0.72) !important;
   }
 
   .textarea{
-    min-height:34px !important;
-    font-size:7px !important;
-    line-height:1.2 !important;
-    padding:4px !important;
+    min-height:38px !important;
+    font-size:7.5px !important;
+    padding:5px !important;
     resize:none !important;
     overflow:hidden !important;
     background:rgba(255,255,255,0.72) !important;
   }
 
   .fixed-activities{
-    height:40px !important;
-    min-height:40px !important;
-    max-height:40px !important;
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
   }
 
   .fixed-people{
-    height:33px !important;
-    min-height:33px !important;
-    max-height:33px !important;
+    height:36px !important;
+    min-height:36px !important;
+    max-height:36px !important;
   }
 
   .fixed-method{
-    height:26px !important;
-    min-height:26px !important;
-    max-height:26px !important;
+    height:28px !important;
+    min-height:28px !important;
+    max-height:28px !important;
   }
 
   .checklist-box,
@@ -702,101 +707,32 @@ th:nth-child(7){width:16%;}
     border-radius:12px !important;
   }
 
-  /* PAGE 2 FULL HEIGHT */
-  #risk-register-section{
-min-height:278mm !important;
-height:278mm !important;
-    display:flex !important;
-    flex-direction:column !important;
+  th{
+    font-size:6.5px !important;
+    padding:5px 3px !important;
   }
 
-  #risk-register-section .section-title{
-    flex:0 0 auto !important;
+  td textarea{
+    font-size:7px !important;
+    min-height:38px !important;
+    padding:4px !important;
+    line-height:1.15 !important;
+    resize:none !important;
+    overflow:hidden !important;
+  }
+
+  td textarea.auto-grow-cell{
+    min-height:0 !important;
+  }
+
+  td input{
+    font-size:7px !important;
+    height:22px !important;
   }
 
   .table-wrap{
     page-break-before:auto !important;
-    page-break-after:auto !important;
-    overflow:visible !important;
-    flex:1 1 auto !important;
-    display:flex !important;
-    flex-direction:column !important;
-  }
-
-  .table-wrap table{
-    width:100% !important;
-    height:100% !important;
-    table-layout:fixed !important;
-    border-collapse:separate !important;
-    border-spacing:0 !important;
-  }
-
-  th{
-    font-size:6px !important;
-    line-height:1.1 !important;
-    padding:4px 3px !important;
-  }
-
-  tbody{
-    height:100% !important;
-  }
-
-  tbody tr{
-    height:auto !important;
-  }
-
-  td{
-    height:auto !important;
-    vertical-align:top !important;
-  }
-
-  td textarea,
-  td input{
-    border:0 !important;
-    background:transparent !important;
-    box-shadow:none !important;
-    outline:none !important;
-  }
-
-  td textarea{
-    display:block !important;
-    width:100% !important;
-    height:auto !important;
-    min-height:0 !important;
-    padding:5px 4px !important;
-    font-size:6.2px !important;
-    line-height:1.15 !important;
-    resize:none !important;
-    overflow:hidden !important;
-    white-space:pre-wrap !important;
-    box-sizing:border-box !important;
-  }
-
-  td textarea.auto-grow-cell{
-    height:auto !important;
-    min-height:0 !important;
-  }
-
-  td input{
-    display:block !important;
-    width:100% !important;
-    height:20px !important;
-    line-height:20px !important;
-    padding:0 4px !important;
-    font-size:6.2px !important;
-    box-sizing:border-box !important;
-  }
-
-  td input[type="date"]{
-    font-size:6px !important;
-    height:20px !important;
-    line-height:20px !important;
-    padding:0 2px !important;
-  }
-
-  #signoff-section{
-    page-break-before:always !important;
-    break-before:page !important;
+    page-break-after:auto;
   }
 
   .actions{
@@ -824,64 +760,33 @@ height:278mm !important;
     padding:0 !important;
   }
 }
-/* mobile print helper */
-@media print and (max-width:760px){
-  #scope-section{
-    margin-top:6px !important;
-    page-break-before:auto !important;
-    break-before:auto !important;
-  }
 
-  #assessment-details-section{
-    page-break-after:avoid !important;
-    break-after:avoid !important;
-  }
 
-  #mobile-print-scope-anchor{
-    display:block !important;
-    height:0 !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
+/* Tighter text wrapping in boxes */
+.textarea,
+td textarea{
+  padding:4px 6px !important;
+  line-height:1.2 !important;
 }
-/* mobile print helper */
-@media print and (max-width:760px){
-  #scope-section{
-    margin-top:6px !important;
-    page-break-before:auto !important;
-    break-before:auto !important;
-  }
 
-  #assessment-details-section{
-    page-break-after:avoid !important;
-    break-after:avoid !important;
-  }
-
-  #mobile-print-scope-anchor{
-    display:block !important;
-    height:0 !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
+.input,
+td input{
+  padding:0 6px !important;
+  line-height:1.2 !important;
 }
-/* mobile print helper */
-@media print and (max-width:760px){
-  #scope-section{
-    margin-top:6px !important;
-    page-break-before:auto !important;
-    break-before:auto !important;
+
+/* Print specific tightening */
+@media print{
+  .textarea,
+  td textarea{
+    padding:3px 4px !important;
+    line-height:1.1 !important;
   }
 
-  #assessment-details-section{
-    page-break-after:avoid !important;
-    break-after:avoid !important;
-  }
-
-  #mobile-print-scope-anchor{
-    display:block !important;
-    height:0 !important;
-    margin:0 !important;
-    padding:0 !important;
+  .input,
+  td input{
+    padding:0 4px !important;
+    line-height:1.1 !important;
   }
 }
 
@@ -1112,8 +1017,8 @@ height:278mm !important;
     </div>
   </div>
 
-<div class="section" id="signoff-section">
-  <h2 class="section-title">Assessment Sign-Off</h2>
+  <div class="section" id="signoff-section">
+    <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
         <label>Assessor Signature</label>
@@ -1160,10 +1065,6 @@ function downloadPDF(){
 document.getElementById('assessmentDate').valueAsDate = new Date();
 document.getElementById('signDate').valueAsDate = new Date();
 
-document.querySelectorAll('tbody input[type="date"]').forEach((el) => {
-  el.valueAsDate = new Date();
-});
-
 function formatDateToDDMMYYYY(date){
   const d = String(date.getDate()).padStart(2,'0');
   const m = String(date.getMonth()+1).padStart(2,'0');
@@ -1177,8 +1078,8 @@ document.querySelectorAll('input[type="date"]').forEach((el) => {
 });
 
 function autoGrowTextarea(el){
-  el.style.height = 'auto';
-  el.style.height = el.scrollHeight + 'px';
+  el.style.height = '0px';
+  el.style.height = (el.scrollHeight + 2) + 'px';
 }
 
 function autoGrowAllTextareas(){
@@ -1187,27 +1088,23 @@ function autoGrowAllTextareas(){
   });
 }
 
-function prepareTableForPrint(){
-  document.querySelectorAll('tbody textarea').forEach((el) => {
-    el.style.height = 'auto';
-    el.style.overflow = 'hidden';
-    el.style.height = el.scrollHeight + 'px';
-  });
-}
-
 let autoGrowResizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(autoGrowResizeTimer);
-  autoGrowResizeTimer = setTimeout(() => {
-    autoGrowAllTextareas();
-    prepareTableForPrint();
-  }, 120);
+  autoGrowResizeTimer = setTimeout(autoGrowAllTextareas, 120);
 });
+
+window.addEventListener('load', autoGrowAllTextareas);
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(autoGrowAllTextareas);
+}
 
 document.querySelectorAll('.auto-grow-cell').forEach((el) => {
   autoGrowTextarea(el);
   el.addEventListener('input', () => autoGrowTextarea(el));
 });
+
 
 const scopeSection = document.getElementById('scope-section');
 const assessmentDetailsSection = document.getElementById('assessment-details-section');
@@ -1231,24 +1128,9 @@ function restoreScopeAfterPrint(){
   }
 }
 
-window.addEventListener('beforeprint', () => {
-  prepareTableForPrint();
-  moveScopeForMobilePrint();
-});
-
+window.addEventListener('beforeprint', moveScopeForMobilePrint);
 window.addEventListener('afterprint', restoreScopeAfterPrint);
 
-window.addEventListener('load', () => {
-  autoGrowAllTextareas();
-  prepareTableForPrint();
-});
-
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => {
-    autoGrowAllTextareas();
-    prepareTableForPrint();
-  });
-}
 </script>
 
 </body>
