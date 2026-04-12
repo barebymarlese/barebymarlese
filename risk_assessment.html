@@ -598,6 +598,12 @@ th:nth-child(7){width:16%;}
 }
 
 @media print{
+  /* Page 3 spacing + rounded top for sign-off */
+  #signoff-section{
+    margin-top:12mm !important;
+    border-radius:18px 18px 12px 12px !important;
+  }
+
   @page{
     size:A4 portrait;
     margin:6mm;
@@ -736,131 +742,8 @@ th:nth-child(7){width:16%;}
 
 /* mobile print helper */
 @media print and (max-width:760px){
-  .card{
-    padding:9px 9px !important;
-  }
-
-  #assessment-details-section,
   #scope-section{
-    padding:5px !important;
-    margin-bottom:3px !important;
-    border-radius:7px !important;
-  }
-
-  #assessment-details-section .section-title,
-  #scope-section .section-title{
-    font-size:6.8px !important;
-    margin-bottom:2px !important;
-    line-height:1.05 !important;
-  }
-
-  #assessment-details-section .grid{
-    grid-template-columns:1fr 1fr !important;
-    gap:3px 4px !important;
-  }
-
-  #scope-section .grid{
-    grid-template-columns:1fr 1fr !important;
-    gap:3px 4px !important;
-  }
-
-  #scope-section .field.wide:last-child,
-  #scope-section .field.wide:nth-child(3){
-    grid-column:1 / -1 !important;
-  }
-
-  #assessment-details-section .field,
-  #scope-section .field{
-    grid-column:auto !important;
-  }
-
-  #assessment-details-section .field.wide{
-    grid-column:1 / -1 !important;
-  }
-
-  #assessment-details-section .field label,
-  #scope-section .field label{
-    font-size:6px !important;
-    margin-bottom:1px !important;
-    line-height:1.05 !important;
-  }
-
-  #assessment-details-section .input,
-  #scope-section .input{
-    height:18px !important;
-    min-height:18px !important;
-    line-height:18px !important;
-    font-size:6.2px !important;
-    padding:0 4px !important;
-    border-radius:6px !important;
-  }
-
-  #assessment-details-section textarea.textarea,
-  #scope-section textarea.textarea{
-    font-size:6px !important;
-    line-height:1.1 !important;
-    padding:3px 4px !important;
-    border-radius:6px !important;
-  }
-
-  #assessment-details-section .textarea.small{
-    min-height:18px !important;
-    height:18px !important;
-    max-height:18px !important;
-  }
-
-  #scope-section .fixed-activities{
-    height:28px !important;
-    min-height:28px !important;
-    max-height:28px !important;
-  }
-
-  #scope-section .fixed-people{
-    height:22px !important;
-    min-height:22px !important;
-    max-height:22px !important;
-  }
-
-  #scope-section .fixed-method{
-    height:16px !important;
-    min-height:16px !important;
-    max-height:16px !important;
-  }
-
-  #scope-section h2.section-title[style]{
-    margin-top:5px !important;
-  }
-
-  #scope-section .checklist-box{
-    margin-top:3px !important;
-    padding:5px 6px !important;
-    border-radius:7px !important;
-  }
-
-  #scope-section .checklist{
-    padding-left:11px !important;
-    columns:2 !important;
-    column-gap:10px !important;
-    margin:0 !important;
-  }
-
-  #scope-section .checklist li{
-    break-inside:avoid !important;
-    font-size:5.7px !important;
-    line-height:1.1 !important;
-    margin:0 0 1px !important;
-  }
-
-  #scope-section .note{
-    margin-top:3px !important;
-    padding:5px 6px !important;
-    font-size:5.8px !important;
-    line-height:1.1 !important;
-    border-radius:7px !important;
-  }
-
-  #scope-section{
-    margin-top:3px !important;
+    margin-top:6px !important;
     page-break-before:auto !important;
     break-before:auto !important;
   }
@@ -875,6 +758,35 @@ th:nth-child(7){width:16%;}
     height:0 !important;
     margin:0 !important;
     padding:0 !important;
+  }
+}
+
+
+/* Tighter text wrapping in boxes */
+.textarea,
+td textarea{
+  padding:4px 6px !important;
+  line-height:1.2 !important;
+}
+
+.input,
+td input{
+  padding:0 6px !important;
+  line-height:1.2 !important;
+}
+
+/* Print specific tightening */
+@media print{
+  .textarea,
+  td textarea{
+    padding:3px 4px !important;
+    line-height:1.1 !important;
+  }
+
+  .input,
+  td input{
+    padding:0 4px !important;
+    line-height:1.1 !important;
   }
 }
 
@@ -1105,7 +1017,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="signoff-section">
     <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
