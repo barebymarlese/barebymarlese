@@ -676,18 +676,20 @@ function updateSignDateTime(){
 }
 
 window.addEventListener('load', () => {
-
   document.getElementById('coshhDate').valueAsDate = new Date();
 
   updateSignDateTime();
 
+  // 🔥 live update on web every minute
+  setInterval(updateSignDateTime, 60000);
 });
 
-// 🔥 ensures real time at PDF moment
+// 🔥 ensures correct time on PDF
 window.addEventListener('beforeprint', () => {
   updateSignDateTime();
 });
 </script>
+🚨 What you di
 
 </body>
 </html>
