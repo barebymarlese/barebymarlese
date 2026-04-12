@@ -1036,19 +1036,25 @@ function downloadPDF(){
   }, 150);
 }
 
-window.addEventListener('load', () => {
-
-  document.getElementById('assessmentDate').valueAsDate = new Date();
-
+function updateSignDateTime(){
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   document.getElementById('signDate').value = now.toISOString().slice(0,16);
+}
+
+window.addEventListener('load', () => {
+
+  document.getElementById('assessmentDate').valueAsDate = new Date();
 
   document.querySelectorAll('tbody input[type="date"]').forEach((el) => {
     el.valueAsDate = new Date();
   });
 
+  updateSignDateTime();
+  setInterval(updateSignDateTime, 1000);
+
 });
+
 
 function formatDateToDDMMYYYY(date){
   const d = String(date.getDate()).padStart(2,'0');
