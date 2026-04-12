@@ -354,7 +354,6 @@ th:nth-child(7){width:16%;}
   line-height:1.5;
 }
 
-
 .checklist-box{
   margin-top:8px;
   padding:14px 16px;
@@ -511,7 +510,6 @@ th:nth-child(7){width:16%;}
     min-height:62px !important;
   }
 
-  /* mobile exact heights for these 3 boxes - increased so no inner scrolling */
   .fixed-activities{
     height:122px !important;
     min-height:122px !important;
@@ -602,7 +600,7 @@ th:nth-child(7){width:16%;}
     size:A4 portrait;
     margin:6mm;
   }
-  
+
   html, body{
     background:#cacdc6 !important;
     width:100% !important;
@@ -637,19 +635,15 @@ th:nth-child(7){width:16%;}
     margin-bottom:6px !important;
   }
 
-.section{
-  padding:8px !important;
-  margin-bottom:6px !important;
-  page-break-inside:avoid;
-  background:#d0d3cd !important;
-  background-image:none !important;
-  border:1px solid rgba(36,34,26,0.08) !important;
-}
+  .section{
+    padding:8px !important;
+    margin-bottom:6px !important;
+    page-break-inside:avoid;
+    background:#d0d3cd !important;
+    background-image:none !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
+  }
 
-.section:has(.table-wrap){
-  margin-bottom:18mm !important;
-}
-  
   .section-title{
     font-size:8.5px !important;
     margin-bottom:4px !important;
@@ -728,17 +722,16 @@ th:nth-child(7){width:16%;}
     height:22px !important;
   }
 
-.table-wrap{
-  page-break-before:auto !important;
-  page-break-after:auto;
-}
+  .table-wrap{
+    page-break-before:auto !important;
+    page-break-after:auto;
+  }
 
   .actions{
     display:none !important;
   }
 }
 
-/* mobile print helper */
 @media print and (max-width:760px){
   #scope-section{
     margin-top:6px !important;
@@ -758,7 +751,6 @@ th:nth-child(7){width:16%;}
     padding:0 !important;
   }
 }
-
 </style>
 </head>
 <body>
@@ -857,8 +849,8 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-<div class="section register-section">
-  <h2 class="section-title">Risk Assessment Register</h2>
+  <div class="section">
+    <h2 class="section-title">Risk Assessment Register</h2>
     <div class="table-wrap">
       <table>
         <thead>
@@ -986,8 +978,8 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-<div class="section signoff-section">
-  <h2 class="section-title">Assessment Sign-Off</h2>
+  <div class="section">
+    <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
         <label>Assessor Signature</label>
@@ -1078,7 +1070,6 @@ document.querySelectorAll('.auto-grow-cell').forEach((el) => {
   el.addEventListener('input', () => autoGrowTextarea(el));
 });
 
-
 const scopeSection = document.getElementById('scope-section');
 const assessmentDetailsSection = document.getElementById('assessment-details-section');
 const mobilePrintScopeAnchor = document.getElementById('mobile-print-scope-anchor');
@@ -1103,7 +1094,6 @@ function restoreScopeAfterPrint(){
 
 window.addEventListener('beforeprint', moveScopeForMobilePrint);
 window.addEventListener('afterprint', restoreScopeAfterPrint);
-
 </script>
 
 </body>
