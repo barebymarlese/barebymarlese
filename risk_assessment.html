@@ -1092,7 +1092,10 @@ function restoreScopeAfterPrint(){
   }
 }
 
-window.addEventListener('beforeprint', moveScopeForMobilePrint);
+window.addEventListener('beforeprint', () => {
+  autoGrowAllTextareas();
+  moveScopeForMobilePrint();
+});
 window.addEventListener('afterprint', restoreScopeAfterPrint);
 </script>
 
