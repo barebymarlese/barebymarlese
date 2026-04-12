@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Fire Safety & Emergency Plan | BARE by Marlese</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#cacdc6;
+  --card:#d4d7d1;
+  --brand:#5e6959;
+  --text:#24221a;
+  --muted:#878274;
+  --line:rgba(36,34,26,0.10);
+  --line-soft:rgba(36,34,26,0.06);
+}
+*{
+  box-sizing:border-box;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
+  color-adjust:exact !important;
+}
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+  background:var(--bg);
+}
+body{
+  font-family:"Montserrat",sans-serif;
+  color:var(--text);
+  display:block;
+  min-height:100vh;
+}
+input, textarea, select, button{font:inherit;}
+input:focus, textarea:focus, select:focus{
+  outline:2px solid rgba(94,105,89,0.18);
+  outline-offset:0;
+}
+.page-shell{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+  padding:0;
+}
+.card{
+  width:100%;
+  max-width:980px;
+  margin:0 auto;
+  padding:28px 30px;
+  background:rgba(212,215,209,0.94);
+  border-radius:0;
+  box-shadow:none;
+  border:none;
+}
+.logo{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:12px;
+  letter-spacing:.26em;
+  font-weight:600;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.logo .bare{color:var(--brand);font-size:24px;}
+.logo .by{
+  color:var(--muted);
+  font-size:15px;
+  font-weight:500;
+  text-transform:none;
+  letter-spacing:.05em;
+}
+h1{
+  text-align:center;
+  margin:0 0 8px;
+  font-size:16px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+.intro{
+  text-align:center;
+  font-size:12px;
+  line-height:1.6;
+  max-width:760px;
+  margin:0 auto 16px;
+}
+.legal-note{
+  text-align:center;
+  font-size:11px;
+  line-height:1.55;
+  max-width:820px;
+  margin:0 auto 16px;
+  color:var(--text);
+}
+.section{
+  padding:16px 16px;
+  border-radius:14px;
+  background:linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.12));
+  border:1px solid rgba(255,255,255,0.42);
+  box-shadow:none;
+  margin-bottom:12px;
+  width:100%;
+  max-width:100%;
+}
+.section-title{
+  margin:0 0 10px;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--brand);
+  font-weight:700;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 14px;
+  width:100%;
+}
+.field{width:100%;min-width:0;}
+.field label{
+  display:block;
+  margin:0 0 5px;
+  font-size:9px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-weight:700;
+  color:var(--brand);
+}
+.input,
+.textarea,
+.select{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,0.82);
+  border-radius:10px;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+  margin:0;
+  display:block;
+}
+.input,
+.select{
+  height:40px;
+  min-height:40px;
+  padding:0 12px;
+  font-size:13px;
+  line-height:40px;
+}
+textarea.textarea{
+  min-height:76px;
+  padding:10px 12px;
+  font-size:12px;
+  line-height:1.45;
+  resize:none;
+  overflow:hidden;
+}
+.textarea.small{min-height:60px;}
+.textarea.medium{min-height:95px;}
+.textarea.large{min-height:132px;}
+.wide{grid-column:1 / -1;}
+.table-wrap{
+  width:100%;
+  max-width:100%;
+  overflow:visible;
+  border-radius:12px;
+  background:rgba(255,255,255,0.18);
+  border:1px solid rgba(36,34,26,0.08);
+  padding:1px;
+}
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:fixed;
+  background:rgba(255,255,255,0.14);
+  border-radius:10px;
+  overflow:hidden;
+}
+th, td{
+  vertical-align:top;
+  padding:0;
+  border-right:1px solid var(--line-soft);
+  border-bottom:1px solid var(--line-soft);
+}
+th:last-child, td:last-child{border-right:none;}
+tbody tr:last-child td{border-bottom:none;}
+th{
+  background:rgba(255,255,255,0.46);
+  color:var(--brand);
+  font-size:8px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  padding:8px 5px;
+  text-align:left;
+  line-height:1.18;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  vertical-align:middle;
+}
+tbody tr:nth-child(even) td{background:rgba(255,255,255,0.12);}
+tbody tr:nth-child(odd) td{background:rgba(255,255,255,0.22);}
+td textarea{
+  border:0;
+  border-radius:0;
+  background:transparent;
+  width:100%;
+  min-width:0;
+  font-family:inherit;
+  color:var(--text);
+  outline:none;
+  margin:0;
+  min-height:82px;
+  padding:8px 7px;
+  font-size:10px;
+  line-height:1.28;
+  resize:none;
+  overflow:hidden;
+  display:block;
+}
+.note{
+  margin-top:8px;
+  padding:12px 14px;
+  border-left:4px solid var(--brand);
+  border-radius:4px 12px 12px 4px;
+  background:rgba(255,255,255,0.26);
+  font-size:11px;
+  line-height:1.5;
+}
+.footer{
+  text-align:center;
+  margin-top:10px;
+  font-size:10px;
+  line-height:1.5;
+}
+.actions{display:flex;margin-top:14px;}
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  background:var(--brand);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.check-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px 14px;
+}
+.check-item{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:rgba(255,255,255,0.58);
+  font-size:11px;
+  line-height:1.45;
+}
+.check-item input{
+  margin-top:2px;
+  width:15px;
+  height:15px;
+  flex:0 0 15px;
+}
+.muted{color:var(--muted);}
+th:nth-child(1){width:18%;}
+th:nth-child(2){width:15%;}
+th:nth-child(3){width:17%;}
+th:nth-child(4){width:24%;}
+th:nth-child(5){width:26%;}
+@media screen and (max-width:760px){
+  html, body{overflow-x:hidden !important;width:100% !important;max-width:100% !important;}
+  .page-shell{padding:0 !important;overflow-x:hidden !important;}
+  .card{width:100% !important;max-width:100% !important;margin:0 !important;padding:16px 12px 18px !important;border-radius:0 !important;box-shadow:none !important;border:none !important;}
+  .logo{gap:10px;margin-bottom:4px;}
+  .logo .bare{font-size:21px;}
+  .logo .by{font-size:13px;}
+  h1{font-size:14px;margin-bottom:6px;}
+  .intro,.legal-note{font-size:12px;line-height:1.5;margin-bottom:12px;}
+  .section{width:100% !important;max-width:100% !important;margin:0 0 10px 0 !important;padding:12px 10px !important;border-radius:12px !important;box-shadow:none !important;}
+  .grid,.check-grid{grid-template-columns:1fr !important;gap:7px !important;width:100% !important;}
+  .field,.field.wide{width:100% !important;max-width:100% !important;min-width:0 !important;grid-column:auto !important;}
+  .field label{font-size:8px;margin-bottom:4px;}
+  .input,.select{width:100% !important;max-width:100% !important;height:44px !important;min-height:44px !important;padding:0 12px !important;font-size:16px !important;line-height:44px !important;border-radius:10px !important;}
+  textarea.textarea{width:100% !important;max-width:100% !important;min-height:80px !important;padding:10px 12px !important;font-size:14px !important;line-height:1.35 !important;border-radius:10px !important;}
+  .table-wrap{width:100% !important;max-width:100% !important;overflow:visible !important;border-radius:10px !important;}
+  table{table-layout:fixed !important;}
+  th{font-size:6px !important;padding:6px 4px !important;line-height:1.12 !important;letter-spacing:.03em !important;word-break:break-word !important;overflow-wrap:anywhere !important;}
+  td textarea{min-height:76px !important;padding:6px 5px !important;font-size:8px !important;line-height:1.24 !important;word-break:break-word !important;overflow-wrap:anywhere !important;resize:none !important;overflow:hidden !important;}
+  th:nth-child(1){width:18% !important;}
+  th:nth-child(2){width:15% !important;}
+  th:nth-child(3){width:17% !important;}
+  th:nth-child(4){width:24% !important;}
+  th:nth-child(5){width:26% !important;}
+  .note,.footer{font-size:11px;}
+}
+@media print{
+  @page{size:A4 portrait;margin:6mm;}
+  html, body{background:#cacdc6 !important;width:100% !important;zoom:1 !important;}
+  body{margin:0 !important;padding:0 !important;}
+  .page-shell{background:#cacdc6 !important;}
+  .card{width:100% !important;padding:14px 14px !important;background:#d4d7d1 !important;border-radius:10px !important;box-shadow:none !important;}
+  h1{font-size:12.5px !important;margin-bottom:6px !important;}
+  .intro,.legal-note{font-size:8.3px !important;line-height:1.3 !important;margin-bottom:6px !important;}
+  .section{padding:8px !important;margin-bottom:6px !important;page-break-inside:avoid;background:#d0d3cd !important;background-image:none !important;border:1px solid rgba(36,34,26,0.08) !important;}
+  .section-title{font-size:8.4px !important;margin-bottom:4px !important;}
+  .field label{font-size:7px !important;}
+  .input,.select{height:24px !important;font-size:8px !important;padding:0 6px !important;background:rgba(255,255,255,0.72) !important;}
+  .textarea{min-height:42px !important;font-size:7.7px !important;padding:5px !important;resize:none !important;overflow:hidden !important;background:rgba(255,255,255,0.72) !important;}
+  th{font-size:6px !important;padding:5px 3px !important;}
+  td textarea{font-size:6.9px !important;min-height:46px !important;padding:4px !important;line-height:1.18 !important;resize:none !important;overflow:hidden !important;}
+  .check-item{font-size:8px !important;padding:7px 8px !important;}
+  .actions{display:none !important;}
+}
+</style>
+</head>
+<body>
+<div class="page-shell">
+<div class="card">
+
+  <div class="logo">
+    <span class="bare">BARE |</span>
+    <span class="by">by Marlese</span>
+  </div>
+
+  <h1>Fire Safety &amp; Emergency Plan</h1>
+
+  <p class="intro">
+    Home-based fire safety and emergency plan for laser tattoo removal treatments carried out at BARE by Marlese. This document is designed to support safe day-to-day operation, emergency response, council inspection readiness and insurer expectations for a small treatment room environment.
+  </p>
+
+  <p class="legal-note">
+    This plan is intended to support compliance with fire safety duties for business premises by identifying fire hazards, persons at risk, control measures, evacuation arrangements, equipment checks and emergency actions. It should be read alongside the business fire risk assessment, equipment maintenance records, COSHH documentation and laser local rules.
+  </p>
+
+  <div class="section">
+    <h2 class="section-title">Plan Details</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Business Name</label>
+        <input class="input" type="text" value="BARE by Marlese">
+      </div>
+      <div class="field">
+        <label>Responsible Person</label>
+        <input class="input" type="text" value="Marlese Rosch Haden">
+      </div>
+      <div class="field">
+        <label>Premises</label>
+        <input class="input" type="text" value="Home-Based Treatment Room">
+      </div>
+      <div class="field">
+        <label>Main Treatment Activity</label>
+        <input class="input" type="text" value="Laser Tattoo Removal">
+      </div>
+      <div class="field">
+        <label>Assessment / Issue Date</label>
+        <input class="input" type="date" id="planDate">
+      </div>
+      <div class="field">
+        <label>Review Date</label>
+        <input class="input" type="date">
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Premises Scope &amp; Persons at Risk</h2>
+    <div class="grid">
+      <div class="field wide">
+        <label>Scope of This Plan</label>
+        <textarea class="textarea medium">This plan applies to the treatment room, immediate access route, waiting / entry area where applicable, and any area where laser equipment, electrical items, cleaning products or combustible materials associated with treatment are stored or used.</textarea>
+      </div>
+      <div class="field wide">
+        <label>Persons at Risk</label>
+        <textarea class="textarea medium">Persons at risk may include the practitioner, clients attending for consultation or treatment, any visitor accompanying a client, contractors carrying out servicing or repair work, and any other person who may be present within or near the treatment area at the time of an emergency.</textarea>
+      </div>
+      <div class="field wide">
+        <label>People Requiring Extra Assistance</label>
+        <textarea class="textarea small">Consider clients with reduced mobility, sensory impairment, anxiety, pregnancy, language barriers or any condition that may affect rapid evacuation. Adjustments should be identified before treatment where relevant.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Fire Hazards &amp; Controls Register</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Hazard Source</th>
+            <th>Risk Level</th>
+            <th>Who May Be Harmed</th>
+            <th>Control Measures in Place</th>
+            <th>Further Action / Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><textarea>Laser system, power supply and associated electrical equipment</textarea></td>
+            <td><textarea>Medium</textarea></td>
+            <td><textarea>Practitioner, client, visitors</textarea></td>
+            <td><textarea>Equipment is used according to manufacturer guidance, visually checked before use, switched off when not in use, and kept clear of combustible items. Servicing and maintenance records are retained.</textarea></td>
+            <td><textarea>Record servicing dates and remove equipment from use if faults, burning smells, overheating or cable damage are identified.</textarea></td>
+          </tr>
+          <tr>
+            <td><textarea>General electrical items, extension leads, chargers and sockets</textarea></td>
+            <td><textarea>Medium</textarea></td>
+            <td><textarea>Practitioner, client, contractors</textarea></td>
+            <td><textarea>Only suitable equipment is used. Sockets are not overloaded. Cables are positioned safely and checked for wear. Defective items are not used.</textarea></td>
+            <td><textarea>Keep appliance testing / inspection records where applicable and review use of any extension lead.</textarea></td>
+          </tr>
+          <tr>
+            <td><textarea>Cleaning chemicals, disinfectants and other treatment substances</textarea></td>
+            <td><textarea>Low to Medium</textarea></td>
+            <td><textarea>Practitioner, client</textarea></td>
+            <td><textarea>Products are stored sealed and in original containers where possible, used in accordance with instructions and kept away from ignition sources. Quantities held in the room are kept to a practical minimum.</textarea></td>
+            <td><textarea>Cross-reference COSHH assessment and retain relevant SDS.</textarea></td>
+          </tr>
+          <tr>
+            <td><textarea>Soft furnishings, paper products, couch roll, towels and waste</textarea></td>
+            <td><textarea>Medium</textarea></td>
+            <td><textarea>Anyone present in premises</textarea></td>
+            <td><textarea>Combustible materials are stored tidily, waste is removed regularly, and treatment areas are kept free from unnecessary clutter. Heat-producing items are not left unattended.</textarea></td>
+            <td><textarea>Maintain good housekeeping and keep escape route clear at all times.</textarea></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Fire Prevention Measures</h2>
+    <div class="check-grid">
+      <label class="check-item"><input type="checkbox"> Escape route kept clear and usable at all times</label>
+      <label class="check-item"><input type="checkbox"> Treatment room door / exit easy to open without delay</label>
+      <label class="check-item"><input type="checkbox"> No smoking or naked flames in treatment areas</label>
+      <label class="check-item"><input type="checkbox"> Combustible waste removed routinely</label>
+      <label class="check-item"><input type="checkbox"> Electrical leads checked visually before use</label>
+      <label class="check-item"><input type="checkbox"> Faulty equipment taken out of use immediately</label>
+      <label class="check-item"><input type="checkbox"> Fire detection / smoke alarm tested routinely</label>
+      <label class="check-item"><input type="checkbox"> Appropriate extinguisher available where chosen and user understands limitations</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Emergency Procedure</h2>
+    <div class="grid">
+      <div class="field wide">
+        <label>Action on Discovering Fire or Smoke</label>
+        <textarea class="textarea large">Stop treatment immediately. Switch off laser equipment if this can be done safely without delaying escape. Alert anyone in the premises. Evacuate by the nearest safe exit. Do not stop to collect belongings. Call 999 once safely outside and provide the full address and nature of the emergency. Do not re-enter the premises until the fire service confirms it is safe to do so.</textarea>
+      </div>
+      <div class="field wide">
+        <label>Action if a Client Is Under Treatment</label>
+        <textarea class="textarea medium">Cease treatment at once, remove eyewear if safe to do so, assist the client to leave calmly by the nearest safe route, and account for anyone present once outside. Where a client may require assistance, the practitioner should prioritise immediate evacuation support.</textarea>
+      </div>
+      <div class="field">
+        <label>Assembly Point</label>
+        <input class="input" type="text" placeholder="Add the safe meeting point outside the property">
+      </div>
+      <div class="field">
+        <label>Emergency Contact / Key Holder</label>
+        <input class="input" type="text" placeholder="Add emergency contact details">
+      </div>
+      <div class="field wide">
+        <label>Calling the Fire Service</label>
+        <textarea class="textarea small">Dial 999, ask for Fire and Rescue, provide the address, advise that the premises are used for laser tattoo removal treatment, state whether anyone is inside, and mention any relevant equipment or substances if known.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Fire Safety Equipment &amp; Checks</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Smoke / Heat Alarm Provision</label>
+        <textarea class="textarea medium">Smoke or heat detection should be installed in appropriate locations for the layout and tested routinely in accordance with manufacturer guidance.</textarea>
+      </div>
+      <div class="field">
+        <label>Fire Extinguisher / Fire Blanket</label>
+        <textarea class="textarea medium">Where provided, equipment should be suitable for the environment, accessible, maintained where required, and only used if the fire is small, escape remains possible and the user is confident to do so.</textarea>
+      </div>
+      <div class="field wide">
+        <label>Inspection &amp; Testing Routine</label>
+        <textarea class="textarea medium">Record routine smoke alarm tests, visual checks of plugs, sockets and cables, servicing of laser equipment, and any inspection or maintenance of fire safety equipment. Defects should be actioned promptly and documented.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Training, Information &amp; Housekeeping</h2>
+    <div class="grid">
+      <div class="field wide">
+        <label>Training / Competence Statement</label>
+        <textarea class="textarea medium">The responsible person / practitioner should be familiar with this plan, the fire risk assessment, safe shutdown of equipment, evacuation arrangements, emergency calling procedure, location of alarms, and limitations of any firefighting equipment provided.</textarea>
+      </div>
+      <div class="field wide">
+        <label>Housekeeping Standards</label>
+        <textarea class="textarea medium">Treatment areas should be kept tidy and free from unnecessary combustibles. Waste should be removed regularly. Electrical items should be unplugged or switched off when not required. Storage should not obstruct doors, exits or access to safety equipment.</textarea>
+      </div>
+      <div class="field wide">
+        <label>Contractors / Visitors</label>
+        <textarea class="textarea small">Any contractor or visitor attending the premises should be informed of relevant fire safety arrangements where appropriate, including exits and what to do in an emergency.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Review &amp; Significant Change Trigger</h2>
+    <textarea class="textarea medium">This plan should be reviewed at least annually and sooner if there is any significant change, including changes to the room layout, escape route, electrical setup, laser equipment, products stored on site, treatment process, client profile, building works, incident, near miss, insurer requirement or local authority request.</textarea>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Sign Off</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Signature</label>
+        <input class="input" type="text" placeholder="Type full name or print after signing">
+      </div>
+      <div class="field">
+        <label>Date Signed</label>
+        <input class="input" type="datetime-local" id="signDate" step="60">
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Important</strong><br>
+    This document should be used as part of a wider compliance pack. Keep it with your fire risk assessment, general risk assessment, COSHH records, laser local rules, equipment maintenance records, insurance documents and any incident log.
+  </div>
+
+  <div class="footer">
+    BARE by Marlese | Fire Safety &amp; Emergency Plan
+  </div>
+
+  <div class="actions">
+    <button class="btn" onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+function downloadPDF(){
+  const originalTitle = document.title;
+  document.title = "BARE-Fire-Safety-Emergency-Plan";
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1200);
+  }, 150);
+}
+
+function autoGrowTextarea(el){
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function autoGrowAllTextareas(){
+  document.querySelectorAll('textarea').forEach((el) => {
+    autoGrowTextarea(el);
+    if (!el.dataset.autogrowBound) {
+      el.addEventListener('input', function(){
+        autoGrowTextarea(this);
+      });
+      el.dataset.autogrowBound = 'true';
+    }
+  });
+}
+
+function updateSignDateTime(){
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  const date = now.toISOString().slice(0,10);
+  const time = now.toTimeString().slice(0,5);
+  document.getElementById('signDate').value = `${date}T${time}`;
+}
+
+window.addEventListener('load', () => {
+  document.getElementById('planDate').valueAsDate = new Date();
+  updateSignDateTime();
+  autoGrowAllTextareas();
+  setInterval(updateSignDateTime, 60000);
+});
+
+window.addEventListener('beforeprint', () => {
+  updateSignDateTime();
+  autoGrowAllTextareas();
+});
+</script>
+
+</body>
+</html>
