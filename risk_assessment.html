@@ -605,6 +605,16 @@ th:nth-child(7){width:16%;}
     margin:6mm;
   }
 
+  .print-page-break-before{
+    page-break-before:always !important;
+    break-before:page !important;
+  }
+
+  .print-page-break-after{
+    page-break-after:always !important;
+    break-after:page !important;
+  }
+
   html, body{
     background:#cacdc6 !important;
     width:100% !important;
@@ -732,6 +742,8 @@ th:nth-child(7){width:16%;}
   .table-wrap{
     page-break-before:auto !important;
     page-break-after:auto;
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
   }
 
   .actions{
@@ -858,7 +870,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section">
+  <div class="section print-page-break-before">
     <h2 class="section-title">Risk Assessment Register</h2>
     <div class="table-wrap">
       <table>
@@ -987,7 +999,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section">
+  <div class="section print-page-break-before">
     <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
