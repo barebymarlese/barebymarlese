@@ -1037,7 +1037,10 @@ function downloadPDF(){
 }
 
 document.getElementById('assessmentDate').valueAsDate = new Date();
-document.getElementById('signDate').valueAsDate = new Date();
+
+const now = new Date();
+now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+document.getElementById('signDate').value = now.toISOString().slice(0,16);
 
 document.querySelectorAll('tbody input[type="date"]').forEach((el) => {
   el.valueAsDate = new Date();
