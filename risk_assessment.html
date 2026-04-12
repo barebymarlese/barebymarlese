@@ -734,8 +734,13 @@ td input{
 
   .table-wrap{
     page-break-before:auto !important;
-    page-break-after:auto;
+    page-break-after:auto !important;
   }
+
+  #signoff-section{
+  page-break-before: always !important;
+  break-before: page !important;
+}
 
   .actions{
     display:none !important;
