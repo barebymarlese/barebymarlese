@@ -47,6 +47,22 @@ select{
   font:inherit;
 }
 
+input:focus,
+textarea:focus,
+select:focus{
+  outline:2px solid rgba(94,105,89,0.18);
+  outline-offset:0;
+}
+
+.th-format{
+  display:block;
+  font-size:.9em;
+  letter-spacing:.02em;
+  text-transform:none;
+  font-weight:600;
+  margin-top:2px;
+}
+
 .page-shell{
   width:100%;
   max-width:100%;
@@ -61,6 +77,8 @@ select{
   padding:28px 30px;
   background:rgba(212,215,209,0.94);
   border-radius:0;
+  box-shadow:none;
+  border:none;
 }
 
 .logo{
@@ -103,7 +121,10 @@ h1{
   border-radius:14px;
   background:linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.12));
   border:1px solid rgba(255,255,255,0.42);
+  box-shadow:none;
   margin-bottom:12px;
+  width:100%;
+  max-width:100%;
 }
 
 .section-title{
@@ -119,6 +140,12 @@ h1{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:8px 14px;
+  width:100%;
+}
+
+.field{
+  width:100%;
+  min-width:0;
 }
 
 .field label{
@@ -134,17 +161,23 @@ h1{
 .input,
 .textarea{
   width:100%;
+  max-width:100%;
   border:1px solid var(--line);
   background:rgba(255,255,255,0.82);
   border-radius:10px;
+  font-family:inherit;
   color:var(--text);
   outline:none;
+  margin:0;
 }
 
 .input{
   height:40px;
+  min-height:40px;
   padding:0 12px;
   font-size:13px;
+  line-height:40px;
+  display:block;
 }
 
 textarea.textarea{
@@ -153,13 +186,66 @@ textarea.textarea{
   font-size:12px;
   line-height:1.45;
   resize:none;
+  display:block;
 }
 
-.textarea.small{ min-height:56px; }
-.wide{ grid-column:1 / -1; }
+.textarea.small{
+  min-height:56px;
+}
+
+.wide{
+  grid-column:1 / -1;
+}
+
+/* LOCKED BOXES - NO INTERNAL SCROLL */
+.fixed-box{
+  resize:none !important;
+  overflow:hidden !important;
+}
+
+/* desktop */
+.fixed-activities{
+  height:72px;
+  min-height:72px;
+  max-height:72px;
+}
+
+.fixed-people{
+  height:58px;
+  min-height:58px;
+  max-height:58px;
+}
+
+.fixed-method{
+  height:42px;
+  min-height:42px;
+  max-height:42px;
+}
+
+input[type="date"].input{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  height:40px;
+  min-height:40px;
+  line-height:40px;
+  padding:0 12px;
+  border-radius:10px;
+  display:block;
+}
+
+input[type="date"]::-webkit-date-and-time-value{
+  text-align:left;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator{
+  opacity:.85;
+}
 
 .table-wrap{
   width:100%;
+  max-width:100%;
+  overflow:visible;
   border-radius:12px;
   background:rgba(255,255,255,0.18);
   border:1px solid rgba(36,34,26,0.08);
@@ -171,6 +257,9 @@ table{
   border-collapse:separate;
   border-spacing:0;
   table-layout:fixed;
+  background:rgba(255,255,255,0.14);
+  border-radius:10px;
+  overflow:hidden;
 }
 
 th, td{
@@ -180,21 +269,37 @@ th, td{
   border-bottom:1px solid var(--line-soft);
 }
 
+th:last-child, td:last-child{border-right:none;}
+tbody tr:last-child td{border-bottom:none;}
+
 th{
   background:rgba(255,255,255,0.46);
   color:var(--brand);
   font-size:8px;
   font-weight:700;
   text-transform:uppercase;
+  letter-spacing:.06em;
   padding:8px 5px;
   text-align:left;
+  line-height:1.18;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  vertical-align:middle;
 }
 
-td textarea, td input{
+tbody tr:nth-child(even) td{background:rgba(255,255,255,0.12);}
+tbody tr:nth-child(odd) td{background:rgba(255,255,255,0.22);}
+
+td textarea,
+td input{
   border:0;
+  border-radius:0;
   background:transparent;
   width:100%;
+  font-family:inherit;
+  color:var(--text);
   outline:none;
+  margin:0;
 }
 
 td textarea{
@@ -204,6 +309,31 @@ td textarea{
   line-height:1.26;
   resize:none;
   overflow:hidden;
+  display:block;
+}
+
+td textarea.auto-grow-cell{
+  min-height:0;
+  height:auto;
+}
+
+td input{
+  height:32px;
+  padding:0 6px;
+  font-size:8.8px;
+  line-height:32px;
+  display:block;
+}
+
+td input[type="date"]{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  height:32px;
+  min-height:32px;
+  line-height:32px;
+  padding:0 4px;
+  font-size:7.2px;
 }
 
 th:nth-child(1){width:13%;}
@@ -214,60 +344,415 @@ th:nth-child(5){width:8%;}
 th:nth-child(6){width:8%;}
 th:nth-child(7){width:16%;}
 
-/* PRINT OPTIMIZATION: REMOVE SPACES AND FIT BOXES */
-@media print{
-  @page{
-    size:A4 portrait;
-    margin:5mm;
-  }
+.note{
+  margin-top:8px;
+  padding:12px 14px;
+  border-left:4px solid var(--brand);
+  border-radius:4px 12px 12px 4px;
+  background:rgba(255,255,255,0.26);
+  font-size:11px;
+  line-height:1.5;
+}
 
-  body, .page-shell{ background:#cacdc6 !important; }
 
-  .card{
-    padding:10px !important;
-    background:#d4d7d1 !important;
-  }
+.checklist-box{
+  margin-top:8px;
+  padding:14px 16px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.26);
+  border:1px solid rgba(36,34,26,0.08);
+}
 
-  .section{
-    padding:6px !important;
-    margin-bottom:6px !important;
-    background:#d0d3cd !important;
-    border:1px solid rgba(0,0,0,0.05) !important;
-  }
+.note strong{
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
 
-  /* Force table cells to wrap text tightly */
-  th{
-    font-size:6.5px !important;
-    padding:3px 2px !important;
-  }
+.checklist{
+  margin:0;
+  padding-left:18px;
+}
 
-  td textarea{
-    font-size:7.2px !important;
-    line-height:1.1 !important;
-    padding:2px 3px !important; /* Minimized padding */
-    min-height:0 !important;   /* Let JS height take over */
-    margin:0 !important;
-  }
+.checklist li{
+  font-size:11px;
+  line-height:1.45;
+  margin:0 0 5px;
+}
 
-  td input{
-    font-size:7.2px !important;
-    height:18px !important;
-    padding:0 2px !important;
-  }
+.footer{
+  text-align:center;
+  margin-top:10px;
+  font-size:10px;
+  line-height:1.5;
+}
 
-  .actions { display:none !important; }
+.actions{
+  display:flex;
+  margin-top:14px;
 }
 
 .btn{
   width:100%;
   padding:14px;
   border-radius:12px;
+  border:none;
   background:var(--brand);
   color:#fff;
+  font-size:12px;
   font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
   cursor:pointer;
-  border:none;
-  margin-top:20px;
+}
+
+@media screen and (max-width:760px){
+  html, body{
+    overflow-x:hidden !important;
+    width:100% !important;
+    max-width:100% !important;
+  }
+
+  .page-shell{
+    padding:0 !important;
+    overflow-x:hidden !important;
+  }
+
+  .card{
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 !important;
+    padding:16px 12px 18px !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    border:none !important;
+  }
+
+  .logo{
+    gap:10px;
+    margin-bottom:4px;
+  }
+
+  .logo .bare{font-size:21px;}
+  .logo .by{font-size:13px;}
+
+  h1{
+    font-size:14px;
+    margin-bottom:6px;
+  }
+
+  .intro{
+    font-size:12px;
+    line-height:1.5;
+    margin-bottom:12px;
+  }
+
+  .section{
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 0 10px 0 !important;
+    padding:12px 10px !important;
+    border-radius:12px !important;
+    box-shadow:none !important;
+  }
+
+  .grid{
+    grid-template-columns:1fr !important;
+    gap:7px !important;
+    width:100% !important;
+  }
+
+  .field,
+  .field.wide{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    grid-column:auto !important;
+  }
+
+  .field label{
+    font-size:8px;
+    margin-bottom:4px;
+  }
+
+  .input{
+    width:100% !important;
+    max-width:100% !important;
+    height:44px !important;
+    min-height:44px !important;
+    padding:0 12px !important;
+    font-size:16px !important;
+    line-height:44px !important;
+    border-radius:10px !important;
+    transform:none !important;
+    zoom:1 !important;
+  }
+
+  input[type="date"].input{
+    height:44px !important;
+    min-height:44px !important;
+    line-height:44px !important;
+    padding:0 12px !important;
+    border-radius:10px !important;
+  }
+
+  textarea.textarea{
+    width:100% !important;
+    max-width:100% !important;
+    min-height:70px !important;
+    padding:10px 12px !important;
+    font-size:14px !important;
+    line-height:1.35 !important;
+    border-radius:10px !important;
+    resize:none !important;
+    overflow:hidden !important;
+  }
+
+  .textarea.small{
+    min-height:62px !important;
+  }
+
+  /* mobile exact heights for these 3 boxes - increased so no inner scrolling */
+  .fixed-activities{
+    height:122px !important;
+    min-height:122px !important;
+    max-height:122px !important;
+  }
+
+  .fixed-people{
+    height:104px !important;
+    min-height:104px !important;
+    max-height:104px !important;
+  }
+
+  .fixed-method{
+    height:74px !important;
+    min-height:74px !important;
+    max-height:74px !important;
+  }
+
+  .table-wrap{
+    width:100% !important;
+    max-width:100% !important;
+    overflow:visible !important;
+    border-radius:10px !important;
+  }
+
+  table{
+    table-layout:fixed !important;
+  }
+
+  th{
+    font-size:6.2px !important;
+    padding:6px 4px !important;
+    line-height:1.12 !important;
+    letter-spacing:.03em !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  td textarea{
+    min-height:68px !important;
+    padding:6px 5px !important;
+    font-size:8px !important;
+    line-height:1.22 !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+    resize:none !important;
+    overflow:hidden !important;
+  }
+
+  td textarea.auto-grow-cell{
+    min-height:0 !important;
+  }
+
+  td input{
+    height:32px !important;
+    line-height:32px !important;
+    padding:0 5px !important;
+    font-size:8px !important;
+    word-break:break-word !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  td input[type="date"]{
+    height:32px !important;
+    min-height:32px !important;
+    line-height:32px !important;
+    padding:0 4px !important;
+    font-size:16px !important;
+  }
+
+  th:nth-child(1){width:13% !important;}
+  th:nth-child(2){width:13% !important;}
+  th:nth-child(3){width:24% !important;}
+  th:nth-child(4){width:18% !important;}
+  th:nth-child(5){width:9% !important;}
+  th:nth-child(6){width:9% !important;}
+  th:nth-child(7){width:14% !important;}
+
+  .note,
+  .checklist li,
+  .footer{
+    font-size:11px;
+  }
+}
+
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:6mm;
+  }
+
+  html, body{
+    background:#cacdc6 !important;
+    width:100% !important;
+    zoom:1 !important;
+  }
+
+  body{
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  .page-shell{
+    background:#cacdc6 !important;
+  }
+
+  .card{
+    width:100% !important;
+    padding:14px 14px !important;
+    background:#d4d7d1 !important;
+    border-radius:10px !important;
+    box-shadow:none !important;
+  }
+
+  h1{
+    font-size:12.5px !important;
+    margin-bottom:6px !important;
+  }
+
+  .intro{
+    font-size:8.5px !important;
+    line-height:1.3 !important;
+    margin-bottom:6px !important;
+  }
+
+  .section{
+    padding:8px !important;
+    margin-bottom:6px !important;
+    page-break-inside:avoid;
+    background:#d0d3cd !important;
+    background-image:none !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
+  }
+
+  .section-title{
+    font-size:8.5px !important;
+    margin-bottom:4px !important;
+  }
+
+  .field label{
+    font-size:7px !important;
+  }
+
+  .input{
+    height:24px !important;
+    font-size:8px !important;
+    padding:0 6px !important;
+    background:rgba(255,255,255,0.72) !important;
+  }
+
+  .textarea{
+    min-height:38px !important;
+    font-size:7.5px !important;
+    padding:5px !important;
+    resize:none !important;
+    overflow:hidden !important;
+    background:rgba(255,255,255,0.72) !important;
+  }
+
+  .fixed-activities{
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
+  }
+
+  .fixed-people{
+    height:36px !important;
+    min-height:36px !important;
+    max-height:36px !important;
+  }
+
+  .fixed-method{
+    height:28px !important;
+    min-height:28px !important;
+    max-height:28px !important;
+  }
+
+  .checklist-box,
+  .note{
+    background:rgba(255,255,255,0.18) !important;
+    border:1px solid rgba(36,34,26,0.08) !important;
+    page-break-inside:avoid !important;
+  }
+
+  .note{
+    border-left:none !important;
+    border-radius:12px !important;
+  }
+
+  th{
+    font-size:6.5px !important;
+    padding:5px 3px !important;
+  }
+
+  td textarea{
+    font-size:7px !important;
+    min-height:38px !important;
+    padding:4px !important;
+    line-height:1.15 !important;
+    resize:none !important;
+    overflow:hidden !important;
+  }
+
+  td textarea.auto-grow-cell{
+    min-height:0 !important;
+  }
+
+  td input{
+    font-size:7px !important;
+    height:22px !important;
+  }
+
+  .table-wrap{
+    page-break-before:auto !important;
+    page-break-after:auto;
+  }
+
+  .actions{
+    display:none !important;
+  }
+}
+
+/* mobile print helper */
+@media print and (max-width:760px){
+  #scope-section{
+    margin-top:6px !important;
+    page-break-before:auto !important;
+    break-before:auto !important;
+  }
+
+  #assessment-details-section{
+    page-break-after:avoid !important;
+    break-after:avoid !important;
+  }
+
+  #mobile-print-scope-anchor{
+    display:block !important;
+    height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
 }
 
 </style>
@@ -283,13 +768,88 @@ th:nth-child(7){width:16%;}
 
   <h1>Risk Assessment</h1>
 
-  <div class="section">
+  <p class="intro">
+    Home-based laser tattoo removal risk assessment for a dedicated treatment area.
+    This document is intended to support safe working practice, council inspection readiness,
+    insurer expectations, and regular review of hazards, controls, and further actions.
+  </p>
+
+  <div class="section" id="assessment-details-section">
     <h2 class="section-title">Assessment Details</h2>
     <div class="grid">
-      <div class="field"><label>Business</label><input class="input" type="text" value="BARE by Marlese"></div>
-      <div class="field"><label>Assessor</label><input class="input" type="text" value="Marlese Rosch Haden"></div>
-      <div class="field"><label>Date</label><input class="input" type="date" id="assessmentDate"></div>
-      <div class="field"><label>Review</label><input class="input" type="date"></div>
+      <div class="field">
+        <label>Business Name</label>
+        <input class="input" type="text" value="BARE by Marlese">
+      </div>
+      <div class="field">
+        <label>Assessment Reference</label>
+        <input class="input" type="text" placeholder="e.g. RA-001">
+      </div>
+      <div class="field">
+        <label>Assessor Name</label>
+        <input class="input" type="text" value="Marlese Rosch Haden">
+      </div>
+      <div class="field">
+        <label>Role</label>
+        <input class="input" type="text" value="Practitioner / Sole Trader">
+      </div>
+      <div class="field wide">
+        <label>Premises Address / Treatment Room</label>
+        <input class="input" type="text" value="2 Hagbourne Close, Woodcote, RG8 0RZ">
+      </div>
+      <div class="field">
+        <label>Assessment Date</label>
+        <input class="input" type="date" id="assessmentDate">
+      </div>
+      <div class="field">
+        <label>Review Date</label>
+        <input class="input" type="date">
+      </div>
+      <div class="field wide">
+        <label>Machine / Equipment Covered</label>
+        <textarea class="textarea small">Laser system, eyewear, couch, trolley, sharps bin, cleaning products</textarea>
+      </div>
+      <div id="mobile-print-scope-anchor"></div>
+    </div>
+  </div>
+
+  <div class="section" id="scope-section">
+    <h2 class="section-title">Scope & People at Risk</h2>
+    <div class="grid">
+      <div class="field wide">
+        <label>Activities Covered</label>
+        <textarea class="textarea small fixed-box fixed-activities">Client consultation, patch testing, laser tattoo removal treatment, cleaning and disinfection, waste handling, equipment checks, record keeping, and client exit / aftercare issue.</textarea>
+      </div>
+      <div class="field wide">
+        <label>People at Risk</label>
+        <textarea class="textarea small fixed-box fixed-people">Practitioner, client, visitors to the home, contractors / service engineers, and anyone entering the treatment area during operation.</textarea>
+      </div>
+      <div class="field wide">
+        <label>General Risk Rating Method</label>
+        <textarea class="textarea small fixed-box fixed-method">Low / Medium / High based on likelihood, severity, and effectiveness of controls.</textarea>
+      </div>
+    </div>
+
+    <h2 class="section-title" style="margin-top:12px;">Supporting Control Measures Checklist</h2>
+    <div class="checklist-box">
+      <ul class="checklist">
+        <li>Consultation, consent, and treatment records completed and stored securely.</li>
+        <li>Patch testing / suitability checks used where clinically appropriate.</li>
+        <li>Manufacturer instructions, training evidence, and service records retained.</li>
+        <li>Protective eyewear available, clean, and suitable for the equipment used.</li>
+        <li>Cleaning products and disinfectants used according to label and COSHH information.</li>
+        <li>Treatment room kept clean, ventilated, and free of avoidable trip hazards.</li>
+        <li>Business waste handled separately and disposed of through appropriate arrangements.</li>
+        <li>Incidents, near misses, and complaints reviewed to improve controls.</li>
+        <li>Assessment reviewed after incidents, equipment changes, layout changes, or updated guidance.</li>
+      </ul>
+    </div>
+
+    <div class="note">
+      <strong>Important</strong><br>
+      This risk assessment should be reviewed whenever there is a change in equipment, treatment scope,
+      products used, room layout, insurer requirements, local council conditions, or after any accident,
+      near miss, or significant complaint.
     </div>
   </div>
 
@@ -300,63 +860,152 @@ th:nth-child(7){width:16%;}
         <thead>
           <tr>
             <th>Hazard</th>
-            <th>Target</th>
+            <th>Who Might Be Harmed</th>
             <th>Existing Controls</th>
-            <th>Further Action</th>
-            <th>Risk</th>
+            <th>Further Action Needed</th>
+            <th>Risk Level</th>
             <th>Owner</th>
-            <th>Review</th>
+            <th>Due / Review</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><textarea class="auto-grow-cell">Laser beam / exposure to eyes</textarea></td>
-            <td><textarea class="auto-grow-cell">Practitioner, client, visitor</textarea></td>
-            <td><textarea class="auto-grow-cell">Controlled treatment area used; wavelength-specific protective eyewear worn; access restricted; machine used per instructions.</textarea></td>
-            <td><textarea class="auto-grow-cell">Record eyewear checks before each session; keep replacements available.</textarea></td>
+            <td><textarea>Laser beam / accidental exposure to eyes</textarea></td>
+            <td><textarea>Practitioner, client, visitor</textarea></td>
+            <td><textarea class="auto-grow-cell">Controlled treatment area used; wavelength-specific protective eyewear worn by practitioner and client; no treatment unless eyewear is in place; access restricted during treatment; machine used according to manufacturer instructions and training.</textarea></td>
+            <td><textarea class="auto-grow-cell">Record eyewear checks before each clinic session; keep replacement eyewear available if required.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="text" value="Annual"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="auto-grow-cell">Skin burn / adverse reaction</textarea></td>
-            <td><textarea class="auto-grow-cell">Client</textarea></td>
-            <td><textarea class="auto-grow-cell">Consultation; contraindications screened; patch test completed; settings selected per skin type; aftercare explained.</textarea></td>
-            <td><textarea class="auto-grow-cell">Review consent forms regularly; update protocols after incidents.</textarea></td>
+            <td><textarea>Skin burn / adverse skin reaction</textarea></td>
+            <td><textarea>Client</textarea></td>
+            <td><textarea class="auto-grow-cell">Consultation completed; contraindications screened; patch test completed where appropriate; settings selected according to skin type, tattoo characteristics, and manufacturer guidance; treatment only proceeds where suitable; aftercare explained and documented.</textarea></td>
+            <td><textarea class="auto-grow-cell">Review consent and medical screening form wording regularly; update protocols after any incident or manufacturer bulletin.</textarea></td>
             <td><input type="text" value="Medium"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="text" value="Annual"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="auto-grow-cell">Cross-contamination / infection</textarea></td>
-            <td><textarea class="auto-grow-cell">Client, practitioner</textarea></td>
-            <td><textarea class="auto-grow-cell">Clean treatment area; hand hygiene; gloves; single-use consumables; surfaces disinfected between clients.</textarea></td>
-            <td><textarea class="auto-grow-cell">Maintain cleaning schedule and stock check.</textarea></td>
+            <td><textarea>Cross-contamination / infection</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea class="auto-grow-cell">Dedicated clean treatment area; hand hygiene before and after treatment; gloves worn as appropriate; single-use consumables used where possible; treatment couch and contact surfaces disinfected between clients; clean and used items kept separate; no treatment on infected or unsuitable skin.</textarea></td>
+            <td><textarea class="auto-grow-cell">Maintain cleaning schedule and stock check; review disinfectant contact times and product instructions.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="text" value="Annual"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="auto-grow-cell">Electrical fault / fire</textarea></td>
-            <td><textarea class="auto-grow-cell">Practitioner, client</textarea></td>
-            <td><textarea class="auto-grow-cell">Equipment visually checked before use; damaged cables removed; service records retained.</textarea></td>
-            <td><textarea class="auto-grow-cell">Log user checks and servicing; replace damaged leads immediately.</textarea></td>
+            <td><textarea>Exposure to cleaning chemicals / disinfectants</textarea></td>
+            <td><textarea>Practitioner, client</textarea></td>
+            <td><textarea class="auto-grow-cell">COSHH information retained for products used; products kept in labelled containers; used to manufacturer directions; incompatible products not mixed; gloves used if required; products stored securely away from children and treatment food/drink areas.</textarea></td>
+            <td><textarea class="auto-grow-cell">Keep current safety data sheets; review storage and dilution instructions when changing products.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="text" value="Annual"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
           <tr>
-            <td><textarea class="auto-grow-cell">Trips and Slips</textarea></td>
-            <td><textarea class="auto-grow-cell">Client, practitioner</textarea></td>
-            <td><textarea class="auto-grow-cell">Floor area kept free from clutter; spills cleaned promptly; adequate lighting maintained.</textarea></td>
-            <td><textarea class="auto-grow-cell">Check cable routing each clinic day.</textarea></td>
+            <td><textarea>Electrical fault / shock / fire from equipment</textarea></td>
+            <td><textarea>Practitioner, client, household occupants</textarea></td>
+            <td><textarea class="auto-grow-cell">Electrical equipment visually checked before use; damaged cables/plugs removed from service; equipment maintained to prevent danger; machine installed and operated on suitable supply; liquids kept away from electrical equipment; service records retained.</textarea></td>
+            <td><textarea class="auto-grow-cell">Log user checks and servicing; replace any damaged extension leads or accessories immediately.</textarea></td>
             <td><input type="text" value="Low"></td>
             <td><input type="text" value="Marlese"></td>
-            <td><input type="text" value="Annual"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
+          </tr>
+          <tr>
+            <td><textarea>Fire / emergency evacuation</textarea></td>
+            <td><textarea>Client, practitioner, household occupants, visitors</textarea></td>
+            <td><textarea class="auto-grow-cell">Clear exit route maintained; treatment room kept tidy; ignition sources controlled; no smoking; emergency contact phone available; appointments managed so area is supervised; fire precautions checked as part of routine premises safety review.</textarea></td>
+            <td><textarea class="auto-grow-cell">Record fire escape plan and assembly point; check alarm / extinguisher arrangements if provided.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
+          </tr>
+          <tr>
+            <td><textarea>Trips, slips, and manual handling</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea class="auto-grow-cell">Floor area kept free from clutter and trailing cables; spills cleaned promptly; adequate lighting maintained; treatment bed and trolley positioned to avoid awkward lifting and overreaching; client assisted as needed.</textarea></td>
+            <td><textarea class="auto-grow-cell">Check cable routing each clinic day; review room layout if equipment changes.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
+          </tr>
+          <tr>
+            <td><textarea>Poor ventilation / heat build-up / client discomfort</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea class="auto-grow-cell">Treatment room ventilated before and after appointments; fresh air available in enclosed area; room temperature monitored for comfort and safe working; treatment paused if environment becomes unsuitable.</textarea></td>
+            <td><textarea class="auto-grow-cell">Review ventilation in warm weather and when room layout changes.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
+          </tr>
+          <tr>
+            <td><textarea>Waste handling / contaminated materials</textarea></td>
+            <td><textarea>Practitioner, waste carrier, household occupants</textarea></td>
+            <td><textarea class="auto-grow-cell">Business waste separated from domestic waste; waste stored securely; transfers made using appropriate collection arrangements; records kept where required; treatment-related waste not left accessible to children or pets.</textarea></td>
+            <td><textarea class="auto-grow-cell">Confirm current disposal route and retain waste paperwork where applicable.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
+          </tr>
+          <tr>
+            <td><textarea>Lone working / personal safety</textarea></td>
+            <td><textarea>Practitioner</textarea></td>
+            <td><textarea class="auto-grow-cell">Appointments by prior booking only; client details recorded in advance; phone available; session times managed; practitioner aware of emergency contact process; treatment not carried out if practitioner feels unsafe.</textarea></td>
+            <td><textarea class="auto-grow-cell">Consider check-in procedure for late appointments or new clients.</textarea></td>
+            <td><input type="text" value="Medium"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
+          </tr>
+          <tr>
+            <td><textarea>First aid / incident response</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea class="auto-grow-cell">Suitable first aid kit available; emergency phone accessible; incidents, adverse reactions, and near misses recorded; practitioner stops treatment and escalates appropriately if reaction exceeds expected response.</textarea></td>
+            <td><textarea class="auto-grow-cell">Review contents of first aid kit routinely and after any use.</textarea></td>
+            <td><input type="text" value="Low"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
+          </tr>
+          <tr>
+            <td><textarea>Client unsuitability / contraindications / legal consent issues</textarea></td>
+            <td><textarea>Client, practitioner</textarea></td>
+            <td><textarea class="auto-grow-cell">Medical screening and consent completed before treatment; treatment refused or deferred where contraindicated; photographic and treatment records kept securely; practitioner only treats within training, competence, and insurance cover.</textarea></td>
+            <td><textarea class="auto-grow-cell">Review insurer conditions and update forms if scope of treatment changes.</textarea></td>
+            <td><input type="text" value="Medium"></td>
+            <td><input type="text" value="Marlese"></td>
+            <td><input type="date" placeholder="dd/mm/yyyy"></td>
           </tr>
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Assessment Sign-Off</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Assessor Signature</label>
+        <input class="input" type="text" placeholder="Type full name or print after signing">
+      </div>
+      <div class="field">
+        <label>Date Signed</label>
+        <input class="input" type="date" id="signDate">
+      </div>
+      <div class="field">
+        <label>Next Review Trigger</label>
+        <input class="input" type="text" placeholder="Annual review / incident / machine change / insurer request">
+      </div>
+      <div class="field">
+        <label>Version</label>
+        <input class="input" type="text" value="1.0">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    BARE by Marlese | Home-Based Laser Tattoo Removal Risk Assessment
   </div>
 
   <div class="actions">
@@ -368,25 +1017,85 @@ th:nth-child(7){width:16%;}
 
 <script>
 function downloadPDF(){
-  window.print();
+  const originalTitle = document.title;
+  document.title = "BARE-Risk-Assessment";
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1200);
+  }, 150);
 }
+
+document.getElementById('assessmentDate').valueAsDate = new Date();
+document.getElementById('signDate').valueAsDate = new Date();
+
+function formatDateToDDMMYYYY(date){
+  const d = String(date.getDate()).padStart(2,'0');
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}
+
+document.querySelectorAll('input[type="date"]').forEach((el) => {
+  el.setAttribute('title','dd/mm/yyyy');
+  el.setAttribute('aria-label', (el.previousElementSibling && el.previousElementSibling.textContent ? el.previousElementSibling.textContent + ' dd/mm/yyyy' : 'dd/mm/yyyy'));
+});
 
 function autoGrowTextarea(el){
-  el.style.height = 'auto';
-  el.style.height = (el.scrollHeight) + 'px';
+  el.style.height = '0px';
+  el.style.height = (el.scrollHeight + 2) + 'px';
 }
 
-function autoGrowAll(){
-  document.querySelectorAll('.auto-grow-cell').forEach(autoGrowTextarea);
+function autoGrowAllTextareas(){
+  document.querySelectorAll('.auto-grow-cell').forEach((el) => {
+    autoGrowTextarea(el);
+  });
 }
 
-window.addEventListener('load', autoGrowAll);
-window.addEventListener('resize', autoGrowAll);
-document.querySelectorAll('.auto-grow-cell').forEach(el => {
+let autoGrowResizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(autoGrowResizeTimer);
+  autoGrowResizeTimer = setTimeout(autoGrowAllTextareas, 120);
+});
+
+window.addEventListener('load', autoGrowAllTextareas);
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(autoGrowAllTextareas);
+}
+
+document.querySelectorAll('.auto-grow-cell').forEach((el) => {
+  autoGrowTextarea(el);
   el.addEventListener('input', () => autoGrowTextarea(el));
 });
 
-document.getElementById('assessmentDate').valueAsDate = new Date();
+
+const scopeSection = document.getElementById('scope-section');
+const assessmentDetailsSection = document.getElementById('assessment-details-section');
+const mobilePrintScopeAnchor = document.getElementById('mobile-print-scope-anchor');
+let originalScopeParent = scopeSection ? scopeSection.parentNode : null;
+let originalScopeNextSibling = scopeSection ? scopeSection.nextSibling : null;
+
+function moveScopeForMobilePrint(){
+  if (!scopeSection || !mobilePrintScopeAnchor) return;
+  if (window.innerWidth <= 760) {
+    mobilePrintScopeAnchor.insertAdjacentElement('afterend', scopeSection);
+  }
+}
+
+function restoreScopeAfterPrint(){
+  if (!scopeSection || !originalScopeParent) return;
+  if (originalScopeNextSibling && originalScopeNextSibling.parentNode === originalScopeParent) {
+    originalScopeParent.insertBefore(scopeSection, originalScopeNextSibling);
+  } else {
+    originalScopeParent.appendChild(scopeSection);
+  }
+}
+
+window.addEventListener('beforeprint', moveScopeForMobilePrint);
+window.addEventListener('afterprint', restoreScopeAfterPrint);
+
 </script>
 
 </body>
