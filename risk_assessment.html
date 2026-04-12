@@ -706,47 +706,87 @@ th:nth-child(7){width:16%;}
     padding:5px 3px !important;
   }
 
-td{
-  height:auto !important;
-}
+  td{
+    height:auto !important;
+  }
 
-td textarea{
-  height:auto !important;
-  min-height:0 !important;
-  padding:3px 4px !important;
-  font-size:7px !important;
-  line-height:1.1 !important;
-  resize:none !important;
-  overflow:hidden !important;
-}
+  td textarea{
+    height:auto !important;
+    min-height:0 !important;
+    padding:4px !important;
+    font-size:7px !important;
+    line-height:1.15 !important;
+    resize:none !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+  }
 
-td textarea.auto-grow-cell{
-  height:auto !important;
-  min-height:0 !important;
-}
+  td textarea.auto-grow-cell{
+    height:auto !important;
+    min-height:0 !important;
+  }
 
-td input{
-  font-size:7px !important;
-  height:20px !important;
-  line-height:20px !important;
-  padding:0 4px !important;
-}
+  td input{
+    font-size:7px !important;
+    height:22px !important;
+    line-height:22px !important;
+    padding:0 4px !important;
+    box-sizing:border-box !important;
+  }
 
   .table-wrap{
     page-break-before:auto !important;
     page-break-after:auto !important;
+    min-height:240mm !important;
+    height:240mm !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  .table-wrap table{
+    width:100% !important;
+    height:100% !important;
+    table-layout:fixed !important;
+  }
+
+  .table-wrap tbody{
+    height:100% !important;
+  }
+
+  .table-wrap tbody tr{
+    height:auto !important;
   }
 
   #signoff-section{
-  page-break-before: always !important;
-  break-before: page !important;
-}
+    page-break-before:always !important;
+    break-before:page !important;
+  }
 
   .actions{
     display:none !important;
   }
 }
 
+/* mobile print helper */
+@media print and (max-width:760px){
+  #scope-section{
+    margin-top:6px !important;
+    page-break-before:auto !important;
+    break-before:auto !important;
+  }
+
+  #assessment-details-section{
+    page-break-after:avoid !important;
+    break-after:avoid !important;
+  }
+
+  #mobile-print-scope-anchor{
+    display:block !important;
+    height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+}
 /* mobile print helper */
 @media print and (max-width:760px){
   #scope-section{
