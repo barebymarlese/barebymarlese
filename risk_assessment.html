@@ -598,12 +598,6 @@ th:nth-child(7){width:16%;}
 }
 
 @media print{
-  /* Page 3 spacing + rounded top for sign-off */
-  #signoff-section{
-    margin-top:12mm !important;
-    border-radius:18px 18px 12px 12px !important;
-  }
-
   @page{
     size:A4 portrait;
     margin:6mm;
@@ -762,67 +756,12 @@ th:nth-child(7){width:16%;}
 }
 
 
-/* Tighter text wrapping in boxes */
-.textarea,
-td textarea{
-  padding:4px 6px !important;
-  line-height:1.2 !important;
-}
-
-.input,
-td input{
-  padding:0 6px !important;
-  line-height:1.2 !important;
-}
-
-/* Print specific tightening */
 @media print{
-  .textarea,
-  td textarea{
-    padding:3px 4px !important;
-    line-height:1.1 !important;
-  }
-
-  .input,
-  td input{
-    padding:0 4px !important;
-    line-height:1.1 !important;
-  }
-}
-
-
-@media print{
-  /* REMOVE forced heights so text wraps tight */
-  td textarea{
-    min-height:auto !important;
-    height:auto !important;
-    padding:2px 3px !important;
-    line-height:1.05 !important;
-  }
-
-  .textarea{
-    min-height:auto !important;
-    height:auto !important;
-    padding:3px !important;
-    line-height:1.05 !important;
-  }
-
-  /* tighten rows */
-  td{
-    height:auto !important;
-  }
-
-  /* remove extra spacing between rows */
-  tr{
-    height:auto !important;
-  }
-}
-
-
-@media print{
-  /* push sign-off down slightly on new page */
+  /* ONLY affect when sign-off starts on new page */
   #signoff-section{
-    margin-top:10mm !important;
+    break-before: page;
+    page-break-before: always;
+    padding-top:10mm !important;
   }
 }
 
