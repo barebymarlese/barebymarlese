@@ -300,12 +300,13 @@ td textarea{
   cursor:pointer;
 }
 
-th:nth-child(1){width:16%;}
-th:nth-child(2){width:12%;}
-th:nth-child(3){width:24%;}
-th:nth-child(4){width:12%;}
-th:nth-child(5){width:16%;}
-th:nth-child(6){width:20%;}
+th:nth-child(1){width:14%;}
+th:nth-child(2){width:11%;}
+th:nth-child(3){width:11%;}
+th:nth-child(4){width:21%;}
+th:nth-child(5){width:11%;}
+th:nth-child(6){width:14%;}
+th:nth-child(7){width:18%;}
 
 @media screen and (max-width:760px){
   html, body{
@@ -428,12 +429,13 @@ th:nth-child(6){width:20%;}
     overflow:hidden !important;
   }
 
-  th:nth-child(1){width:17% !important;}
-  th:nth-child(2){width:12% !important;}
-  th:nth-child(3){width:24% !important;}
-  th:nth-child(4){width:12% !important;}
-  th:nth-child(5){width:16% !important;}
-  th:nth-child(6){width:19% !important;}
+  th:nth-child(1){width:14% !important;}
+  th:nth-child(2){width:11% !important;}
+  th:nth-child(3){width:11% !important;}
+  th:nth-child(4){width:21% !important;}
+  th:nth-child(5){width:11% !important;}
+  th:nth-child(6){width:14% !important;}
+  th:nth-child(7){width:18% !important;}
 
   .note,
   .footer{
@@ -547,7 +549,7 @@ th:nth-child(6){width:20%;}
   <h1>COSHH Assessment</h1>
 
   <p class="intro">
-    Home-based COSHH assessment covering cleaning products, disinfectants, gels and other treatment-related substances used within the treatment area. This document supports safe handling, storage, disposal, council inspection readiness and insurer expectations.
+    This COSHH assessment has been completed in accordance with the Control of Substances Hazardous to Health Regulations 2002 (as amended). It relates specifically to substances used during laser tattoo removal treatments, including pre-treatment cleaning, disinfectants, cooling agents and other treatment-related products used within the home treatment environment.
   </p>
 
   <div class="section">
@@ -579,8 +581,9 @@ th:nth-child(6){width:20%;}
         <thead>
           <tr>
             <th>Product / Substance</th>
-            <th>Hazard</th>
-            <th>Control Measures</th>
+            <th>Risk Level</th>
+            <th>Exposure Route</th>
+            <th>Hazard / Control Measures</th>
             <th>PPE Required</th>
             <th>Storage</th>
             <th>First Aid / Emergency</th>
@@ -589,29 +592,32 @@ th:nth-child(6){width:20%;}
         <tbody>
           <tr>
             <td><textarea>Disinfectant (Clinic Grade)</textarea></td>
-            <td><textarea>Skin and eye irritation</textarea></td>
-            <td><textarea>Use according to manufacturer instructions, avoid direct contact with eyes, keep treatment area ventilated and do not mix with incompatible cleaning products.</textarea></td>
+            <td><textarea>Medium</textarea></td>
+            <td><textarea>Skin contact, eye contact, inhalation</textarea></td>
+            <td><textarea>May cause skin and eye irritation. Use according to manufacturer instructions, keep treatment area ventilated, avoid mixing with incompatible products and keep containers closed when not in use.</textarea></td>
             <td><textarea>Gloves where appropriate</textarea></td>
-            <td><textarea>Store sealed in original container, upright and away from children, pets and direct heat.</textarea></td>
-            <td><textarea>Rinse affected area with plenty of water and seek medical advice if irritation continues.</textarea></td>
+            <td><textarea>Store sealed in the original labelled container, upright and away from children, pets, food areas and direct heat.</textarea></td>
+            <td><textarea>Rinse affected area with plenty of water, move to fresh air if required and seek medical advice if irritation continues or symptoms persist.</textarea></td>
           </tr>
 
           <tr>
             <td><textarea>Cooling Gel</textarea></td>
-            <td><textarea>Low hazard, possible irritation in sensitive individuals</textarea></td>
-            <td><textarea>Use with clean applicator or clean hands, keep container closed between clients and avoid contamination.</textarea></td>
+            <td><textarea>Low</textarea></td>
+            <td><textarea>Skin contact, accidental eye contact</textarea></td>
+            <td><textarea>Low hazard but possible irritation in sensitive individuals. Use with a clean applicator or clean hands, prevent contamination between clients and keep the container closed between uses.</textarea></td>
             <td><textarea>None normally required</textarea></td>
             <td><textarea>Store clean, dry and at room temperature in line with product guidance.</textarea></td>
-            <td><textarea>Remove product, rinse skin and discontinue use if irritation occurs.</textarea></td>
+            <td><textarea>Remove product, rinse skin or eyes with water and discontinue use if irritation occurs.</textarea></td>
           </tr>
 
           <tr>
             <td><textarea>Cleaning Spray</textarea></td>
-            <td><textarea>Possible inhalation, skin or eye irritation</textarea></td>
-            <td><textarea>Use in ventilated area, avoid direct inhalation, follow dilution and contact-time guidance and keep away from treatment food or drink areas.</textarea></td>
+            <td><textarea>Medium</textarea></td>
+            <td><textarea>Inhalation, skin contact, eye contact</textarea></td>
+            <td><textarea>May cause skin, eye or respiratory irritation. Use in a ventilated area, avoid direct inhalation, follow dilution and contact-time guidance and keep away from food or drink areas.</textarea></td>
             <td><textarea>Gloves where required by label</textarea></td>
-            <td><textarea>Store securely in labelled container away from children and incompatible substances.</textarea></td>
-            <td><textarea>Move to fresh air if affected and rinse skin or eyes thoroughly with water.</textarea></td>
+            <td><textarea>Store securely in a labelled container away from children and incompatible substances.</textarea></td>
+            <td><textarea>Move to fresh air if affected and rinse skin or eyes thoroughly with water. Seek medical advice if symptoms continue.</textarea></td>
           </tr>
         </tbody>
       </table>
@@ -620,12 +626,27 @@ th:nth-child(6){width:20%;}
 
   <div class="section">
     <h2 class="section-title">General Control Measures</h2>
-    <textarea class="textarea">Products are used according to manufacturer instructions. Safety data sheets are retained where applicable. Incompatible substances are not mixed. Products are kept securely away from children, pets and food preparation areas. Spill response and routine cleaning arrangements are in place. The treatment area is kept ventilated during use.</textarea>
+    <textarea class="textarea">Products are used according to manufacturer instructions and only for their intended purpose within laser tattoo removal treatments. Safety Data Sheets are obtained and retained for hazardous substances where applicable and are accessible within the treatment area. Incompatible substances are not mixed. Products are kept securely away from children, pets, food preparation areas and direct heat. The treatment room is ventilated during use, routine cleaning arrangements are in place and spill response arrangements are maintained.</textarea>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Training & Competence</h2>
+    <textarea class="textarea small">The practitioner is trained in the safe handling, use, storage and disposal of all substances listed within this assessment and follows manufacturer instructions, treatment protocols and relevant health and safety procedures.</textarea>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Emergency Procedures</h2>
+    <textarea class="textarea">In the event of accidental exposure, spillage or adverse reaction, treatment will stop immediately. First aid guidance and manufacturer instructions will be followed, the area will be ventilated if required, medical advice will be sought where appropriate, and the incident will be recorded. Control measures and this assessment will then be reviewed and updated if needed.</textarea>
   </div>
 
   <div class="section">
     <h2 class="section-title">Disposal</h2>
-    <textarea class="textarea small">Waste is handled in accordance with local authority guidance, manufacturer instructions and any applicable waste contractor arrangements. No product is disposed of in domestic waste where restrictions apply.</textarea>
+    <textarea class="textarea small">Waste is handled in accordance with local authority guidance, manufacturer instructions and any applicable waste contractor arrangements. No product is disposed of in domestic waste where restrictions apply. Empty or part-used containers are disposed of in line with supplier instructions and local requirements.</textarea>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">Review Arrangements</h2>
+    <textarea class="textarea small">This assessment will be reviewed at least annually and sooner if substances, suppliers, treatment processes, Safety Data Sheets, storage arrangements, incidents, insurer requirements or council requirements change.</textarea>
   </div>
 
   <div class="section">
@@ -644,7 +665,7 @@ th:nth-child(6){width:20%;}
 
   <div class="note">
     <strong>Important</strong><br>
-    Review this COSHH assessment whenever products change, new substances are introduced, a safety data sheet is updated, storage arrangements change, or after any incident, spill, reaction or insurer / council request.
+    This COSHH assessment should be read alongside current product labels, manufacturer instructions and any applicable Safety Data Sheets. It must be updated whenever products change, new substances are introduced, a safety data sheet is updated, storage arrangements change, or after any incident, spill, reaction or insurer / council request.
   </div>
 
   <div class="footer">
