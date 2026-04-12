@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>COSHH Assessment | BARE by Marlese</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#cacdc6;
+  --card:#d4d7d1;
+  --brand:#5e6959;
+  --text:#24221a;
+  --line:rgba(36,34,26,0.10);
+}
+
+body{
+  margin:0;
+  font-family:"Montserrat",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.card{
+  max-width:980px;
+  margin:0 auto;
+  padding:28px;
+  background:var(--card);
+}
+
+h1{
+  text-align:center;
+  font-size:16px;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+
+.section{
+  margin-top:14px;
+  padding:14px;
+  background:rgba(255,255,255,0.3);
+  border-radius:12px;
+}
+
+.section-title{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--brand);
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+input, textarea{
+  width:100%;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid var(--line);
+  font-family:inherit;
+}
+
+textarea{
+  min-height:60px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.wide{
+  grid-column:1 / -1;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th, td{
+  border:1px solid var(--line);
+  padding:6px;
+}
+
+th{
+  background:#eee;
+  font-size:10px;
+}
+
+td textarea{
+  border:none;
+  background:transparent;
+  font-size:11px;
+}
+
+@media print{
+  body{
+    background:white !important;
+  }
+  .card{
+    background:white !important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+
+<h1>COSHH Assessment</h1>
+
+<div class="section">
+  <div class="section-title">Assessment Details</div>
+  <div class="grid">
+    <div>
+      <label>Business Name</label>
+      <input type="text" value="BARE by Marlese">
+    </div>
+    <div>
+      <label>Assessor</label>
+      <input type="text" value="Marlese Rosch Haden">
+    </div>
+    <div>
+      <label>Assessment Date</label>
+      <input type="date" id="coshhDate">
+    </div>
+    <div>
+      <label>Review Date</label>
+      <input type="date">
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Substance Details</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Product / Substance</th>
+        <th>Hazard</th>
+        <th>Control Measures</th>
+        <th>PPE Required</th>
+        <th>Storage</th>
+        <th>First Aid / Emergency</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><textarea>Disinfectant (Clinic Grade)</textarea></td>
+        <td><textarea>Skin/eye irritation</textarea></td>
+        <td><textarea>Use as directed, avoid contact with eyes, ventilated area</textarea></td>
+        <td><textarea>Gloves</textarea></td>
+        <td><textarea>Closed container, away from children</textarea></td>
+        <td><textarea>Rinse with water, seek medical advice if needed</textarea></td>
+      </tr>
+
+      <tr>
+        <td><textarea>Cooling Gel</textarea></td>
+        <td><textarea>Low hazard</textarea></td>
+        <td><textarea>Use clean applicator, avoid contamination</textarea></td>
+        <td><textarea>None</textarea></td>
+        <td><textarea>Room temperature</textarea></td>
+        <td><textarea>Wash off if irritation occurs</textarea></td>
+      </tr>
+
+      <tr>
+        <td><textarea>Cleaning Spray</textarea></td>
+        <td><textarea>Inhalation / skin irritation</textarea></td>
+        <td><textarea>Use in ventilated area, avoid inhalation</textarea></td>
+        <td><textarea>Gloves</textarea></td>
+        <td><textarea>Locked storage</textarea></td>
+        <td><textarea>Fresh air, rinse skin</textarea></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">General Control Measures</div>
+  <textarea>
+Products used according to manufacturer instructions. COSHH data sheets retained. 
+No mixing of incompatible chemicals. Stored safely away from children. 
+Spill management procedures in place. Treatment area ventilated.
+  </textarea>
+</div>
+
+<div class="section">
+  <div class="section-title">Disposal</div>
+  <textarea>
+Waste disposed of in accordance with local authority and waste contractor guidance. 
+No hazardous substances disposed of via domestic waste where restricted.
+  </textarea>
+</div>
+
+<div class="section">
+  <div class="section-title">Sign Off</div>
+  <div class="grid">
+    <div>
+      <label>Signature</label>
+      <input type="text">
+    </div>
+    <div>
+      <label>Date Signed</label>
+      <input type="datetime-local" id="coshhSign">
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+document.getElementById('coshhDate').valueAsDate = new Date();
+
+function updateTime(){
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('coshhSign').value = now.toISOString().slice(0,16);
+}
+
+updateTime();
+window.addEventListener('beforeprint', updateTime);
+</script>
+
+</body>
+</html>
