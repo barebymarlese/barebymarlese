@@ -1065,23 +1065,26 @@ function autoGrowAllTextareas(){
   });
 }
 
+function prepareTableForPrint(){
+  document.querySelectorAll('tbody textarea').forEach((el) => {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  });
+}
+
 let autoGrowResizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(autoGrowResizeTimer);
-  autoGrowResizeTimer = setTimeout(autoGrowAllTextareas, 120);
+  autoGrowResizeTimer = setTimeout(() => {
+    autoGrowAllTextareas();
+    prepareTableForPrint();
+  }, 120);
 });
-
-window.addEventListener('load', autoGrowAllTextareas);
-
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(autoGrowAllTextareas);
-}
 
 document.querySelectorAll('.auto-grow-cell').forEach((el) => {
   autoGrowTextarea(el);
   el.addEventListener('input', () => autoGrowTextarea(el));
 });
-
 
 const scopeSection = document.getElementById('scope-section');
 const assessmentDetailsSection = document.getElementById('assessment-details-section');
@@ -1105,9 +1108,24 @@ function restoreScopeAfterPrint(){
   }
 }
 
-window.addEventListener('beforeprint', moveScopeForMobilePrint);
+window.addEventListener('beforeprint', () => {
+  prepareTableForPrint();
+  moveScopeForMobilePrint();
+});
+
 window.addEventListener('afterprint', restoreScopeAfterPrint);
 
+window.addEventListener('load', () => {
+  autoGrowAllTextareas();
+  prepareTableForPrint();
+});
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => {
+    autoGrowAllTextareas();
+    prepareTableForPrint();
+  });
+}
 </script>
 
 </body>
