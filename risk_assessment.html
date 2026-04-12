@@ -790,6 +790,34 @@ td input{
   }
 }
 
+
+@media print{
+  /* REMOVE forced heights so text wraps tight */
+  td textarea{
+    min-height:auto !important;
+    height:auto !important;
+    padding:2px 3px !important;
+    line-height:1.05 !important;
+  }
+
+  .textarea{
+    min-height:auto !important;
+    height:auto !important;
+    padding:3px !important;
+    line-height:1.05 !important;
+  }
+
+  /* tighten rows */
+  td{
+    height:auto !important;
+  }
+
+  /* remove extra spacing between rows */
+  tr{
+    height:auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
