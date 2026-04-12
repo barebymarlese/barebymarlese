@@ -669,6 +669,18 @@ function downloadPDF(){
   }, 150);
 }
 
+<script>
+function downloadPDF(){
+  const originalTitle = document.title;
+  document.title = "BARE-Risk-Assessment";
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1200);
+  }, 150);
+}
+
 function updateSignDateTime(){
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -689,7 +701,6 @@ window.addEventListener('beforeprint', () => {
   updateSignDateTime();
 });
 </script>
-🚨 What you di
 
 </body>
 </html>
