@@ -702,14 +702,30 @@ th:nth-child(7){width:16%;}
     border-radius:12px !important;
   }
 
+  /* PAGE 2 FULL HEIGHT */
+  #risk-register-section{
+    min-height:274mm !important;
+    height:274mm !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  #risk-register-section .section-title{
+    flex:0 0 auto !important;
+  }
+
   .table-wrap{
     page-break-before:auto !important;
     page-break-after:auto !important;
     overflow:visible !important;
+    flex:1 1 auto !important;
+    display:flex !important;
+    flex-direction:column !important;
   }
 
   .table-wrap table{
     width:100% !important;
+    height:100% !important;
     table-layout:fixed !important;
     border-collapse:separate !important;
     border-spacing:0 !important;
@@ -719,6 +735,14 @@ th:nth-child(7){width:16%;}
     font-size:6px !important;
     line-height:1.1 !important;
     padding:4px 3px !important;
+  }
+
+  tbody{
+    height:100% !important;
+  }
+
+  tbody tr{
+    height:auto !important;
   }
 
   td{
@@ -739,12 +763,13 @@ th:nth-child(7){width:16%;}
     width:100% !important;
     height:auto !important;
     min-height:0 !important;
-    padding:3px 4px !important;
+    padding:5px 4px !important;
     font-size:6.2px !important;
-    line-height:1.1 !important;
+    line-height:1.15 !important;
     resize:none !important;
     overflow:hidden !important;
     white-space:pre-wrap !important;
+    box-sizing:border-box !important;
   }
 
   td textarea.auto-grow-cell{
@@ -755,16 +780,17 @@ th:nth-child(7){width:16%;}
   td input{
     display:block !important;
     width:100% !important;
-    height:18px !important;
-    line-height:18px !important;
+    height:20px !important;
+    line-height:20px !important;
     padding:0 4px !important;
     font-size:6.2px !important;
+    box-sizing:border-box !important;
   }
 
   td input[type="date"]{
     font-size:6px !important;
-    height:18px !important;
-    line-height:18px !important;
+    height:20px !important;
+    line-height:20px !important;
     padding:0 2px !important;
   }
 
@@ -778,6 +804,26 @@ th:nth-child(7){width:16%;}
   }
 }
 
+/* mobile print helper */
+@media print and (max-width:760px){
+  #scope-section{
+    margin-top:6px !important;
+    page-break-before:auto !important;
+    break-before:auto !important;
+  }
+
+  #assessment-details-section{
+    page-break-after:avoid !important;
+    break-after:avoid !important;
+  }
+
+  #mobile-print-scope-anchor{
+    display:block !important;
+    height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+}
 /* mobile print helper */
 @media print and (max-width:760px){
   #scope-section{
