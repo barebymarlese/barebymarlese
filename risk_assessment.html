@@ -737,101 +737,130 @@ th:nth-child(7){width:16%;}
 /* mobile print helper */
 @media print and (max-width:760px){
   .card{
-    padding:10px 10px !important;
+    padding:9px 9px !important;
   }
 
   #assessment-details-section,
   #scope-section{
-    padding:6px !important;
-    margin-bottom:4px !important;
-    border-radius:8px !important;
+    padding:5px !important;
+    margin-bottom:3px !important;
+    border-radius:7px !important;
   }
 
-  #assessment-details-section .grid,
+  #assessment-details-section .section-title,
+  #scope-section .section-title{
+    font-size:6.8px !important;
+    margin-bottom:2px !important;
+    line-height:1.05 !important;
+  }
+
+  #assessment-details-section .grid{
+    grid-template-columns:1fr 1fr !important;
+    gap:3px 4px !important;
+  }
+
   #scope-section .grid{
-    gap:4px !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:3px 4px !important;
+  }
+
+  #scope-section .field.wide:last-child,
+  #scope-section .field.wide:nth-child(3){
+    grid-column:1 / -1 !important;
+  }
+
+  #assessment-details-section .field,
+  #scope-section .field{
+    grid-column:auto !important;
+  }
+
+  #assessment-details-section .field.wide{
+    grid-column:1 / -1 !important;
   }
 
   #assessment-details-section .field label,
   #scope-section .field label{
-    font-size:6.4px !important;
-    margin-bottom:2px !important;
-    line-height:1.08 !important;
+    font-size:6px !important;
+    margin-bottom:1px !important;
+    line-height:1.05 !important;
   }
 
   #assessment-details-section .input,
   #scope-section .input{
-    height:20px !important;
-    min-height:20px !important;
-    line-height:20px !important;
-    font-size:7px !important;
-    padding:0 5px !important;
-    border-radius:7px !important;
+    height:18px !important;
+    min-height:18px !important;
+    line-height:18px !important;
+    font-size:6.2px !important;
+    padding:0 4px !important;
+    border-radius:6px !important;
   }
 
   #assessment-details-section textarea.textarea,
   #scope-section textarea.textarea{
-    font-size:6.6px !important;
-    line-height:1.18 !important;
-    padding:4px 5px !important;
-    border-radius:7px !important;
+    font-size:6px !important;
+    line-height:1.1 !important;
+    padding:3px 4px !important;
+    border-radius:6px !important;
   }
 
   #assessment-details-section .textarea.small{
-    min-height:22px !important;
-    height:22px !important;
-    max-height:22px !important;
+    min-height:18px !important;
+    height:18px !important;
+    max-height:18px !important;
   }
 
   #scope-section .fixed-activities{
-    height:40px !important;
-    min-height:40px !important;
-    max-height:40px !important;
-  }
-
-  #scope-section .fixed-people{
     height:28px !important;
     min-height:28px !important;
     max-height:28px !important;
   }
 
-  #scope-section .fixed-method{
-    height:18px !important;
-    min-height:18px !important;
-    max-height:18px !important;
+  #scope-section .fixed-people{
+    height:22px !important;
+    min-height:22px !important;
+    max-height:22px !important;
   }
 
-  #scope-section .section-title{
-    font-size:7.2px !important;
-    margin-bottom:3px !important;
+  #scope-section .fixed-method{
+    height:16px !important;
+    min-height:16px !important;
+    max-height:16px !important;
+  }
+
+  #scope-section h2.section-title[style]{
+    margin-top:5px !important;
   }
 
   #scope-section .checklist-box{
-    margin-top:5px !important;
-    padding:7px 8px !important;
-    border-radius:8px !important;
+    margin-top:3px !important;
+    padding:5px 6px !important;
+    border-radius:7px !important;
   }
 
   #scope-section .checklist{
-    padding-left:13px !important;
+    padding-left:11px !important;
+    columns:2 !important;
+    column-gap:10px !important;
+    margin:0 !important;
   }
 
   #scope-section .checklist li{
-    font-size:6.4px !important;
-    line-height:1.18 !important;
-    margin:0 0 2px !important;
+    break-inside:avoid !important;
+    font-size:5.7px !important;
+    line-height:1.1 !important;
+    margin:0 0 1px !important;
   }
 
   #scope-section .note{
-    margin-top:5px !important;
-    padding:6px 8px !important;
-    font-size:6.3px !important;
-    line-height:1.18 !important;
-    border-radius:8px !important;
+    margin-top:3px !important;
+    padding:5px 6px !important;
+    font-size:5.8px !important;
+    line-height:1.1 !important;
+    border-radius:7px !important;
   }
 
   #scope-section{
-    margin-top:4px !important;
+    margin-top:3px !important;
     page-break-before:auto !important;
     break-before:auto !important;
   }
