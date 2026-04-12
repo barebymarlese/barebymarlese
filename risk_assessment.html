@@ -755,6 +755,56 @@ th:nth-child(7){width:16%;}
   }
 }
 
+
+@media print{
+  /* tighter table fit in PDF only */
+  .table-wrap table{
+    border-collapse:collapse !important;
+    border-spacing:0 !important;
+  }
+
+  .table-wrap tbody tr,
+  .table-wrap tbody td{
+    height:auto !important;
+  }
+
+  .table-wrap td textarea{
+    min-height:0 !important;
+    height:auto !important;
+    padding:2px 3px !important;
+    line-height:1.05 !important;
+    margin:0 !important;
+  }
+
+  .table-wrap td textarea.auto-grow-cell{
+    min-height:0 !important;
+    height:auto !important;
+  }
+
+  .table-wrap td input{
+    height:20px !important;
+    min-height:20px !important;
+    line-height:20px !important;
+    padding:0 3px !important;
+    margin:0 !important;
+  }
+
+  .table-wrap td input[type="date"]{
+    height:20px !important;
+    min-height:20px !important;
+    line-height:20px !important;
+    padding:0 2px !important;
+  }
+
+  /* keep sign-off on its own page and drop it slightly from top */
+  #signoff-section{
+    break-before:page !important;
+    page-break-before:always !important;
+    margin-top:0 !important;
+    padding-top:10mm !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -982,7 +1032,7 @@ th:nth-child(7){width:16%;}
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="signoff-section">
     <h2 class="section-title">Assessment Sign-Off</h2>
     <div class="grid">
       <div class="field">
