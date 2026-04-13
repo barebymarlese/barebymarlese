@@ -1544,10 +1544,12 @@ if(res.ok){
 }else{
   const errorText = await res.text();
   setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
+  statusEl.style.display = "block";
 }
 
 }catch(err){
   setStatus(err.message || "Oops — connection error. Please try again.", "error");
+  statusEl.style.display = "block";
 }
     });
   </script>
