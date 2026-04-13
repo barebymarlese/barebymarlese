@@ -1542,7 +1542,8 @@ if(res.ok){
   window.location.href = "deposit.html";
 
 }else{
-  setStatus("Oops — there was a problem submitting your form. Please try again.", "error");
+  const errorText = await res.text();
+  setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
 }
 
 }catch(err){
