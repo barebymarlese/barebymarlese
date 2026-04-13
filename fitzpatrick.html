@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Fitzpatrick Skin Test | BARE by Marlese</title>
-
   <link rel="icon" type="image/png" href="/favicon.png">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,523 +12,614 @@
   <style>
     :root{
       --bg:#cacdc6;
-      --heading-muted:#878274;
-      --heading-dark:#24221a;
-      --body:#cacdc6;
+      --card:#d4d7d1;
       --brand:#5e6959;
-      --shadow: 0 18px 45px rgba(0,0,0,.16);
+      --text:#24221a;
+      --muted:#878274;
+      --line:rgba(36,34,26,0.10);
+      --line-soft:rgba(36,34,26,0.06);
     }
 
-    *{ box-sizing:border-box; }
-    *, *::before, *::after{ min-width:0; }
+    *{
+      box-sizing:border-box;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+      color-adjust:exact !important;
+    }
+
     html, body{
+      margin:0;
+      padding:0;
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden !important;
+      background:var(--bg);
+    }
+
+    body{
+      font-family:"Montserrat",sans-serif;
+      color:var(--text);
+      display:block;
+      min-height:100vh;
+    }
+
+    input,
+    textarea,
+    select,
+    button{
+      font:inherit;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus,
+    button:focus{
+      outline:2px solid rgba(94,105,89,0.18);
+      outline-offset:0;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page-shell{
       width:100%;
       max-width:100%;
       overflow-x:hidden;
+      padding:0;
     }
-    body{
-      margin:0;
-      font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:var(--bg);
-      color:var(--heading-dark);
-    }
-    a{ color:inherit; 
-       text-decoration:none;
-     }
-    .wrap{ width:min(1100px, calc(100% - 48px)); margin:0 auto; max-width:100%; }
-    
-.nav{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 999;
-  backdrop-filter: blur(8px);
-  background: rgba(202,205,198,.96);
-}
 
-.nav::after{
-  content: "";
-  display: block;
-  height: 1px;
-  background: rgba(36,34,26,.15);
-}
-    /* Nav (same feel as your site) */
-    .nav-inner{
-      display:flex;
-      align-items:center;
-      justify-content:flex-start;
-      gap:16px;
-      padding: 14px 0;
+    .card{
+      width:100%;
+      max-width:980px;
+      margin:0 auto;
+      padding:28px 30px;
+      background:rgba(212,215,209,0.94);
+      border-radius:0;
+      box-shadow:none;
+      border:none;
     }
+
     .logo{
       display:flex;
       align-items:baseline;
-      gap:10px;
+      justify-content:center;
+      gap:12px;
       letter-spacing:.26em;
       font-weight:600;
       text-transform:uppercase;
+      margin-bottom:5px;
     }
-    .logo .bare{ color: var(--brand); font-size: 22px; }
-    .logo .by{ letter-spacing:.05em; font-weight:500; text-transform:none; color: var(--heading-muted); font-size: 14px; }
-    
-/* ADD THIS HERE */
-main{
-  padding-top: 60px;
-}
-    .nav-links{
-      display:flex;
-      gap:18px;
-      font-size: 13px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--heading-dark);
-      opacity:.85;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .nav-links a{ padding:8px 10px; border-radius:999px; text-decoration:none; }
-    .nav-links a:hover{ background: rgba(36,34,26,.07); }
 
-    section{ padding: 6px 0; }
-    .section-title{
+    .logo .bare{
+      color:var(--brand);
+      font-size:24px;
+    }
+
+    .logo .by{
+      color:var(--muted);
+      font-size:15px;
+      font-weight:500;
+      text-transform:none;
+      letter-spacing:.05em;
+    }
+
+    h1{
       text-align:center;
-      margin: 0 0 8px;
-      font-size: 56px;
-      color: var(--heading-muted);
-      letter-spacing: .02em;
-      text-shadow: 0 10px 28px rgba(0,0,0,.16);
-      font-weight: 600;
+      margin:0 0 8px;
+      font-size:16px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
     }
 
-    /* Fitz UI (clean + bordered + tap-friendly) */
-    .fitz-card{
-      background: rgba(202,205,198,.55);
-      border: 1px solid rgba(36,34,26,.16);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-    .fitz-intro{
-      margin: 0 0 16px;
-      opacity:.86;
-      line-height:1.55;
-      font-size:14px;
+    .intro{
       text-align:center;
+      font-size:12px;
+      line-height:1.6;
+      max-width:760px;
+      margin:0 auto 16px;
     }
 
-    .fitz-grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:12px;
-      margin-bottom: 14px;
-    }
-    .fitz-grid input{
+    .section{
+      padding:16px 16px;
+      border-radius:14px;
+      background:linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.12));
+      border:1px solid rgba(255,255,255,0.42);
+      box-shadow:none;
+      margin-bottom:12px;
       width:100%;
       max-width:100%;
-      min-width:0;
-      padding:12px;
-      font-size:16px;
-      -webkit-appearance:none;
-      appearance:none;
-      border-radius:12px;
-      border:1px solid rgba(36,34,26,.22);
-      background: rgba(202,205,198,.65);
-      color: var(--heading-dark);
-      font-family: inherit;
-      outline:none;
     }
-    .fitz-grid input:focus{
-      border-color: rgba(94,105,89,.7);
-      box-shadow: 0 0 0 3px rgba(94,105,89,.22);
+
+    .section-title{
+      margin:0 0 10px;
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--brand);
+      font-weight:700;
     }
 
     .fitz-q{
-      margin-top:14px;
-      padding:16px;
-      border-radius:16px;
-      border:1px solid rgba(36,34,26,.14);
-      background: rgba(202,205,198,.40);
+      margin-top:12px;
+      padding:14px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.18);
+      border:1px solid rgba(36,34,26,0.08);
     }
+
+    .fitz-q:first-of-type{
+      margin-top:0;
+    }
+
     .fitz-q-title{
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
       font-weight:700;
-      margin-bottom:10px;
+      color:var(--brand);
+      margin:0 0 10px;
     }
 
     .fitz-options{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns:1fr 1fr;
       gap:10px 12px;
     }
+
     .fitz-opt{
+      position:relative;
       display:flex;
-      align-items:center;
-      width:100%;
-      max-width:100%;
-      overflow-wrap:anywhere;
-      word-break:break-word;
+      align-items:flex-start;
       gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(36,34,26,.12);
-      background: rgba(202,205,198,.55);
+      width:100%;
+      min-width:0;
+      padding:12px 12px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.82);
+      color:var(--text);
       cursor:pointer;
-      user-select:none;
+      line-height:1.4;
     }
-    .fitz-opt:hover{ border-color: rgba(94,105,89,.45); }
+
+    .fitz-opt:hover{
+      border-color:rgba(94,105,89,0.35);
+    }
 
     .fitz-opt input{
       position:absolute;
       opacity:0;
       pointer-events:none;
     }
+
     .fitz-mark{
-      width:18px; height:18px;
+      width:18px;
+      height:18px;
+      margin-top:1px;
       border-radius:999px;
-      border:2px solid rgba(36,34,26,.35);
+      border:2px solid rgba(36,34,26,0.35);
       display:grid;
       place-items:center;
       flex:0 0 18px;
-      background: rgba(202,205,198,.75);
+      background:rgba(255,255,255,0.9);
     }
+
     .fitz-mark::after{
       content:"";
-      width:10px; height:10px;
+      width:10px;
+      height:10px;
       border-radius:999px;
-      background: var(--brand);
-      transform: scale(0);
-      transition: transform .12s ease;
+      background:var(--brand);
+      transform:scale(0);
+      transition:transform .12s ease;
     }
-    .fitz-opt input:checked + .fitz-mark::after{ transform: scale(1); }
 
-    .fitz-consent{
-      margin-top:16px;
-      padding:16px;
-      border-radius:16px;
-      border:1px solid rgba(36,34,26,.14);
-      background: rgba(94,105,89,.12);
+    .fitz-opt input:checked + .fitz-mark::after{
+      transform:scale(1);
     }
-    .fitz-consent .fitz-options{ grid-template-columns: 1fr; }
-    .fitz-small{ font-size:12px; opacity:.75; margin-top:10px; }
 
     .fitz-actions{
       display:flex;
       gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
+      margin-top:14px;
     }
+
     .fitz-btn{
-      background: var(--brand);
-      font-size:16px;
-      color: var(--body);
-      border:0;
-      border-radius:999px;
-      padding:12px 18px;
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:none;
+      background:var(--brand);
+      color:#fff;
+      font-size:12px;
       font-weight:700;
-      letter-spacing:.06em;
+      letter-spacing:.1em;
+      text-transform:uppercase;
       cursor:pointer;
     }
+
     .fitz-btn-ghost{
       background:transparent;
-      border:1px solid rgba(36,34,26,.25);
-      color: var(--heading-dark);
+      color:var(--text);
+      border:1px solid var(--line);
     }
 
     .fitz-result{
-      margin-top:16px;
-      padding:16px;
-      border-radius:16px;
-      border:1px solid rgba(36,34,26,.14);
-      background: rgba(202,205,198,.40);
+      margin-top:14px;
+      padding:14px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.24);
+      border:1px solid rgba(36,34,26,0.08);
     }
+
     .fitz-pill{
       display:inline-block;
       padding:6px 12px;
       border-radius:999px;
-      background: rgba(94,105,89,.18);
+      background:rgba(94,105,89,0.18);
+      color:var(--brand);
       font-weight:800;
       letter-spacing:.08em;
       text-transform:uppercase;
       margin-bottom:8px;
+      font-size:10px;
     }
 
-    footer{
-      padding: 20px 0 34px;
+    #fitzText{
+      font-size:13px;
+      font-weight:600;
+      line-height:1.5;
+      margin-bottom:4px;
+    }
+
+    .fitz-small{
+      font-size:11px;
+      line-height:1.5;
+      margin-top:4px;
+    }
+
+    .note{
+      margin-top:8px;
+      padding:12px 14px;
+      border-left:4px solid var(--brand);
+      border-radius:4px 12px 12px 4px;
+      background:rgba(255,255,255,0.26);
+      font-size:11px;
+      line-height:1.5;
+    }
+
+    .footer{
       text-align:center;
-      font-size: 12px;
-      letter-spacing:.12em;
-      text-transform: uppercase;
-      color: var(--heading-dark);
-      opacity:.7;
+      margin-top:10px;
+      font-size:10px;
+      line-height:1.5;
     }
 
-  @media (max-width: 980px){
+    @media screen and (max-width:760px){
+      html, body{
+        overflow-x:hidden !important;
+        width:100% !important;
+        max-width:100% !important;
+      }
 
-  /* Mobile nav layout */
-  .nav-inner{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
+      .page-shell{
+        padding:0 !important;
+        overflow-x:hidden !important;
+      }
 
-  .logo{
-    justify-content: flex-start;
-    width: 100%;
-  }
+      .card{
+        width:100% !important;
+        max-width:100% !important;
+        margin:0 !important;
+        padding:16px 12px 18px !important;
+        border-radius:0 !important;
+        box-shadow:none !important;
+        border:none !important;
+      }
 
-  .nav-links{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 8px;
-    font-size: 12px;
-    letter-spacing: .12em;
-  }
+      .logo{
+        gap:10px;
+        margin-bottom:4px;
+      }
 
-  .nav-links a{
-    flex: 1;
-    text-align: center;
-    padding: 8px 0;
-    white-space: nowrap;
-  }
+      .logo .bare{font-size:21px;}
+      .logo .by{font-size:13px;}
 
-  /* Fitz layout mobile */
-  .fitz-grid{
-    grid-template-columns: 1fr;
-  }
+      h1{
+        font-size:14px;
+        margin-bottom:6px;
+      }
 
-  .fitz-options{
-    grid-template-columns: 1fr;
-  }
+      .intro{
+        font-size:12px;
+        line-height:1.5;
+        margin-bottom:12px;
+      }
 
-  .fitz-card{
-    padding: 18px;
-    height: auto !important;
-    overflow: visible !important;
-  }
+      .section{
+        width:100% !important;
+        max-width:100% !important;
+        margin:0 0 10px 0 !important;
+        padding:12px 10px !important;
+        border-radius:12px !important;
+      }
 
-  .fitz-q{
-    padding: 14px;
-  }
+      .fitz-q{
+        padding:12px !important;
+        margin-top:10px !important;
+      }
 
-  .fitz-opt{
-    padding: 12px 12px;
-  }
+      .fitz-options{
+        grid-template-columns:1fr !important;
+        gap:8px !important;
+      }
 
-  .fitz-actions{
-    flex-direction: column;
-  }
+      .fitz-opt{
+        padding:12px 10px !important;
+        font-size:14px !important;
+      }
 
-  .fitz-btn{
-    width: 100%;
-  }
+      .fitz-actions{
+        flex-direction:column !important;
+      }
 
-  #fitzpatrick{
-    padding-bottom: 80px;
-    overflow-x:hidden;
-  }
+      .fitz-btn{
+        font-size:12px !important;
+      }
 
-  .section-title{
-    font-size: 42px;
-  }
+      input,
+      select,
+      textarea,
+      button{
+        font-size:16px !important;
+      }
+    }
 
-  input,
-  select,
-  textarea,
-  button{
-    font-size:16px !important;
-  }
-}
+    @media print{
+      @page{
+        size:A4 portrait;
+        margin:8mm;
+      }
 
-/* FORCE: no underline on logo on desktop + mobile */
-header .logo,
-header .logo:link,
-header .logo:visited,
-header .logo:hover,
-header .logo:active{
-  text-decoration: none !important;
-  color: inherit !important;
-}
+      html, body{
+        background:#cacdc6 !important;
+        width:100% !important;
+      }
 
-/* also ensure inner text isn't underlined */
-header .logo *{
-  text-decoration: none !important;
-}
+      body{
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      .card{
+        width:100% !important;
+        padding:14px 14px !important;
+        background:#d4d7d1 !important;
+      }
+
+      h1{
+        font-size:12px !important;
+        margin-bottom:6px !important;
+      }
+
+      .intro{
+        font-size:8px !important;
+        line-height:1.3 !important;
+        margin-bottom:6px !important;
+      }
+
+      .section{
+        padding:8px !important;
+        margin-bottom:6px !important;
+        background:#d0d3cd !important;
+        background-image:none !important;
+        border:1px solid rgba(36,34,26,0.08) !important;
+      }
+
+      .section-title,
+      .fitz-q-title{
+        font-size:8px !important;
+        margin-bottom:5px !important;
+      }
+
+      .fitz-q{
+        padding:8px !important;
+        margin-top:6px !important;
+        page-break-inside:avoid;
+      }
+
+      .fitz-options{
+        gap:6px !important;
+      }
+
+      .fitz-opt{
+        padding:7px 8px !important;
+        font-size:7px !important;
+      }
+
+      .fitz-mark{
+        width:14px !important;
+        height:14px !important;
+        flex:0 0 14px !important;
+      }
+
+      .fitz-mark::after{
+        width:8px !important;
+        height:8px !important;
+      }
+
+      .fitz-btn{
+        font-size:8px !important;
+        padding:10px !important;
+      }
+
+      .note,
+      .fitz-small,
+      #fitzText,
+      .footer{
+        font-size:8px !important;
+      }
+    }
   </style>
 </head>
-
 <body>
-  <header class="nav">
-  <div class="wrap nav-inner">
-    <a class="logo" href="index.html" aria-label="BARE by Marlese">
-      <span class="bare">BARE |</span>
-      <span class="by">by Marlese</span>
-    </a>
-    
-  </div>
-</header>
+  <div class="page-shell">
+    <div class="card">
+      <a class="logo" href="index.html" aria-label="BARE by Marlese">
+        <span class="bare">BARE |</span>
+        <span class="by">by Marlese</span>
+      </a>
 
-  <main>
-    <section id="fitzpatrick">
-      <div class="wrap">
-        <h2 class="section-title">FITZPATRICK SKIN TEST</h2>
+      <h1>Fitzpatrick Skin Test</h1>
 
-        <div class="fitz-card">
-          <p class="fitz-intro">
-            This short questionnaire helps estimate Fitzpatrick Skin Type. It’s a guide only and does not replace a professional assessment. If you opened this from the consultation form, your result will automatically fill back in when you finish.
-          </p>
+      <p class="intro">
+        This questionnaire helps estimate Fitzpatrick Skin Type before consultation and patch testing. It is a guide only and does not replace professional clinical assessment. If opened from your consultation form, the result can be sent back automatically once completed.
+      </p>
 
-          <form id="fitzForm" autocomplete="off">
-           <div class="fitz-q">
-  <div class="fitz-q-title">1) Natural hair colour</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q1" value="0" required><span class="fitz-mark"></span><span>Sandy red</span></label>
-    <label class="fitz-opt"><input type="radio" name="q1" value="1"><span class="fitz-mark"></span><span>Blond</span></label>
-    <label class="fitz-opt"><input type="radio" name="q1" value="2"><span class="fitz-mark"></span><span>Chestnut / dark blond</span></label>
-    <label class="fitz-opt"><input type="radio" name="q1" value="3"><span class="fitz-mark"></span><span>Dark brown</span></label>
-    <label class="fitz-opt"><input type="radio" name="q1" value="4"><span class="fitz-mark"></span><span>Black</span></label>
-  </div>
-</div>
+      <div class="section">
+        <h2 class="section-title">Skin Type Questionnaire</h2>
 
-<!-- Q2 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">2) Natural eye colour</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q2" value="0" required><span class="fitz-mark"></span><span>Light blue / grey / green</span></label>
-    <label class="fitz-opt"><input type="radio" name="q2" value="1"><span class="fitz-mark"></span><span>Blue / grey / green</span></label>
-    <label class="fitz-opt"><input type="radio" name="q2" value="2"><span class="fitz-mark"></span><span>Brown</span></label>
-    <label class="fitz-opt"><input type="radio" name="q2" value="3"><span class="fitz-mark"></span><span>Dark brown</span></label>
-    <label class="fitz-opt"><input type="radio" name="q2" value="4"><span class="fitz-mark"></span><span>Brownish black</span></label>
-  </div>
-</div>
+        <form id="fitzForm" autocomplete="off">
+          <div class="fitz-q">
+            <div class="fitz-q-title">1) Natural hair colour</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q1" value="0" required><span class="fitz-mark"></span><span>Sandy red</span></label>
+              <label class="fitz-opt"><input type="radio" name="q1" value="1"><span class="fitz-mark"></span><span>Blond</span></label>
+              <label class="fitz-opt"><input type="radio" name="q1" value="2"><span class="fitz-mark"></span><span>Chestnut / dark blond</span></label>
+              <label class="fitz-opt"><input type="radio" name="q1" value="3"><span class="fitz-mark"></span><span>Dark brown</span></label>
+              <label class="fitz-opt"><input type="radio" name="q1" value="4"><span class="fitz-mark"></span><span>Black</span></label>
+            </div>
+          </div>
 
-<!-- Q3 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">3) Skin colour on parts not exposed to the sun</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q3" value="0" required><span class="fitz-mark"></span><span>Reddish</span></label>
-    <label class="fitz-opt"><input type="radio" name="q3" value="1"><span class="fitz-mark"></span><span>Very pale</span></label>
-    <label class="fitz-opt"><input type="radio" name="q3" value="2"><span class="fitz-mark"></span><span>Pale with beige tint</span></label>
-    <label class="fitz-opt"><input type="radio" name="q3" value="3"><span class="fitz-mark"></span><span>Light brown</span></label>
-    <label class="fitz-opt"><input type="radio" name="q3" value="4"><span class="fitz-mark"></span><span>Dark brown</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">2) Natural eye colour</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q2" value="0" required><span class="fitz-mark"></span><span>Light blue / grey / green</span></label>
+              <label class="fitz-opt"><input type="radio" name="q2" value="1"><span class="fitz-mark"></span><span>Blue / grey / green</span></label>
+              <label class="fitz-opt"><input type="radio" name="q2" value="2"><span class="fitz-mark"></span><span>Brown</span></label>
+              <label class="fitz-opt"><input type="radio" name="q2" value="3"><span class="fitz-mark"></span><span>Dark brown</span></label>
+              <label class="fitz-opt"><input type="radio" name="q2" value="4"><span class="fitz-mark"></span><span>Brownish black</span></label>
+            </div>
+          </div>
 
-<!-- Q4 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">4) Freckles on parts of the skin not exposed to the sun</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q4" value="0" required><span class="fitz-mark"></span><span>Many</span></label>
-    <label class="fitz-opt"><input type="radio" name="q4" value="1"><span class="fitz-mark"></span><span>Several</span></label>
-    <label class="fitz-opt"><input type="radio" name="q4" value="2"><span class="fitz-mark"></span><span>Few</span></label>
-    <label class="fitz-opt"><input type="radio" name="q4" value="3"><span class="fitz-mark"></span><span>Incidental</span></label>
-    <label class="fitz-opt"><input type="radio" name="q4" value="4"><span class="fitz-mark"></span><span>None</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">3) Skin colour on parts not exposed to the sun</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q3" value="0" required><span class="fitz-mark"></span><span>Reddish</span></label>
+              <label class="fitz-opt"><input type="radio" name="q3" value="1"><span class="fitz-mark"></span><span>Very pale</span></label>
+              <label class="fitz-opt"><input type="radio" name="q3" value="2"><span class="fitz-mark"></span><span>Pale with beige tint</span></label>
+              <label class="fitz-opt"><input type="radio" name="q3" value="3"><span class="fitz-mark"></span><span>Light brown</span></label>
+              <label class="fitz-opt"><input type="radio" name="q3" value="4"><span class="fitz-mark"></span><span>Dark brown</span></label>
+            </div>
+          </div>
 
-<!-- Q5 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">5) Consequences of prolonged sun exposure without sunscreen</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q5" value="0" required><span class="fitz-mark"></span><span>Painful redness, blistering, peeling</span></label>
-    <label class="fitz-opt"><input type="radio" name="q5" value="1"><span class="fitz-mark"></span><span>Blistering followed by peeling</span></label>
-    <label class="fitz-opt"><input type="radio" name="q5" value="2"><span class="fitz-mark"></span><span>Sunburn sometimes followed by peeling</span></label>
-    <label class="fitz-opt"><input type="radio" name="q5" value="3"><span class="fitz-mark"></span><span>Rare sunburns</span></label>
-    <label class="fitz-opt"><input type="radio" name="q5" value="4"><span class="fitz-mark"></span><span>Never had a problem</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">4) Freckles on parts of the skin not exposed to the sun</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q4" value="0" required><span class="fitz-mark"></span><span>Many</span></label>
+              <label class="fitz-opt"><input type="radio" name="q4" value="1"><span class="fitz-mark"></span><span>Several</span></label>
+              <label class="fitz-opt"><input type="radio" name="q4" value="2"><span class="fitz-mark"></span><span>Few</span></label>
+              <label class="fitz-opt"><input type="radio" name="q4" value="3"><span class="fitz-mark"></span><span>Incidental</span></label>
+              <label class="fitz-opt"><input type="radio" name="q4" value="4"><span class="fitz-mark"></span><span>None</span></label>
+            </div>
+          </div>
 
-<!-- Q6 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">6) Ability to tan</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q6" value="0" required><span class="fitz-mark"></span><span>Little or no tanning</span></label>
-    <label class="fitz-opt"><input type="radio" name="q6" value="1"><span class="fitz-mark"></span><span>Light colour tan</span></label>
-    <label class="fitz-opt"><input type="radio" name="q6" value="2"><span class="fitz-mark"></span><span>Medium tan</span></label>
-    <label class="fitz-opt"><input type="radio" name="q6" value="3"><span class="fitz-mark"></span><span>Easy tanning</span></label>
-    <label class="fitz-opt"><input type="radio" name="q6" value="4"><span class="fitz-mark"></span><span>Turns dark very quickly</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">5) Consequences of prolonged sun exposure without sunscreen</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q5" value="0" required><span class="fitz-mark"></span><span>Painful redness, blistering, peeling</span></label>
+              <label class="fitz-opt"><input type="radio" name="q5" value="1"><span class="fitz-mark"></span><span>Blistering followed by peeling</span></label>
+              <label class="fitz-opt"><input type="radio" name="q5" value="2"><span class="fitz-mark"></span><span>Sunburn sometimes followed by peeling</span></label>
+              <label class="fitz-opt"><input type="radio" name="q5" value="3"><span class="fitz-mark"></span><span>Rare sunburns</span></label>
+              <label class="fitz-opt"><input type="radio" name="q5" value="4"><span class="fitz-mark"></span><span>Never had a problem</span></label>
+            </div>
+          </div>
 
-<!-- Q7 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">7) One day's sun exposure can cause a tan</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q7" value="0" required><span class="fitz-mark"></span><span>Never</span></label>
-    <label class="fitz-opt"><input type="radio" name="q7" value="1"><span class="fitz-mark"></span><span>Seldom</span></label>
-    <label class="fitz-opt"><input type="radio" name="q7" value="2"><span class="fitz-mark"></span><span>Sometimes</span></label>
-    <label class="fitz-opt"><input type="radio" name="q7" value="3"><span class="fitz-mark"></span><span>Often</span></label>
-    <label class="fitz-opt"><input type="radio" name="q7" value="4"><span class="fitz-mark"></span><span>Always</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">6) Ability to tan</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q6" value="0" required><span class="fitz-mark"></span><span>Little or no tanning</span></label>
+              <label class="fitz-opt"><input type="radio" name="q6" value="1"><span class="fitz-mark"></span><span>Light colour tan</span></label>
+              <label class="fitz-opt"><input type="radio" name="q6" value="2"><span class="fitz-mark"></span><span>Medium tan</span></label>
+              <label class="fitz-opt"><input type="radio" name="q6" value="3"><span class="fitz-mark"></span><span>Easy tanning</span></label>
+              <label class="fitz-opt"><input type="radio" name="q6" value="4"><span class="fitz-mark"></span><span>Turns dark very quickly</span></label>
+            </div>
+          </div>
 
-<!-- Q8 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">8) Reaction of facial skin to sun</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q8" value="0" required><span class="fitz-mark"></span><span>Very sensitive</span></label>
-    <label class="fitz-opt"><input type="radio" name="q8" value="1"><span class="fitz-mark"></span><span>Sensitive</span></label>
-    <label class="fitz-opt"><input type="radio" name="q8" value="2"><span class="fitz-mark"></span><span>Normal</span></label>
-    <label class="fitz-opt"><input type="radio" name="q8" value="3"><span class="fitz-mark"></span><span>Very resistant</span></label>
-    <label class="fitz-opt"><input type="radio" name="q8" value="4"><span class="fitz-mark"></span><span>Never had a problem</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">7) One day's sun exposure can cause a tan</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q7" value="0" required><span class="fitz-mark"></span><span>Never</span></label>
+              <label class="fitz-opt"><input type="radio" name="q7" value="1"><span class="fitz-mark"></span><span>Seldom</span></label>
+              <label class="fitz-opt"><input type="radio" name="q7" value="2"><span class="fitz-mark"></span><span>Sometimes</span></label>
+              <label class="fitz-opt"><input type="radio" name="q7" value="3"><span class="fitz-mark"></span><span>Often</span></label>
+              <label class="fitz-opt"><input type="radio" name="q7" value="4"><span class="fitz-mark"></span><span>Always</span></label>
+            </div>
+          </div>
 
-<!-- Q9 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">9) Last exposure to sun or a sun lamp</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q9" value="0" required><span class="fitz-mark"></span><span>More than 3 months</span></label>
-    <label class="fitz-opt"><input type="radio" name="q9" value="1"><span class="fitz-mark"></span><span>2–3 months</span></label>
-    <label class="fitz-opt"><input type="radio" name="q9" value="2"><span class="fitz-mark"></span><span>1–2 months</span></label>
-    <label class="fitz-opt"><input type="radio" name="q9" value="3"><span class="fitz-mark"></span><span>Less than 1 month</span></label>
-    <label class="fitz-opt"><input type="radio" name="q9" value="4"><span class="fitz-mark"></span><span>Less than 2 weeks</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">8) Reaction of facial skin to sun</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q8" value="0" required><span class="fitz-mark"></span><span>Very sensitive</span></label>
+              <label class="fitz-opt"><input type="radio" name="q8" value="1"><span class="fitz-mark"></span><span>Sensitive</span></label>
+              <label class="fitz-opt"><input type="radio" name="q8" value="2"><span class="fitz-mark"></span><span>Normal</span></label>
+              <label class="fitz-opt"><input type="radio" name="q8" value="3"><span class="fitz-mark"></span><span>Very resistant</span></label>
+              <label class="fitz-opt"><input type="radio" name="q8" value="4"><span class="fitz-mark"></span><span>Never had a problem</span></label>
+            </div>
+          </div>
 
-<!-- Q10 -->
-<div class="fitz-q">
-  <div class="fitz-q-title">10) The treatment area is sometimes exposed to the sun</div>
-  <div class="fitz-options">
-    <label class="fitz-opt"><input type="radio" name="q10" value="0" required><span class="fitz-mark"></span><span>Never</span></label>
-    <label class="fitz-opt"><input type="radio" name="q10" value="1"><span class="fitz-mark"></span><span>Hardly ever</span></label>
-    <label class="fitz-opt"><input type="radio" name="q10" value="2"><span class="fitz-mark"></span><span>Sometimes</span></label>
-    <label class="fitz-opt"><input type="radio" name="q10" value="3"><span class="fitz-mark"></span><span>Often</span></label>
-    <label class="fitz-opt"><input type="radio" name="q10" value="4"><span class="fitz-mark"></span><span>Always</span></label>
-  </div>
-</div>
+          <div class="fitz-q">
+            <div class="fitz-q-title">9) Last exposure to sun or a sun lamp</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q9" value="0" required><span class="fitz-mark"></span><span>More than 3 months</span></label>
+              <label class="fitz-opt"><input type="radio" name="q9" value="1"><span class="fitz-mark"></span><span>2–3 months</span></label>
+              <label class="fitz-opt"><input type="radio" name="q9" value="2"><span class="fitz-mark"></span><span>1–2 months</span></label>
+              <label class="fitz-opt"><input type="radio" name="q9" value="3"><span class="fitz-mark"></span><span>Less than 1 month</span></label>
+              <label class="fitz-opt"><input type="radio" name="q9" value="4"><span class="fitz-mark"></span><span>Less than 2 weeks</span></label>
+            </div>
+          </div>
 
-<!-- Hidden fields populated by JS -->
-<input type="hidden" name="fitz_type" id="fitzTypeHidden">
-<input type="hidden" name="fitz_score" id="fitzScoreHidden">
+          <div class="fitz-q">
+            <div class="fitz-q-title">10) The treatment area is sometimes exposed to the sun</div>
+            <div class="fitz-options">
+              <label class="fitz-opt"><input type="radio" name="q10" value="0" required><span class="fitz-mark"></span><span>Never</span></label>
+              <label class="fitz-opt"><input type="radio" name="q10" value="1"><span class="fitz-mark"></span><span>Hardly ever</span></label>
+              <label class="fitz-opt"><input type="radio" name="q10" value="2"><span class="fitz-mark"></span><span>Sometimes</span></label>
+              <label class="fitz-opt"><input type="radio" name="q10" value="3"><span class="fitz-mark"></span><span>Often</span></label>
+              <label class="fitz-opt"><input type="radio" name="q10" value="4"><span class="fitz-mark"></span><span>Always</span></label>
+            </div>
+          </div>
 
-<!-- Buttons -->
-<div class="fitz-actions">
-  <button type="submit" class="fitz-btn">CALCULATE</button>
-  <button type="button" id="fitzReset" class="fitz-btn fitz-btn-ghost">RESET</button>
-</div>
+          <input type="hidden" name="fitz_type" id="fitzTypeHidden">
+          <input type="hidden" name="fitz_score" id="fitzScoreHidden">
 
-<!-- Result -->
-<div id="fitzResult" class="fitz-result" hidden>
-  <div class="fitz-pill" id="fitzPill">Type</div>
-  <div id="fitzText"></div>
-  <div class="fitz-small" id="fitzDesc"></div>
-  <div class="fitz-small" id="fitzStatus"></div>
-</div>
-          </form>
+          <div class="fitz-actions">
+            <button type="submit" class="fitz-btn">Calculate</button>
+            <button type="button" id="fitzReset" class="fitz-btn fitz-btn-ghost">Reset</button>
+          </div>
 
-        </div>
+          <div id="fitzResult" class="fitz-result" hidden>
+            <div class="fitz-pill" id="fitzPill">Type</div>
+            <div id="fitzText"></div>
+            <div class="fitz-small" id="fitzDesc"></div>
+            <div class="fitz-small" id="fitzStatus"></div>
+          </div>
+        </form>
       </div>
-    </section>
-  </main>
 
-  <footer>
-   © BARE by Marlese | <a href="/privacy.html">Privacy Policy</a>
-  </footer>
+      <div class="note">
+        <strong>Important</strong><br>
+        Fitzpatrick scoring is a screening aid only. Final suitability, laser parameters and patch testing decisions should always be confirmed during professional consultation and clinical assessment.
+      </div>
 
-  
+      <div class="footer">
+        © BARE by Marlese | <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+
   <script>
     const form = document.getElementById("fitzForm");
     const resultBox = document.getElementById("fitzResult");
@@ -555,9 +644,6 @@ header .logo *{
       "V": "Type V — Brown skin, very rarely burns",
       "VI": "Type VI — Dark brown/black skin, never burns"
     };
-
-
-
 
     function clearBareStoredFitz(){
       try{
@@ -603,43 +689,37 @@ header .logo *{
       const roman = calculateFitzType(score);
       const typeLabel = `Type ${roman}`;
 
-      // Populate hidden fields
       document.getElementById("fitzTypeHidden").value = typeLabel;
       document.getElementById("fitzScoreHidden").value = score;
 
-      // Show result on this page
       pill.textContent = typeLabel;
       text.textContent = `${typeLabel} (score ${score}/40)`;
       if(desc){ desc.textContent = fitzLabelMap[roman] || typeLabel; }
       resultBox.hidden = false;
 
-      // Save locally so the consultation page can read it even if postMessage is blocked
       try{
-        localStorage.setItem("fitzpatrick_result", roman);      // simple key
+        localStorage.setItem("fitzpatrick_result", roman);
         localStorage.setItem("bare_fitz_type", roman);
-        localStorage.setItem("bare_fitz_label", fitzLabelMap[roman] || typeLabel);          // legacy key
+        localStorage.setItem("bare_fitz_label", fitzLabelMap[roman] || typeLabel);
         localStorage.setItem("bare_fitz_score", String(score));
       }catch(e){}
 
-      // If this page was opened from the consultation form, send result back.
-      // We post multiple payload shapes for maximum compatibility.
-      const payloadA = { fitzpatrick: roman, score, label: (fitzLabelMap[roman] || typeLabel) };                 // simplest
-      const payloadB = { kind: "bare_fitz_result", fitz: roman, score, label: (fitzLabelMap[roman] || typeLabel) }; // your current pattern
+      const payloadA = { fitzpatrick: roman, score, label: (fitzLabelMap[roman] || typeLabel) };
+      const payloadB = { kind: "bare_fitz_result", fitz: roman, score, label: (fitzLabelMap[roman] || typeLabel) };
 
       try{
         if(window.opener && !window.opener.closed){
           window.opener.postMessage(payloadA, "*");
           window.opener.postMessage(payloadB, "*");
 
-          status.textContent = "Result sent back to your consultation form ✅ You can close this tab.";
+          status.textContent = "Result sent back to your consultation form. You can close this tab.";
 
-          // Optional: auto-close after a short delay (mobile-friendly)
           setTimeout(() => { try{ window.close(); }catch(e){} }, 1200);
         }else{
-          status.textContent = "Result saved ✅ Return to your consultation form to see it filled in.";
+          status.textContent = "Result saved. Return to your consultation form to see it filled in.";
         }
       }catch(e){
-        status.textContent = "Result saved ✅ Return to your consultation form to see it filled in.";
+        status.textContent = "Result saved. Return to your consultation form to see it filled in.";
       }
     });
 
@@ -656,6 +736,5 @@ header .logo *{
       }catch(e){}
     });
   </script>
-
 </body>
 </html>
