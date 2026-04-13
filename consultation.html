@@ -1547,7 +1547,7 @@ if(res.ok){
 }
 
 }catch(err){
-  setStatus("Oops — connection error. Please try again.", "error");
+  setStatus(err.message || "Oops — connection error. Please try again.", "error");
 }
     });
   </script>
