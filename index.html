@@ -138,10 +138,10 @@
       --heading-dark: #24221a;
       --body: #cacdc6;          /* per your spec: “other writing” */
       --brand: #5e6959;         /* BARE by Marlese */
-      --panel: #24221a;         /* dark panels so #cacdc6 body text stays readable */
-      --panel-2: rgba(36,34,26,.88);
-      --line: rgba(36,34,26,.35);
-      --shadow: 0 18px 45px rgba(0,0,0,.16);
+      --panel: rgba(212,215,209,.72);
+      --panel-2: rgba(212,215,209,.58);
+      --line: rgba(36,34,26,.12);
+      --shadow: 0 12px 30px rgba(36,34,26,.10);
     }
 
     *{ box-sizing:border-box; }
@@ -270,8 +270,8 @@
     }
 
     .hero-card{
-      background: rgba(202,205,198,.55);
-      border: 1px solid rgba(36,34,26,.12);
+      background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
+      border: 1px solid rgba(255,255,255,.42);
       border-radius: 18px;
       padding: 18px 18px 16px;
       box-shadow: var(--shadow);
@@ -340,6 +340,22 @@
       opacity:1;
       text-transform: uppercase;
     }
+
+    .hero-cta-title{
+      font-size: 28px;
+      line-height: 1.18;
+      font-weight: 600;
+      color: var(--heading-dark);
+    }
+    .hero-cta-sub,
+    .hero-cta-locations,
+    .hero-cta-small,
+    .hero-cta-trust{
+      color: var(--heading-dark);
+      opacity: .84;
+      line-height: 1.55;
+    }
+
 
     /* Section heading */
     section{ padding: 44px 0; }
@@ -412,8 +428,8 @@ letter-spacing:.02em;
       border-radius: 18px;
       overflow:hidden;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
+      border: 1px solid rgba(255,255,255,.42);
+      background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
     }
     .panel{
       padding: 24px 26px;
@@ -446,8 +462,8 @@ letter-spacing:.02em;
       border-radius: 18px;
       padding: 18px 22px;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
+      border: 1px solid rgba(255,255,255,.42);
+      background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
       text-align:center;
     }
     .aftercare h3{
@@ -476,8 +492,8 @@ letter-spacing:.02em;
     .price-col{
       border-radius: 18px;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
+      border: 1px solid rgba(255,255,255,.42);
+      background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
       padding: 18px 18px 14px;
     }
     .price-row{
@@ -575,8 +591,8 @@ letter-spacing:.02em;
     .forms-card{
       border-radius: 18px;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
+      border: 1px solid rgba(255,255,255,.42);
+      background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
       padding: 18px;
       display:flex;
       flex-direction:column;
@@ -650,8 +666,8 @@ letter-spacing:.02em;
     .contact-left{
       border-radius: 18px;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
-      background: rgba(202,205,198,.45);
+      border: 1px solid rgba(255,255,255,.42);
+      background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
       padding: 18px;
       position: relative;
       overflow:hidden;
@@ -689,7 +705,7 @@ letter-spacing:.02em;
     .contact-right{
       border-radius: 18px;
       box-shadow: var(--shadow);
-      border: 1px solid rgba(36,34,26,.16);
+      border: 1px solid rgba(255,255,255,.42);
       overflow:hidden;
       min-height: 420px;
       background:#111;
@@ -1042,7 +1058,7 @@ letter-spacing:.02em;
   flex-direction:column;
   align-items:center;
   gap:6px;
-  color:#cacdc6;
+  color:#24221a;
   text-decoration:none;
   min-width:78px;
 }
@@ -1077,10 +1093,10 @@ letter-spacing:.02em;
 .booking-shell{
   margin: 8px 0 22px;
   padding: 22px;
-  border: 1px solid rgba(202,205,198,.12);
+  border: 1px solid rgba(255,255,255,.32);
   border-radius: 18px;
-  background: linear-gradient(180deg, rgba(202,205,198,.06), rgba(202,205,198,.02));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
 }
 .booking-kicker{
   text-align:center;
@@ -1092,14 +1108,14 @@ letter-spacing:.02em;
 }
 .booking-title{
   text-align:center;
-  color:#cacdc6;
+  color:#24221a;
   font-size:26px;
   font-weight:600;
   margin:0 0 8px;
 }
 .booking-intro{
   text-align:center;
-  color:#cacdc6;
+  color:#24221a;
   opacity:.84;
   max-width:620px;
   margin:0 auto 24px;
@@ -1117,8 +1133,8 @@ letter-spacing:.02em;
 .booking-card{
   width:100%;
 
-  background: rgba(202,205,198,.06);
-  border:1px solid rgba(202,205,198,.14);
+  background: rgba(255,255,255,.26);
+  border:1px solid rgba(255,255,255,.32);
   border-radius:18px;
   padding:18px;
   display:flex;
@@ -1140,7 +1156,7 @@ letter-spacing:.02em;
 }
 .booking-card p{
   margin:0 0 14px;
-  color:#cacdc6;
+  color:#24221a;
   opacity:.84;
   font-size:14px;
   line-height:1.6;
@@ -1163,9 +1179,9 @@ display:inline-flex;
 align-items:center;
 padding:7px 12px;
 border-radius:999px;
-background: rgba(202,205,198,.08);
-border:1px solid rgba(202,205,198,.12);
-color:#cacdc6;
+background: rgba(255,255,255,.42);
+border:1px solid rgba(255,255,255,.34);
+color:#24221a;
 font-size:11px;
 letter-spacing:.1em;
 text-transform:uppercase;
@@ -1180,7 +1196,7 @@ text-transform:uppercase;
   padding:0 20px;
   border-radius:999px;
   background:#5e6959;
-  color:#cacdc6;
+  color:#24221a;
   font-weight:700;
   letter-spacing:.06em;
   text-transform:uppercase;
@@ -1213,7 +1229,7 @@ text-transform:uppercase;
   padding:0 28px;
   border-radius:999px;
   background:#5e6959;
-  color:#cacdc6;
+  color:#24221a;
   font-weight:700;
   letter-spacing:.08em;
   text-transform:uppercase;
@@ -1850,8 +1866,8 @@ Consultation &amp; Patch Test Included
     ">
 
       <div style="
-        background:#24221a;
-        color:#cacdc6;
+        background:linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.10));
+        color:#24221a;
         border-radius:18px;
         padding:26px;
         display:flex;
@@ -1945,7 +1961,7 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
   <span class="dot"></span>Book Consultation</a>
   <footer>
   © BARE by Marlese — Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire |
-  <a href="privacy.html" style="color:#878274;">Privacy Policy</a>
+  <a href="/privacy.html" style="color:#878274;">Privacy Policy</a>
 </footer>
 
 
