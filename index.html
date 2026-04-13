@@ -1191,20 +1191,29 @@ text-transform:uppercase;
   display:flex;
   align-items:center;
   justify-content:center;
+
   width:100%;
   min-height:54px;
   padding:0 20px;
+
   border-radius:999px;
-  background:#5e6959;
-  color:#24221a;
+
+  /* MATCH AFTERCARE BUTTON */
+  background: var(--brand);
+  color: var(--body);
+
   font-weight:700;
+  font-size:14px;
   letter-spacing:.06em;
   text-transform:uppercase;
-  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+
   box-shadow: 0 10px 24px rgba(0,0,0,.18);
+
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
 }
+
 .booking-btn:hover{
-  filter: brightness(.97);
+  filter: brightness(.96);
   transform: translateY(-2px);
   box-shadow: 0 16px 34px rgba(0,0,0,.22);
 }
