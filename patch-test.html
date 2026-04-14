@@ -570,80 +570,156 @@
         </div>
     </div>
 
-    <script>
-        const BRAND_TITLE = "Patch Test Form | BARE by Marlese";
+</div>
 
-        function toggleReaction(element) { element.classList.toggle('selected'); }
+<script>
+    const PATCH_TEST_WORKER_URL = "https://YOUR-WORKER-URL.workers.dev";
+    const BRAND_TITLE = "Patch Test Form | BARE by Marlese";
 
-        const canvas = document.getElementById('signature-pad');
-        const signaturePad = new SignaturePad(canvas, { penColor: 'rgb(36, 34, 26)' });
+    function toggleReaction(element) { element.classList.toggle('selected'); }
 
-        function resizeCanvas() {
-            const ratio = Math.max(window.devicePixelRatio || 1, 1);
-            canvas.width = canvas.offsetWidth * ratio;
-            canvas.height = canvas.offsetHeight * ratio;
-            canvas.getContext("2d").scale(ratio, ratio);
-            signaturePad.clear();
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas, { penColor: 'rgb(36, 34, 26)' });
+
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+        signaturePad.clear();
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function clearSig() { 
+        signaturePad.clear(); 
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+        document.getElementById('printTimeStamp').innerText = "";
+        document.getElementById('clientName').value = "";
+        document.getElementById('dateOfBirth').value = "";
+        document.getElementById('testArea').value = "";
+        document.getElementById('skinType').value = "";
+        document.getElementById('serialNo').value = "";
+        document.getElementById('wavelength').value = "";
+        document.getElementById('joules').value = "";
+        document.getElementById('pulse').value = "";
+        document.getElementById('spot').value = "";
+        document.getElementById('testShots').value = "";
+        document.getElementById('earliestTreatmentDate').value = "";
+        document.getElementById('eyePro').checked = true;
+        document.title = BRAND_TITLE;
+        const testDateEl = document.getElementById('testDate');
+        if (testDateEl) testDateEl.valueAsDate = new Date();
+
+        const statusEl = document.getElementById("status");
+        if (statusEl) {
+            statusEl.style.display = "none";
+            statusEl.textContent = "";
+        }
+    }
+
+    function updateTimeStamp() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('printTimeStamp').innerText = "Signed: " + dateStr + " at " + timeStr;
+        return dateStr.replace(/\s/g, '-');
+    }
+
+    function syncMobilePrintMode() {
+        document.body.classList.toggle('mobile-print', window.innerWidth <= 600);
+    }
+
+    window.addEventListener('beforeprint', syncMobilePrintMode);
+    window.addEventListener('afterprint', () => {
+        document.body.classList.remove('mobile-print');
+    });
+
+    function setStatus(msg, type = "info") {
+        const statusEl = document.getElementById("status");
+        if (!statusEl) return;
+
+        statusEl.textContent = msg;
+        statusEl.style.display = "block";
+        statusEl.style.borderColor =
+            type === "error" ? "rgba(180,50,50,.25)" : "rgba(36,34,26,.14)";
+    }
+
+    function buildPatchTestFormData() {
+        const data = new FormData();
+
+        data.append("client_name", document.getElementById("clientName")?.value || "");
+        data.append("date_of_birth", document.getElementById("dateOfBirth")?.value || "");
+        data.append("test_date", document.getElementById("testDate")?.value || "");
+        data.append("test_area", document.getElementById("testArea")?.value || "");
+        data.append("skin_type", document.getElementById("skinType")?.value || "");
+
+        data.append("serial_no", document.getElementById("serialNo")?.value || "");
+        data.append("wavelength", document.getElementById("wavelength")?.value || "");
+        data.append("joules", document.getElementById("joules")?.value || "");
+        data.append("pulse", document.getElementById("pulse")?.value || "");
+        data.append("spot", document.getElementById("spot")?.value || "");
+        data.append("test_shots", document.getElementById("testShots")?.value || "");
+        data.append("earliest_treatment_date", document.getElementById("earliestTreatmentDate")?.value || "");
+        data.append("eye_protection", document.getElementById("eyePro")?.checked ? "Yes" : "No");
+
+        const selectedReactions = [...document.querySelectorAll(".pill.selected")]
+            .map(p => p.textContent.trim())
+            .join(", ");
+        data.append("immediate_reaction", selectedReactions || "None selected");
+
+        data.append("submitted_at", new Date().toISOString());
+
+        if (signaturePad && !signaturePad.isEmpty()) {
+            data.append("signature", signaturePad.toDataURL("image/png"));
+        } else {
+            data.append("signature", "");
         }
 
-        window.addEventListener("resize", resizeCanvas);
-        resizeCanvas();
+        return data;
+    }
 
-        function clearSig() { 
-            signaturePad.clear(); 
-            document.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
-            document.getElementById('printTimeStamp').innerText = "";
-            document.getElementById('clientName').value = "";
-            document.getElementById('dateOfBirth').value = "";
-            document.getElementById('testArea').value = "";
-            document.getElementById('skinType').value = "";
-            document.getElementById('serialNo').value = "";
-            document.getElementById('wavelength').value = "";
-            document.getElementById('joules').value = "";
-            document.getElementById('pulse').value = "";
-            document.getElementById('spot').value = "";
-            document.getElementById('testShots').value = "";
-            document.getElementById('earliestTreatmentDate').value = "";
-            document.getElementById('eyePro').checked = true;
-            document.title = BRAND_TITLE;
-            document.getElementById('testDate').valueAsDate = new Date();
+    async function prepareAndSend() {
+        const clientName = document.getElementById("clientName")?.value.trim();
+
+        if (!clientName) {
+            setStatus("Please enter client name", "error");
+            return;
         }
 
-        function updateTimeStamp() {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-            const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('printTimeStamp').innerText = "Signed: " + dateStr + " at " + timeStr;
-            return dateStr.replace(/\s/g, '-');
+        if (signaturePad.isEmpty()) {
+            setStatus("Please add signature", "error");
+            return;
         }
 
-        function syncMobilePrintMode() {
-            document.body.classList.toggle('mobile-print', window.innerWidth <= 600);
+        try {
+            updateTimeStamp();
+            setStatus("Sending patch test...");
+
+            const data = buildPatchTestFormData();
+
+            const res = await fetch(PATCH_TEST_WORKER_URL, {
+                method: "POST",
+                body: data
+            });
+
+            if (res.ok) {
+                setStatus("Patch test sent successfully ✅");
+            } else {
+                const err = await res.text();
+                setStatus(err || "Error sending", "error");
+            }
+
+        } catch (err) {
+            setStatus("Connection error", "error");
         }
+    }
 
-        window.addEventListener('beforeprint', syncMobilePrintMode);
-        window.addEventListener('afterprint', () => {
-            document.body.classList.remove('mobile-print');
-        });
-
-        function prepareAndPrint() {
-            const nameInput = document.getElementById('clientName').value.trim();
-            const clientName = nameInput || "Client";
-            const dateFormatted = updateTimeStamp();
-
-            syncMobilePrintMode();
-            document.title = "Patch-Test-" + clientName + "-" + dateFormatted;
-
-            setTimeout(() => { 
-                window.print(); 
-                setTimeout(() => { 
-                    document.title = BRAND_TITLE;
-                    document.body.classList.remove('mobile-print');
-                }, 2000);
-            }, 250);
-        }
-
-        document.getElementById('testDate').valueAsDate = new Date();
-    </script>
+    window.addEventListener("load", () => {
+        const testDateEl = document.getElementById("testDate");
+        if (testDateEl) testDateEl.valueAsDate = new Date();
+    });
+</script>
 </body>
 </html>
