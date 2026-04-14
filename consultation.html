@@ -1180,6 +1180,28 @@ header .logo *{
 <div class="con-small">
   Please refer to the aftercare guidance available on the main BARE by Marlese website.
 </div>
+
+<div style="margin-top:16px;">
+  <label class="con-label">Client Signature <span class="required-star">*</span></label>
+
+  <canvas id="signature-pad" style="
+    width:100%;
+    height:160px;
+    background:rgba(255,255,255,0.9);
+    border:1px solid rgba(36,34,26,0.15);
+    border-radius:12px;
+    display:block;
+    touch-action:none;
+  "></canvas>
+
+  <input type="hidden" name="signature" id="signature-data">
+
+  <div style="display:flex; gap:10px; margin-top:10px;">
+    <button type="button" class="con-btn con-btn-ghost" id="clear-signature">
+      CLEAR SIGNATURE
+    </button>
+  </div>
+</div>
             </div>
 <!-- Hidden metadata -->
             <input type="hidden" name="submitted_at" id="submitted_at">
@@ -1215,6 +1237,8 @@ header .logo *{
   <footer>
     © BARE by Marlese | <a href="/privacy.html">Privacy Policy</a>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
   <script>
     
@@ -1500,6 +1524,44 @@ syncFitzFromStorage();
       clearConsultationFormState();
     });
 
+    // Signature pad setup
+    const canvas = document.getElementById("signature-pad");
+    const signatureDataInput = document.getElementById("signature-data");
+    const clearSignatureBtn = document.getElementById("clear-signature");
+    let signaturePad = null;
+
+    function resizeCanvas(preserveDrawing = true){
+      if(!canvas) return;
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const existing = preserveDrawing && signaturePad && !signaturePad.isEmpty()
+        ? signaturePad.toDataURL()
+        : null;
+
+      canvas.width = canvas.offsetWidth * ratio;
+      canvas.height = canvas.offsetHeight * ratio;
+      canvas.getContext("2d").scale(ratio, ratio);
+
+      if(!signaturePad){
+        signaturePad = new SignaturePad(canvas);
+      }else{
+        signaturePad.clear();
+      }
+
+      if(existing){
+        signaturePad.fromDataURL(existing);
+      }
+    }
+
+    resizeCanvas(false);
+    window.addEventListener("resize", () => resizeCanvas(true));
+
+    if(clearSignatureBtn){
+      clearSignatureBtn.addEventListener("click", () => {
+        if(signaturePad) signaturePad.clear();
+        if(signatureDataInput) signatureDataInput.value = "";
+      });
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -1513,6 +1575,17 @@ syncFitzFromStorage();
 
       if(!validateRequiredCheckboxGroups()){
         return;
+      }
+
+      if(signaturePad && signaturePad.isEmpty()){
+        setStatus("Please provide your signature before submitting.", "error");
+        statusEl.style.display = "block";
+        canvas?.scrollIntoView({behavior:"smooth", block:"center"});
+        return;
+      }
+
+      if(signatureDataInput && signaturePad){
+        signatureDataInput.value = signaturePad.toDataURL("image/png");
       }
 
       submittedAt.value = new Date().toISOString();
