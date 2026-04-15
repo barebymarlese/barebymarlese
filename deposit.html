@@ -36,6 +36,7 @@ body{
 .shell{
   width:100%;
   max-width:860px;
+  position:relative;
 }
 .brand{
   text-align:center;
@@ -188,15 +189,56 @@ h1{
 }
 .status-pill.show{display:block}
 .divider{height:1px;background:var(--line);margin:18px 0}
-.back-link{
-  display:inline-block;
-  margin-top:10px;
+.back-btn{
+  appearance:none;
+  border:1px solid rgba(94,105,89,.18);
+  background:#eceee9;
   color:var(--olive);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  min-height:46px;
+  padding:12px 18px;
+  border-radius:999px;
   text-decoration:none;
   font-size:14px;
-  font-weight:600;
+  font-weight:700;
+  letter-spacing:.01em;
+  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+  box-shadow:0 8px 20px rgba(36,34,26,.06);
 }
-.back-link:hover{text-decoration:underline}
+.back-btn:hover{
+  transform:translateY(-1px);
+  background:#e6e9e2;
+}
+.flash-message{
+  position:fixed;
+  top:18px;
+  left:50%;
+  transform:translateX(-50%) translateY(-8px);
+  width:min(92vw, 760px);
+  padding:15px 18px;
+  border-radius:16px;
+  background:rgba(248,248,246,.98);
+  border:1px solid rgba(94,105,89,.18);
+  box-shadow:0 16px 38px rgba(36,34,26,.14);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.6;
+  z-index:1000;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .35s ease, transform .35s ease, visibility .35s ease;
+}
+.flash-message.show{
+  opacity:1;
+  visibility:visible;
+  transform:translateX(-50%) translateY(0);
+}
+.flash-message strong{
+  color:var(--olive-dark);
+}
 footer{
   text-align:center;
   padding:18px 10px 0;
@@ -209,10 +251,19 @@ footer{
   .hero{padding:36px 22px 20px}
   .left,.right{padding:22px}
   .price{font-size:38px}
+  .flash-message{
+    top:12px;
+    font-size:13px;
+    padding:13px 15px;
+  }
 }
 </style>
 </head>
 <body>
+<div class="flash-message" id="consultation-flash" role="status" aria-live="polite">
+  <strong>Thank you for completing your consultation.</strong> You will receive a response soon. Please check your junk/spam folder as well if you do not see it in your inbox.
+</div>
+
 <div class="page">
   <div class="shell">
     <div class="brand">BARE by Marlese</div>
@@ -265,7 +316,7 @@ footer{
           </div>
 
           <div class="divider"></div>
-          <a class="back-link" href="https://barebymarlese.com/">← Back to BARE by Marlese</a>
+          <a class="back-btn" href="https://barebymarlese.com/" aria-label="Back to BARE by Marlese">← Back to BARE by Marlese</a>
         </div>
 
         <div class="right">
@@ -310,9 +361,18 @@ footer{
   const payBtn = document.getElementById('pay-deposit-btn');
   const continueBtn = document.getElementById('continue-booking-btn');
   const helpText = document.querySelector('.help');
+  const flashMessage = document.getElementById('consultation-flash');
 
   const RETURN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
   let pageWasHidden = false;
+
+  function showConsultationMessage() {
+    if (!flashMessage) return;
+    flashMessage.classList.add('show');
+    window.setTimeout(function () {
+      flashMessage.classList.remove('show');
+    }, 10000);
+  }
 
   function lockBooking() {
     continueBtn.disabled = true;
@@ -388,6 +448,8 @@ footer{
     clearPaymentFlow();
     lockBooking();
   }
+
+  showConsultationMessage();
 
   payBtn.addEventListener("click", function () {
     localStorage.setItem("barePaymentStarted", "yes");
