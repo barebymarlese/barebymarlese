@@ -380,8 +380,7 @@ footer{
   const flashMessage = document.getElementById('consultation-flash');
 
   const RETURN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-  const PAYMENT_URL = "https://checkout.revolut.com/payment-link/db26ee07-3712-49db-b515-c6ddb1028813";
-  let paymentInProgress = false;
+  let pageWasHidden = false;
 
   function showConsultationMessage() {
     if (!flashMessage) return;
@@ -432,62 +431,71 @@ footer{
     localStorage.removeItem("barePaymentStartedTs");
     localStorage.removeItem("barePaymentReturned");
     localStorage.removeItem("barePaymentReturnedTs");
-    paymentInProgress = false;
   }
 
   function hasValidReturn() {
-    const started = localStorage.getItem("barePaymentStarted");
     const returned = localStorage.getItem("barePaymentReturned");
-    const startedTs = parseInt(localStorage.getItem("barePaymentStartedTs") || "0", 10);
     const returnedTs = parseInt(localStorage.getItem("barePaymentReturnedTs") || "0", 10);
 
-    if (started !== "yes" || returned !== "yes" || !startedTs || !returnedTs) return false;
-    if (returnedTs < startedTs) return false;
-
-    return (Date.now() - returnedTs) <= RETURN_WINDOW_MS;
+    return returned === "yes" &&
+      returnedTs &&
+      (Date.now() - returnedTs) <= RETURN_WINDOW_MS;
   }
 
-  function initState() {
-    if (hasValidReturn()) {
+  function markReturnedFromPayment() {
+    const started = localStorage.getItem("barePaymentStarted");
+    const startedTs = parseInt(localStorage.getItem("barePaymentStartedTs") || "0", 10);
+
+    if (started !== "yes" || !startedTs) return;
+    if (!pageWasHidden) return;
+
+    const elapsed = Date.now() - startedTs;
+
+    if (elapsed > 3000 && elapsed <= RETURN_WINDOW_MS) {
+      localStorage.setItem("barePaymentReturned", "yes");
+      localStorage.setItem("barePaymentReturnedTs", String(Date.now()));
       activateBooking();
-    } else {
-      clearPaymentFlow();
-      lockBooking();
     }
   }
 
+  const started = localStorage.getItem("barePaymentStarted");
+  const returned = localStorage.getItem("barePaymentReturned");
+
+  if (started === "yes" && returned === "yes" && hasValidReturn()) {
+    activateBooking();
+  } else {
+    lockBooking();
+  }
+
   showConsultationMessage();
-  initState();
 
-  payBtn.addEventListener("click", function (event) {
-    event.preventDefault();
-
+  payBtn.addEventListener("click", function () {
     localStorage.setItem("barePaymentStarted", "yes");
     localStorage.setItem("barePaymentStartedTs", String(Date.now()));
     localStorage.removeItem("barePaymentReturned");
     localStorage.removeItem("barePaymentReturnedTs");
-    paymentInProgress = true;
+    pageWasHidden = false;
     lockBooking();
-
-    window.location.href = PAYMENT_URL;
   });
 
   document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "visible" && paymentInProgress) {
-      localStorage.setItem("barePaymentReturned", "yes");
-      localStorage.setItem("barePaymentReturnedTs", String(Date.now()));
-      paymentInProgress = false;
-
-      if (hasValidReturn()) {
-        activateBooking();
-      } else {
-        lockBooking();
-      }
+    if (document.visibilityState === "hidden") {
+      pageWasHidden = true;
+    } else if (document.visibilityState === "visible") {
+      markReturnedFromPayment();
     }
   });
 
+  window.addEventListener("focus", markReturnedFromPayment);
   window.addEventListener("pageshow", function () {
-    initState();
+    const started = localStorage.getItem("barePaymentStarted");
+    const returned = localStorage.getItem("barePaymentReturned");
+
+    if (started === "yes" && returned === "yes" && hasValidReturn()) {
+      activateBooking();
+    } else {
+      lockBooking();
+    }
   });
 
   continueBtn.addEventListener("click", function () {
