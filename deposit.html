@@ -426,18 +426,18 @@ footer{
     continueBtn.classList.remove("btn-secondary");
     continueBtn.classList.add("btn-primary");
 
-    payBtn.style.opacity = "1";
-    payBtn.style.pointerEvents = "auto";
-    payBtn.textContent = "Pay £30 Deposit";
+    payBtn.style.opacity = ".45";
+    payBtn.style.pointerEvents = "none";
+    payBtn.textContent = "Deposit Paid";
 
     statusPill.classList.add("show");
 
     if (helpText) {
-      helpText.textContent = "Return detected. You can now continue to booking. If needed, you can still reopen the payment page.";
+      helpText.textContent = "Return detected. You can now continue to booking.";
     }
 
     if (returnHint) {
-      returnHint.textContent = "Booking is now unlocked. Tap Continue to Booking when ready.";
+      returnHint.textContent = "Booking is now unlocked. Tap the button above to continue.";
     }
   }
 
