@@ -357,6 +357,44 @@
       </div>
     </div>
 
+
+    <div class="section">
+      <h2 class="section-title">Internal Compliance & Incident Logging</h2>
+      <div class="grid-3">
+        <div class="panel">
+          <h3>Purpose</h3>
+          <ul>
+            <li>Used to record accidents, incidents, near misses, adverse reactions, and safety-related events</li>
+            <li>Supports practitioner record keeping and internal compliance</li>
+            <li>Provides a clear written record for insurance, follow-up, and business safety documentation</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>System Structure</h3>
+          <ul>
+            <li>Form hosted on GitHub Pages</li>
+            <li>Submission handled through Cloudflare Worker</li>
+            <li>Email delivery handled through Resend and Gmail</li>
+            <li>Records can be retained in Gmail, downloaded as PDF, and stored in Google Drive</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>How It Is Used</h3>
+          <ul>
+            <li>Completed by the practitioner or responsible person</li>
+            <li>Not part of the normal client booking journey</li>
+            <li>Used only when an incident, accident, or adverse event needs to be formally recorded</li>
+            <li>Designed to fit the same low-risk, serverless business structure as the rest of the website</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>Where this fits</strong><br>
+        The incident log sits inside the internal business compliance structure rather than the public client journey. It supports safe record keeping without adding a database, login area, or extra backend risk to the main website.
+      </div>
+    </div>
+
     <div class="section">
       <h2 class="section-title">Full Client Journey</h2>
       <div class="journey">
