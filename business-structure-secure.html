@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Business Structure | BARE by Marlese</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#cacdc6;
+      --card-bg:#d4d7d1;
+      --heading-muted:#878274;
+      --heading-dark:#24221a;
+      --brand:#5e6959;
+      --brand-dark:#4c5648;
+      --panel:rgba(255,255,255,0.34);
+      --border:rgba(36,34,26,0.08);
+      --shadow:0 12px 30px rgba(0,0,0,0.10);
+    }
+    * { box-sizing:border-box; -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important; }
+    html, body { margin:0; padding:0; width:100%; background:var(--bg); overflow-x:hidden; }
+    body { font-family:"Montserrat",sans-serif; color:var(--heading-dark); display:flex; justify-content:center; min-height:100vh; }
+    a { color:var(--brand); text-decoration:none; }
+    .wrap {
+      background:rgba(212,215,209,0.92);
+      border:1px solid rgba(255,255,255,0.3);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:30px 44px;
+      max-width:1080px;
+      width:95%;
+      margin:20px auto;
+    }
+    .logo {
+      display:flex; align-items:baseline; justify-content:center; gap:12px;
+      letter-spacing:.26em; font-weight:600; text-transform:uppercase; margin-bottom:5px;
+    }
+    .logo .bare { color:var(--brand); font-size:24px; }
+    .logo .by { letter-spacing:.05em; font-weight:500; text-transform:none; color:var(--heading-muted); font-size:15px; }
+    .eyebrow { text-align:center; margin:0 0 8px; font-size:12px; color:var(--heading-muted); letter-spacing:.18em; font-weight:700; text-transform:uppercase; }
+    h1 { margin:0; text-align:center; font-size:28px; line-height:1.2; letter-spacing:.04em; text-transform:uppercase; color:var(--heading-dark); }
+    .intro { text-align:center; font-size:12px; line-height:1.8; max-width:800px; margin:14px auto 24px; }
+    .hero-grid, .grid-2, .grid-3 { display:grid; gap:16px 20px; }
+    .hero-grid { grid-template-columns:1.15fr .95fr; margin-bottom:20px; }
+    .grid-2 { grid-template-columns:1fr 1fr; }
+    .grid-3 { grid-template-columns:repeat(3, 1fr); }
+    .section {
+      padding:24px 28px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,0.4);
+      background:linear-gradient(145deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+      box-shadow:inset 0 1px 3px rgba(255,255,255,0.2);
+      margin-bottom:18px;
+    }
+    .section-title { margin:0 0 14px; font-size:12px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--brand); }
+    .panel {
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px 16px 14px;
+      min-width:0;
+    }
+    .panel h3 { margin:0 0 8px; font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--brand); }
+    .panel p, .panel li, .panel td, .panel th { font-size:11.2px; line-height:1.65; margin:0; }
+    .panel ul { margin:0; padding-left:18px; }
+    .panel li + li { margin-top:6px; }
+    .highlight {
+      background:rgba(94,105,89,0.10);
+      border:1px solid rgba(94,105,89,0.18);
+      border-radius:18px;
+      padding:18px;
+    }
+    .highlight strong { display:block; margin-bottom:8px; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--brand-dark); }
+    .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .tag { padding:8px 11px; border-radius:999px; background:rgba(255,255,255,0.38); border:1px solid rgba(36,34,26,0.08); font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
+    .journey { display:grid; gap:12px; }
+    .step {
+      display:grid; grid-template-columns:44px 1fr; gap:14px; align-items:start;
+      background:rgba(255,255,255,0.28); border:1px solid rgba(36,34,26,0.08);
+      border-radius:16px; padding:14px 16px; position:relative;
+    }
+    .step:not(:last-child)::after {
+      content:""; position:absolute; left:37px; top:calc(100% + 2px); width:2px; height:10px; background:rgba(94,105,89,0.32);
+    }
+    .step-num {
+      width:30px; height:30px; border-radius:999px; background:var(--brand); color:#fff;
+      display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; letter-spacing:.04em; margin-top:2px;
+    }
+    .step h4 { margin:0 0 4px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+    .step p { margin:0; font-size:11.2px; line-height:1.6; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { text-align:left; padding:8px 10px; border-bottom:1px solid rgba(36,34,26,0.08); vertical-align:top; }
+    th { color:var(--brand-dark); font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+    .credential-safe { color:var(--heading-muted); font-style:italic; }
+    .note-box {
+      font-size:11px; line-height:1.65; margin-top:16px; padding:14px 16px; border-radius:4px 12px 12px 4px;
+      border-left:5px solid var(--brand); background:rgba(255,255,255,0.25);
+    }
+    .footer { text-align:center; margin-top:18px; font-size:11px; line-height:1.7; }
+    .print-actions { display:flex; gap:16px; margin-top:18px; }
+    .btn { flex:1; background:var(--brand); font-size:12px; color:#fff; border:0; border-radius:12px; padding:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; }
+    @media screen and (max-width:900px) { .hero-grid, .grid-2, .grid-3 { grid-template-columns:1fr; } }
+    @media screen and (max-width:700px) {
+      body { display:block; padding:0; }
+      .wrap { width:94vw; margin:10px auto; padding:20px; }
+      h1 { font-size:22px; }
+      .panel p, .panel li, .panel td, .panel th, .step p, .intro, .footer, .note-box { font-size:13px; }
+      .step h4 { font-size:12px; }
+      .step { grid-template-columns:38px 1fr; gap:12px; }
+      .step-num { width:28px; height:28px; font-size:11px; }
+      .step:not(:last-child)::after { left:30px; }
+      .print-actions { flex-direction:column; }
+    }
+    @media print {
+      @page { size:A4 portrait; margin:6mm; }
+      html, body { width:100%; height:auto; background:#cacdc6 !important; }
+      body { display:block !important; min-height:auto !important; margin:0 !important; padding:0 !important; }
+      .wrap { background:#d4d7d1 !important; box-shadow:none !important; border:none !important; border-radius:20px !important; width:100% !important; max-width:none !important; margin:0 !important; padding:18px 20px !important; }
+      h1 { font-size:22px !important; }
+      .intro { font-size:10px !important; line-height:1.55 !important; margin-bottom:16px !important; }
+      .section { padding:16px !important; border-radius:16px !important; margin-bottom:12px !important; }
+      .panel { padding:12px !important; border-radius:12px !important; }
+      .section-title { font-size:10px !important; margin-bottom:10px !important; }
+      .panel h3, .step h4, th { font-size:8px !important; }
+      .panel p, .panel li, .panel td, .panel th, .step p, .note-box, .footer { font-size:8.8px !important; line-height:1.45 !important; }
+      .tag { font-size:7.5px !important; padding:6px 8px !important; }
+      .step { padding:10px 12px !important; }
+      .step-num { width:24px !important; height:24px !important; font-size:9px !important; }
+      .no-print { display:none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+      <span class="bare">BARE |</span>
+      <span class="by">by Marlese</span>
+    </div>
+
+    <div class="eyebrow">Business Overview</div>
+    <h1>Full Business Structure</h1>
+    <p class="intro">
+      A full overview of the BARE by Marlese setup, including domains, hosting, connected tools, consultation handling,
+      payment flow, booking flow, communications, storage, and the complete client journey from first website visit to confirmed appointment.
+    </p>
+
+    <div class="hero-grid">
+      <div class="section">
+        <h2 class="section-title">Business Summary</h2>
+        <div class="highlight">
+          <strong>Core Structure</strong>
+          BARE by Marlese runs through a website-led client flow. The website is hosted on GitHub Pages, performance and workers are handled through Cloudflare, consultations are submitted via Cloudflare Worker, emails are handled through Gmail and Resend, files are stored in Google Drive, deposits are taken through Revolut Pro, and appointments are completed through Google Calendar Appointment Scheduling.
+        </div>
+        <div class="tag-row">
+          <span class="tag">GoDaddy</span>
+          <span class="tag">GitHub Pages</span>
+          <span class="tag">Cloudflare</span>
+          <span class="tag">Resend</span>
+          <span class="tag">Gmail</span>
+          <span class="tag">Google Drive</span>
+          <span class="tag">Google Calendar</span>
+          <span class="tag">Revolut Pro</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Main Objective</h2>
+        <div class="panel">
+          <h3>Client Journey Goal</h3>
+          <p>
+            Keep the client journey simple and premium: complete the consultation first, receive confirmation,
+            move to the deposit page, pay the £30 deposit through Revolut Pro, return to the website tab,
+            unlock booking, and then complete the appointment booking through Google Calendar.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Domains, Hosting & Connected Tools</h2>
+      <div class="grid-3">
+        <div class="panel">
+          <h3>Domains</h3>
+          <ul>
+            <li>Primary domain: barebymarlese.com</li>
+            <li>Secondary domain: barebymarlese.co.uk</li>
+            <li>Domain provider: GoDaddy</li>
+            <li>Auto-renews on 21/01/2029</li>
+            <li>Planned action: move domain management to Cloudflare before renewal</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Website Hosting</h3>
+          <ul>
+            <li>Hosting platform: GitHub Pages</li>
+            <li>Website acts as the front-end for consultation, deposit, and booking</li>
+            <li>Pages support the step-by-step client journey</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Connected Tools</h3>
+          <ul>
+            <li>Cloudflare</li>
+            <li>Resend</li>
+            <li>Gmail</li>
+            <li>Google Drive</li>
+            <li>Google Calendar Appointment Scheduling</li>
+            <li>Revolut Pro</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Access & System Logins</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Platform Access List</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Platform</th>
+                <th>Link / Account</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GoDaddy</td>
+                <td>Domain management account</td>
+              </tr>
+              <tr>
+                <td>Cloudflare</td>
+                <td><a href="https://dash.cloudflare.com/">dash.cloudflare.com</a></td>
+              </tr>
+              <tr>
+                <td>Cloudflare account email</td>
+                <td>barebymarlese@gmail.com</td>
+              </tr>
+              <tr>
+                <td>Resend</td>
+                <td><a href="https://resend.com/login">resend.com/login</a></td>
+              </tr>
+              <tr>
+                <td>Resend account email</td>
+                <td>barebymarlese@gmail.com</td>
+              </tr>
+              <tr>
+                <td>Google services</td>
+                <td>Gmail / Google Drive / Google Calendar Appointment Scheduling</td>
+              </tr>
+              <tr>
+                <td>Payments</td>
+                <td>Revolut Pro</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <h3>Important Security Note</h3>
+          <p>
+            This version is intentionally safe for GitHub and download use. Actual passwords have been left out and should not be stored in website files, public repositories, or shared HTML documents.
+          </p>
+          <div class="note-box" style="margin-top:12px;">
+            <strong>Use instead</strong><br>
+            Keep live passwords in a password manager or a private offline admin document. This page is designed to show your business structure and system map without exposing sensitive access details.
+          </div>
+          <p class="credential-safe" style="margin-top:12px;">
+            Password fields intentionally excluded for security.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Cloudflare & Email Setup</h2>
+      <div class="grid-3">
+        <div class="panel">
+          <h3>Cloudflare</h3>
+          <ul>
+            <li>Used for website-related services and worker handling</li>
+            <li>Dashboard: dash.cloudflare.com</li>
+            <li>Main account email: barebymarlese@gmail.com</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Workers</h3>
+          <ul>
+            <li>bare-consultation-worker</li>
+            <li>bare-patchtest-worker</li>
+            <li>Consultation submissions are processed through Cloudflare Worker</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Resend & Gmail</h3>
+          <ul>
+            <li>Resend login: resend.com/login</li>
+            <li>Account email: barebymarlese@gmail.com</li>
+            <li>Gmail handles inbox receipt and communication flow</li>
+            <li>Client receives consultation confirmation email after submission</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Consultation, Storage & Booking Structure</h2>
+      <div class="grid-3">
+        <div class="panel">
+          <h3>Consultation Form</h3>
+          <ul>
+            <li>Client completes consultation form on the website</li>
+            <li>Form is submitted through Cloudflare Worker</li>
+            <li>You receive the consultation by email</li>
+            <li>Client receives a consultation confirmation email</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>File & Data Storage</h3>
+          <ul>
+            <li>Consultation files stored in Google Drive</li>
+            <li>Gmail used as active inbox for submissions</li>
+            <li>Google Drive used for organised file handling and retention</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Booking & Payment</h3>
+          <ul>
+            <li>Client moves to deposit page after consultation</li>
+            <li>£30 deposit is paid through Revolut Pro</li>
+            <li>Client returns to the website tab after payment</li>
+            <li>Booking becomes available after deposit step</li>
+            <li>Appointment is booked through Google Calendar Appointment Scheduling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Full Client Journey</h2>
+      <div class="journey">
+        <div class="step"><div class="step-num">1</div><div><h4>Website Visit</h4><p>Client lands on the BARE by Marlese website.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div><h4>Consultation Completed</h4><p>Client fills in and submits the consultation form.</p></div></div>
+        <div class="step"><div class="step-num">3</div><div><h4>Worker Submission</h4><p>The consultation is processed through Cloudflare Worker.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div><h4>Email Receipt</h4><p>You receive the consultation in your email workflow.</p></div></div>
+        <div class="step"><div class="step-num">5</div><div><h4>Client Confirmation</h4><p>The client receives a consultation confirmation email.</p></div></div>
+        <div class="step"><div class="step-num">6</div><div><h4>Deposit Page</h4><p>The client is directed to the deposit page on the website.</p></div></div>
+        <div class="step"><div class="step-num">7</div><div><h4>Deposit Payment</h4><p>The client pays the £30 deposit using Revolut Pro.</p></div></div>
+        <div class="step"><div class="step-num">8</div><div><h4>Return to Website</h4><p>The client returns to the original website tab after payment.</p></div></div>
+        <div class="step"><div class="step-num">9</div><div><h4>Booking Unlocks</h4><p>The booking step becomes available once the deposit step has been completed.</p></div></div>
+        <div class="step"><div class="step-num">10</div><div><h4>Appointment Confirmed</h4><p>The client books through Google Calendar and receives booking confirmation.</p></div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Operational Logic</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Front-End Structure</h3>
+          <ul>
+            <li>Website is the main client-facing platform</li>
+            <li>Consultation comes first</li>
+            <li>Deposit comes second</li>
+            <li>Booking unlocks after the payment step</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Back-End Handling</h3>
+          <ul>
+            <li>Cloudflare Worker processes submissions</li>
+            <li>Gmail and Resend support communication flow</li>
+            <li>Google Drive supports file storage</li>
+            <li>Google Calendar handles appointment confirmation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>Important</strong><br>
+        This document is a secure business structure overview. It includes your platforms, workflow, and account map, but does not expose passwords inside the file. That keeps it suitable for local admin use, printing, or private reference without putting account access at risk.
+      </div>
+
+      <div class="footer">
+        BARE by Marlese business structure overview<br>
+        Domains: barebymarlese.com / barebymarlese.co.uk
+      </div>
+    </div>
+
+    <div class="print-actions no-print">
+      <button class="btn" onclick="window.print()">Create PDF</button>
+    </div>
+  </div>
+</body>
+</html>
