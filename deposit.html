@@ -458,10 +458,12 @@ footer{
     }
   }
 
-  if (hasValidReturn()) {
+  const started = localStorage.getItem("barePaymentStarted");
+  const returned = localStorage.getItem("barePaymentReturned");
+
+  if (started === "yes" && returned === "yes" && hasValidReturn()) {
     activateBooking();
   } else {
-    clearPaymentFlow();
     lockBooking();
   }
 
@@ -486,7 +488,10 @@ footer{
 
   window.addEventListener("focus", markReturnedFromPayment);
   window.addEventListener("pageshow", function () {
-    if (hasValidReturn()) {
+    const started = localStorage.getItem("barePaymentStarted");
+    const returned = localStorage.getItem("barePaymentReturned");
+
+    if (started === "yes" && returned === "yes" && hasValidReturn()) {
       activateBooking();
     } else {
       lockBooking();
