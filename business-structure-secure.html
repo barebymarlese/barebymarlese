@@ -419,107 +419,126 @@
       </div>
 
       <div class="comparison-wrap" id="comparisonWrap">
-        <div class="section" style="margin-top:18px; margin-bottom:0;">
-          <h2 class="section-title">High-Level Security Comparison</h2>
-          <p class="comparison-intro">
-            A more detailed, high-level comparison showing why the BARE setup has a smaller attack surface and lower maintenance burden than a typical WordPress or Wix build.
-          </p>
-          <div class="comparison-table-wrap">
-            <table class="comparison-table">
-              <thead>
-                <tr>
-                  <th>Area</th>
-                  <th>BARE (Your Setup)</th>
-                  <th>WordPress / Wix</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Backend system</strong></td>
-                  <td>None (static site only)</td>
-                  <td>Full backend system</td>
-                </tr>
-                <tr>
-                  <td><strong>Login / Admin panel</strong></td>
-                  <td>❌ None</td>
-                  <td>✅ Yes (commonly targeted)</td>
-                </tr>
-                <tr>
-                  <td><strong>Database</strong></td>
-                  <td>❌ None</td>
-                  <td>✅ Stores data</td>
-                </tr>
-                <tr>
-                  <td><strong>Plugins / Add-ons</strong></td>
-                  <td>❌ None</td>
-                  <td>✅ Many (risk)</td>
-                </tr>
-                <tr>
-                  <td><strong>Attack surface</strong></td>
-                  <td>Very small</td>
-                  <td>Large</td>
-                </tr>
-                <tr>
-                  <td><strong>Hosting model</strong></td>
-                  <td>Decoupled (GitHub + Cloudflare)</td>
-                  <td>Centralised platform</td>
-                </tr>
-                <tr>
-                  <td><strong>Security layer</strong></td>
-                  <td>Built-in (Cloudflare)</td>
-                  <td>Depends on setup</td>
-                </tr>
-                <tr>
-                  <td><strong>Form handling</strong></td>
-                  <td>Serverless (Worker)</td>
-                  <td>Stored / processed in backend</td>
-                </tr>
-                <tr>
-                  <td><strong>Payment handling</strong></td>
-                  <td>External (Revolut)</td>
-                  <td>Often integrated</td>
-                </tr>
-                <tr>
-                  <td><strong>Maintenance required</strong></td>
-                  <td>Minimal</td>
-                  <td>Ongoing updates</td>
-                </tr>
-                <tr>
-                  <td><strong>Data exposure risk</strong></td>
-                  <td>Very low — no client database on site</td>
-                  <td>Higher — data often stored in platform systems</td>
-                </tr>
-                <tr>
-                  <td><strong>Permanent server</strong></td>
-                  <td>❌ No always-on server</td>
-                  <td>✅ Running application layer</td>
-                </tr>
-                <tr>
-                  <td><strong>Bot protection</strong></td>
-                  <td>Handled at the Cloudflare layer</td>
-                  <td>Usually needs extra setup</td>
-                </tr>
-                <tr>
-                  <td><strong>Failure impact</strong></td>
-                  <td>More isolated — one tool failing does not break everything</td>
-                  <td>More interconnected — issues can affect the wider site</td>
-                </tr>
-                <tr>
-                  <td><strong>Typical risk profile</strong></td>
-                  <td>Mostly form abuse / spam attempts</td>
-                  <td>Login attacks, plugin exploits, database breaches</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+  <div class="section" style="margin-top:18px; margin-bottom:0;">
+    <h2 class="section-title">High-Level Security Comparison</h2>
 
-          <div class="note-box">
-            <strong>Summary</strong><br>
-            The BARE setup is intentionally minimal: no login area, no database, no plugin stack, and no traditional backend. That reduces the number of places an attacker can target and lowers the maintenance needed to keep the site secure.
-          </div>
-        </div>
-      </div>
+    <p class="comparison-intro">
+      A detailed comparison showing why the BARE setup reduces risk by design compared to traditional website platforms.
+    </p>
+
+    <div class="comparison-table-wrap">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>BARE (Your Setup)</th>
+            <th>WordPress / Wix</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><strong>Backend system</strong></td>
+            <td>No backend (static site)<br><strong>→ No running server means nothing to exploit or break into</strong></td>
+            <td>Full backend system</td>
+          </tr>
+
+          <tr>
+            <td><strong>Login / Admin panel</strong></td>
+            <td>❌ None<br><strong>→ Removes the most common attack target completely</strong></td>
+            <td>✅ Yes (commonly targeted)</td>
+          </tr>
+
+          <tr>
+            <td><strong>Database</strong></td>
+            <td>❌ None<br><strong>→ No stored client data means nothing to steal or breach</strong></td>
+            <td>✅ Stores data</td>
+          </tr>
+
+          <tr>
+            <td><strong>Plugins / Add-ons</strong></td>
+            <td>❌ None<br><strong>→ Eliminates third-party vulnerabilities and update risks</strong></td>
+            <td>✅ Many (risk)</td>
+          </tr>
+
+          <tr>
+            <td><strong>Attack surface</strong></td>
+            <td>Very small<br><strong>→ Only a controlled form endpoint exists, limiting exposure</strong></td>
+            <td>Large</td>
+          </tr>
+
+          <tr>
+            <td><strong>Hosting model</strong></td>
+            <td>Decoupled (GitHub + Cloudflare)<br><strong>→ Systems are isolated so one issue cannot affect everything</strong></td>
+            <td>Centralised platform</td>
+          </tr>
+
+          <tr>
+            <td><strong>Security layer</strong></td>
+            <td>Built-in (Cloudflare)<br><strong>→ Traffic is filtered before it reaches your site</strong></td>
+            <td>Depends on setup</td>
+          </tr>
+
+          <tr>
+            <td><strong>Form handling</strong></td>
+            <td>Serverless (Worker)<br><strong>→ Runs only when needed and does not store data</strong></td>
+            <td>Stored / processed in backend</td>
+          </tr>
+
+          <tr>
+            <td><strong>Payment handling</strong></td>
+            <td>External (Revolut)<br><strong>→ Payment data never touches your website</strong></td>
+            <td>Often integrated</td>
+          </tr>
+
+          <tr>
+            <td><strong>Maintenance required</strong></td>
+            <td>Minimal<br><strong>→ No updates or patches means fewer vulnerability risks</strong></td>
+            <td>Ongoing updates</td>
+          </tr>
+
+          <tr>
+            <td><strong>Data exposure risk</strong></td>
+            <td>Very low<br><strong>→ No client database on site means nothing to leak or breach</strong></td>
+            <td>Higher — data often stored in platform systems</td>
+          </tr>
+
+          <tr>
+            <td><strong>Permanent server</strong></td>
+            <td>❌ No always-on server<br><strong>→ No persistent system for attackers to target</strong></td>
+            <td>✅ Running application layer</td>
+          </tr>
+
+          <tr>
+            <td><strong>Bot protection</strong></td>
+            <td>Handled at the Cloudflare layer<br><strong>→ Malicious traffic is blocked before reaching your site</strong></td>
+            <td>Usually needs extra setup</td>
+          </tr>
+
+          <tr>
+            <td><strong>Failure impact</strong></td>
+            <td>More isolated<br><strong>→ One tool failing does not compromise the entire system</strong></td>
+            <td>More interconnected — issues can affect the wider site</td>
+          </tr>
+
+          <tr>
+            <td><strong>Typical risk profile</strong></td>
+            <td>Mostly form abuse / spam attempts<br><strong>→ Limited exposure reduces severity of attacks</strong></td>
+            <td>Login attacks, plugin exploits, database breaches</td>
+          </tr>
+
+        </tbody>
+      </table>
     </div>
+
+    <div class="note-box">
+      <strong>Why this matters</strong><br>
+      The BARE setup is intentionally minimal: no login area, no database, no plugin stack, and no traditional backend.
+      By reducing entry points and avoiding stored data, the risk of hacking, data breaches,
+      and system vulnerabilities is significantly lower.
+    </div>
+  </div>
+</div>
 
     <div class="print-actions no-print">
       <button class="btn" onclick="window.print()">Create PDF</button>
