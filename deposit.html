@@ -348,7 +348,7 @@ footer{
             </div>
 
             <div class="action-wrap">
-              <a class="btn btn-primary" href="https://checkout.revolut.com/payment-link/db26ee07-3712-49db-b515-c6ddb1028813" target="_blank" rel="noopener noreferrer" id="pay-deposit-btn">Pay £30 Deposit</a>
+              <a class="btn btn-primary" href="https://checkout.revolut.com/payment-link/db26ee07-3712-49db-b515-c6ddb1028813" rel="noopener noreferrer" id="pay-deposit-btn">Pay £30 Deposit</a>
 
               <button class="btn btn-secondary" id="continue-booking-btn" disabled>Complete Payment First</button>
 
@@ -380,7 +380,7 @@ footer{
   const flashMessage = document.getElementById('consultation-flash');
 
   const RETURN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-  let pageWasHidden = false;
+  const PAYMENT_URL = "https://checkout.revolut.com/payment-link/db26ee07-3712-49db-b515-c6ddb1028813";
 
   function showConsultationMessage() {
     if (!flashMessage) return;
@@ -431,71 +431,79 @@ footer{
     localStorage.removeItem("barePaymentStartedTs");
     localStorage.removeItem("barePaymentReturned");
     localStorage.removeItem("barePaymentReturnedTs");
+    sessionStorage.removeItem("barePaymentInProgress");
   }
 
   function hasValidReturn() {
+    const started = localStorage.getItem("barePaymentStarted");
     const returned = localStorage.getItem("barePaymentReturned");
+    const startedTs = parseInt(localStorage.getItem("barePaymentStartedTs") || "0", 10);
     const returnedTs = parseInt(localStorage.getItem("barePaymentReturnedTs") || "0", 10);
 
-    return returned === "yes" &&
+    return started === "yes" &&
+      returned === "yes" &&
+      startedTs &&
       returnedTs &&
+      returnedTs >= startedTs &&
       (Date.now() - returnedTs) <= RETURN_WINDOW_MS;
   }
 
-  function markReturnedFromPayment() {
+  function isBackNavigation() {
+    try {
+      const entries = performance.getEntriesByType("navigation");
+      return entries && entries[0] && entries[0].type === "back_forward";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function detectReturnFromPayment() {
     const started = localStorage.getItem("barePaymentStarted");
     const startedTs = parseInt(localStorage.getItem("barePaymentStartedTs") || "0", 10);
+    const paymentInProgress = sessionStorage.getItem("barePaymentInProgress") === "yes";
+    const referrerIsRevolut = /revolut/i.test(document.referrer || "");
 
-    if (started !== "yes" || !startedTs) return;
-    if (!pageWasHidden) return;
+    if (started !== "yes" || !startedTs) return false;
+    if ((Date.now() - startedTs) > RETURN_WINDOW_MS) {
+      clearPaymentFlow();
+      return false;
+    }
 
-    const elapsed = Date.now() - startedTs;
-
-    if (elapsed > 3000 && elapsed <= RETURN_WINDOW_MS) {
+    if (paymentInProgress && (referrerIsRevolut || isBackNavigation())) {
       localStorage.setItem("barePaymentReturned", "yes");
       localStorage.setItem("barePaymentReturnedTs", String(Date.now()));
-      activateBooking();
+      sessionStorage.removeItem("barePaymentInProgress");
+      return true;
     }
+
+    return false;
   }
 
-  const started = localStorage.getItem("barePaymentStarted");
-  const returned = localStorage.getItem("barePaymentReturned");
-
-  if (started === "yes" && returned === "yes" && hasValidReturn()) {
-    activateBooking();
-  } else {
-    lockBooking();
-  }
-
-  showConsultationMessage();
-
-  payBtn.addEventListener("click", function () {
-    localStorage.setItem("barePaymentStarted", "yes");
-    localStorage.setItem("barePaymentStartedTs", String(Date.now()));
-    localStorage.removeItem("barePaymentReturned");
-    localStorage.removeItem("barePaymentReturnedTs");
-    pageWasHidden = false;
-    lockBooking();
-  });
-
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "hidden") {
-      pageWasHidden = true;
-    } else if (document.visibilityState === "visible") {
-      markReturnedFromPayment();
-    }
-  });
-
-  window.addEventListener("focus", markReturnedFromPayment);
-  window.addEventListener("pageshow", function () {
-    const started = localStorage.getItem("barePaymentStarted");
-    const returned = localStorage.getItem("barePaymentReturned");
-
-    if (started === "yes" && returned === "yes" && hasValidReturn()) {
+  function initState() {
+    if (detectReturnFromPayment() || hasValidReturn()) {
       activateBooking();
     } else {
       lockBooking();
     }
+  }
+
+  showConsultationMessage();
+  initState();
+
+  payBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    localStorage.setItem("barePaymentStarted", "yes");
+    localStorage.setItem("barePaymentStartedTs", String(Date.now()));
+    localStorage.removeItem("barePaymentReturned");
+    localStorage.removeItem("barePaymentReturnedTs");
+    sessionStorage.setItem("barePaymentInProgress", "yes");
+
+    window.location.href = PAYMENT_URL;
+  });
+
+  window.addEventListener("pageshow", function () {
+    initState();
   });
 
   continueBtn.addEventListener("click", function () {
