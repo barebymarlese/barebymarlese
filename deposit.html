@@ -380,6 +380,7 @@ footer{
   const flashMessage = document.getElementById('consultation-flash');
   const statusPill = document.getElementById('payment-status');
   const returnHint = document.getElementById('return-hint');
+  const backBtn = document.querySelector('.back-btn');
 
   const RETURN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
   let pageWasHidden = false;
@@ -425,18 +426,18 @@ footer{
     continueBtn.classList.remove("btn-secondary");
     continueBtn.classList.add("btn-primary");
 
-    payBtn.style.opacity = ".45";
-    payBtn.style.pointerEvents = "none";
-    payBtn.textContent = "Deposit Opened";
+    payBtn.style.opacity = "1";
+    payBtn.style.pointerEvents = "auto";
+    payBtn.textContent = "Pay £30 Deposit";
 
     statusPill.classList.add("show");
 
     if (helpText) {
-      helpText.textContent = "Return detected. You can now continue to booking.";
+      helpText.textContent = "Return detected. You can now continue to booking. If needed, you can still reopen the payment page.";
     }
 
     if (returnHint) {
-      returnHint.textContent = "Booking is now unlocked. Tap the button above to continue.";
+      returnHint.textContent = "Booking is now unlocked. Tap Continue to Booking when ready.";
     }
   }
 
@@ -472,7 +473,10 @@ footer{
     }
   }
 
-  if (hasValidReturn()) {
+  const referrerIsRevolut = document.referrer && document.referrer.indexOf("revolut") !== -1;
+  const hasStartedFlow = localStorage.getItem("barePaymentStarted") === "yes";
+
+  if (hasValidReturn() && (pageWasHidden || referrerIsRevolut || hasStartedFlow)) {
     activateBooking();
   } else {
     clearPaymentFlow();
@@ -519,6 +523,12 @@ footer{
     localStorage.setItem("bareDepositGateTs", String(Date.now()));
     window.location.href = "booking.html";
   });
+
+  if (backBtn) {
+    backBtn.addEventListener("click", function () {
+      clearPaymentFlow();
+    });
+  }
 })();
 </script>
 </body>
