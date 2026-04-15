@@ -280,9 +280,9 @@ footer{
 <div class="page">
   <div class="shell">
     <div class="brand">
-      BARE <span class="brand-divider">|</span>
-      <span class="brand-sub">by Marlese</span>
-    </div>
+  BARE <span class="brand-divider">|</span>
+  <span class="brand-sub">by Marlese</span>
+</div>
     <div class="card">
       <div class="hero">
         <span class="kicker">Step 2 of 3</span>
@@ -348,20 +348,20 @@ footer{
             </div>
 
             <div class="action-wrap">
-              <a class="btn btn-primary" href="https://checkout.revolut.com/payment-link/db26ee07-3712-49db-b515-c6ddb1028813" rel="noopener noreferrer" id="pay-deposit-btn">Pay £30 Deposit</a>
+              <a class="btn btn-primary" href="https://checkout.revolut.com/payment-link/db26ee07-3712-49db-b515-c6ddb1028813" target="_blank" rel="noopener noreferrer" id="pay-deposit-btn">Pay £30 Deposit</a>
 
               <button class="btn btn-secondary" id="continue-booking-btn" disabled>Complete Payment First</button>
 
               <div class="help" id="payment-help">
-                Payment opens in the same tab. After checkout, simply tap back to return here and continue to booking.
+                The payment opens in secure Revolut checkout. Once you return to this page, booking will unlock automatically so you can continue.
               </div>
 
               <div class="status-pill" id="payment-status">
-                Welcome back. You can now continue to booking.
+                Welcome back. If your Revolut payment has completed successfully, you can now continue to booking.
               </div>
 
-              <div class="notice" id="return-hint">
-                After payment, return to this page and your booking button will unlock automatically.
+              <div class="notice">
+                For a clean client journey, booking is only unlocked after the payment step has been opened and you have returned to this page.
               </div>
             </div>
           </div>
@@ -376,11 +376,8 @@ footer{
 (function () {
   const payBtn = document.getElementById('pay-deposit-btn');
   const continueBtn = document.getElementById('continue-booking-btn');
-  const helpText = document.getElementById('payment-help');
+  const helpText = document.querySelector('.help');
   const flashMessage = document.getElementById('consultation-flash');
-  const statusPill = document.getElementById('payment-status');
-  const returnHint = document.getElementById('return-hint');
-  const backBtn = document.querySelector('.back-btn');
 
   const RETURN_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
   let pageWasHidden = false;
@@ -406,14 +403,8 @@ footer{
     payBtn.style.pointerEvents = "auto";
     payBtn.textContent = "Pay £30 Deposit";
 
-    statusPill.classList.remove("show");
-
     if (helpText) {
-      helpText.textContent = "Payment opens in the same tab. After checkout, simply tap back to return here and continue to booking.";
-    }
-
-    if (returnHint) {
-      returnHint.textContent = "After payment, return to this page and your booking button will unlock automatically.";
+      helpText.textContent = "The payment opens in secure Revolut checkout. Once you return to this page, booking will unlock automatically so you can continue.";
     }
   }
 
@@ -430,14 +421,8 @@ footer{
     payBtn.style.pointerEvents = "none";
     payBtn.textContent = "Deposit Paid";
 
-    statusPill.classList.add("show");
-
     if (helpText) {
-      helpText.textContent = "Return detected. You can now continue to booking.";
-    }
-
-    if (returnHint) {
-      returnHint.textContent = "Booking is now unlocked. Tap the button above to continue.";
+      helpText.textContent = "Payment detected. You can now continue to booking.";
     }
   }
 
@@ -473,10 +458,7 @@ footer{
     }
   }
 
-  const referrerIsRevolut = document.referrer && document.referrer.indexOf("revolut") !== -1;
-  const hasStartedFlow = localStorage.getItem("barePaymentStarted") === "yes";
-
-  if (hasValidReturn() && (pageWasHidden || referrerIsRevolut || hasStartedFlow)) {
+  if (hasValidReturn()) {
     activateBooking();
   } else {
     clearPaymentFlow();
@@ -492,10 +474,6 @@ footer{
     localStorage.removeItem("barePaymentReturnedTs");
     pageWasHidden = false;
     lockBooking();
-
-    if (returnHint) {
-      returnHint.textContent = "Complete payment, then use your browser back button once to return here and continue.";
-    }
   });
 
   document.addEventListener("visibilitychange", function () {
@@ -507,7 +485,6 @@ footer{
   });
 
   window.addEventListener("focus", markReturnedFromPayment);
-
   window.addEventListener("pageshow", function () {
     if (hasValidReturn()) {
       activateBooking();
@@ -523,12 +500,6 @@ footer{
     localStorage.setItem("bareDepositGateTs", String(Date.now()));
     window.location.href = "booking.html";
   });
-
-  if (backBtn) {
-    backBtn.addEventListener("click", function () {
-      clearPaymentFlow();
-    });
-  }
 })();
 </script>
 </body>
