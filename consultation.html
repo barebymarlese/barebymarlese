@@ -298,6 +298,11 @@
       text-transform:uppercase;
       cursor:pointer;
     }
+    .con-btn[disabled]{
+      opacity:.6;
+      cursor:not-allowed;
+      pointer-events:none;
+    }
     .con-btn-ghost{
       background: rgba(255,255,255,0.38);
       border: 1px solid rgba(36,34,26,.14);
@@ -607,7 +612,7 @@ header .logo *{
               </div>
 
               <label class="con-label">What colours are in the tattoo? <span class="required-star">*</span></label>
-              <div class="con-options" data-none-group="tattoo-colours">
+              <div class="con-options" data-none-group="tattoo-colours" data-required-group="tattoo-colours">
                 <label class="con-opt">
                   <input type="checkbox" name="ink_black" value="Yes" data-colour-weight="1">
                   <span class="con-mark"></span>
@@ -694,7 +699,7 @@ header .logo *{
               <label class="con-label">Is this tattoo a cover-up of another tattoo? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
-                  <input type="radio" name="tattoo_coverup" value="No">
+                  <input type="radio" name="tattoo_coverup" value="No" required>
                   <span class="con-mark"></span>
                   <span>No</span>
                 </label>
@@ -1013,7 +1018,7 @@ header .logo *{
                 <option value="Yes">Yes</option>
               </select>
 
-              <div class="con-options" style="margin-top:12px;" data-none-group="medications">
+              <div class="con-options" style="margin-top:12px;" data-none-group="medications" data-required-group="medications">
                 <label class="con-opt">
                   <input type="checkbox" name="blood_thinners" value="Yes">
                   <span class="con-mark"></span>
@@ -1425,6 +1430,9 @@ syncFitzFromStorage();
     const submittedAt = document.getElementById("submitted_at");
     const subjectLine = document.getElementById("subject_line");
     const successPopup = document.getElementById("success-popup");
+    const submitBtn = document.getElementById("submit-btn");
+    const defaultSubmitLabel = submitBtn ? submitBtn.textContent : "SUBMIT CONSULTATION";
+    let isSubmitting = false;
 
     function setStatus(msg, type){
       statusEl.textContent = msg;
@@ -1480,6 +1488,39 @@ syncFitzFromStorage();
         }
       }
       return true;
+    }
+
+    function buildConsultationFingerprint(){
+      const fullName = (form.querySelector('[name="full_name"]')?.value || "").trim().toLowerCase();
+      const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
+      const dob = (form.querySelector('[name="dob"]')?.value || "").trim();
+      const phone = (form.querySelector('[name="phone"]')?.value || "").replace(/\s+/g, "").trim();
+      const tattooLocation = (form.querySelector('[name="tattoo_location"]')?.value || "").trim().toLowerCase();
+      return [fullName, email, dob, phone, tattooLocation].join("|");
+    }
+
+    function isDuplicateRecentSubmission(){
+      try{
+        const fingerprint = buildConsultationFingerprint();
+        if(!fingerprint || fingerprint === "||||") return false;
+        const previous = JSON.parse(sessionStorage.getItem("bare_last_consultation") || "null");
+        if(!previous || !previous.fingerprint || !previous.submittedAt) return false;
+        const tenMinutes = 10 * 60 * 1000;
+        const isSame = previous.fingerprint === fingerprint;
+        const isRecent = (Date.now() - previous.submittedAt) < tenMinutes;
+        return isSame && isRecent;
+      }catch(e){
+        return false;
+      }
+    }
+
+    function storeRecentSubmission(){
+      try{
+        sessionStorage.setItem("bare_last_consultation", JSON.stringify({
+          fingerprint: buildConsultationFingerprint(),
+          submittedAt: Date.now()
+        }));
+      }catch(e){}
     }
 
     function updateColourScoring(){
@@ -1571,6 +1612,15 @@ syncFitzFromStorage();
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      if(isSubmitting){
+        return;
+      }
+
+      if(!form.checkValidity()){
+        form.reportValidity();
+        return;
+      }
+
       // Ensure Fitzpatrick result is completed
       if(!fitzValueEl || !fitzValueEl.value){
         setStatus("Please complete the Fitzpatrick Skin Test before submitting.", "error");
@@ -1590,12 +1640,24 @@ syncFitzFromStorage();
         return;
       }
 
+      if(isDuplicateRecentSubmission()){
+        setStatus("This consultation looks like a duplicate submission. Please wait a few minutes before trying again.", "error");
+        statusEl.style.display = "block";
+        return;
+      }
+
       if(signatureDataInput && signaturePad){
         signatureDataInput.value = signaturePad.toDataURL("image/png");
       }
 
       submittedAt.value = new Date().toISOString();
       subjectLine.value = "Laser Tattoo Removal Consultation — BARE by Marlese";
+
+      isSubmitting = true;
+      if(submitBtn){
+        submitBtn.disabled = true;
+        submitBtn.textContent = "SENDING…";
+      }
 
       setStatus("Sending…", "success");
       statusEl.style.display = "block";
@@ -1609,27 +1671,30 @@ syncFitzFromStorage();
           headers: { "Accept": "application/json" }
         });
 
-if(res.ok){
-  statusEl.style.display = "none";
-  form.reset();
-  clearBareStoredFitz();
-  if(fitzValueEl) fitzValueEl.value = "";
-  if(fitzDisplayEl) fitzDisplayEl.value = "";
-  if(fitzDescEl) fitzDescEl.value = "Not completed yet";
-  if(fitzScoreEl) fitzScoreEl.value = "";
+        if(res.ok){
+          storeRecentSubmission();
+          statusEl.style.display = "none";
+          window.location.href = "deposit.html";
+        }else{
+          const errorText = await res.text();
+          setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
+          statusEl.style.display = "block";
+          isSubmitting = false;
+          if(submitBtn){
+            submitBtn.disabled = false;
+            submitBtn.textContent = defaultSubmitLabel;
+          }
+        }
 
-  window.location.href = "deposit.html";
-
-}else{
-  const errorText = await res.text();
-  setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
-  statusEl.style.display = "block";
-}
-
-}catch(err){
-  setStatus(err.message || "Oops — connection error. Please try again.", "error");
-  statusEl.style.display = "block";
-}
+      }catch(err){
+        setStatus(err.message || "Oops — connection error. Please try again.", "error");
+        statusEl.style.display = "block";
+        isSubmitting = false;
+        if(submitBtn){
+          submitBtn.disabled = false;
+          submitBtn.textContent = defaultSubmitLabel;
+        }
+      }
     });
   </script>
 
