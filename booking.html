@@ -1,17 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-(function(){
-  var allowed = localStorage.getItem("bareDepositGate");
-  var ts = parseInt(localStorage.getItem("bareDepositGateTs") || "0", 10);
-  var twelveHours = 12 * 60 * 60 * 1000;
-  if(allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours){
-    window.location.href = "deposit.html";
-  }
-})();
-</script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -129,7 +118,6 @@ opacity:.9;
 
 <div class="booking-box">
 
-<!-- GOOGLE BOOKING EMBED -->
 <iframe id="booking-calendar"
 src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3GLomGoNPn2sNp4JOOOCnwmQ26Oz8eZr-t-IXRlezb1Y8NDF-bLjWTef4_kJtmY3PivvGz4wcT?gv=true"
 style="border:0"
