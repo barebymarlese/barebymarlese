@@ -148,20 +148,26 @@ Return to Homepage
 </div>
   
 <script>
-window.addEventListener("load", function() {
-  const calendar = document.getElementById("booking-calendar");
-  if(calendar){
-    calendar.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-});
-</script>
+(function() {
+  // 1. Check if they just arrived back from a successful Stripe payment
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get('session_id');
 
-<script>
-window.addEventListener("pageshow", function(){
-  setTimeout(function(){
-    localStorage.removeItem("bareDepositGate");
-  }, 1500);
-});
+  // If they have a session_id from Stripe, reinforce the 'gate'
+  if (sessionId) {
+    localStorage.setItem("bareDepositGate", "allowed");
+    localStorage.setItem("bareDepositGateTs", String(Date.now()));
+  }
+
+  // 2. Standard Gate Check
+  var allowed = localStorage.getItem("bareDepositGate");
+  var ts = parseInt(localStorage.getItem("bareDepositGateTs") || "0", 10);
+  var twelveHours = 12 * 60 * 60 * 1000;
+
+  if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
+    window.location.href = "deposit.html";
+  }
+})();
 </script>
 </body>
 </html>
