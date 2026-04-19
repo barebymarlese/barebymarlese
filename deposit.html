@@ -419,25 +419,25 @@ footer{
 </div>
 
 <script>
-(function () {
-  const payBtn = document.getElementById('pay-deposit-btn');
-  const flashMessage = document.getElementById('consultation-flash');
+(function() {
+  // 1. Check if they just arrived back from a successful Stripe payment
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get('session_id');
 
-  // 1. Show the "Thank You" message if they just came from the form
-  if (flashMessage) {
-    flashMessage.classList.add('show');
-    window.setTimeout(function () {
-      flashMessage.classList.remove('show');
-    }, 10000);
-  }
-
-  // 2. Prepare the "Gate" for when they return
-  // When they click pay, we authorize their access to booking.html 
-  // so it's ready for them when Stripe redirects them back.
-  payBtn.addEventListener("click", function () {
+  // If they have a session_id from Stripe, reinforce the 'gate'
+  if (sessionId) {
     localStorage.setItem("bareDepositGate", "allowed");
     localStorage.setItem("bareDepositGateTs", String(Date.now()));
-  });
+  }
+
+  // 2. Standard Gate Check
+  var allowed = localStorage.getItem("bareDepositGate");
+  var ts = parseInt(localStorage.getItem("bareDepositGateTs") || "0", 10);
+  var twelveHours = 12 * 60 * 60 * 1000;
+
+  if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
+    window.location.href = "deposit.html";
+  }
 })();
 </script>
 </body>
