@@ -1543,6 +1543,7 @@ syncFitzFromStorage();
         if(res.ok){
           storeRecentSubmission();
           statusEl.style.display = "none";
+          localStorage.setItem("bareFromConsultation", "true");
           window.location.href = "deposit.html";
         }else{
           const errorText = await res.text();
