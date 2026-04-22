@@ -1187,11 +1187,7 @@ header .logo *{
         statusNode.className = "";
         statusNode.textContent = "";
       }
-      const popupEl = document.getElementById("success-popup");
-      if(popupEl){
-        popupEl.classList.remove("show");
-        popupEl.setAttribute("aria-hidden", "true");
-      }
+
       try{
         updateColourScoring();
       }catch(e){}
