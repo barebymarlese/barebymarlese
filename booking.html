@@ -148,8 +148,8 @@ Return to Homepage
   }
 
   // 2. Standard Gate Check
-  var allowed = localStorage.getItem("bareDepositGate");
-  var ts = parseInt(localStorage.getItem("bareDepositGateTs") || "0", 10);
+  const allowed = localStorage.getItem("bareDepositGate");
+  const ts = Number(localStorage.getItem("bareDepositGateTs") || "0");
   var twelveHours = 12 * 60 * 60 * 1000;
 
   if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
