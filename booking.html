@@ -147,14 +147,14 @@ Return to Homepage
     localStorage.setItem("bareDepositGateTs", String(Date.now()));
   }
 
-  // 2. Standard Gate Check
-  const allowed = localStorage.getItem("bareDepositGate");
-  const ts = Number(localStorage.getItem("bareDepositGateTs") || "0");
-  var twelveHours = 12 * 60 * 60 * 1000;
+// 2. Standard Gate Check
+const allowed = localStorage.getItem("bareDepositGate");
+const ts = Number(localStorage.getItem("bareDepositGateTs") || "0");
+const twelveHours = 12 * 60 * 60 * 1000;
 
-  if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
-    window.location.href = "deposit.html";
-  }
+if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
+  window.location.href = "deposit.html";
+}
 })();
 </script>
 </body>
