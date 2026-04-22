@@ -1104,8 +1104,7 @@ header .logo *{
             </div>
 <!-- Hidden metadata -->
             <input type="hidden" name="submitted_at" id="submitted_at">
-            <input type="hidden" name="_subject" id="subject_line">
-              
+                          
 <!-- Turnstile -->
 <div style="margin-top:16px;">
   <div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8"></div>
@@ -1301,7 +1300,6 @@ syncFitzFromStorage();
     const statusEl = document.getElementById("status");
     const resetBtn = document.getElementById("reset-btn");
     const submittedAt = document.getElementById("submitted_at");
-    const subjectLine = document.getElementById("subject_line");
     const submitBtn = document.getElementById("submit-btn");
     const defaultSubmitLabel = submitBtn ? submitBtn.textContent : "SUBMIT CONSULTATION";
     let isSubmitting = false;
