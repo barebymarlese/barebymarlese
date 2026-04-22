@@ -363,24 +363,26 @@ footer{
   const payBtn = document.getElementById('pay-deposit-btn');
   const flashMessage = document.getElementById('consultation-flash');
 
-  // 1. Show the "Thank You" message if they just came from the form
-const cameFromConsultation = localStorage.getItem("bareFromConsultation");
-if (flashMessage && cameFromConsultation === "true") {
-  flashMessage.classList.add('show');
+  const cameFromConsultation = localStorage.getItem("bareFromConsultation");
+  if (flashMessage && cameFromConsultation === "true") {
+    flashMessage.classList.add('show');
 
-  window.setTimeout(function () {
-    flashMessage.classList.remove('show');
-  }, 10000);
+    window.setTimeout(function () {
+      flashMessage.classList.remove('show');
+    }, 10000);
 
-  localStorage.removeItem("bareFromConsultation");
-}
+    localStorage.removeItem("bareFromConsultation");
+  }
+
   // 2. Prepare the "Gate" for when they return
-  // When they click pay, we authorize their access to booking.html 
+  // When they click pay, we authorize their access to booking.html
   // so it's ready for them when Stripe redirects them back.
-  payBtn.addEventListener("click", function () {
-    localStorage.setItem("bareDepositGate", "allowed");
-    localStorage.setItem("bareDepositGateTs", String(Date.now()));
-  });
+  if (payBtn) {
+    payBtn.addEventListener("click", function () {
+      localStorage.setItem("bareDepositGate", "allowed");
+      localStorage.setItem("bareDepositGateTs", String(Date.now()));
+    });
+  }
 })();
 </script>
 </body>
