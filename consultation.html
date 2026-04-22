@@ -540,6 +540,8 @@ header .logo *{
                 <input type="hidden" name="access_key" value="fab6c8d7-5f9a-4d59-8846-795623cf439d">
                 <input type="hidden" name="subject" value="New Consultation - BARE by Marlese">
                 <input type="hidden" name="redirect" value="https://barebymarlese.com/deposit.html">
+                <!-- Honeypot anti-spam -->
+                <input type="text" name="website" style="display:none;">
             <!-- Client details -->
             <div class="con-section">
               <div class="con-h3">Client Details</div>
@@ -748,6 +750,20 @@ header .logo *{
     <span class="con-mark"></span>
     <span>
       I consent to BARE by Marlese storing and processing my personal and health-related information (including consultation and Fitzpatrick skin type data) to assess treatment suitability and respond to my enquiry. I have read the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+    </span>
+  </label>
+
+  <label class="con-opt" style="margin-top:10px;">
+    <input type="checkbox" name="age_confirm" value="Yes" required>
+    <span class="con-mark"></span>
+    <span>I confirm that I am over 18 years of age.</span>
+  </label>
+
+  <label class="con-opt" style="margin-top:10px;">
+    <input type="checkbox" name="explicit_consent" value="Yes" required>
+    <span class="con-mark"></span>
+    <span>
+      I give informed consent to undergo laser tattoo removal treatment, understanding the risks, healing process, and that results vary.
     </span>
   </label>
 
@@ -1105,7 +1121,18 @@ header .logo *{
               </div>
             </div>
 
-            
+
+            <!-- Additional Information -->
+            <div class="con-section">
+              <div class="con-h3">Additional Information</div>
+
+              <label class="con-label">Is there anything else I should know?</label>
+              <textarea class="con-textarea" name="additional_info" rows="3" placeholder="Optional"></textarea>
+
+              <label class="con-label">What outcome are you hoping for?</label>
+              <textarea class="con-textarea" name="treatment_goal" rows="2" placeholder="Full removal, fading for cover-up, lightening, etc."></textarea>
+            </div>
+
             <!-- Photos -->
             <div class="con-section">
               <div class="con-h3">Photos</div>
