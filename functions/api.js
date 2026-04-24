@@ -55,7 +55,35 @@ function isPastSlot(date, time) {
       })
     });
   }
+if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
+  const bookings = await env.DB.prepare(
+    `SELECT id, client_name, email, phone, appointment_date, appointment_time, status
+     FROM appointments
+     ORDER BY appointment_date ASC, appointment_time ASC`
+  ).all();
 
+  return new Response(JSON.stringify(bookings.results), {
+    headers: jsonHeaders
+  });
+}
+
+if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
+  const body = await request.json();
+  const id = body.id;
+
+  if (!id) {
+    return new Response("Missing booking ID", { status: 400 });
+  }
+
+  await env.DB.prepare(
+    "UPDATE appointments SET status = 'cancelled' WHERE id = ?"
+  ).bind(id).run();
+
+  return new Response(JSON.stringify({ success: true }), {
+    headers: jsonHeaders
+  });
+}
+  
 if (request.method === "GET") {
   const date = url.searchParams.get("date");
 
