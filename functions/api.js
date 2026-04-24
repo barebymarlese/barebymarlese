@@ -83,6 +83,73 @@ if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
     headers: jsonHeaders
   });
 }
+
+if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
+  const id = url.searchParams.get("id");
+  const token = url.searchParams.get("token");
+
+  if (!id || !token) {
+    return new Response("Missing booking details", { status: 400 });
+  }
+
+  const booking = await env.DB.prepare(
+    `SELECT id, client_name, email, phone, appointment_date, appointment_time, status
+     FROM appointments
+     WHERE id = ? AND reschedule_token = ?`
+  ).bind(id, token).first();
+
+  if (!booking) {
+    return new Response("Booking not found", { status: 404 });
+  }
+
+  return new Response(JSON.stringify(booking), {
+    headers: jsonHeaders
+  });
+}
+
+if (request.method === "POST" && url.searchParams.get("reschedule") === "update") {
+  const body = await request.json();
+
+  const { id, token, appointment_date, appointment_time } = body;
+
+  if (!id || !token || !appointment_date || !appointment_time) {
+    return new Response("Missing reschedule details", { status: 400 });
+  }
+
+  const existing = await env.DB.prepare(
+    `SELECT id FROM appointments WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
+  ).bind(id, token).first();
+
+  if (!existing) {
+    return new Response("Booking not found", { status: 404 });
+  }
+
+  const dayNumber = getDayNumber(appointment_date);
+  const validSlots = slotsByDay[dayNumber] || [];
+
+  if (!validSlots.includes(appointment_time)) {
+    return new Response("Invalid appointment time", { status: 400 });
+  }
+
+  if (isPastSlot(appointment_date, appointment_time)) {
+    return new Response("This appointment time has already passed", { status: 400 });
+  }
+
+  try {
+    await env.DB.prepare(
+      `UPDATE appointments
+       SET appointment_date = ?, appointment_time = ?
+       WHERE id = ? AND reschedule_token = ?`
+    ).bind(appointment_date, appointment_time, id, token).run();
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: jsonHeaders
+    });
+
+  } catch (e) {
+    return new Response("That slot is already taken", { status: 409 });
+  }
+}
   
 if (request.method === "GET") {
   const date = url.searchParams.get("date");
