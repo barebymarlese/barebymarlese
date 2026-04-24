@@ -267,7 +267,9 @@ async function loadAvailableSlots(date) {
 
   try {
     const res = await fetch(`/api?date=${encodeURIComponent(date)}`);
-    const slots = await res.json();
+    const data = await res.json();
+    const slots = data.slots || [];
+    const nextAvailable = data.nextAvailable || null;
 
     if (!Array.isArray(slots) || slots.length === 0) {
       container.innerHTML = '<div class="slot-message">No availability for this date.</div>';
