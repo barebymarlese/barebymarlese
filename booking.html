@@ -7,13 +7,11 @@
 <title>Book Your Appointment | BARE by Marlese</title>
 
 <link rel="icon" type="image/png" href="/favicon.png">
-
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-
 body{
-font-family: 'Montserrat', sans-serif;
+font-family:'Montserrat',sans-serif;
 background:#f7f7f5;
 margin:0;
 padding:0;
@@ -62,27 +60,46 @@ color:white;
 
 .booking-box{
 background:white;
-padding:20px;
-border-radius:8px;
+padding:28px 22px;
+border-radius:12px;
 box-shadow:0 5px 20px rgba(0,0,0,0.05);
 }
 
-iframe{
-border:0;
-width:100%;
-height:820px;
+.booking-box label{
+display:block;
+margin:0 0 10px;
+font-size:13px;
+font-weight:600;
+letter-spacing:.08em;
+text-transform:uppercase;
+color:#5e6959;
 }
 
-.button-row{
+.booking-box input{
+width:100%;
+max-width:360px;
+padding:14px 16px;
+border:1px solid rgba(36,34,26,.15);
+border-radius:8px;
+font-family:inherit;
+font-size:15px;
+color:#24221a;
+background:#f8f8f6;
+}
+
+#available-slots{
+margin-top:24px;
 display:flex;
 justify-content:center;
-gap:15px;
-margin-top:20px;
+gap:10px;
 flex-wrap:wrap;
-}  
+}
 
-.fallback{
-margin-top:20px;
+.slot-message{
+width:100%;
+font-size:14px;
+color:#878274;
+line-height:1.6;
 }
 
 .btn{
@@ -91,14 +108,61 @@ padding:14px 24px;
 background:#5e6959;
 color:white;
 text-decoration:none;
+border:0;
 border-radius:4px;
 margin-top:15px;
+font-family:inherit;
+font-size:14px;
+font-weight:500;
+cursor:pointer;
 }
 
 .btn:hover{
 opacity:.9;
 }
 
+.slot-btn{
+margin:5px;
+min-width:110px;
+}
+
+.button-row{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-top:26px;
+flex-wrap:wrap;
+}
+
+#booking-status{
+margin-top:20px;
+font-size:14px;
+line-height:1.6;
+}
+
+.success{
+color:#4f5a4b;
+font-weight:600;
+}
+
+.error{
+color:#8a3b3b;
+font-weight:600;
+}
+
+@media(max-width:700px){
+.wrap{
+padding:28px 16px;
+}
+
+.booking-box{
+padding:22px 16px;
+}
+
+.booking-box input{
+max-width:100%;
+}
+}
 </style>
 </head>
 
@@ -118,44 +182,113 @@ opacity:.9;
 
 <div class="booking-box">
 
-<iframe id="booking-calendar"
-src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ3GLomGoNPn2sNp4JOOOCnwmQ26Oz8eZr-t-IXRlezb1Y8NDF-bLjWTef4_kJtmY3PivvGz4wcT?gv=true"
-style="border:0"
-width="100%"
-height="820"
-frameborder="0">
-</iframe>
+  <label for="booking-date">Choose a date</label>
+  <input type="date" id="booking-date">
 
-<div class="button-row">
-<a class="btn" href="https://barebymarlese.com">
-Return to Homepage
-</a>
-</div>
+  <div id="available-slots">
+    <div class="slot-message">Please choose a date to view available times.</div>
+  </div>
+
+  <p id="booking-status"></p>
+
+  <div class="button-row">
+    <a class="btn" href="https://barebymarlese.com">Return to Homepage</a>
+  </div>
 
 </div>
 </div>
-  
+
 <script>
 (function() {
-  // 1. Check if they just arrived back from a successful Stripe payment
   const urlParams = new URLSearchParams(window.location.search);
   const sessionId = urlParams.get('session_id');
 
-  // If they have a session_id from Stripe, reinforce the 'gate'
   if (sessionId) {
     localStorage.setItem("bareDepositGate", "allowed");
     localStorage.setItem("bareDepositGateTs", String(Date.now()));
   }
 
-// 2. Standard Gate Check
-const allowed = localStorage.getItem("bareDepositGate");
-const ts = Number(localStorage.getItem("bareDepositGateTs") || "0");
-const twelveHours = 12 * 60 * 60 * 1000;
+  const allowed = localStorage.getItem("bareDepositGate");
+  const ts = Number(localStorage.getItem("bareDepositGateTs") || "0");
+  const twelveHours = 12 * 60 * 60 * 1000;
 
-if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
-  window.location.href = "deposit.html";
-}
+  if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
+    window.location.href = "deposit.html";
+  }
 })();
 </script>
+
+<script>
+async function loadAvailableSlots(date) {
+  const container = document.getElementById("available-slots");
+  const status = document.getElementById("booking-status");
+
+  status.textContent = "";
+  status.className = "";
+  container.innerHTML = '<div class="slot-message">Loading available times...</div>';
+
+  try {
+    const res = await fetch(`/api?date=${encodeURIComponent(date)}`);
+    const slots = await res.json();
+
+    if (!Array.isArray(slots) || slots.length === 0) {
+      container.innerHTML = '<div class="slot-message">No availability for this date.</div>';
+      return;
+    }
+
+    container.innerHTML = slots.map(slot => `
+      <button class="btn slot-btn" type="button" onclick="bookSlot('${date}', '${slot}')">
+        ${slot}
+      </button>
+    `).join("");
+  } catch (err) {
+    container.innerHTML = '<div class="slot-message">Could not load available times. Please try again.</div>';
+  }
+}
+
+document.getElementById("booking-date").addEventListener("change", function(e) {
+  if (e.target.value) {
+    loadAvailableSlots(e.target.value);
+  }
+});
+
+async function bookSlot(date, time) {
+  const status = document.getElementById("booking-status");
+
+  const name = localStorage.getItem("bare_customer_name") || "Client";
+  const email = localStorage.getItem("bare_customer_email") || "";
+
+  status.textContent = "Booking your appointment...";
+  status.className = "";
+
+  try {
+    const res = await fetch("/api", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        client_name: name,
+        email: email,
+        phone: "",
+        appointment_date: date,
+        appointment_time: time
+      })
+    });
+
+    if (res.ok) {
+      status.textContent = `Appointment booked successfully for ${date} at ${time}.`;
+      status.className = "success";
+      loadAvailableSlots(date);
+    } else {
+      status.textContent = "That slot has just been taken. Please choose another time.";
+      status.className = "error";
+      loadAvailableSlots(date);
+    }
+  } catch (err) {
+    status.textContent = "There was a problem booking your appointment. Please try again.";
+    status.className = "error";
+  }
+}
+</script>
+
 </body>
 </html>
