@@ -56,25 +56,36 @@ function isPastSlot(date, time) {
     });
   }
 
-  if (request.method === "GET") {
-    const date = url.searchParams.get("date");
+if (request.method === "GET") {
+  const date = url.searchParams.get("date");
 
-    if (!date) {
-      return new Response(JSON.stringify([]), { headers: jsonHeaders });
-    }
-
-    const dayNumber = getDayNumber(date);
-    const allSlots = slotsByDay[dayNumber] || [];
-
-    const booked = await env.DB.prepare(
-      "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND status = 'confirmed'"
-    ).bind(date).all();
-
-    const bookedTimes = booked.results.map(row => row.appointment_time);
-    const availableSlots = allSlots.filter(slot => !bookedTimes.includes(slot));
-
-    return new Response(JSON.stringify(availableSlots), { headers: jsonHeaders });
+  if (!date) {
+    return new Response(JSON.stringify({
+      slots: [],
+      nextAvailable: null
+    }), { headers: jsonHeaders });
   }
+
+  const dayNumber = getDayNumber(date);
+  const allSlots = slotsByDay[dayNumber] || [];
+
+  const booked = await env.DB.prepare(
+    "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND status = 'confirmed'"
+  ).bind(date).all();
+
+  const bookedTimes = booked.results.map(row => row.appointment_time);
+
+  const availableSlots = allSlots.filter(slot => {
+    return !bookedTimes.includes(slot) && !isPastSlot(date, slot);
+  });
+
+  const nextAvailable = availableSlots.length ? availableSlots[0] : null;
+
+  return new Response(JSON.stringify({
+    slots: availableSlots,
+    nextAvailable
+  }), { headers: jsonHeaders });
+}
 
   if (request.method === "POST") {
     const body = await request.json();
