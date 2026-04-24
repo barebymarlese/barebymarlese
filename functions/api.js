@@ -221,7 +221,7 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
     <p>If you need to reschedule or cancel, please use one of the links below. At least 24 hours' notice is required for your deposit to remain transferable.</p>
 
     <div style="text-align:center;margin:22px 0;">
-      <a href="mailto:${replyAddress}?subject=Reschedule appointment - ${safeDate} ${safeTime}"
+      <a href="${rescheduleLink}"
          style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
         Reschedule
       </a>
