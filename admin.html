@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bookings Admin | BARE by Marlese</title>
+
+<link rel="icon" type="image/png" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family:'Montserrat',sans-serif;
+  background:#f7f7f5;
+  margin:0;
+  padding:0;
+  color:#24221a;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+h1{
+  text-align:center;
+  font-weight:500;
+  margin-bottom:8px;
+}
+
+.sub{
+  text-align:center;
+  color:#878274;
+  margin-bottom:28px;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.05);
+  padding:22px;
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+
+th,td{
+  padding:12px 10px;
+  border-bottom:1px solid rgba(36,34,26,.10);
+  text-align:left;
+  vertical-align:top;
+}
+
+th{
+  color:#5e6959;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  background:#e7e9e4;
+  color:#5e6959;
+}
+
+.status.cancelled{
+  background:#f1e6e3;
+  color:#8a3b3b;
+}
+
+.btn{
+  border:0;
+  background:#5e6959;
+  color:white;
+  padding:9px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:13px;
+}
+
+.btn.cancel{
+  background:#878274;
+}
+
+.btn:hover{
+  opacity:.9;
+}
+
+.message{
+  text-align:center;
+  margin:18px 0;
+  color:#878274;
+}
+
+@media(max-width:700px){
+  .wrap{padding:28px 14px;}
+  table{font-size:13px;}
+  th,td{padding:10px 8px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+  <h1>Bookings Admin</h1>
+  <p class="sub">BARE by Marlese appointment dashboard</p>
+
+  <div class="card">
+    <div id="message" class="message">Loading bookings...</div>
+
+    <table id="bookings-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Contact</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="bookings-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+async function loadBookings(){
+  const message = document.getElementById("message");
+  const table = document.getElementById("bookings-table");
+  const body = document.getElementById("bookings-body");
+
+  message.textContent = "Loading bookings...";
+  table.style.display = "none";
+  body.innerHTML = "";
+
+  try{
+    const res = await fetch("/api?admin=bookings");
+    const bookings = await res.json();
+
+    if(!bookings.length){
+      message.textContent = "No bookings found.";
+      return;
+    }
+
+    bookings.forEach(booking => {
+      const isCancelled = booking.status === "cancelled";
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>
+          <strong>${booking.client_name || "Client"}</strong>
+        </td>
+        <td>
+          ${booking.email || "No email"}<br>
+          ${booking.phone || "No phone"}
+        </td>
+        <td>${booking.appointment_date}</td>
+        <td>${booking.appointment_time}</td>
+        <td>
+          <span class="status ${isCancelled ? "cancelled" : ""}">
+            ${booking.status}
+          </span>
+        </td>
+        <td>
+          ${isCancelled ? "—" : `<button class="btn cancel" onclick="cancelBooking(${booking.id})">Cancel</button>`}
+        </td>
+      `;
+
+      body.appendChild(row);
+    });
+
+    message.textContent = "";
+    table.style.display = "table";
+
+  }catch(err){
+    message.textContent = "Could not load bookings.";
+  }
+}
+
+async function cancelBooking(id){
+  if(!confirm("Cancel this booking? The slot will become available again.")){
+    return;
+  }
+
+  const res = await fetch("/api?admin=cancel", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id})
+  });
+
+  if(res.ok){
+    loadBookings();
+  }else{
+    alert("Could not cancel booking.");
+  }
+}
+
+loadBookings();
+</script>
+
+</body>
+</html>
