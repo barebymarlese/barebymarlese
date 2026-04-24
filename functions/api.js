@@ -140,13 +140,18 @@ if (isPastSlot(appointmentDate, appointmentTime)) {
 }
 
 try {
-      await env.DB.prepare(
-        `INSERT INTO appointments
-        (client_name, email, phone, appointment_date, appointment_time, status)
-        VALUES (?, ?, ?, ?, ?, 'confirmed')`
-      )
-      .bind(clientName, email, phone, appointmentDate, appointmentTime)
-      .run();
+const rescheduleToken = crypto.randomUUID();
+
+const insertResult = await env.DB.prepare(
+  `INSERT INTO appointments
+  (client_name, email, phone, appointment_date, appointment_time, status, reschedule_token)
+  VALUES (?, ?, ?, ?, ?, 'confirmed', ?)`
+)
+.bind(clientName, email, phone, appointmentDate, appointmentTime, rescheduleToken)
+.run();
+
+const bookingId = insertResult.meta.last_row_id;
+const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
 
       const safeName = escapeHtml(clientName);
       const safeEmail = escapeHtml(email || "Not provided");
