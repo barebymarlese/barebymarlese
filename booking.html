@@ -351,6 +351,7 @@ async function bookSlot(date, time) {
     });
 
     if (res.ok) {
+      document.getElementById("confirm-booking-btn")?.remove();
       status.textContent = `Appointment booked successfully for ${date} at ${time}.`;
       status.className = "success";
       loadAvailableSlots(date);
