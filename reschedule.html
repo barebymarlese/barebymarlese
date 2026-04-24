@@ -438,13 +438,24 @@ async function confirmReschedule(){
     });
 
     if(res.ok){
-      status.innerHTML = `
-        <div class="success-card">
-          <p class="success">Your appointment has been updated.</p>
-          <p><strong>New date:</strong> ${escapeHtml(selectedDate)}</p>
-          <p><strong>New time:</strong> ${escapeHtml(selectedTime)}</p>
-        </div>
-      `;
+  status.innerHTML = `
+    <div class="success-card">
+      <p class="success">Your appointment has been updated.</p>
+      <p><strong>New date:</strong> ${escapeHtml(selectedDate)}</p>
+      <p><strong>New time:</strong> ${escapeHtml(selectedTime)}</p>
+      <p style="margin-top:10px; font-size:13px; color:#878274;">
+        Redirecting you back to the website...
+      </p>
+    </div>
+  `;
+
+  document.getElementById("available-slots").innerHTML = "";
+
+  // 🔁 redirect after 3 seconds
+  setTimeout(() => {
+    window.location.href = "https://barebymarlese.com";
+  }, 3000);
+}
       status.className = "";
       document.getElementById("available-slots").innerHTML = "";
       loadBooking();
