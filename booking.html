@@ -295,7 +295,31 @@ document.getElementById("booking-date").addEventListener("change", function(e) {
     loadAvailableSlots(e.target.value);
   }
 });
+  
+let selectedDate = "";
+let selectedTime = "";
 
+function selectSlot(date, time, button) {
+  selectedDate = date;
+  selectedTime = time;
+
+  document.querySelectorAll(".slot-btn").forEach(btn => {
+    btn.style.opacity = "1";
+    btn.style.outline = "none";
+  });
+
+  button.style.opacity = "0.75";
+  button.style.outline = "3px solid rgba(94,105,89,.25)";
+
+  const confirmBtn = document.getElementById("confirm-booking-btn");
+  confirmBtn.style.display = "inline-block";
+  confirmBtn.textContent = `Confirm ${time}`;
+}
+
+function confirmSelectedSlot() {
+  if (!selectedDate || !selectedTime) return;
+  bookSlot(selectedDate, selectedTime);
+}
 async function bookSlot(date, time) {
   const status = document.getElementById("booking-status");
 
