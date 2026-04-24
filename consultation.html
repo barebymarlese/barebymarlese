@@ -1533,30 +1533,36 @@ syncFitzFromStorage();
 
       const data = new FormData(form);
 
-      try{
-        const res = await fetch(form.action, {
-          method: "POST",
-          body: data,
-          headers: { "Accept": "application/json" }
-        });
+try{
+  const res = await fetch(form.action, {
+    method: "POST",
+    body: data,
+    headers: { "Accept": "application/json" }
+  });
 
-        if(res.ok){
-          storeRecentSubmission();
-          statusEl.style.display = "none";
-          localStorage.setItem("bareFromConsultation", "true");
-          window.location.href = "deposit.html";
-        }else{
-          const errorText = await res.text();
-          setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
-          statusEl.style.display = "block";
-          isSubmitting = false;
-          if(submitBtn){
-            submitBtn.disabled = false;
-            submitBtn.textContent = defaultSubmitLabel;
-          }
-        }
+  if(res.ok){
+    storeRecentSubmission();
+    statusEl.style.display = "none";
 
-      }catch(err){
+    const submittedData = new FormData(form);
+    localStorage.setItem("bare_customer_name", submittedData.get("full_name") || "");
+    localStorage.setItem("bare_customer_email", submittedData.get("email") || "");
+    localStorage.setItem("bare_customer_phone", submittedData.get("phone") || "");
+
+    localStorage.setItem("bareFromConsultation", "true");
+    window.location.href = "deposit.html";
+  }else{
+    const errorText = await res.text();
+    setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
+    statusEl.style.display = "block";
+    isSubmitting = false;
+    if(submitBtn){
+      submitBtn.disabled = false;
+      submitBtn.textContent = defaultSubmitLabel;
+    }
+  }
+
+}catch(err){
         setStatus(err.message || "Oops — connection error. Please try again.", "error");
         statusEl.style.display = "block";
         isSubmitting = false;
