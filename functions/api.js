@@ -1,4 +1,4 @@
-export async function onRequest(context) {
+export async function onRequest(context) {x
   const { request, env } = context;
   const url = new URL(request.url);
 
