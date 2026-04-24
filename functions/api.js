@@ -27,6 +27,16 @@ export async function onRequest(context) {
     return new Date(year, month - 1, day).getDay();
   }
 
+  function slotDateTime(date, time) {
+  const [year, month, day] = date.split("-").map(Number);
+  const [hour, minute] = time.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute);
+}
+
+function isPastSlot(date, time) {
+  return slotDateTime(date, time).getTime() <= Date.now();
+}
+
   async function sendEmail({ to, subject, html }) {
     if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return;
 
