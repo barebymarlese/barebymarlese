@@ -96,11 +96,22 @@ if (request.method === "GET") {
     const appointmentDate = body.appointment_date;
     const appointmentTime = body.appointment_time;
 
-    if (!appointmentDate || !appointmentTime) {
-      return new Response("Missing appointment date or time", { status: 400 });
-    }
+if (!appointmentDate || !appointmentTime) {
+  return new Response("Missing appointment date or time", { status: 400 });
+}
 
-    try {
+const dayNumber = getDayNumber(appointmentDate);
+const validSlots = slotsByDay[dayNumber] || [];
+
+if (!validSlots.includes(appointmentTime)) {
+  return new Response("Invalid appointment time", { status: 400 });
+}
+
+if (isPastSlot(appointmentDate, appointmentTime)) {
+  return new Response("This appointment time has already passed", { status: 400 });
+}
+
+try {
       await env.DB.prepare(
         `INSERT INTO appointments
         (client_name, email, phone, appointment_date, appointment_time, status)
