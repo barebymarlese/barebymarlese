@@ -277,8 +277,8 @@ async function loadAvailableSlots(date) {
     }
 
     container.innerHTML = slots.map(slot => `
-  <button class="btn slot-btn" type="button" onclick="selectSlot('${date}', '${slot}', this)">
-    ${slot}
+  <button class="btn slot-btn ${slot === nextAvailable ? "next-slot" : ""}" type="button" onclick="selectSlot('${date}', '${slot}', this)">
+    ${slot === nextAvailable ? "Next available: " : ""}${slot}
   </button>
 `).join("") + `
   <div style="width:100%; margin-top:18px;">
