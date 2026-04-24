@@ -13,6 +13,15 @@ export async function onRequest(context) {
     6: ["09:00", "09:30", "10:00", "10:30"]
   };
 
+  function escapeHtml(str = "") {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
   function getDayNumber(dateString) {
     const [year, month, day] = dateString.split("-").map(Number);
     return new Date(year, month - 1, day).getDay();
@@ -79,29 +88,101 @@ export async function onRequest(context) {
       .bind(clientName, email, phone, appointmentDate, appointmentTime)
       .run();
 
+      const safeName = escapeHtml(clientName);
+      const safeEmail = escapeHtml(email || "Not provided");
+      const safePhone = escapeHtml(phone || "Not provided");
+      const safeDate = escapeHtml(appointmentDate);
+      const safeTime = escapeHtml(appointmentTime);
+
       await sendEmail({
         to: env.TO_EMAIL,
         subject: "New BARE by Marlese booking",
         html: `
-          <h2>New booking received</h2>
-          <p><strong>Client:</strong> ${clientName}</p>
-          <p><strong>Email:</strong> ${email || "Not provided"}</p>
-          <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-          <p><strong>Date:</strong> ${appointmentDate}</p>
-          <p><strong>Time:</strong> ${appointmentTime}</p>
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
+      NEW BOOKING RECEIVED
+    </div>
+
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p><strong>Client:</strong> ${safeName}</p>
+      <p><strong>Email:</strong> ${safeEmail}</p>
+      <p><strong>Phone:</strong> ${safePhone}</p>
+      <p><strong>Date:</strong> ${safeDate}</p>
+      <p><strong>Time:</strong> ${safeTime}</p>
+    </div>
+
+    <p>This appointment has been saved in your Cloudflare D1 booking database.</p>
+  </div>
+</div>
         `
       });
 
       if (email) {
+        const replyAddress = env.REPLY_TO_EMAIL || env.TO_EMAIL;
+
         await sendEmail({
           to: email,
-          subject: "Your BARE by Marlese appointment is confirmed",
+          subject: "Appointment Confirmed – BARE by Marlese",
           html: `
-            <h2>Your appointment is confirmed</h2>
-            <p>Thank you for booking with <strong>BARE by Marlese</strong>.</p>
-            <p><strong>Date:</strong> ${appointmentDate}</p>
-            <p><strong>Time:</strong> ${appointmentTime}</p>
-            <p>If you need to change your appointment, please reply to this email.</p>
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
+      APPOINTMENT CONFIRMED
+    </div>
+
+    <p>Hi ${safeName},</p>
+
+    <p>Thank you for booking with <strong>BARE by Marlese</strong>. Your appointment has been confirmed.</p>
+
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
+      <p><strong>Date:</strong> ${safeDate}</p>
+      <p><strong>Time:</strong> ${safeTime}</p>
+      <p><strong>Phone:</strong> ${safePhone}</p>
+    </div>
+
+    <p>Your £30 deposit will be deducted from your treatment cost.</p>
+
+    <p>If you need to reschedule or cancel, please use one of the links below. At least 24 hours' notice is required for your deposit to remain transferable.</p>
+
+    <div style="text-align:center;margin:22px 0;">
+      <a href="mailto:${replyAddress}?subject=Reschedule appointment - ${safeDate} ${safeTime}"
+         style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
+        Reschedule
+      </a>
+
+      <a href="mailto:${replyAddress}?subject=Cancel appointment - ${safeDate} ${safeTime}"
+         style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
+        Cancel
+      </a>
+    </div>
+
+    <p>If you have any questions, simply reply to this email.</p>
+
+    <p style="margin-top:20px;">
+      Kind regards,<br>
+      <strong>Marlese</strong><br>
+      BARE by Marlese
+    </p>
+
+    <p style="margin-top:12px;">
+      <a href="https://barebymarlese.com" style="color:#5e6959;text-decoration:none;">
+        barebymarlese.com
+      </a>
+    </p>
+
+  </div>
+</div>
           `
         });
       }
