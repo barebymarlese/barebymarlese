@@ -150,7 +150,40 @@ color:#8a3b3b;
 font-weight:600;
 }
 
+.hours-strip{
+  display:inline-block;
+  margin:8px auto 24px;
+  padding:12px 20px;
+  background:#e7e9e4;
+  color:#24221a;
+  border-radius:999px;
+  font-size:14px;
+  line-height:1.5;
+  box-shadow:0 5px 18px rgba(0,0,0,0.04);
+}
+
+.hours-strip strong{
+  color:#5e6959;
+  font-weight:600;
+}
+
+.hours-strip span{
+  color:#878274;
+  margin:0 8px;
+}
+
 @media(max-width:700px){
+
+.hours-strip{
+  border-radius:14px;
+  display:block;
+}
+
+.hours-strip span{
+  display:block;
+  margin:4px 0;
+}
+
 .wrap{
 padding:28px 16px;
 }
@@ -179,6 +212,11 @@ max-width:100%;
 </div>
 
 <p>Please select your preferred appointment time below. This step is available after your consultation and deposit.</p>
+
+<div class="hours-strip">
+  <strong>Opening Hours:</strong>
+  Monday–Friday 5pm–8pm <span>•</span> Saturday 9am–11am
+</div>
 
 <div class="booking-box">
 
