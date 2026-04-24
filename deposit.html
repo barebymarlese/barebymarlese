@@ -373,16 +373,6 @@ footer{
 
     localStorage.removeItem("bareFromConsultation");
   }
-
-  // 2. Prepare the "Gate" for when they return
-  // When they click pay, we authorize their access to booking.html
-  // so it's ready for them when Stripe redirects them back.
-  if (payBtn) {
-    payBtn.addEventListener("click", function () {
-      localStorage.setItem("bareDepositGate", "allowed");
-      localStorage.setItem("bareDepositGateTs", String(Date.now()));
-    });
-  }
 })();
 </script>
 </body>
