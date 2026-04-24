@@ -325,6 +325,7 @@ async function bookSlot(date, time) {
 
   const name = localStorage.getItem("bare_customer_name") || "Client";
   const email = localStorage.getItem("bare_customer_email") || "";
+  const phone = localStorage.getItem("bare_customer_phone") || "";
 
   status.textContent = "Booking your appointment...";
   status.className = "";
