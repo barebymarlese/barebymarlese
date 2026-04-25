@@ -216,7 +216,6 @@ if (!appointmentDate || !appointmentTime) {
 }
 
 const validSlots = getSlotsByType(bookingType, appointmentDate);
-const validSlots = slotsByDay[dayNumber] || [];
 
 if (!validSlots.includes(appointmentTime)) {
   return new Response("Invalid appointment time", { status: 400 });
