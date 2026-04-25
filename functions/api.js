@@ -142,8 +142,12 @@ if (request.method === "POST" && url.searchParams.get("reschedule") === "update"
     return new Response("Booking not found", { status: 404 });
   }
 
-  const dayNumber = getDayNumber(appointment_date);
-  const validSlots = slotsByDay[dayNumber] || [];
+const existingBooking = await env.DB.prepare(
+  `SELECT booking_type FROM appointments WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
+).bind(id, token).first();
+
+const bookingType = existingBooking?.booking_type || "consultation";
+const validSlots = getSlotsByType(bookingType, appointment_date);
 
   if (!validSlots.includes(appointment_time)) {
     return new Response("Invalid appointment time", { status: 400 });
