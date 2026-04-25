@@ -75,7 +75,7 @@ function isPastSlot(date, time) {
   }
 if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
 const bookings = await env.DB.prepare(
-   SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid
+  `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid
    FROM appointments
    ORDER BY appointment_date ASC, appointment_time ASC`
 ).all();
