@@ -324,7 +324,10 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
       <p><strong>Phone:</strong> ${safePhone}</p>
     </div>
 
-    <p>Your £30 deposit will be deducted from your treatment cost.</p>
+    ${bookingType === "treatment"
+  ? `<p>Your treatment package has been booked and paid for.</p>`
+  : `<p>Your £30 deposit will be deducted from your treatment cost.</p>`
+}
 
     <p>If you need to reschedule or cancel, please use one of the links below. At least 24 hours' notice is required for your deposit to remain transferable.</p>
 
