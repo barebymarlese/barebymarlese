@@ -111,10 +111,10 @@ if (request.method === "GET" && url.searchParams.get("reschedule") === "booking"
   }
 
   const booking = await env.DB.prepare(
-    `SELECT id, client_name, email, phone, appointment_date, appointment_time, status
-     FROM appointments
-     WHERE id = ? AND reschedule_token = ?`
-  ).bind(id, token).first();
+   SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
+   FROM appointments
+   WHERE id = ? AND reschedule_token = ?`
+).bind(id, token).first();
 
   if (!booking) {
     return new Response("Booking not found", { status: 404 });
