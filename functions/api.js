@@ -222,7 +222,13 @@ if (request.method === "GET") {
     const bookingType = body.booking_type || "consultation";
     const packageType = body.package_type || null;
     const amountPaid = body.amount_paid || null;
+    const packageDisplay = packageType
+  ? packageType.charAt(0).toUpperCase() + packageType.slice(1)
+  : null;
 
+const priceDisplay = amountPaid
+  ? `£${amountPaid}`
+  : null;
 if (!appointmentDate || !appointmentTime) {
   return new Response("Missing appointment date or time", { status: 400 });
 }
