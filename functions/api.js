@@ -216,7 +216,7 @@ if (!appointmentDate || !appointmentTime) {
   return new Response("Missing appointment date or time", { status: 400 });
 }
 
-const dayNumber = getDayNumber(appointmentDate);
+const validSlots = getSlotsByType(bookingType, appointmentDate);
 const validSlots = slotsByDay[dayNumber] || [];
 
 if (!validSlots.includes(appointmentTime)) {
