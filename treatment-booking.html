@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treatment Booking | BARE by Marlese</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#cacdc6;--ink:#24221a;--olive:#5e6959;--olive-dark:#4f5a4b;--stone:#878274;--card:#f8f8f6;--line:rgba(36,34,26,.12)}*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:'Montserrat',Arial,sans-serif;background:radial-gradient(circle at top,rgba(255,255,255,.45),transparent 30%),linear-gradient(180deg,#d8dbd4 0%,var(--bg) 100%);color:var(--ink);min-height:100vh}.page{min-height:100vh;padding:28px 16px}.shell{width:100%;max-width:900px;margin:0 auto}.brand{text-align:center;margin:0 0 18px;color:var(--ink);letter-spacing:.18em;font-size:12px;text-transform:uppercase}.brand-divider{opacity:.6;margin:0 6px}.brand-sub{font-weight:400;letter-spacing:.12em;text-transform:none}.card{background:rgba(248,248,246,.9);border:1px solid var(--line);border-radius:28px;box-shadow:0 18px 60px rgba(36,34,26,.10);overflow:hidden;backdrop-filter:blur(6px)}.hero{padding:40px 28px 24px;text-align:center;background:linear-gradient(180deg,rgba(94,105,89,.08),rgba(94,105,89,0) 100%);border-bottom:1px solid var(--line)}.kicker{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(94,105,89,.10);color:var(--olive);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}h1{margin:18px 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight:600}.sub{max-width:680px;margin:0 auto;font-size:15px;line-height:1.7;color:rgba(36,34,26,.78)}.content{padding:26px}.locked,.form-panel,.success-card{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 8px 24px rgba(36,34,26,.04)}.locked{text-align:center}.summary{background:#f4f5f3;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:22px}.summary p{margin:7px 0;font-size:14px}.summary strong{color:var(--olive)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}.field{display:flex;flex-direction:column;gap:8px}label{font-size:12px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--olive)}input{width:100%;padding:14px 16px;border:1px solid rgba(36,34,26,.15);border-radius:12px;font-family:inherit;font-size:15px;color:var(--ink);background:white}#available-slots{margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.slot-message{width:100%;font-size:14px;color:rgba(36,34,26,.68);line-height:1.6;text-align:center}.btn{appearance:none;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:14px 18px;border-radius:14px;text-decoration:none;font-family:inherit;font-weight:700;font-size:14px;transition:transform .18s ease,opacity .18s ease,background .18s ease}.btn:hover{transform:translateY(-1px);opacity:.95}.btn-primary{background:var(--olive);color:#fff}.btn-secondary{background:#eceee9;color:var(--ink)}.slot-btn{margin:5px;min-width:118px;background:var(--olive);color:white}.next-slot{box-shadow:0 0 0 3px rgba(94,105,89,.18);background:var(--olive-dark)}#status{margin-top:20px;font-size:14px;line-height:1.6;text-align:center}.success{color:#4f5a4b;font-weight:700}.error{color:#8a3b3b;font-weight:700}footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:12px}@media(max-width:760px){.page{padding:22px 12px}.hero{padding:34px 20px 22px}.content{padding:18px}.grid{grid-template-columns:1fr}.btn{width:100%}.slot-btn{width:auto;min-width:130px}}
+</style>
+</head>
+<body>
+<div class="page"><div class="shell"><div class="brand">BARE <span class="brand-divider">|</span><span class="brand-sub">by Marlese</span></div><div class="card"><div class="hero"><span class="kicker">Treatment Calendar</span><h1>Book Your Treatment</h1><p class="sub">Choose your first treatment appointment after completing your package payment.</p></div><div class="content" id="content"></div></div><footer>© BARE by Marlese | Treatment booking</footer></div></div>
+<script>
+const packageDetails = {
+  tiny: { label:"Tiny Tattoo - 6 Session Bundle", price:"£360", amount:36000 },
+  small: { label:"Small Tattoo - 6 Session Bundle", price:"£495", amount:49500 },
+  medium: { label:"Medium Tattoo - 6 Session Bundle", price:"£620", amount:62000 },
+  large: { label:"Large Tattoo - 6 Session Bundle", price:"£820", amount:82000 },
+  xl: { label:"XL Tattoo - 6 Session Bundle", price:"£1050", amount:105000 }
+};
+
+const params = new URLSearchParams(window.location.search);
+const paid = params.get("paid");
+const packageKeyFromUrl = (params.get("package") || "").toLowerCase();
+
+if (paid === "true" && packageDetails[packageKeyFromUrl]) {
+  localStorage.setItem("bareTreatmentPaid", "true");
+  localStorage.setItem("bareTreatmentPackage", packageKeyFromUrl);
+}
+
+const hasPaid = localStorage.getItem("bareTreatmentPaid") === "true";
+const packageKey = localStorage.getItem("bareTreatmentPackage");
+const selectedPackage = packageDetails[packageKey];
+const content = document.getElementById("content");
+let selectedDate = "";
+let selectedTime = "";
+
+function escapeHtml(value){return String(value||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
+
+function setMinDate(){const dateInput=document.getElementById("booking-date");if(!dateInput)return;const today=new Date();const yyyy=today.getFullYear();const mm=String(today.getMonth()+1).padStart(2,"0");const dd=String(today.getDate()).padStart(2,"0");dateInput.min=`${yyyy}-${mm}-${dd}`;}
+
+function renderLocked(){
+  content.innerHTML = `<div class="locked"><h2>Treatment booking is locked</h2><p>This page unlocks after the package payment has been completed.</p><a class="btn btn-primary" href="/treatment.html">Choose Package</a></div>`;
+}
+
+function renderBooking(){
+  content.innerHTML = `
+    <div class="summary">
+      <p><strong>Selected package:</strong> ${escapeHtml(selectedPackage.label)}</p>
+      <p><strong>Paid:</strong> ${escapeHtml(selectedPackage.price)}</p>
+    </div>
+    <div class="form-panel">
+      <div class="grid">
+        <div class="field"><label for="client-name">Full name</label><input id="client-name" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="client-email">Email</label><input id="client-email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="client-phone">Phone</label><input id="client-phone" type="tel" autocomplete="tel" required></div>
+        <div class="field"><label for="booking-date">Choose date</label><input type="date" id="booking-date" required></div>
+      </div>
+      <div id="available-slots"><div class="slot-message">Please choose a date to view treatment times.</div></div>
+      <p id="status"></p>
+    </div>
+  `;
+  setMinDate();
+  document.getElementById("booking-date").addEventListener("change", e => { if(e.target.value) loadAvailableSlots(e.target.value); });
+}
+
+async function loadAvailableSlots(date){
+  const container=document.getElementById("available-slots");const status=document.getElementById("status");selectedDate="";selectedTime="";status.textContent="";status.className="";container.innerHTML='<div class="slot-message">Loading treatment times...</div>';
+  try{
+    const res=await fetch(`/api?type=treatment&date=${encodeURIComponent(date)}`);const data=await res.json();const slots=data.slots||[];const nextAvailable=data.nextAvailable||null;
+    if(!Array.isArray(slots)||slots.length===0){container.innerHTML='<div class="slot-message">No treatment availability for this date.</div>';return;}
+    container.innerHTML=slots.map(slot=>`<button class="btn slot-btn ${slot===nextAvailable?"next-slot":""}" type="button" onclick="selectSlot('${date}','${slot}',this)">${slot===nextAvailable?"Next available: ":""}${slot}</button>`).join("")+`<div style="width:100%;margin-top:18px;text-align:center;"><button id="confirm-booking-btn" class="btn btn-primary" type="button" style="display:none;" onclick="confirmBooking()">Confirm Treatment Booking</button></div>`;
+  }catch(err){container.innerHTML='<div class="slot-message">Could not load treatment times. Please try again.</div>';}
+}
+
+function selectSlot(date,time,button){selectedDate=date;selectedTime=time;document.querySelectorAll(".slot-btn").forEach(btn=>{btn.style.opacity="1";btn.style.outline="none";});button.style.opacity="0.75";button.style.outline="3px solid rgba(94,105,89,.25)";const confirmBtn=document.getElementById("confirm-booking-btn");confirmBtn.style.display="inline-flex";confirmBtn.textContent=`Confirm ${time}`;}
+
+async function confirmBooking(){
+  const status=document.getElementById("status");const name=document.getElementById("client-name").value.trim();const email=document.getElementById("client-email").value.trim();const phone=document.getElementById("client-phone").value.trim();
+  if(!name||!email||!phone){status.textContent="Please enter your name, email and phone number.";status.className="error";return;}
+  if(!selectedDate||!selectedTime){status.textContent="Please choose a treatment time.";status.className="error";return;}
+  status.textContent="Saving your treatment booking...";status.className="";
+  try{
+    const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({booking_type:"treatment",package_type:packageKey,amount_paid:selectedPackage.amount,client_name:name,email,phone,appointment_date:selectedDate,appointment_time:selectedTime})});
+    if(res.ok){localStorage.removeItem("bareTreatmentPaid");localStorage.removeItem("bareTreatmentPackage");content.innerHTML=`<div class="success-card"><p class="success">Your treatment appointment has been confirmed.</p><p><strong>Package:</strong> ${escapeHtml(selectedPackage.label)}</p><p><strong>Date:</strong> ${escapeHtml(selectedDate)}</p><p><strong>Time:</strong> ${escapeHtml(selectedTime)}</p><p>A confirmation email has been sent.</p><a class="btn btn-secondary" href="/">Back to website</a></div>`;}
+    else{const text=await res.text();status.textContent=text||"Could not book this treatment time. Please try another slot.";status.className="error";}
+  }catch(err){status.textContent="There was a problem saving your booking. Please try again.";status.className="error";}
+}
+
+if(!hasPaid || !selectedPackage){renderLocked();}else{renderBooking();}
+</script>
+</body>
+</html>
