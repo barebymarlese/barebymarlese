@@ -183,8 +183,8 @@ if (request.method === "GET") {
   const allSlots = getSlotsByType(bookingType, date);
 
   const booked = await env.DB.prepare(
-    "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND status = 'confirmed'"
-  ).bind(date).all();
+    "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND booking_type = ? AND status = 'confirmed'"
+).bind(date, bookingType).all();
 
   const bookedTimes = booked.results.map(row => row.appointment_time);
 
