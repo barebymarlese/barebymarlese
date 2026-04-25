@@ -232,10 +232,20 @@ const rescheduleToken = crypto.randomUUID();
 
 const insertResult = await env.DB.prepare(
   `INSERT INTO appointments
-  (client_name, email, phone, appointment_date, appointment_time, status, reschedule_token)
-  VALUES (?, ?, ?, ?, ?, 'confirmed', ?)`
+  (client_name, email, phone, appointment_date, appointment_time, status, reschedule_token, booking_type, package_type, amount_paid)
+  VALUES (?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?)`
 )
-.bind(clientName, email, phone, appointmentDate, appointmentTime, rescheduleToken)
+.bind(
+  clientName,
+  email,
+  phone,
+  appointmentDate,
+  appointmentTime,
+  rescheduleToken,
+  bookingType,
+  packageType,
+  amountPaid
+)
 .run();
 
 const bookingId = insertResult.meta.last_row_id;
