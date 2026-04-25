@@ -300,7 +300,9 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
 
         await sendEmail({
           to: email,
-          subject: "Appointment Confirmed – BARE by Marlese",
+          subject: bookingType === "treatment"
+          ? "Treatment Booking Confirmed – BARE by Marlese"
+          : "Appointment Confirmed – BARE by Marlese",
           html: `
 <div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
