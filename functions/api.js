@@ -133,7 +133,10 @@ if (request.method === "POST" && url.searchParams.get("reschedule") === "update"
   if (!id || !token || !appointment_date || !appointment_time) {
     return new Response("Missing reschedule details", { status: 400 });
   }
-
+  
+if (!existingBooking) {
+  return new Response("Booking not found", { status: 404 });
+}
 const existingBooking = await env.DB.prepare(
   `SELECT booking_type FROM appointments WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
 ).bind(id, token).first();
