@@ -179,8 +179,8 @@ if (request.method === "GET") {
     }), { headers: jsonHeaders });
   }
 
-  const dayNumber = getDayNumber(date);
-  const allSlots = slotsByDay[dayNumber] || [];
+  const bookingType = url.searchParams.get("type") || "consultation";
+  const allSlots = getSlotsByType(bookingType, date);
 
   const booked = await env.DB.prepare(
     "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND status = 'confirmed'"
