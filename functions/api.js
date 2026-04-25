@@ -152,7 +152,18 @@ const validSlots = getSlotsByType(bookingType, appointment_date);
   if (isPastSlot(appointment_date, appointment_time)) {
     return new Response("This appointment time has already passed", { status: 400 });
   }
+const clash = await env.DB.prepare(
+  `SELECT id FROM appointments
+   WHERE appointment_date = ?
+   AND appointment_time = ?
+   AND booking_type = ?
+   AND status = 'confirmed'
+   AND id != ?`
+).bind(appointment_date, appointment_time, bookingType, id).first();
 
+if (clash) {
+  return new Response("That slot is already taken", { status: 409 });
+}
   try {
     await env.DB.prepare(
       `UPDATE appointments
