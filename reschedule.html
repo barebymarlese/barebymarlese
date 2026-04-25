@@ -338,6 +338,7 @@ async function loadBooking(){
     }
 
     const booking = await res.json();
+    bookingType = booking.booking_type || "consultation";
 
     summary.innerHTML = `
       <p><strong>Current appointment</strong></p>
