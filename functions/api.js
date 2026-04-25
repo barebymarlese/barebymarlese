@@ -314,8 +314,8 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
     </div>
 
     <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
-      APPOINTMENT CONFIRMED
-    </div>
+  ${bookingType === "treatment" ? "TREATMENT BOOKING CONFIRMED" : "APPOINTMENT CONFIRMED"}
+</div>
 
     <p>Hi ${safeName},</p>
 
