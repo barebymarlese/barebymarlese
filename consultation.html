@@ -4,18 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Consultation Form | BARE by Marlese</title>
-  <script>
-  if (
-    location.hostname === "barebymarlese.com" ||
-    location.hostname === "www.barebymarlese.com" ||
-    location.hostname === "barebymarlese.pages.dev"
-  ) {
-    const turnstileScript = document.createElement("script");
-    turnstileScript.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    turnstileScript.async = true;
-    turnstileScript.defer = true;
-    document.head.appendChild(turnstileScript);
-  }
+<script>
+const isLiveDomain =
+  location.hostname === "barebymarlese.com" ||
+  location.hostname === "www.barebymarlese.com";
+
+if (isLiveDomain) {
+  const s = document.createElement("script");
+  s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+  s.async = true;
+  s.defer = true;
+  document.head.appendChild(s);
+}
 </script>
   <link rel="icon" type="image/png" href="/favicon.png">
 
