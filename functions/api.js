@@ -395,10 +395,15 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
         });
       }
 
-      return new Response(JSON.stringify({ success: true }), {
-        status: 200,
-        headers: jsonHeaders
-      });
+      return new Response(JSON.stringify({
+  success: true,
+  bookingId,
+  rescheduleLink,
+  emailSent: Boolean(email)
+}), {
+  status: 200,
+  headers: jsonHeaders
+});
 
     } catch (e) {
       return new Response("Slot already taken", { status: 409 });
