@@ -440,27 +440,24 @@ async function confirmReschedule(){
     });
 
     if(res.ok){
-  status.innerHTML = `
-    <div class="success-card">
-      <p class="success">Your appointment has been updated.</p>
-      <p><strong>New date:</strong> ${escapeHtml(selectedDate)}</p>
-      <p><strong>New time:</strong> ${escapeHtml(selectedTime)}</p>
-      <p style="margin-top:10px; font-size:13px; color:#878274;">
-        Redirecting you back to the website...
-      </p>
-    </div>
-  `;
+      status.innerHTML = `
+        <div class="success-card">
+          <p class="success">Your appointment has been updated.</p>
+          <p><strong>New date:</strong> ${escapeHtml(selectedDate)}</p>
+          <p><strong>New time:</strong> ${escapeHtml(selectedTime)}</p>
+          <p>Please check your inbox and junk/spam folder for any updated booking information.</p>
+          <p style="margin-top:10px; font-size:13px; color:#878274;">
+            Redirecting you back to the website...
+          </p>
+        </div>
+      `;
 
-  document.getElementById("available-slots").innerHTML = "";
-
-  // 🔁 redirect after 3 seconds
-  setTimeout(() => {
-    window.location.href = "https://barebymarlese.com";
-  }, 5000);
-}
-      status.className = "";
       document.getElementById("available-slots").innerHTML = "";
-      loadBooking();
+
+      setTimeout(() => {
+        window.location.href = "https://barebymarlese.com";
+      }, 5000);
+
     }else{
       const text = await res.text();
       status.textContent = text || "Could not reschedule. Please try another time.";
