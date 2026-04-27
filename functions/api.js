@@ -110,8 +110,8 @@ if (request.method === "GET" && url.searchParams.get("reschedule") === "booking"
     return new Response("Missing booking details", { status: 400 });
   }
 
-  const booking = await env.DB.prepare(
-   SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
+const booking = await env.DB.prepare(
+  `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
    FROM appointments
    WHERE id = ? AND reschedule_token = ?`
 ).bind(id, token).first();
