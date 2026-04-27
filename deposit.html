@@ -355,22 +355,5 @@ footer{
   </div>
 </div>
 
-<script>
-(function () {
-  const payBtn = document.getElementById('pay-deposit-btn');
-  const flashMessage = document.getElementById('consultation-flash');
-
-  const cameFromConsultation = localStorage.getItem("bareFromConsultation");
-  if (flashMessage && cameFromConsultation === "true") {
-    flashMessage.classList.add('show');
-
-    window.setTimeout(function () {
-      flashMessage.classList.remove('show');
-    }, 10000);
-
-    localStorage.removeItem("bareFromConsultation");
-  }
-})();
-</script>
 </body>
 </html>
