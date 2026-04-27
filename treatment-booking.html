@@ -84,9 +84,31 @@ async function confirmBooking(){
   status.textContent="Saving your treatment booking...";status.className="";
   try{
     const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({booking_type:"treatment",package_type:packageKey,amount_paid:selectedPackage.amount,client_name:name,email,phone,appointment_date:selectedDate,appointment_time:selectedTime})});
-    if(res.ok){localStorage.removeItem("bareTreatmentPaid");localStorage.removeItem("bareTreatmentPackage");content.innerHTML=`<div class="success-card"><p class="success">Your treatment appointment has been confirmed.</p><p><strong>Package:</strong> ${escapeHtml(selectedPackage.label)}</p><p><strong>Date:</strong> ${escapeHtml(selectedDate)}</p><p><strong>Time:</strong> ${escapeHtml(selectedTime)}</p><p>A confirmation email has been sent.</p><a class="btn btn-secondary" href="/">Back to website</a></div>`;}
-    else{const text=await res.text();status.textContent=text||"Could not book this treatment time. Please try another slot.";status.className="error";}
-  }catch(err){status.textContent="There was a problem saving your booking. Please try again.";status.className="error";}
+if(res.ok){
+  localStorage.removeItem("bareTreatmentPaid");
+  localStorage.removeItem("bareTreatmentPackage");
+
+  content.innerHTML = `
+    <div class="success-card">
+      <p class="success">Thank you — your treatment appointment has been confirmed.</p>
+      <p><strong>Package:</strong> ${escapeHtml(selectedPackage.label)}</p>
+      <p><strong>Date:</strong> ${escapeHtml(selectedDate)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(selectedTime)}</p>
+      <p>Your booking has been successfully secured.</p>
+      <p>Please check your inbox for your confirmation email. If you do not see it, please check your junk/spam folder and mark it as safe to ensure you receive future updates.</p>
+      <p>Your confirmation email includes a link where you can manage your booking, including rescheduling if needed.</p>
+      <p style="margin-top:10px;font-size:13px;color:#878274;">Redirecting you back to the website...</p>
+    </div>
+  `;
+
+  setTimeout(() => {
+    window.location.href = "https://barebymarlese.com";
+  }, 5000);
+
+} else {
+  const text = await res.text();
+  status.textContent = text || "Could not book this treatment time. Please try another slot.";
+  status.className = "error";
 }
 
 if(!hasPaid || !selectedPackage){renderLocked();}else{renderBooking();}
