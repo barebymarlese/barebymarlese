@@ -333,7 +333,12 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
 
     <p>Hi ${safeName},</p>
 
-    <p>Thank you for booking with <strong>BARE by Marlese</strong>. Your appointment has been confirmed.</p>
+    ${bookingType === "treatment"
+  ? `<p>Thank you for booking with <strong>BARE by Marlese</strong>. Your treatment appointment has been confirmed.</p>`
+  : `<p>Thank you for completing your consultation form and booking your consultation & patch test with <strong>BARE by Marlese</strong>.</p>
+     <p>Your consultation and patch test is confirmed for <strong>${safeDate}</strong> at <strong>${safeTime}</strong>.</p>
+     <p>Your details have been received and will be reviewed thoroughly before your appointment.</p>`
+}
 
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
   <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
