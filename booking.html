@@ -354,11 +354,24 @@ async function bookSlot(date, time) {
       })
     });
 
-    if (res.ok) {
-      document.getElementById("confirm-booking-btn")?.remove();
-      status.textContent = `Appointment booked successfully for ${date} at ${time}.`;
-      status.className = "success";
-      loadAvailableSlots(date);
+   if (res.ok) {
+  document.getElementById("available-slots").innerHTML = "";
+
+  status.innerHTML = `
+    <div style="background:#f4f5f3;border-radius:12px;padding:18px;margin-top:18px;">
+      <p class="success">Thank you — your consultation and patch test has been booked.</p>
+      <p><strong>Date:</strong> ${date}</p>
+      <p><strong>Time:</strong> ${time}</p>
+      <p>Please check your inbox and junk/spam folder for your confirmation email and manage booking link.</p>
+      <p style="font-size:13px;color:#878274;">Redirecting you back to the website...</p>
+    </div>
+  `;
+  status.className = "success";
+
+  setTimeout(() => {
+    window.location.href = "https://barebymarlese.com";
+  }, 5000);
+     
     } else {
       status.textContent = "That slot has just been taken. Please choose another time.";
       status.className = "error";
