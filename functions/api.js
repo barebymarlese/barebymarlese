@@ -300,9 +300,11 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
     ? `<p><strong>Amount Paid:</strong> ${priceDisplay}</p>`
     : ""}
 
+  <p><strong>Name:</strong> ${safeName}</p>
+  <p><strong>Email:</strong> ${safeEmail}</p>
+  <p><strong>Phone:</strong> ${safePhone}</p>
   <p><strong>Date:</strong> ${safeDate}</p>
   <p><strong>Time:</strong> ${safeTime}</p>
-  <p><strong>Phone:</strong> ${safePhone}</p>
 </div>
 
     <p>This appointment has been saved in your Cloudflare D1 booking database.</p>
