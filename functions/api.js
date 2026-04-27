@@ -361,7 +361,7 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
     <div style="text-align:center;margin:22px 0;">
       <a href="${rescheduleLink}"
          style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
-        Reschedule
+        Manage Booking
       </a>
 
       <a href="mailto:${replyAddress}?subject=Cancel appointment - ${safeDate} ${safeTime}"
