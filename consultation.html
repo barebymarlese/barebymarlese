@@ -1141,10 +1141,7 @@ header .logo *{
 <div id="turnstile-container" style="margin-top:16px;"></div>
 
 <script>
-if (
-  location.hostname === "barebymarlese.com" ||
-  location.hostname === "www.barebymarlese.com"
-) {
+if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   document.getElementById("turnstile-container").innerHTML =
     '<div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8"></div>';
 }
