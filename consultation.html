@@ -1113,7 +1113,11 @@ header .logo *{
 </div>
 
 <div style="margin-top:16px;">
-  <label class="con-label">Client Signature <span class="required-star">*</span></label>
+  <div class="con-small" style="margin:12px 0;">
+  Signed at: <strong id="signed-at-display">Waiting for signature...</strong>
+</div>
+<input type="hidden" name="signed_at" id="signed_at">
+<label class="con-label">Client Signature <span class="required-star">*</span></label>
 
   <canvas id="signature-pad" style="
     width:100%;
@@ -1333,7 +1337,24 @@ window.addEventListener("storage", (e) => {
 // Run once in case the result was already saved
 syncFitzFromStorage();
 
-    const form = document.getElementById("consultation-form");
+    
+const signedAtInput = document.getElementById("signed_at");
+const signedAtDisplay = document.getElementById("signed-at-display");
+
+function setSignedTimestamp(){
+  const now = new Date();
+  signedAtInput.value = now.toISOString();
+  signedAtDisplay.textContent = now.toLocaleString("en-GB", {
+    timeZone: "Europe/London",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+const form = document.getElementById("consultation-form");
     const statusEl = document.getElementById("status");
     const resetBtn = document.getElementById("reset-btn");
     const submittedAt = document.getElementById("submitted_at");
@@ -1557,6 +1578,7 @@ syncFitzFromStorage();
         signatureDataInput.value = signaturePad.toDataURL("image/png");
       }
 
+      if(!signedAtInput.value){ setSignedTimestamp(); }
       submittedAt.value = new Date().toISOString();
      
       isSubmitting = true;
