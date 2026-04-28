@@ -176,7 +176,32 @@ if (request.method === "POST" && url.searchParams.get("reschedule") === "update"
     ).bind(appointment_date, appointment_time, id, token).run();
 
     const manageLink = `https://barebymarlese.com/reschedule.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
+await sendEmail({
+    to: env.TO_EMAIL,
+    subject: "Booking Amendment",
+    html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
 
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
+      BOOKING AMENDMENT
+    </div>
+
+    <p><strong>Client:</strong> ${escapeHtml(existingBooking.client_name || "Client")}</p>
+    <p><strong>Email:</strong> ${escapeHtml(existingBooking.email || "Not provided")}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
+    <p><strong>Type:</strong> ${escapeHtml(existingBooking.booking_type || "consultation")}</p>
+    <p><strong>New date:</strong> ${escapeHtml(appointment_date)}</p>
+    <p><strong>New time:</strong> ${escapeHtml(appointment_time)}</p>
+
+  </div>
+</div>
+    `
+  });
     if (existingBooking.email) {
       await sendEmail({
         to: existingBooking.email,
