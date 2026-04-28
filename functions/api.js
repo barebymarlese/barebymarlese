@@ -208,6 +208,13 @@ await sendEmail({
 <p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
 <p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
 
+<div style="text-align:center;margin-top:18px;">
+  <a href="${manageLink}"
+     style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;">
+    Manage Booking
+  </a>
+</div>
+
   </div>
 </div>
     `
