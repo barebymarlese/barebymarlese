@@ -111,7 +111,17 @@ if(res.ok){
   status.className = "error";
 }
 
-if(!hasPaid || !selectedPackage){renderLocked();}else{renderBooking();}
+  } catch(err) {
+    status.textContent = "There was a problem saving your treatment booking. Please try again.";
+    status.className = "error";
+  }
+}
+
+if(!hasPaid || !selectedPackage){
+  renderLocked();
+}else{
+  renderBooking();
+}
 </script>
 </body>
 </html>
