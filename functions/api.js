@@ -408,7 +408,7 @@ export async function onRequest(context) {
 
     <p>Treatment bundle sessions are valid for 12 months from the date of purchase. Cancelling or delaying appointments does not extend the validity period. Please ensure sufficient time remains to complete all sessions within this period.</p>
 
-    <p>If this cancellation relates to a treatment package and you wish to rebook, please reply to this email so your treatment spacing and remaining time can be reviewed.</p>
+    <p>If your appointment relates to a treatment package and you wish to rebook, please reply to this email so your treatment spacing and remaining time can be reviewed.</p>
 
     <p style="margin-top:20px;">
       Kind regards,<br>
