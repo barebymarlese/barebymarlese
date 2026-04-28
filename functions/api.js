@@ -133,17 +133,19 @@ if (request.method === "POST" && url.searchParams.get("reschedule") === "update"
   if (!id || !token || !appointment_date || !appointment_time) {
     return new Response("Missing reschedule details", { status: 400 });
   }
-  
-const existingBooking = await env.DB.prepare(
-  `SELECT booking_type FROM appointments WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
-).bind(id, token).first();
 
-if (!existingBooking) {
-  return new Response("Booking not found", { status: 404 });
-}
+  const existingBooking = await env.DB.prepare(
+    `SELECT id, client_name, email, phone, booking_type, reschedule_token
+     FROM appointments
+     WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
+  ).bind(id, token).first();
 
-const bookingType = existingBooking?.booking_type || "consultation";
-const validSlots = getSlotsByType(bookingType, appointment_date);
+  if (!existingBooking) {
+    return new Response("Booking not found", { status: 404 });
+  }
+
+  const bookingType = existingBooking?.booking_type || "consultation";
+  const validSlots = getSlotsByType(bookingType, appointment_date);
 
   if (!validSlots.includes(appointment_time)) {
     return new Response("Invalid appointment time", { status: 400 });
@@ -152,18 +154,20 @@ const validSlots = getSlotsByType(bookingType, appointment_date);
   if (isPastSlot(appointment_date, appointment_time)) {
     return new Response("This appointment time has already passed", { status: 400 });
   }
-const clash = await env.DB.prepare(
-  `SELECT id FROM appointments
-   WHERE appointment_date = ?
-   AND appointment_time = ?
-   AND booking_type = ?
-   AND status = 'confirmed'
-   AND id != ?`
-).bind(appointment_date, appointment_time, bookingType, id).first();
 
-if (clash) {
-  return new Response("That slot is already taken", { status: 409 });
-}
+  const clash = await env.DB.prepare(
+    `SELECT id FROM appointments
+     WHERE appointment_date = ?
+     AND appointment_time = ?
+     AND booking_type = ?
+     AND status = 'confirmed'
+     AND id != ?`
+  ).bind(appointment_date, appointment_time, bookingType, id).first();
+
+  if (clash) {
+    return new Response("That slot is already taken", { status: 409 });
+  }
+
   try {
     await env.DB.prepare(
       `UPDATE appointments
@@ -171,7 +175,74 @@ if (clash) {
        WHERE id = ? AND reschedule_token = ?`
     ).bind(appointment_date, appointment_time, id, token).run();
 
-    return new Response(JSON.stringify({ success: true }), {
+    const manageLink = `https://barebymarlese.com/reschedule.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
+
+    if (existingBooking.email) {
+      await sendEmail({
+        to: existingBooking.email,
+        subject: existingBooking.booking_type === "treatment"
+          ? "Treatment Appointment Updated – BARE by Marlese"
+          : "Consultation & Patch Test Updated – BARE by Marlese",
+        html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
+      ${existingBooking.booking_type === "treatment" ? "TREATMENT APPOINTMENT UPDATED" : "CONSULTATION & PATCH TEST UPDATED"}
+    </div>
+
+    <p>Hi ${escapeHtml(existingBooking.client_name || "there")},</p>
+
+    ${existingBooking.booking_type === "treatment"
+      ? `<p>Your treatment appointment with <strong>BARE by Marlese</strong> has been updated.</p>`
+      : `<p>Your consultation and patch test with <strong>BARE by Marlese</strong> has been updated.</p>`
+    }
+
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p style="margin:0 0 8px;"><strong>New appointment details</strong></p>
+      <p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
+    </div>
+
+    <p>You can manage your booking using the button below.</p>
+
+    <div style="text-align:center;margin:22px 0;">
+      <a href="${manageLink}"
+         style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
+        Manage Booking
+      </a>
+    </div>
+
+    <p>If you have any questions, simply reply to this email.</p>
+
+    <p style="margin-top:20px;">
+      Kind regards,<br>
+      <strong>Marlese</strong><br>
+      BARE by Marlese
+    </p>
+
+    <p style="margin-top:12px;">
+      <a href="https://barebymarlese.com" style="color:#5e6959;text-decoration:none;">
+        barebymarlese.com
+      </a>
+    </p>
+
+  </div>
+</div>
+        `
+      });
+    }
+
+    return new Response(JSON.stringify({
+      success: true,
+      rescheduleLink: manageLink,
+      emailSent: Boolean(existingBooking.email)
+    }), {
       headers: jsonHeaders
     });
 
