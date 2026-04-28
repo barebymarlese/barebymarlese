@@ -404,11 +404,11 @@ export async function onRequest(context) {
       <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
     </div>
 
-    <p>At least 24 hours' notice is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from your bundle.</p>
+    <p>A minimum of 24 hours’ notice is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from your bundle.</p>
 
-    <p>Treatment bundle sessions are valid for 12 months from the date of purchase. Cancelling or delaying appointments does not extend the validity period of your bundle. Please ensure enough time remains to complete your sessions within the 12-month period.</p>
+    <p>Treatment bundle sessions are valid for 12 months from the date of purchase. Cancelling or delaying appointments does not extend the validity period. Please ensure sufficient time remains to complete all sessions within this period.</p>
 
-    <p>If this was a mistake, please reply to this email.</p>
+    <p>If this cancellation relates to a treatment package and you wish to rebook, please reply to this email so your treatment spacing and remaining time can be reviewed.</p>
 
     <p style="margin-top:20px;">
       Kind regards,<br>
