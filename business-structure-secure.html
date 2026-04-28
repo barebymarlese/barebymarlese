@@ -168,17 +168,15 @@
         <h2 class="section-title">Business Summary</h2>
         <div class="highlight">
           <strong>Core Structure</strong>
-          BARE by Marlese runs through a website-led client flow. The website is hosted on GitHub Pages, performance and workers are handled through Cloudflare, consultations are submitted via Cloudflare Worker, emails are handled through Gmail and Resend, files are stored in Google Drive, deposits are taken through Revolut Pro, and appointments are completed through Google Calendar Appointment Scheduling.
+          BARE by Marlese runs through a website-led client flow. The website files are managed in GitHub and served through Cloudflare. DNS, Pages/Workers, the /api booking system, D1 database, consultation processing, rescheduling, cancellations and reminders are all handled through Cloudflare. Emails are sent through Resend, payments are taken through Stripe, and appointments are stored in Cloudflare D1 through your own booking API.
         </div>
         <div class="tag-row">
-          <span class="tag">GoDaddy</span>
-          <span class="tag">GitHub Pages</span>
+          <span class="tag">GitHub Repository</span>
           <span class="tag">Cloudflare</span>
           <span class="tag">Resend</span>
           <span class="tag">Gmail</span>
-          <span class="tag">Google Drive</span>
-          <span class="tag">Google Calendar</span>
-          <span class="tag">Revolut Pro</span>
+          <span class="tag">Cloudflare D1</span>
+          <span class="tag">Stripe</span>
         </div>
       </div>
 
@@ -188,8 +186,7 @@
           <h3>Client Journey Goal</h3>
           <p>
             Keep the client journey simple and premium: complete the consultation first, receive confirmation,
-            move to the deposit page, pay the £30 deposit through Revolut Pro, return to the website tab,
-            unlock booking, and then complete the appointment booking through Google Calendar.
+            move to the deposit page, pay the £30 deposit through Stripe, return automatically to the unlocked Cloudflare/GitHub booking page, choose an available appointment, and receive manage/cancel links by email.
           </p>
         </div>
       </div>
@@ -203,18 +200,18 @@
           <ul>
             <li>Primary domain: barebymarlese.com</li>
             <li>Secondary domain: barebymarlese.co.uk</li>
-            <li>Domain provider: GoDaddy</li>
-            <li>Auto-renews on 21/01/2029</li>
-            <li>Planned action: move domain management to Cloudflare before renewal</li>
+            <li>Domain management and DNS: Cloudflare</li>
+            <li>Cloudflare controls DNS, routing, security, Pages and Workers</li>
+            <li>No Cloudflare dependency in the current setup</li>
           </ul>
         </div>
 
         <div class="panel">
           <h3>Website Hosting</h3>
           <ul>
-            <li>Hosting platform: GitHub Pages</li>
-            <li>Website acts as the front-end for consultation, deposit, and booking</li>
-            <li>Pages support the step-by-step client journey</li>
+            <li>Website source files are managed in GitHub</li>
+            <li>Cloudflare serves and protects the live site</li>
+            <li>The website acts as the front-end for consultation, deposit, booking, rescheduling and cancellation</li>
           </ul>
         </div>
 
@@ -224,9 +221,9 @@
             <li>Cloudflare</li>
             <li>Resend</li>
             <li>Gmail</li>
-            <li>Google Drive</li>
-            <li>Google Calendar Appointment Scheduling</li>
-            <li>Revolut Pro</li>
+            <li>Cloudflare D1 booking database</li>
+            <li>Cloudflare Pages Functions / API</li>
+            <li>Stripe</li>
           </ul>
         </div>
       </div>
@@ -246,10 +243,6 @@
             </thead>
             <tbody>
               <tr>
-                <td>GoDaddy</td>
-                <td>Domain management account</td>
-              </tr>
-              <tr>
                 <td>Cloudflare</td>
                 <td><a href="https://dash.cloudflare.com/">dash.cloudflare.com</a></td>
               </tr>
@@ -266,12 +259,12 @@
                 <td>barebymarlese@gmail.com</td>
               </tr>
               <tr>
-                <td>Google services</td>
-                <td>Gmail / Google Drive / Google Calendar Appointment Scheduling</td>
+                <td>Business inbox</td>
+                <td>Email received through your configured BARE mailbox / Gmail access</td>
               </tr>
               <tr>
                 <td>Payments</td>
-                <td>Revolut Pro</td>
+                <td>Stripe payment links / checkout</td>
               </tr>
             </tbody>
           </table>
@@ -294,12 +287,12 @@
     </div>
 
     <div class="section">
-      <h2 class="section-title">Cloudflare & Email Setup</h2>
+      <h2 class="section-title">Cloudflare, GitHub & Email Setup</h2>
       <div class="grid-3">
         <div class="panel">
           <h3>Cloudflare</h3>
           <ul>
-            <li>Used for website-related services and worker handling</li>
+            <li>Used for DNS, routing, website protection, Pages/Workers and D1</li>
             <li>Dashboard: dash.cloudflare.com</li>
             <li>Main account email: barebymarlese@gmail.com</li>
           </ul>
@@ -308,24 +301,26 @@
           <h3>Workers</h3>
           <ul>
             <li>bare-consultation-worker</li>
-            <li>bare-patchtest-worker</li>
+            <li>Booking API Worker / Pages Function</li>
+            <li>Reminder Worker with scheduled trigger</li>
             <li>Consultation submissions are processed through Cloudflare Worker</li>
+            <li>Bookings, reschedules and cancellations are handled through Cloudflare API + D1</li>
           </ul>
         </div>
         <div class="panel">
-          <h3>Resend & Gmail</h3>
+          <h3>Resend & Email</h3>
           <ul>
             <li>Resend login: resend.com/login</li>
             <li>Account email: barebymarlese@gmail.com</li>
-            <li>Gmail handles inbox receipt and communication flow</li>
-            <li>Client receives consultation confirmation email after submission</li>
+            <li>Resend sends consultation, booking, amendment, cancellation and reminder emails</li>
+            <li>Client replies go to your configured BARE reply-to inbox</li>
           </ul>
         </div>
       </div>
     </div>
 
     <div class="section">
-      <h2 class="section-title">Consultation, Storage & Booking Structure</h2>
+      <h2 class="section-title">Consultation, Payment & Booking Structure</h2>
       <div class="grid-3">
         <div class="panel">
           <h3>Consultation Form</h3>
@@ -339,19 +334,85 @@
         <div class="panel">
           <h3>File & Data Storage</h3>
           <ul>
-            <li>Consultation files stored in Google Drive</li>
-            <li>Gmail used as active inbox for submissions</li>
-            <li>Google Drive used for organised file handling and retention</li>
+            <li>Consultation PDFs and uploaded photos are emailed through Resend</li>
+            <li>Gmail used as active inbox for submissions and client communication</li>
+            <li>Private business records can be used for organised manual file retention</li>
+            <li>Appointment data is stored in Cloudflare D1</li>
           </ul>
         </div>
         <div class="panel">
           <h3>Booking & Payment</h3>
           <ul>
             <li>Client moves to deposit page after consultation</li>
-            <li>£30 deposit is paid through Revolut Pro</li>
-            <li>Client returns to the website tab after payment</li>
+            <li>£30 deposit is paid through Stripe</li>
+            <li>Stripe redirects to booking.html with a session_id</li>
             <li>Booking becomes available after deposit step</li>
-            <li>Appointment is booked through Google Calendar Appointment Scheduling</li>
+            <li>Appointment is saved into Cloudflare D1 through /api</li>
+            <li>Client receives manage and cancel links by email</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Current Booking, Payment & Appointment Management Flow</h2>
+      <div class="grid-3">
+        <div class="panel">
+          <h3>Consultation Booking</h3>
+          <ul>
+            <li>consultation.html submits to the Consultation Worker</li>
+            <li>deposit.html handles the £30 Stripe deposit step</li>
+            <li>Stripe success URL redirects to booking.html?session_id={CHECKOUT_SESSION_ID}</li>
+            <li>booking.html unlocks after the session_id is detected</li>
+            <li>/api returns available consultation slots and saves the confirmed booking</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Reschedule & Cancel</h3>
+          <ul>
+            <li>reschedule.html loads booking details using id and token</li>
+            <li>/api?reschedule=update validates the token, slot and booking status</li>
+            <li>cancel.html loads booking details using id and token</li>
+            <li>/api?cancel=confirm changes the booking status to cancelled</li>
+            <li>You and the client receive amendment or cancellation emails</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Reminders & Status</h3>
+          <ul>
+            <li>Appointments start as status: confirmed</li>
+            <li>Cancelled appointments become status: cancelled</li>
+            <li>The scheduled reminder Worker sends reminders 23–25 hours before confirmed appointments</li>
+            <li>reminder_sent changes from no to yes after the reminder is sent</li>
+            <li>Past confirmed bookings are marked as completed automatically</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note-box">
+        <strong>Key redirect rules</strong><br>
+        Consultation deposit success must redirect to <strong>booking.html?session_id={CHECKOUT_SESSION_ID}</strong>. Treatment package success must redirect to <strong>treatment-booking.html?paid=true&amp;package=tiny/small/medium/large/xl</strong>. These URL values unlock the correct booking pages.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Treatment Package Flow</h2>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>Package Payment</h3>
+          <ul>
+            <li>Client only uses treatment.html after consultation and patch test approval</li>
+            <li>Client chooses the agreed 6-session tattoo removal bundle</li>
+            <li>Stripe handles the package payment outside the website</li>
+            <li>Stripe redirects to treatment-booking.html with paid=true and the package key</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Treatment Booking</h3>
+          <ul>
+            <li>treatment-booking.html unlocks after the correct Stripe redirect</li>
+            <li>The page posts booking_type: treatment to /api</li>
+            <li>D1 stores package_type and amount_paid</li>
+            <li>Treatment bookings use the same reschedule, cancel and reminder system</li>
           </ul>
         </div>
       </div>
@@ -372,10 +433,10 @@
         <div class="panel">
           <h3>System Structure</h3>
           <ul>
-            <li>Form hosted on GitHub Pages</li>
+            <li>Form files managed in GitHub and served through Cloudflare</li>
             <li>Submission handled through Cloudflare Worker</li>
             <li>Email delivery handled through Resend and Gmail</li>
-            <li>Records can be retained in Gmail, downloaded as PDF, and stored in Google Drive</li>
+            <li>Records are emailed as PDF and can be retained in your private business records</li>
           </ul>
         </div>
         <div class="panel">
@@ -391,7 +452,7 @@
 
       <div class="note-box">
         <strong>Where this fits</strong><br>
-        The incident log sits inside the internal business compliance structure rather than the public client journey. It supports safe record keeping without adding a database, login area, or extra backend risk to the main website.
+        The incident log sits inside the internal business compliance structure rather than the public client journey. It supports safe record keeping while keeping the public website flow separate from private operational records.
       </div>
     </div>
 
@@ -404,10 +465,12 @@
         <div class="step"><div class="step-num">4</div><div><h4>Email Receipt</h4><p>You receive the consultation in your email workflow.</p></div></div>
         <div class="step"><div class="step-num">5</div><div><h4>Client Confirmation</h4><p>The client receives a consultation confirmation email.</p></div></div>
         <div class="step"><div class="step-num">6</div><div><h4>Deposit Page</h4><p>The client is directed to the deposit page on the website.</p></div></div>
-        <div class="step"><div class="step-num">7</div><div><h4>Deposit Payment</h4><p>The client pays the £30 deposit using Revolut Pro.</p></div></div>
-        <div class="step"><div class="step-num">8</div><div><h4>Return to Website</h4><p>The client returns to the original website tab after payment.</p></div></div>
+        <div class="step"><div class="step-num">7</div><div><h4>Deposit Payment</h4><p>The client pays the £30 deposit using Stripe.</p></div></div>
+        <div class="step"><div class="step-num">8</div><div><h4>Stripe Success Redirect</h4><p>Stripe redirects the client to booking.html with the required session_id so the booking page unlocks.</p></div></div>
         <div class="step"><div class="step-num">9</div><div><h4>Booking Unlocks</h4><p>The booking step becomes available once the deposit step has been completed.</p></div></div>
-        <div class="step"><div class="step-num">10</div><div><h4>Appointment Confirmed</h4><p>The client books through Google Calendar and receives booking confirmation.</p></div></div>
+        <div class="step"><div class="step-num">10</div><div><h4>Appointment Confirmed</h4><p>The client selects a slot, the API saves the booking in Cloudflare D1, and confirmation emails are sent.</p></div></div>
+        <div class="step"><div class="step-num">11</div><div><h4>Manage / Cancel Links</h4><p>The client receives reschedule and cancel links using their booking ID and secure token.</p></div></div>
+        <div class="step"><div class="step-num">12</div><div><h4>Reminder & Completion</h4><p>The scheduled reminder Worker sends reminders 23–25 hours before the appointment and marks past confirmed bookings as completed.</p></div></div>
       </div>
     </div>
 
@@ -420,16 +483,19 @@
             <li>Website is the main client-facing platform</li>
             <li>Consultation comes first</li>
             <li>Deposit comes second</li>
-            <li>Booking unlocks after the payment step</li>
+            <li>Booking unlocks after Stripe redirects with a valid session_id</li>
+            <li>Treatment packages unlock treatment-booking.html with paid=true and package type</li>
           </ul>
         </div>
         <div class="panel">
           <h3>Back-End Handling</h3>
           <ul>
-            <li>Cloudflare Worker processes submissions</li>
-            <li>Gmail and Resend support communication flow</li>
-            <li>Google Drive supports file storage</li>
-            <li>Google Calendar handles appointment confirmation</li>
+            <li>Consultation Worker processes forms, file validation, PDF generation and email delivery</li>
+            <li>Booking API handles availability, bookings, reschedules, cancellations and admin actions</li>
+            <li>Cloudflare D1 stores appointment records, statuses, tokens, booking types and reminder flags</li>
+            <li>Reminder Worker sends 24-hour reminders and auto-completes past confirmed bookings</li>
+            <li>Resend sends client and internal emails</li>
+            <li>Private business records supports manual file storage where needed</li>
           </ul>
         </div>
       </div>
@@ -441,7 +507,7 @@
 
       <div class="footer">
         BARE by Marlese business structure overview<br>
-        Domains: barebymarlese.com / barebymarlese.co.uk
+        Domains: barebymarlese.com / barebymarlese.co.uk | DNS and hosting handled through Cloudflare
       </div>
     </div>
 
@@ -480,7 +546,7 @@
 
                 <tr>
                   <td><strong>Backend system</strong></td>
-                  <td>No backend (static site)<br><span class="comparison-sub">No live server environment means nothing is continuously exposed to attack.</span></td>
+                  <td>Static front-end + serverless Cloudflare backend<br><span class="comparison-sub">No traditional always-on app server; Workers run only when needed.</span></td>
                   <td>Full backend system</td>
                 </tr>
 
@@ -492,7 +558,7 @@
 
                 <tr>
                   <td><strong>Database</strong></td>
-                  <td>❌ None<br><span class="comparison-sub">No client data is stored on the website, reducing the risk of database breaches.</span></td>
+                  <td>Limited Cloudflare D1 booking database<br><span class="comparison-sub">The website does not store consultation medical files, but booking records are stored in D1 for availability, reschedule, cancellation and reminders.</span></td>
                   <td>✅ Stores data</td>
                 </tr>
 
@@ -528,7 +594,7 @@
 
                 <tr>
                   <td><strong>Payment handling</strong></td>
-                  <td>External (Revolut)<br><span class="comparison-sub">Payment details are handled outside the website environment.</span></td>
+                  <td>External (Stripe)<br><span class="comparison-sub">Payment details are handled outside the website environment and Stripe redirects clients back into the booking flow.</span></td>
                   <td>Often integrated</td>
                 </tr>
 
@@ -540,7 +606,7 @@
 
                 <tr>
                   <td><strong>Data exposure risk</strong></td>
-                  <td>Very low<br><span class="comparison-sub">No client database on the site means there is far less stored data at risk.</span></td>
+                  <td>Very low<br><span class="comparison-sub">Only limited appointment data is stored in D1; consultation records are delivered by email/PDF rather than held in a public website database.</span></td>
                   <td>Higher — data often stored in platform systems</td>
                 </tr>
 
@@ -574,7 +640,7 @@
 
           <div class="note-box">
             <strong>Why this matters</strong><br>
-            The BARE setup is intentionally minimal: no login area, no database, no plugin stack, and no traditional backend.
+            The BARE setup is intentionally minimal: no public login area, a limited Cloudflare D1 booking database, no plugin stack, and no traditional backend server.
             By reducing entry points and avoiding unnecessary storage, the overall risk of hacking, data breaches, and system vulnerabilities is significantly lower.
           </div>
         </div>
