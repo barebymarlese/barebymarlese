@@ -4,56 +4,59 @@ export async function onRequest(context) {
 
   const jsonHeaders = { "Content-Type": "application/json" };
 
-const consultationSlots = {
-  1: ["17:00", "17:30", "18:00", "18:30", "19:00"],
-  2: ["17:00", "17:30", "18:00", "18:30", "19:00"],
-  3: ["17:00", "17:30", "18:00", "18:30", "19:00"],
-  4: ["17:00", "17:30", "18:00", "18:30", "19:00"],
-  5: ["17:00", "17:30", "18:00", "18:30", "19:00"],
-  6: ["09:00", "09:30", "10:00", "10:30"]
-};
+  const consultationSlots = {
+    1: ["17:00", "17:30", "18:00", "18:30", "19:00"],
+    2: ["17:00", "17:30", "18:00", "18:30", "19:00"],
+    3: ["17:00", "17:30", "18:00", "18:30", "19:00"],
+    4: ["17:00", "17:30", "18:00", "18:30", "19:00"],
+    5: ["17:00", "17:30", "18:00", "18:30", "19:00"],
+    6: ["09:00", "09:30", "10:00", "10:30"]
+  };
 
-const treatmentSlots = {
-  1: ["17:00", "18:00", "19:00"],
-  2: ["17:00", "18:00", "19:00"],
-  3: ["17:00", "18:00", "19:00"],
-  4: ["17:00", "18:00", "19:00"],
-  5: ["17:00", "18:00", "19:00"],
-  6: ["09:00", "10:00", "11:00"]
-};
-function getSlotsByType(type, dateString) {
-  const dayNumber = getDayNumber(dateString);
+  const treatmentSlots = {
+    1: ["17:00", "18:00", "19:00"],
+    2: ["17:00", "18:00", "19:00"],
+    3: ["17:00", "18:00", "19:00"],
+    4: ["17:00", "18:00", "19:00"],
+    5: ["17:00", "18:00", "19:00"],
+    6: ["09:00", "10:00", "11:00"]
+  };
 
-  if (type === "treatment") {
-    return treatmentSlots[dayNumber] || [];
+  function getSlotsByType(type, dateString) {
+    const dayNumber = getDayNumber(dateString);
+    if (type === "treatment") return treatmentSlots[dayNumber] || [];
+    return consultationSlots[dayNumber] || [];
   }
 
-  return consultationSlots[dayNumber] || [];
-}
+  function escapeHtml(str = "") {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
 
-function escapeHtml(str = "") {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
+  function getDayNumber(dateString) {
+    const [year, month, day] = dateString.split("-").map(Number);
+    return new Date(year, month - 1, day).getDay();
+  }
 
-function getDayNumber(dateString) {
-  const [year, month, day] = dateString.split("-").map(Number);
-  return new Date(year, month - 1, day).getDay();
-}
+  function slotDateTime(date, time) {
+    const [year, month, day] = date.split("-").map(Number);
+    const [hour, minute] = time.split(":").map(Number);
+    return new Date(year, month - 1, day, hour, minute);
+  }
 
-function slotDateTime(date, time) {
-  const [year, month, day] = date.split("-").map(Number);
-  const [hour, minute] = time.split(":").map(Number);
-  return new Date(year, month - 1, day, hour, minute);
-}
+  function isPastSlot(date, time) {
+    return slotDateTime(date, time).getTime() <= Date.now();
+  }
 
-function isPastSlot(date, time) {
-  return slotDateTime(date, time).getTime() <= Date.now();
-}
+  function isLateCancellation(date, time) {
+    const appointmentMs = slotDateTime(date, time).getTime();
+    const hoursUntilAppointment = (appointmentMs - Date.now()) / (1000 * 60 * 60);
+    return hoursUntilAppointment < 24;
+  }
 
   async function sendEmail({ to, subject, html }) {
     if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return;
@@ -73,116 +76,137 @@ function isPastSlot(date, time) {
       })
     });
   }
-if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
-const bookings = await env.DB.prepare(
-  `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid
-   FROM appointments
-   ORDER BY appointment_date ASC, appointment_time ASC`
-).all();
 
-  return new Response(JSON.stringify(bookings.results), {
-    headers: jsonHeaders
-  });
-}
+  if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
+    const bookings = await env.DB.prepare(
+      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid
+       FROM appointments
+       ORDER BY appointment_date ASC, appointment_time ASC`
+    ).all();
 
-if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
-  const body = await request.json();
-  const id = body.id;
-
-  if (!id) {
-    return new Response("Missing booking ID", { status: 400 });
+    return new Response(JSON.stringify(bookings.results), {
+      headers: jsonHeaders
+    });
   }
 
-  await env.DB.prepare(
-    "UPDATE appointments SET status = 'cancelled' WHERE id = ?"
-  ).bind(id).run();
+  if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
+    const body = await request.json();
+    const id = body.id;
 
-  return new Response(JSON.stringify({ success: true }), {
-    headers: jsonHeaders
-  });
-}
+    if (!id) return new Response("Missing booking ID", { status: 400 });
 
-if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
-  const id = url.searchParams.get("id");
-  const token = url.searchParams.get("token");
-
-  if (!id || !token) {
-    return new Response("Missing booking details", { status: 400 });
-  }
-
-const booking = await env.DB.prepare(
-  `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
-   FROM appointments
-   WHERE id = ? AND reschedule_token = ?`
-).bind(id, token).first();
-
-  if (!booking) {
-    return new Response("Booking not found", { status: 404 });
-  }
-
-  return new Response(JSON.stringify(booking), {
-    headers: jsonHeaders
-  });
-}
-
-if (request.method === "POST" && url.searchParams.get("reschedule") === "update") {
-  const body = await request.json();
-
-  const { id, token, appointment_date, appointment_time } = body;
-
-  if (!id || !token || !appointment_date || !appointment_time) {
-    return new Response("Missing reschedule details", { status: 400 });
-  }
-
-  const existingBooking = await env.DB.prepare(
-  `SELECT id, client_name, email, phone, booking_type, appointment_date, appointment_time, reschedule_token
-   FROM appointments
-   WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
-).bind(id, token).first();
-
-  if (!existingBooking) {
-    return new Response("Booking not found", { status: 404 });
-  }
-
-  const bookingType = existingBooking?.booking_type || "consultation";
-  const validSlots = getSlotsByType(bookingType, appointment_date);
-
-  if (!validSlots.includes(appointment_time)) {
-    return new Response("Invalid appointment time", { status: 400 });
-  }
-
-  if (isPastSlot(appointment_date, appointment_time)) {
-    return new Response("This appointment time has already passed", { status: 400 });
-  }
-
-  const clash = await env.DB.prepare(
-    `SELECT id FROM appointments
-     WHERE appointment_date = ?
-     AND appointment_time = ?
-     AND booking_type = ?
-     AND status = 'confirmed'
-     AND id != ?`
-  ).bind(appointment_date, appointment_time, bookingType, id).first();
-
-  if (clash) {
-    return new Response("That slot is already taken", { status: 409 });
-  }
-
-  try {
     await env.DB.prepare(
-      `UPDATE appointments
-       SET appointment_date = ?, appointment_time = ?
-       WHERE id = ? AND reschedule_token = ?`
-    ).bind(appointment_date, appointment_time, id, token).run();
+      "UPDATE appointments SET status = 'cancelled' WHERE id = ?"
+    ).bind(id).run();
 
-    const manageLink = `https://barebymarlese.com/reschedule.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
-await sendEmail({
-    to: env.TO_EMAIL,
-    subject: "Booking Amendment",
-    html: `
+    return new Response(JSON.stringify({ success: true }), {
+      headers: jsonHeaders
+    });
+  }
+
+  if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
+    const id = url.searchParams.get("id");
+    const token = url.searchParams.get("token");
+
+    if (!id || !token) {
+      return new Response("Missing booking details", { status: 400 });
+    }
+
+    const booking = await env.DB.prepare(
+      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
+       FROM appointments
+       WHERE id = ? AND reschedule_token = ?`
+    ).bind(id, token).first();
+
+    if (!booking) {
+      return new Response("Booking not found", { status: 404 });
+    }
+
+    return new Response(JSON.stringify(booking), {
+      headers: jsonHeaders
+    });
+  }
+
+  if (request.method === "GET" && url.searchParams.get("cancel") === "booking") {
+    const id = url.searchParams.get("id");
+    const token = url.searchParams.get("token");
+
+    if (!id || !token) {
+      return new Response("Missing booking details", { status: 400 });
+    }
+
+    const booking = await env.DB.prepare(
+      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
+       FROM appointments
+       WHERE id = ? AND reschedule_token = ?`
+    ).bind(id, token).first();
+
+    if (!booking) {
+      return new Response("Booking not found", { status: 404 });
+    }
+
+    return new Response(JSON.stringify(booking), {
+      headers: jsonHeaders
+    });
+  }
+
+  if (request.method === "POST" && url.searchParams.get("reschedule") === "update") {
+    const body = await request.json();
+    const { id, token, appointment_date, appointment_time } = body;
+
+    if (!id || !token || !appointment_date || !appointment_time) {
+      return new Response("Missing reschedule details", { status: 400 });
+    }
+
+    const existingBooking = await env.DB.prepare(
+      `SELECT id, client_name, email, phone, booking_type, appointment_date, appointment_time, reschedule_token
+       FROM appointments
+       WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
+    ).bind(id, token).first();
+
+    if (!existingBooking) {
+      return new Response("Booking not found", { status: 404 });
+    }
+
+    const bookingType = existingBooking.booking_type || "consultation";
+    const validSlots = getSlotsByType(bookingType, appointment_date);
+
+    if (!validSlots.includes(appointment_time)) {
+      return new Response("Invalid appointment time", { status: 400 });
+    }
+
+    if (isPastSlot(appointment_date, appointment_time)) {
+      return new Response("This appointment time has already passed", { status: 400 });
+    }
+
+    const clash = await env.DB.prepare(
+      `SELECT id FROM appointments
+       WHERE appointment_date = ?
+       AND appointment_time = ?
+       AND booking_type = ?
+       AND status = 'confirmed'
+       AND id != ?`
+    ).bind(appointment_date, appointment_time, bookingType, id).first();
+
+    if (clash) {
+      return new Response("That slot is already taken", { status: 409 });
+    }
+
+    try {
+      await env.DB.prepare(
+        `UPDATE appointments
+         SET appointment_date = ?, appointment_time = ?
+         WHERE id = ? AND reschedule_token = ?`
+      ).bind(appointment_date, appointment_time, id, token).run();
+
+      const manageLink = `https://barebymarlese.com/reschedule.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
+
+      await sendEmail({
+        to: env.TO_EMAIL,
+        subject: "Booking Amendment",
+        html: `
 <div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
-    
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
@@ -191,44 +215,43 @@ await sendEmail({
       BOOKING AMENDMENT
     </div>
 
-<p><strong>Client:</strong> ${escapeHtml(existingBooking.client_name || "Client")}</p>
-<p><strong>Email:</strong> ${escapeHtml(existingBooking.email || "Not provided")}</p>
-<p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
-<p><strong>Type:</strong> ${escapeHtml(existingBooking.booking_type || "consultation")}</p>
+    <p><strong>Client:</strong> ${escapeHtml(existingBooking.client_name || "Client")}</p>
+    <p><strong>Email:</strong> ${escapeHtml(existingBooking.email || "Not provided")}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
+    <p><strong>Type:</strong> ${escapeHtml(existingBooking.booking_type || "consultation")}</p>
 
-<br>
+    <br>
 
-<p><strong>Previous appointment</strong></p>
-<p><strong>Date:</strong> ${escapeHtml(existingBooking.appointment_date)}</p>
-<p><strong>Time:</strong> ${escapeHtml(existingBooking.appointment_time)}</p>
+    <p><strong>Previous appointment</strong></p>
+    <p><strong>Date:</strong> ${escapeHtml(existingBooking.appointment_date)}</p>
+    <p><strong>Time:</strong> ${escapeHtml(existingBooking.appointment_time)}</p>
 
-<br>
+    <br>
 
-<p><strong>New appointment</strong></p>
-<p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
-<p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
+    <p><strong>New appointment</strong></p>
+    <p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
+    <p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
 
-<div style="text-align:center;margin-top:18px;">
-  <a href="${manageLink}"
-     style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;">
-    Manage Booking
-  </a>
-</div>
-
+    <div style="text-align:center;margin-top:18px;">
+      <a href="${manageLink}"
+         style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;">
+        Manage Booking
+      </a>
+    </div>
   </div>
 </div>
-    `
-  });
-    if (existingBooking.email) {
-      await sendEmail({
-        to: existingBooking.email,
-        subject: existingBooking.booking_type === "treatment"
-          ? "Treatment Appointment Updated – BARE by Marlese"
-          : "Consultation & Patch Test Updated – BARE by Marlese",
-        html: `
+        `
+      });
+
+      if (existingBooking.email) {
+        await sendEmail({
+          to: existingBooking.email,
+          subject: existingBooking.booking_type === "treatment"
+            ? "Treatment Appointment Updated – BARE by Marlese"
+            : "Consultation & Patch Test Updated – BARE by Marlese",
+          html: `
 <div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
-
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
@@ -267,13 +290,123 @@ await sendEmail({
       <strong>Marlese</strong><br>
       BARE by Marlese
     </p>
+  </div>
+</div>
+          `
+        });
+      }
 
-    <p style="margin-top:12px;">
-      <a href="https://barebymarlese.com" style="color:#5e6959;text-decoration:none;">
-        barebymarlese.com
-      </a>
+      return new Response(JSON.stringify({
+        success: true,
+        rescheduleLink: manageLink,
+        emailSent: Boolean(existingBooking.email)
+      }), {
+        headers: jsonHeaders
+      });
+
+    } catch (e) {
+      return new Response("That slot is already taken", { status: 409 });
+    }
+  }
+
+  if (request.method === "POST" && url.searchParams.get("cancel") === "confirm") {
+    const body = await request.json();
+    const { id, token } = body;
+
+    if (!id || !token) {
+      return new Response("Missing cancellation details", { status: 400 });
+    }
+
+    const booking = await env.DB.prepare(
+      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, reschedule_token
+       FROM appointments
+       WHERE id = ? AND reschedule_token = ?`
+    ).bind(id, token).first();
+
+    if (!booking) {
+      return new Response("Booking not found", { status: 404 });
+    }
+
+    if (booking.status !== "confirmed") {
+      return new Response("This appointment has already been cancelled or can no longer be changed.", { status: 409 });
+    }
+
+    const lateCancellation = isLateCancellation(booking.appointment_date, booking.appointment_time);
+    const depositTransferable = !lateCancellation;
+
+    await env.DB.prepare(
+      `UPDATE appointments
+       SET status = 'cancelled'
+       WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
+    ).bind(id, token).run();
+
+    await sendEmail({
+      to: env.TO_EMAIL,
+      subject: "Booking Cancelled",
+      html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
+      BOOKING CANCELLED
+    </div>
+
+    <p><strong>Client:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
+    <p><strong>Email:</strong> ${escapeHtml(booking.email || "Not provided")}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(booking.phone || "Not provided")}</p>
+    <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
+
+    <br>
+
+    <p><strong>Cancelled appointment</strong></p>
+    <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+    <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+
+    <br>
+
+    <p><strong>Late cancellation:</strong> ${lateCancellation ? "Yes" : "No"}</p>
+    <p><strong>Deposit transferable:</strong> ${depositTransferable ? "Yes" : "No"}</p>
+  </div>
+</div>
+      `
+    });
+
+    if (booking.email) {
+      await sendEmail({
+        to: booking.email,
+        subject: "Appointment Cancelled – BARE by Marlese",
+        html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
+      APPOINTMENT CANCELLED
+    </div>
+
+    <p>Hi ${escapeHtml(booking.client_name || "there")},</p>
+
+    <p>Your appointment with <strong>BARE by Marlese</strong> has been cancelled.</p>
+
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+    </div>
+
+    <p>At least 24 hours' notice is required for your deposit to remain transferable.</p>
+
+    <p>If this was a mistake, please reply to this email.</p>
+
+    <p style="margin-top:20px;">
+      Kind regards,<br>
+      <strong>Marlese</strong><br>
+      BARE by Marlese
     </p>
-
   </div>
 </div>
         `
@@ -282,47 +415,44 @@ await sendEmail({
 
     return new Response(JSON.stringify({
       success: true,
-      rescheduleLink: manageLink,
-      emailSent: Boolean(existingBooking.email)
+      cancelled: true,
+      lateCancellation,
+      depositTransferable
     }), {
       headers: jsonHeaders
     });
-
-  } catch (e) {
-    return new Response("That slot is already taken", { status: 409 });
   }
-}
-  
-if (request.method === "GET") {
-  const date = url.searchParams.get("date");
 
-  if (!date) {
+  if (request.method === "GET") {
+    const date = url.searchParams.get("date");
+
+    if (!date) {
+      return new Response(JSON.stringify({
+        slots: [],
+        nextAvailable: null
+      }), { headers: jsonHeaders });
+    }
+
+    const bookingType = url.searchParams.get("type") || "consultation";
+    const allSlots = getSlotsByType(bookingType, date);
+
+    const booked = await env.DB.prepare(
+      "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND booking_type = ? AND status = 'confirmed'"
+    ).bind(date, bookingType).all();
+
+    const bookedTimes = booked.results.map(row => row.appointment_time);
+
+    const availableSlots = allSlots.filter(slot => {
+      return !bookedTimes.includes(slot) && !isPastSlot(date, slot);
+    });
+
+    const nextAvailable = availableSlots.length ? availableSlots[0] : null;
+
     return new Response(JSON.stringify({
-      slots: [],
-      nextAvailable: null
+      slots: availableSlots,
+      nextAvailable
     }), { headers: jsonHeaders });
   }
-
-  const bookingType = url.searchParams.get("type") || "consultation";
-  const allSlots = getSlotsByType(bookingType, date);
-
-  const booked = await env.DB.prepare(
-    "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND booking_type = ? AND status = 'confirmed'"
-).bind(date, bookingType).all();
-
-  const bookedTimes = booked.results.map(row => row.appointment_time);
-
-  const availableSlots = allSlots.filter(slot => {
-    return !bookedTimes.includes(slot) && !isPastSlot(date, slot);
-  });
-
-  const nextAvailable = availableSlots.length ? availableSlots[0] : null;
-
-  return new Response(JSON.stringify({
-    slots: availableSlots,
-    nextAvailable
-  }), { headers: jsonHeaders });
-}
 
   if (request.method === "POST") {
     const body = await request.json();
@@ -335,50 +465,51 @@ if (request.method === "GET") {
     const bookingType = body.booking_type || "consultation";
     const packageType = body.package_type || null;
     const amountPaid = body.amount_paid || null;
+
     const packageDisplay = packageType
-  ? packageType.charAt(0).toUpperCase() + packageType.slice(1)
-  : null;
+      ? packageType.charAt(0).toUpperCase() + packageType.slice(1)
+      : null;
 
-const priceDisplay = amountPaid
-  ? `£${amountPaid}`
-  : null;
-if (!appointmentDate || !appointmentTime) {
-  return new Response("Missing appointment date or time", { status: 400 });
-}
+    const priceDisplay = amountPaid ? `£${amountPaid}` : null;
 
-const validSlots = getSlotsByType(bookingType, appointmentDate);
+    if (!appointmentDate || !appointmentTime) {
+      return new Response("Missing appointment date or time", { status: 400 });
+    }
 
-if (!validSlots.includes(appointmentTime)) {
-  return new Response("Invalid appointment time", { status: 400 });
-}
+    const validSlots = getSlotsByType(bookingType, appointmentDate);
 
-if (isPastSlot(appointmentDate, appointmentTime)) {
-  return new Response("This appointment time has already passed", { status: 400 });
-}
+    if (!validSlots.includes(appointmentTime)) {
+      return new Response("Invalid appointment time", { status: 400 });
+    }
 
-try {
-const rescheduleToken = crypto.randomUUID();
+    if (isPastSlot(appointmentDate, appointmentTime)) {
+      return new Response("This appointment time has already passed", { status: 400 });
+    }
 
-const insertResult = await env.DB.prepare(
-  `INSERT INTO appointments
-  (client_name, email, phone, appointment_date, appointment_time, status, reschedule_token, booking_type, package_type, amount_paid)
-  VALUES (?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?)`
-)
-.bind(
-  clientName,
-  email,
-  phone,
-  appointmentDate,
-  appointmentTime,
-  rescheduleToken,
-  bookingType,
-  packageType,
-  amountPaid
-)
-.run();
+    try {
+      const rescheduleToken = crypto.randomUUID();
 
-const bookingId = insertResult.meta.last_row_id;
-const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
+      const insertResult = await env.DB.prepare(
+        `INSERT INTO appointments
+        (client_name, email, phone, appointment_date, appointment_time, status, reschedule_token, booking_type, package_type, amount_paid)
+        VALUES (?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?)`
+      )
+      .bind(
+        clientName,
+        email,
+        phone,
+        appointmentDate,
+        appointmentTime,
+        rescheduleToken,
+        bookingType,
+        packageType,
+        amountPaid
+      )
+      .run();
+
+      const bookingId = insertResult.meta.last_row_id;
+      const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
+      const cancelLink = `https://barebymarlese.com/cancel.html?id=${bookingId}&token=${rescheduleToken}`;
 
       const safeName = escapeHtml(clientName);
       const safeEmail = escapeHtml(email || "Not provided");
@@ -389,8 +520,8 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
       await sendEmail({
         to: env.TO_EMAIL,
         subject: bookingType === "treatment"
-        ? "New BARE by Marlese treatment booking"
-        : "New BARE by Marlese consultation booking",
+          ? "New BARE by Marlese treatment booking"
+          : "New BARE by Marlese consultation booking",
         html: `
 <div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
@@ -402,23 +533,23 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
       NEW BOOKING RECEIVED
     </div>
 
-<div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
-  <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
 
-  ${bookingType === "treatment" && packageDisplay
-    ? `<p><strong>Package:</strong> ${packageDisplay} Tattoo Removal</p>`
-    : ""}
+      ${bookingType === "treatment" && packageDisplay
+        ? `<p><strong>Package:</strong> ${packageDisplay} Tattoo Removal</p>`
+        : ""}
 
-  ${bookingType === "treatment" && priceDisplay
-    ? `<p><strong>Amount Paid:</strong> ${priceDisplay}</p>`
-    : ""}
+      ${bookingType === "treatment" && priceDisplay
+        ? `<p><strong>Amount Paid:</strong> ${priceDisplay}</p>`
+        : ""}
 
-  <p><strong>Name:</strong> ${safeName}</p>
-  <p><strong>Email:</strong> ${safeEmail}</p>
-  <p><strong>Phone:</strong> ${safePhone}</p>
-  <p><strong>Date:</strong> ${safeDate}</p>
-  <p><strong>Time:</strong> ${safeTime}</p>
-</div>
+      <p><strong>Name:</strong> ${safeName}</p>
+      <p><strong>Email:</strong> ${safeEmail}</p>
+      <p><strong>Phone:</strong> ${safePhone}</p>
+      <p><strong>Date:</strong> ${safeDate}</p>
+      <p><strong>Time:</strong> ${safeTime}</p>
+    </div>
 
     <p>This appointment has been saved in your Cloudflare D1 booking database.</p>
   </div>
@@ -427,54 +558,51 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
       });
 
       if (email) {
-        const replyAddress = env.REPLY_TO_EMAIL || env.TO_EMAIL;
-
         await sendEmail({
           to: email,
           subject: bookingType === "treatment"
-          ? "Treatment Booking Confirmed – BARE by Marlese"
-          : "Consultation & Patch Test Confirmed – BARE by Marlese",
+            ? "Treatment Booking Confirmed – BARE by Marlese"
+            : "Consultation & Patch Test Confirmed – BARE by Marlese",
           html: `
 <div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
-
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
 
     <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
-  ${bookingType === "treatment" ? "TREATMENT BOOKING CONFIRMED" : "CONSULTATION & PATCH TEST CONFIRMED"}
-</div>
+      ${bookingType === "treatment" ? "TREATMENT BOOKING CONFIRMED" : "CONSULTATION & PATCH TEST CONFIRMED"}
+    </div>
 
     <p>Hi ${safeName},</p>
 
     ${bookingType === "treatment"
-  ? `<p>Thank you for booking with <strong>BARE by Marlese</strong>. Your treatment appointment has been confirmed.</p>`
-  : `<p>Thank you for completing your consultation form and booking your consultation & patch test with <strong>BARE by Marlese</strong>.</p>
-     <p>Your consultation and patch test is confirmed for <strong>${safeDate}</strong> at <strong>${safeTime}</strong>.</p>
-     <p>Your details have been received and will be reviewed thoroughly before your appointment.</p>`
-}
+      ? `<p>Thank you for booking with <strong>BARE by Marlese</strong>. Your treatment appointment has been confirmed.</p>`
+      : `<p>Thank you for completing your consultation form and booking your consultation & patch test with <strong>BARE by Marlese</strong>.</p>
+         <p>Your consultation and patch test is confirmed for <strong>${safeDate}</strong> at <strong>${safeTime}</strong>.</p>
+         <p>Your details have been received and will be reviewed thoroughly before your appointment.</p>`
+    }
 
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
-  <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
+      <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
 
-  ${bookingType === "treatment" && packageDisplay
-    ? `<p><strong>Package:</strong> ${packageDisplay} Tattoo Removal</p>`
-    : ""}
+      ${bookingType === "treatment" && packageDisplay
+        ? `<p><strong>Package:</strong> ${packageDisplay} Tattoo Removal</p>`
+        : ""}
 
-  ${bookingType === "treatment" && priceDisplay
-    ? `<p><strong>Amount Paid:</strong> ${priceDisplay}</p>`
-    : ""}
+      ${bookingType === "treatment" && priceDisplay
+        ? `<p><strong>Amount Paid:</strong> ${priceDisplay}</p>`
+        : ""}
 
-  <p><strong>Date:</strong> ${safeDate}</p>
-  <p><strong>Time:</strong> ${safeTime}</p>
-  <p><strong>Phone:</strong> ${safePhone}</p>
-</div>
+      <p><strong>Date:</strong> ${safeDate}</p>
+      <p><strong>Time:</strong> ${safeTime}</p>
+      <p><strong>Phone:</strong> ${safePhone}</p>
+    </div>
 
     ${bookingType === "treatment"
-  ? `<p>Your treatment package has been booked and paid for.</p>`
-  : `<p>Your £30 deposit will be deducted from your treatment cost.</p>`
-}
+      ? `<p>Your treatment package has been booked and paid for.</p>`
+      : `<p>Your £30 deposit will be deducted from your treatment cost.</p>`
+    }
 
     <p>If you need to reschedule or cancel, please use one of the links below. At least 24 hours' notice is required for your deposit to remain transferable.</p>
 
@@ -484,9 +612,9 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
         Manage Booking
       </a>
 
-      <a href="mailto:${replyAddress}?subject=Cancel appointment - ${safeDate} ${safeTime}"
+      <a href="${cancelLink}"
          style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
-        Cancel
+        Cancel Appointment
       </a>
     </div>
 
@@ -497,13 +625,6 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
       <strong>Marlese</strong><br>
       BARE by Marlese
     </p>
-
-    <p style="margin-top:12px;">
-      <a href="https://barebymarlese.com" style="color:#5e6959;text-decoration:none;">
-        barebymarlese.com
-      </a>
-    </p>
-
   </div>
 </div>
           `
@@ -511,14 +632,15 @@ const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId
       }
 
       return new Response(JSON.stringify({
-  success: true,
-  bookingId,
-  rescheduleLink,
-  emailSent: Boolean(email)
-}), {
-  status: 200,
-  headers: jsonHeaders
-});
+        success: true,
+        bookingId,
+        rescheduleLink,
+        cancelLink,
+        emailSent: Boolean(email)
+      }), {
+        status: 200,
+        headers: jsonHeaders
+      });
 
     } catch (e) {
       return new Response("Slot already taken", { status: 409 });
