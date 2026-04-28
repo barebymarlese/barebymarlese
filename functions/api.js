@@ -404,7 +404,9 @@ export async function onRequest(context) {
       <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
     </div>
 
-    <p>At least 24 hours' notice is required for your deposit to remain transferable.</p>
+    <p>At least 24 hours' notice is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from your bundle.</p>
+
+    <p>Treatment bundle sessions are valid for 12 months from the date of purchase. Cancelling or delaying appointments does not extend the validity period of your bundle. Please ensure enough time remains to complete your sessions within the 12-month period.</p>
 
     <p>If this was a mistake, please reply to this email.</p>
 
