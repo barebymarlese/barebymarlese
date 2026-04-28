@@ -200,6 +200,7 @@ export async function onRequest(context) {
       ).bind(appointment_date, appointment_time, id, token).run();
 
       const manageLink = `https://barebymarlese.com/reschedule.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
+      const cancelLink = `https://barebymarlese.com/cancel.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
 
       await sendEmail({
         to: env.TO_EMAIL,
