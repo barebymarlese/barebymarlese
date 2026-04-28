@@ -275,14 +275,19 @@ export async function onRequest(context) {
       <p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
     </div>
 
-    <p>You can manage your booking using the button below.</p>
+    <p>You can manage your booking using the buttons below.</p>
 
-    <div style="text-align:center;margin:22px 0;">
-      <a href="${manageLink}"
-         style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
-        Manage Booking
-      </a>
-    </div>
+<div style="text-align:center;margin:22px 0;">
+  <a href="${manageLink}"
+     style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
+    Manage Booking
+  </a>
+
+  <a href="${cancelLink}"
+     style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
+    Cancel Appointment
+  </a>
+</div>
 
     <p>If you have any questions, simply reply to this email.</p>
 
