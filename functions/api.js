@@ -195,6 +195,8 @@ await sendEmail({
     <p><strong>Email:</strong> ${escapeHtml(existingBooking.email || "Not provided")}</p>
     <p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
     <p><strong>Type:</strong> ${escapeHtml(existingBooking.booking_type || "consultation")}</p>
+    <p><strong>Old date:</strong> ${escapeHtml(existingBooking.appointment_date)}</p>
+    <p><strong>Old time:</strong> ${escapeHtml(existingBooking.appointment_time)}</p>
     <p><strong>New date:</strong> ${escapeHtml(appointment_date)}</p>
     <p><strong>New time:</strong> ${escapeHtml(appointment_time)}</p>
 
