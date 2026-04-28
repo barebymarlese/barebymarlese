@@ -135,10 +135,10 @@ if (request.method === "POST" && url.searchParams.get("reschedule") === "update"
   }
 
   const existingBooking = await env.DB.prepare(
-    `SELECT id, client_name, email, phone, booking_type, reschedule_token
-     FROM appointments
-     WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
-  ).bind(id, token).first();
+  `SELECT id, client_name, email, phone, booking_type, appointment_date, appointment_time, reschedule_token
+   FROM appointments
+   WHERE id = ? AND reschedule_token = ? AND status = 'confirmed'`
+).bind(id, token).first();
 
   if (!existingBooking) {
     return new Response("Booking not found", { status: 404 });
