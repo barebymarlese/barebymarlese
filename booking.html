@@ -338,17 +338,19 @@ async function bookSlot(date, time) {
   status.className = "";
 
   try {
-    const res = await fetch("/api", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({
-        client_name: name,
-        email: email,
-        phone: phone,
-        appointment_date: date,
-        appointment_time: time
-      })
-    });
+  const res = await fetch("/api", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      client_name: name,
+      email: email,
+      phone: phone,
+      appointment_date: date,
+      appointment_time: time,
+      booking_type: "consultation",
+      amount_paid: 30
+    })
+  });
 
    if (res.ok) {
   document.getElementById("available-slots").innerHTML = "";
