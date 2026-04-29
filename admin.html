@@ -294,7 +294,29 @@ function escapeHtml(value){
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
+  
+function getWhenText(date, time) {
+  const now = new Date();
+  const appt = new Date(`${date}T${time}:00`);
 
+  const diffHours = (appt - now) / (1000 * 60 * 60);
+
+  const today = now.toISOString().slice(0, 10);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+
+  if (date === today) {
+    return diffHours < 6 ? "later today" : "today";
+  }
+
+  if (date === tomorrowStr) {
+    return "tomorrow";
+  }
+
+  return `on ${date}`;
+}
+  
 function formatWhatsAppPhone(phone){
   let cleaned = String(phone || "").trim().replace(/[\s().-]/g, "");
 
