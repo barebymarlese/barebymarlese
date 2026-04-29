@@ -542,6 +542,12 @@ function formatPackageType(packageType){
   return String(packageType).replaceAll("_", " ").replace(/\b\w/g, c => c.toUpperCase());
 }
 
+function formatTattooSize(size){
+  if (!size) return "";
+  if (size === "xl") return "XL Tattoo";
+  return `${String(size).charAt(0).toUpperCase() + String(size).slice(1)} Tattoo`;
+}
+
 function buildPackageInfo(booking){
   if (booking.booking_type !== "treatment") {
     return `<span class="action-note">—</span>`;
@@ -550,6 +556,7 @@ function buildPackageInfo(booking){
   return `
     <div class="package-text">
       ${escapeHtml(formatPackageType(booking.package_type))}
+      ${booking.tattoo_size ? `<br>${escapeHtml(formatTattooSize(booking.tattoo_size))}` : ""}
       <br>
       <span class="action-note">${escapeHtml(booking.package_status || "none")}</span>
     </div>
