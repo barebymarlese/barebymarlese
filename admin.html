@@ -503,11 +503,16 @@ async function cancelBooking(id){
 
 async function markReminderSent(id){
   try {
-    await fetch("/api?admin=reminder-sent", {
+    const res = await fetch("/api?admin=reminder-sent", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ id })
     });
+
+    if (!res.ok) {
+      console.error("Failed to mark reminder sent");
+      return;
+    }
 
     setTimeout(loadBookings, 500);
 
