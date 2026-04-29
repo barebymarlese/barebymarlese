@@ -151,8 +151,8 @@ export async function onRequest(context) {
   `).bind(id).run();
 
   return new Response(JSON.stringify({ success: true }), {
-    headers: { "Content-Type": "application/json" }
-  });
+  headers: jsonHeaders
+});
 }
   
   if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
