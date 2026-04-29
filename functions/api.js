@@ -110,19 +110,95 @@ export async function onRequest(context) {
   }
 
   if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
-    const body = await request.json();
-    const id = body.id;
+  const body = await request.json();
+  const id = body.id;
 
-    if (!id) return new Response("Missing booking ID", { status: 400 });
+  if (!id) return new Response("Missing booking ID", { status: 400 });
 
-    await env.DB.prepare(
-      "UPDATE appointments SET status = 'cancelled' WHERE id = ?"
-    ).bind(id).run();
+  const booking = await env.DB.prepare(
+    `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, reschedule_token
+     FROM appointments
+     WHERE id = ?`
+  ).bind(id).first();
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: jsonHeaders
+  if (!booking) {
+    return new Response("Booking not found", { status: 404 });
+  }
+
+  if (booking.status === "cancelled") {
+    return new Response("This appointment has already been cancelled.", { status: 409 });
+  }
+
+  const lateCancellation = isLateCancellation(booking.appointment_date, booking.appointment_time);
+  const depositTransferable = !lateCancellation;
+
+  await env.DB.prepare(
+    `UPDATE appointments
+     SET status = 'cancelled'
+     WHERE id = ?`
+  ).bind(id).run();
+
+  await sendEmail({
+    to: env.TO_EMAIL,
+    subject: "Booking Cancelled",
+    html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">BOOKING CANCELLED BY ADMIN</div>
+    <p><strong>Client:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
+    <p><strong>Email:</strong> ${escapeHtml(booking.email || "Not provided")}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(booking.phone || "Not provided")}</p>
+    <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
+    <br>
+    <p><strong>Cancelled appointment</strong></p>
+    <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+    <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+    <br>
+    <p><strong>Late cancellation:</strong> ${lateCancellation ? "Yes" : "No"}</p>
+    <p><strong>Deposit transferable:</strong> ${depositTransferable ? "Yes" : "No"}</p>
+  </div>
+</div>`
+  });
+
+  if (booking.email) {
+    await sendEmail({
+      to: booking.email,
+      subject: "Appointment Cancelled – BARE by Marlese",
+      html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">APPOINTMENT CANCELLED</div>
+    <p>Hi ${escapeHtml(booking.client_name || "there")},</p>
+    <p>Your appointment with <strong>BARE by Marlese</strong> has been cancelled.</p>
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+    </div>
+    <p>A minimum of 24 hours’ notice is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from your bundle.</p>
+    <p>Treatment bundle sessions are valid for 12 months from the date of purchase. Cancelling or delaying appointments does not extend the validity period.</p>
+    <p>If your appointment relates to a treatment package and you wish to rebook, please reply to this email.</p>
+    <p style="margin-top:20px;">Kind regards,<br><strong>Marlese</strong><br>BARE by Marlese</p>
+  </div>
+</div>`
     });
   }
+
+  return new Response(JSON.stringify({
+    success: true,
+    cancelled: true,
+    lateCancellation,
+    depositTransferable,
+    clientEmailSent: Boolean(booking.email)
+  }), {
+    headers: jsonHeaders
+  });
+}
 
   if (request.method === "POST" && url.searchParams.get("admin") === "reminder-sent") {
     const body = await request.json();
