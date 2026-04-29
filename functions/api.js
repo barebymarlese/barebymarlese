@@ -78,11 +78,11 @@ export async function onRequest(context) {
   }
 
   if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
-    const bookings = await env.DB.prepare(
-      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid
-       FROM appointments
-       ORDER BY appointment_date ASC, appointment_time ASC`
-    ).all();
+  const bookings = await env.DB.prepare(
+    `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid, reschedule_token
+     FROM appointments
+     ORDER BY appointment_date ASC, appointment_time ASC`
+  ).all();
 
     return new Response(JSON.stringify(bookings.results), {
       headers: jsonHeaders
