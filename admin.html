@@ -467,6 +467,55 @@ function buildAftercareStatus(booking){
 
   return `<span style="color:#9b2f2f;font-weight:700;">✕ Not sent</span>`;
 }
+
+function formatPaymentStatus(status){
+  if (!status) return "Unpaid";
+  return String(status).replaceAll("_", " ");
+}
+
+function buildPaymentBadge(booking){
+  const status = booking.payment_status || "unpaid";
+
+  if (status === "paid") {
+    return `<span class="badge paid">Paid</span>`;
+  }
+
+  if (status === "deposit_paid") {
+    return `<span class="badge deposit">Deposit paid</span>`;
+  }
+
+  return `<span class="badge unpaid">Unpaid</span>`;
+}
+
+function formatPackageType(packageType){
+  if (!packageType) return "—";
+  return String(packageType).replaceAll("_", " ").replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function buildPackageInfo(booking){
+  if (booking.booking_type !== "treatment") {
+    return `<span class="action-note">—</span>`;
+  }
+
+  return `
+    <div class="package-text">
+      ${escapeHtml(formatPackageType(booking.package_type))}
+      <br>
+      <span class="action-note">${escapeHtml(booking.package_status || "none")}</span>
+    </div>
+  `;
+}
+
+function buildSessionInfo(booking){
+  if (booking.booking_type !== "treatment") {
+    return `<span class="action-note">—</span>`;
+  }
+
+  const used = Number(booking.sessions_used || 0);
+  const total = Number(booking.sessions_total || 0);
+
+  return `<span class="package-text">${used}/${total} used</span>`;
+}
   
 async function loadBookings(){
   const message = document.getElementById("message");
