@@ -183,6 +183,28 @@ if (request.method === "POST" && url.searchParams.get("admin") === "use-session"
     headers: jsonHeaders
   });
 }
+
+if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") {
+  const body = await request.json();
+  const id = body.id;
+  const amountPaid = Number(body.amount_paid || 0);
+
+  if (!id) return new Response("Missing booking ID", { status: 400 });
+
+  await env.DB.prepare(`
+    UPDATE appointments
+    SET payment_status = 'paid',
+        amount_paid = CASE
+          WHEN ? > 0 THEN ?
+          ELSE amount_paid
+        END
+    WHERE id = ?
+  `).bind(amountPaid, amountPaid, id).run();
+
+  return new Response(JSON.stringify({ success: true }), {
+    headers: jsonHeaders
+  });
+}
   
   if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
     const id = url.searchParams.get("id");
