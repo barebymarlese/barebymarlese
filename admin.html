@@ -418,7 +418,19 @@ function buildWhatsAppAction(booking){
     </a>
   `;
 }
+  
+function buildAftercareStatus(booking){
+  if (booking.booking_type !== "treatment") {
+    return `<span class="action-note">—</span>`;
+  }
 
+  if (booking.aftercare_sent === "yes") {
+    return `<span style="color:#2f7d32;font-weight:700;">✓ Sent</span>`;
+  }
+
+  return `<span style="color:#9b2f2f;font-weight:700;">✕ Not sent</span>`;
+}
+  
 async function loadBookings(){
   const message = document.getElementById("message");
   const table = document.getElementById("bookings-table");
