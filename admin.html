@@ -294,11 +294,10 @@ function escapeHtml(value){
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
-  
-function getWhenText(date, time) {
+
+function getWhenText(date, time){
   const now = new Date();
   const appt = new Date(`${date}T${time}:00`);
-
   const diffHours = (appt - now) / (1000 * 60 * 60);
 
   const today = now.toISOString().slice(0, 10);
@@ -316,23 +315,15 @@ function getWhenText(date, time) {
 
   return `on ${date}`;
 }
-  
+
 function formatWhatsAppPhone(phone){
   let cleaned = String(phone || "").trim().replace(/[\s().-]/g, "");
 
   if (!cleaned) return "";
 
-  if (cleaned.startsWith("00")) {
-    cleaned = cleaned.slice(2);
-  }
-
-  if (cleaned.startsWith("+")) {
-    cleaned = cleaned.slice(1);
-  }
-
-  if (cleaned.startsWith("07")) {
-    cleaned = "44" + cleaned.slice(1);
-  }
+  if (cleaned.startsWith("00")) cleaned = cleaned.slice(2);
+  if (cleaned.startsWith("+")) cleaned = cleaned.slice(1);
+  if (cleaned.startsWith("07")) cleaned = "44" + cleaned.slice(1);
 
   return cleaned.replace(/[^0-9]/g, "");
 }
@@ -342,48 +333,7 @@ function getAppointmentDateTime(booking){
   const dateTime = new Date(`${booking.appointment_date}T${booking.appointment_time}:00`);
   return Number.isNaN(dateTime.getTime()) ? null : dateTime;
 }
-function getWhenText(date, time) {
-  const now = new Date();
-  const appt = new Date(`${date}T${time}:00`);
 
-  const diffHours = (appt - now) / (1000 * 60 * 60);
-
-  const today = now.toISOString().slice(0, 10);
-  const tomorrow = new Date(now);
-  tomorrow.setDate(now.getDate() + 1);
-  const tomorrowStr = tomorrow.toISOString().slice(0, 10);
-
-  if (date === today) {
-    return diffHours < 6 ? "later today" : "today";
-  }
-
-  if (date === tomorrowStr) {
-    return "tomorrow";
-  }
-
-  return `on ${date}`;
-}
-
-function buildWhatsAppMessage(booking) {
-  const when = getWhenText(
-    booking.appointment_date,
-    booking.appointment_time
-  );
-
-  return `Hi ${booking.client_name},
-
-Just a reminder your consultation & patch test with BARE by Marlese is ${when}.
-
-Date: ${booking.appointment_date}
-Time: ${booking.appointment_time}
-
-If you need to reschedule:
-https://barebymarlese.com/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}
-
-Kind regards,
-Marlese
-BARE by Marlese`;
-}
 function isWhatsAppReminderWindow(booking){
   const appointment = getAppointmentDateTime(booking);
   if (!appointment) return false;
@@ -396,14 +346,18 @@ function isWhatsAppReminderWindow(booking){
 
 function buildWhatsAppMessage(booking){
   const name = booking.client_name || "there";
-  const type = booking.booking_type === "treatment" ? "treatment appointment" : "consultation & patch test";
+  const when = getWhenText(booking.appointment_date, booking.appointment_time);
+  const type = booking.booking_type === "treatment"
+    ? "treatment appointment"
+    : "consultation & patch test";
+
   const manageLink = booking.reschedule_token
     ? `https://barebymarlese.com/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
     : "https://barebymarlese.com";
 
   return `Hi ${name},
 
-Just a reminder that your ${type} with BARE by Marlese is tomorrow / soon.
+Just a reminder your ${type} with BARE by Marlese is ${when}.
 
 Date: ${booking.appointment_date}
 Time: ${booking.appointment_time}
@@ -434,6 +388,7 @@ function buildWhatsAppAction(booking){
   }
 
   const message = encodeURIComponent(buildWhatsAppMessage(booking));
+
   return `
     <a class="btn btn-whatsapp ready" href="https://wa.me/${phone}?text=${message}" target="_blank" rel="noopener">
       Send WhatsApp
@@ -447,6 +402,7 @@ async function loadBookings(){
   const body = document.getElementById("bookings-body");
   const summary = document.getElementById("summary-pill");
 
+  message.style.display = "block";
   message.textContent = "Loading bookings...";
   summary.textContent = "Loading bookings...";
   table.style.display = "none";
@@ -454,6 +410,11 @@ async function loadBookings(){
 
   try{
     const res = await fetch("/api?admin=bookings");
+
+    if (!res.ok) {
+      throw new Error("Could not load bookings");
+    }
+
     const bookings = await res.json();
 
     if(!bookings.length){
