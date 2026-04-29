@@ -631,6 +631,24 @@ async function markReminderSent(id){
   }
 }
 
+async function useSession(id){
+  if(!confirm("Mark one session as used?")){
+    return;
+  }
+
+  const res = await fetch("/api?admin=use-session", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id})
+  });
+
+  if(res.ok){
+    loadBookings();
+  }else{
+    alert("Could not update session.");
+  }
+}
+
 loadBookings();
 </script>
 </body>
