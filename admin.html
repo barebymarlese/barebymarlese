@@ -146,6 +146,11 @@ h1{
 .btn-primary{background:var(--olive);color:#fff}
 .btn-secondary{background:#eceee9;color:var(--ink);border:1px solid rgba(94,105,89,.12)}
 .btn-cancel{background:#878274;color:#fff;min-height:38px;padding:9px 12px;border-radius:10px;font-size:13px}
+.btn-whatsapp{background:#5e6959;color:#fff;min-height:38px;padding:9px 12px;border-radius:10px;font-size:13px;margin-bottom:6px}
+.btn-whatsapp.ready{background:#25D366;color:#fff}
+.btn-whatsapp[aria-disabled="true"]{opacity:.45;cursor:not-allowed;pointer-events:none;background:#eceee9;color:rgba(36,34,26,.58);border:1px solid rgba(94,105,89,.12)}
+.action-stack{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.action-note{font-size:11px;line-height:1.4;color:rgba(36,34,26,.58)}
 
 .content{
   padding:26px;
@@ -243,7 +248,7 @@ footer{
       <div class="hero">
         <span class="kicker">Private Admin</span>
         <h1>Bookings Dashboard</h1>
-        <p class="sub">View confirmed appointments, client contact details and cancel bookings when needed.</p>
+        <p class="sub">View bookings, client contact details, send manual WhatsApp reminders, and cancel bookings when needed.</p>
       </div>
 
       <div class="toolbar">
@@ -265,6 +270,7 @@ footer{
                 <th>Contact</th>
                 <th>Date</th>
                 <th>Time</th>
+                <th>Type</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -287,6 +293,89 @@ function escapeHtml(value){
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function formatWhatsAppPhone(phone){
+  let cleaned = String(phone || "").trim().replace(/[\s().-]/g, "");
+
+  if (!cleaned) return "";
+
+  if (cleaned.startsWith("00")) {
+    cleaned = cleaned.slice(2);
+  }
+
+  if (cleaned.startsWith("+")) {
+    cleaned = cleaned.slice(1);
+  }
+
+  if (cleaned.startsWith("07")) {
+    cleaned = "44" + cleaned.slice(1);
+  }
+
+  return cleaned.replace(/[^0-9]/g, "");
+}
+
+function getAppointmentDateTime(booking){
+  if (!booking.appointment_date || !booking.appointment_time) return null;
+  const dateTime = new Date(`${booking.appointment_date}T${booking.appointment_time}:00`);
+  return Number.isNaN(dateTime.getTime()) ? null : dateTime;
+}
+
+function isWhatsAppReminderWindow(booking){
+  const appointment = getAppointmentDateTime(booking);
+  if (!appointment) return false;
+
+  const now = new Date();
+  const hoursUntil = (appointment.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+  return hoursUntil > 0 && hoursUntil <= 24;
+}
+
+function buildWhatsAppMessage(booking){
+  const name = booking.client_name || "there";
+  const type = booking.booking_type === "treatment" ? "treatment appointment" : "consultation & patch test";
+  const manageLink = booking.reschedule_token
+    ? `https://barebymarlese.com/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
+    : "https://barebymarlese.com";
+
+  return `Hi ${name},
+
+Just a reminder that your ${type} with BARE by Marlese is tomorrow / soon.
+
+Date: ${booking.appointment_date}
+Time: ${booking.appointment_time}
+
+If you need to reschedule, please use this link:
+${manageLink}
+
+Kind regards,
+Marlese
+BARE by Marlese`;
+}
+
+function buildWhatsAppAction(booking){
+  const isConfirmed = booking.status === "confirmed";
+  const phone = formatWhatsAppPhone(booking.phone);
+  const isDue = isWhatsAppReminderWindow(booking);
+
+  if (!isConfirmed) {
+    return `<span class="action-note">WhatsApp unavailable</span>`;
+  }
+
+  if (!phone) {
+    return `<span class="action-note">No phone number</span>`;
+  }
+
+  if (!isDue) {
+    return `<a class="btn btn-whatsapp" aria-disabled="true">WhatsApp 24h before</a>`;
+  }
+
+  const message = encodeURIComponent(buildWhatsAppMessage(booking));
+  return `
+    <a class="btn btn-whatsapp ready" href="https://wa.me/${phone}?text=${message}" target="_blank" rel="noopener">
+      Send WhatsApp
+    </a>
+  `;
 }
 
 async function loadBookings(){
@@ -326,8 +415,14 @@ async function loadBookings(){
         </td>
         <td class="date-time">${escapeHtml(booking.appointment_date)}</td>
         <td class="date-time">${escapeHtml(booking.appointment_time)}</td>
+        <td>${escapeHtml(booking.booking_type || "consultation")}</td>
         <td><span class="status ${isCancelled ? "cancelled" : ""}">${escapeHtml(booking.status)}</span></td>
-        <td>${isCancelled ? "—" : `<button class="btn btn-cancel" onclick="cancelBooking(${Number(booking.id)})">Cancel</button>`}</td>
+        <td>
+          <div class="action-stack">
+            ${buildWhatsAppAction(booking)}
+            ${isCancelled ? "—" : `<button class="btn btn-cancel" onclick="cancelBooking(${Number(booking.id)})">Cancel</button>`}
+          </div>
+        </td>
       `;
 
       body.appendChild(row);
