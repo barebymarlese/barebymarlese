@@ -654,7 +654,37 @@ async function useSession(id){
     alert("Could not update session.");
   }
 }
+async function markPaid(id){
+  const amount = prompt("Amount paid? Enter pounds only, e.g. 30 or 300");
 
+  if(amount === null){
+    return;
+  }
+
+  const amountPaid = Number(amount);
+
+  if(Number.isNaN(amountPaid) || amountPaid < 0){
+    alert("Please enter a valid amount.");
+    return;
+  }
+
+  const res = await fetch("/api?admin=mark-paid", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      id,
+      amount_paid: amountPaid
+    })
+  });
+
+  if(res.ok){
+    loadBookings();
+  }else{
+    alert("Could not mark payment as paid.");
+  }
+}
+
+loadBookings();
 loadBookings();
 </script>
 </body>
