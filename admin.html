@@ -476,6 +476,7 @@ async function loadBookings(){
         <td class="date-time">${escapeHtml(booking.appointment_time)}</td>
         <td>${escapeHtml(booking.booking_type || "consultation")}</td>
         <td><span class="status ${isCancelled ? "cancelled" : ""}">${escapeHtml(booking.status || "confirmed")}</span></td>
+        <td>${buildAftercareStatus(booking)}</td>
         <td>
           <div class="action-stack">
             ${buildWhatsAppAction(booking)}
