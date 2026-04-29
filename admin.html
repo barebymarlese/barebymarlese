@@ -577,7 +577,14 @@ async function loadBookings(){
     ${booking.booking_type === "treatment" && booking.package_status === "completed"
   ? `<span class="action-note">Package completed</span>`
   : ""}  
+  
+    ${booking.payment_status !== "paid" && !isCancelled
+  ? `<button class="btn btn-secondary" onclick="markPaid(${Number(booking.id)})">Mark Paid</button>`
+  : ""}
 
+${isCancelled || booking.package_status === "completed"
+  ? "—"
+  : `<button class="btn btn-cancel" onclick="cancelBooking(${Number(booking.id)})">Cancel</button>`}
     ${isCancelled || booking.package_status === "completed"
   ? "—"
   : `<button class="btn btn-cancel" onclick="cancelBooking(${Number(booking.id)})">Cancel</button>`}
