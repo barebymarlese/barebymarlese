@@ -342,7 +342,48 @@ function getAppointmentDateTime(booking){
   const dateTime = new Date(`${booking.appointment_date}T${booking.appointment_time}:00`);
   return Number.isNaN(dateTime.getTime()) ? null : dateTime;
 }
+function getWhenText(date, time) {
+  const now = new Date();
+  const appt = new Date(`${date}T${time}:00`);
 
+  const diffHours = (appt - now) / (1000 * 60 * 60);
+
+  const today = now.toISOString().slice(0, 10);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+
+  if (date === today) {
+    return diffHours < 6 ? "later today" : "today";
+  }
+
+  if (date === tomorrowStr) {
+    return "tomorrow";
+  }
+
+  return `on ${date}`;
+}
+
+function buildWhatsAppMessage(booking) {
+  const when = getWhenText(
+    booking.appointment_date,
+    booking.appointment_time
+  );
+
+  return `Hi ${booking.client_name},
+
+Just a reminder your consultation & patch test with BARE by Marlese is ${when}.
+
+Date: ${booking.appointment_date}
+Time: ${booking.appointment_time}
+
+If you need to reschedule:
+https://barebymarlese.com/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}
+
+Kind regards,
+Marlese
+BARE by Marlese`;
+}
 function isWhatsAppReminderWindow(booking){
   const appointment = getAppointmentDateTime(booking);
   if (!appointment) return false;
