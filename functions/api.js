@@ -125,9 +125,9 @@ export async function onRequest(context) {
     return new Response("Booking not found", { status: 404 });
   }
 
-  if (booking.status === "cancelled") {
-    return new Response("This appointment has already been cancelled.", { status: 409 });
-  }
+  if (booking.status !== "confirmed") {
+  return new Response("This appointment has already been cancelled, completed, or can no longer be changed.", { status: 409 });
+}
 
   const lateCancellation = isLateCancellation(booking.appointment_date, booking.appointment_time);
   const depositTransferable = !lateCancellation;
