@@ -78,16 +78,35 @@ export async function onRequest(context) {
   }
 
   if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
-  const bookings = await env.DB.prepare(`
-    SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid, reschedule_token, whatsapp_reminder_sent, aftercare_sent
-    FROM appointments
-    ORDER BY appointment_date ASC, appointment_time ASC
-  `).all();
+    const bookings = await env.DB.prepare(`
+      SELECT
+        id,
+        client_name,
+        email,
+        phone,
+        appointment_date,
+        appointment_time,
+        status,
+        booking_type,
+        package_type,
+        amount_paid,
+        payment_status,
+        payment_type,
+        sessions_total,
+        sessions_used,
+        package_status,
+        payment_reference,
+        reschedule_token,
+        whatsapp_reminder_sent,
+        aftercare_sent
+      FROM appointments
+      ORDER BY appointment_date ASC, appointment_time ASC
+    `).all();
 
-  return new Response(JSON.stringify(bookings.results), {
-    headers: jsonHeaders
-  });
-}
+    return new Response(JSON.stringify(bookings.results), {
+      headers: jsonHeaders
+    });
+  }
 
   if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
     const body = await request.json();
@@ -103,20 +122,21 @@ export async function onRequest(context) {
       headers: jsonHeaders
     });
   }
+
   if (request.method === "POST" && url.searchParams.get("admin") === "reminder-sent") {
-  const body = await request.json();
-  const id = body.id;
+    const body = await request.json();
+    const id = body.id;
 
-  if (!id) return new Response("Missing booking ID", { status: 400 });
+    if (!id) return new Response("Missing booking ID", { status: 400 });
 
-  await env.DB.prepare(
-    "UPDATE appointments SET whatsapp_reminder_sent = 'yes' WHERE id = ?"
-  ).bind(id).run();
+    await env.DB.prepare(
+      "UPDATE appointments SET whatsapp_reminder_sent = 'yes' WHERE id = ?"
+    ).bind(id).run();
 
-  return new Response(JSON.stringify({ success: true }), {
-    headers: jsonHeaders
-  });
-}
+    return new Response(JSON.stringify({ success: true }), {
+      headers: jsonHeaders
+    });
+  }
 
   if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
     const id = url.searchParams.get("id");
@@ -225,37 +245,28 @@ export async function onRequest(context) {
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
-
     <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
       BOOKING AMENDMENT
     </div>
-
     <p><strong>Client:</strong> ${escapeHtml(existingBooking.client_name || "Client")}</p>
     <p><strong>Email:</strong> ${escapeHtml(existingBooking.email || "Not provided")}</p>
     <p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
     <p><strong>Type:</strong> ${escapeHtml(existingBooking.booking_type || "consultation")}</p>
-
     <br>
-
     <p><strong>Previous appointment</strong></p>
     <p><strong>Date:</strong> ${escapeHtml(existingBooking.appointment_date)}</p>
     <p><strong>Time:</strong> ${escapeHtml(existingBooking.appointment_time)}</p>
-
     <br>
-
     <p><strong>New appointment</strong></p>
     <p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
     <p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
-
     <div style="text-align:center;margin-top:18px;">
-      <a href="${manageLink}"
-         style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;">
+      <a href="${manageLink}" style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;">
         Manage Booking
       </a>
     </div>
   </div>
-</div>
-        `
+</div>`
       });
 
       if (existingBooking.email) {
@@ -270,49 +281,29 @@ export async function onRequest(context) {
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
-
     <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
       ${existingBooking.booking_type === "treatment" ? "TREATMENT APPOINTMENT UPDATED" : "CONSULTATION & PATCH TEST UPDATED"}
     </div>
-
     <p>Hi ${escapeHtml(existingBooking.client_name || "there")},</p>
-
     ${existingBooking.booking_type === "treatment"
       ? `<p>Your treatment appointment with <strong>BARE by Marlese</strong> has been updated.</p>`
       : `<p>Your consultation and patch test with <strong>BARE by Marlese</strong> has been updated.</p>`
     }
-
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
       <p style="margin:0 0 8px;"><strong>New appointment details</strong></p>
       <p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
       <p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(existingBooking.phone || "Not provided")}</p>
     </div>
-
     <p>You can manage your booking using the buttons below.</p>
-
-<div style="text-align:center;margin:22px 0;">
-  <a href="${manageLink}"
-     style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
-    Manage Booking
-  </a>
-
-  <a href="${cancelLink}"
-     style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
-    Cancel Appointment
-  </a>
-</div>
-
+    <div style="text-align:center;margin:22px 0;">
+      <a href="${manageLink}" style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">Manage Booking</a>
+      <a href="${cancelLink}" style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">Cancel Appointment</a>
+    </div>
     <p>If you have any questions, simply reply to this email.</p>
-
-    <p style="margin-top:20px;">
-      Kind regards,<br>
-      <strong>Marlese</strong><br>
-      BARE by Marlese
-    </p>
+    <p style="margin-top:20px;">Kind regards,<br><strong>Marlese</strong><br>BARE by Marlese</p>
   </div>
-</div>
-          `
+</div>`
         });
       }
 
@@ -369,29 +360,20 @@ export async function onRequest(context) {
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
-
-    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
-      BOOKING CANCELLED
-    </div>
-
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">BOOKING CANCELLED</div>
     <p><strong>Client:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
     <p><strong>Email:</strong> ${escapeHtml(booking.email || "Not provided")}</p>
     <p><strong>Phone:</strong> ${escapeHtml(booking.phone || "Not provided")}</p>
     <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
-
     <br>
-
     <p><strong>Cancelled appointment</strong></p>
     <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
     <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
-
     <br>
-
     <p><strong>Late cancellation:</strong> ${lateCancellation ? "Yes" : "No"}</p>
     <p><strong>Deposit transferable:</strong> ${depositTransferable ? "Yes" : "No"}</p>
   </div>
-</div>
-      `
+</div>`
     });
 
     if (booking.email) {
@@ -404,34 +386,19 @@ export async function onRequest(context) {
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
-
-    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
-      APPOINTMENT CANCELLED
-    </div>
-
+    <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">APPOINTMENT CANCELLED</div>
     <p>Hi ${escapeHtml(booking.client_name || "there")},</p>
-
     <p>Your appointment with <strong>BARE by Marlese</strong> has been cancelled.</p>
-
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
       <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
       <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
     </div>
-
     <p>A minimum of 24 hours’ notice is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from your bundle.</p>
-
-    <p>Treatment bundle sessions are valid for 12 months from the date of purchase. Cancelling or delaying appointments does not extend the validity period. Please ensure sufficient time remains to complete all sessions within this period.</p>
-
-    <p>If your appointment relates to a treatment package and you wish to rebook, please reply to this email so your treatment spacing and remaining time can be reviewed.</p>
-
-    <p style="margin-top:20px;">
-      Kind regards,<br>
-      <strong>Marlese</strong><br>
-      BARE by Marlese
-    </p>
+    <p>Treatment bundle sessions are valid for 12 months from the date of purchase. Cancelling or delaying appointments does not extend the validity period.</p>
+    <p>If your appointment relates to a treatment package and you wish to rebook, please reply to this email.</p>
+    <p style="margin-top:20px;">Kind regards,<br><strong>Marlese</strong><br>BARE by Marlese</p>
   </div>
-</div>
-        `
+</div>`
       });
     }
 
@@ -486,10 +453,45 @@ export async function onRequest(context) {
     const appointmentTime = body.appointment_time;
     const bookingType = body.booking_type || "consultation";
     const packageType = body.package_type || null;
-    const amountPaid = body.amount_paid || null;
+    const amountPaid = Number(body.amount_paid || 0);
+    const paymentReference = body.payment_reference || null;
+
+    let paymentStatus = "unpaid";
+    let paymentType = null;
+    let sessionsTotal = 0;
+    let sessionsUsed = 0;
+    let packageStatus = "none";
+
+    if (bookingType === "consultation") {
+      if (amountPaid >= 30) {
+        paymentStatus = "deposit_paid";
+        paymentType = "consultation_deposit";
+      }
+    }
+
+    if (bookingType === "treatment") {
+      paymentType = "treatment_payment";
+
+      if (packageType === "single") {
+        sessionsTotal = 1;
+        packageStatus = "active";
+      }
+
+      if (packageType === "three_sessions") {
+        sessionsTotal = 3;
+        packageStatus = "active";
+      }
+
+      if (packageType === "six_sessions") {
+        sessionsTotal = 6;
+        packageStatus = "active";
+      }
+
+      paymentStatus = amountPaid > 0 ? "paid" : "unpaid";
+    }
 
     const packageDisplay = packageType
-      ? packageType.charAt(0).toUpperCase() + packageType.slice(1)
+      ? packageType.replaceAll("_", " ").replace(/\b\w/g, char => char.toUpperCase())
       : null;
 
     const priceDisplay = amountPaid ? `£${amountPaid}` : null;
@@ -513,8 +515,25 @@ export async function onRequest(context) {
 
       const insertResult = await env.DB.prepare(
         `INSERT INTO appointments
-        (client_name, email, phone, appointment_date, appointment_time, status, reschedule_token, booking_type, package_type, amount_paid)
-        VALUES (?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?)`
+        (
+          client_name,
+          email,
+          phone,
+          appointment_date,
+          appointment_time,
+          status,
+          reschedule_token,
+          booking_type,
+          package_type,
+          amount_paid,
+          payment_status,
+          payment_type,
+          sessions_total,
+          sessions_used,
+          package_status,
+          payment_reference
+        )
+        VALUES (?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .bind(
         clientName,
@@ -525,7 +544,13 @@ export async function onRequest(context) {
         rescheduleToken,
         bookingType,
         packageType,
-        amountPaid
+        amountPaid,
+        paymentStatus,
+        paymentType,
+        sessionsTotal,
+        sessionsUsed,
+        packageStatus,
+        paymentReference
       )
       .run();
 
@@ -538,6 +563,9 @@ export async function onRequest(context) {
       const safePhone = escapeHtml(phone || "Not provided");
       const safeDate = escapeHtml(appointmentDate);
       const safeTime = escapeHtml(appointmentTime);
+      const safePaymentStatus = escapeHtml(paymentStatus.replaceAll("_", " "));
+      const safePackageStatus = escapeHtml(packageStatus);
+      const safeSessions = `${sessionsUsed}/${sessionsTotal}`;
 
       await sendEmail({
         to: env.TO_EMAIL,
@@ -550,33 +578,25 @@ export async function onRequest(context) {
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
-
     <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
       NEW BOOKING RECEIVED
     </div>
-
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
       <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
-
-      ${bookingType === "treatment" && packageDisplay
-        ? `<p><strong>Package:</strong> ${packageDisplay} Tattoo Removal</p>`
-        : ""}
-
-      ${bookingType === "treatment" && priceDisplay
-        ? `<p><strong>Amount Paid:</strong> ${priceDisplay}</p>`
-        : ""}
-
       <p><strong>Name:</strong> ${safeName}</p>
       <p><strong>Email:</strong> ${safeEmail}</p>
       <p><strong>Phone:</strong> ${safePhone}</p>
       <p><strong>Date:</strong> ${safeDate}</p>
       <p><strong>Time:</strong> ${safeTime}</p>
+      <p><strong>Type:</strong> ${escapeHtml(bookingType)}</p>
+      ${packageDisplay ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>` : ""}
+      ${priceDisplay ? `<p><strong>Amount Paid:</strong> ${escapeHtml(priceDisplay)}</p>` : ""}
+      <p><strong>Payment Status:</strong> ${safePaymentStatus}</p>
+      ${bookingType === "treatment" ? `<p><strong>Package Status:</strong> ${safePackageStatus}</p><p><strong>Sessions Used:</strong> ${safeSessions}</p>` : ""}
     </div>
-
     <p>This appointment has been saved in your Cloudflare D1 booking database.</p>
   </div>
-</div>
-        `
+</div>`
       });
 
       if (email) {
@@ -591,65 +611,38 @@ export async function onRequest(context) {
     <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
-
     <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
       ${bookingType === "treatment" ? "TREATMENT BOOKING CONFIRMED" : "CONSULTATION & PATCH TEST CONFIRMED"}
     </div>
-
     <p>Hi ${safeName},</p>
-
     ${bookingType === "treatment"
       ? `<p>Thank you for booking with <strong>BARE by Marlese</strong>. Your treatment appointment has been confirmed.</p>`
       : `<p>Thank you for completing your consultation form and booking your consultation & patch test with <strong>BARE by Marlese</strong>.</p>
          <p>Your consultation and patch test is confirmed for <strong>${safeDate}</strong> at <strong>${safeTime}</strong>.</p>
          <p>Your details have been received and will be reviewed thoroughly before your appointment.</p>`
     }
-
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
       <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
-
-      ${bookingType === "treatment" && packageDisplay
-        ? `<p><strong>Package:</strong> ${packageDisplay} Tattoo Removal</p>`
-        : ""}
-
-      ${bookingType === "treatment" && priceDisplay
-        ? `<p><strong>Amount Paid:</strong> ${priceDisplay}</p>`
-        : ""}
-
+      ${packageDisplay ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>` : ""}
+      ${priceDisplay ? `<p><strong>Amount Paid:</strong> ${escapeHtml(priceDisplay)}</p>` : ""}
+      ${bookingType === "treatment" ? `<p><strong>Sessions:</strong> ${safeSessions}</p>` : ""}
       <p><strong>Date:</strong> ${safeDate}</p>
       <p><strong>Time:</strong> ${safeTime}</p>
       <p><strong>Phone:</strong> ${safePhone}</p>
     </div>
-
     ${bookingType === "treatment"
-      ? `<p>Your treatment package has been booked and paid for.</p>`
+      ? `<p>Your treatment booking has been saved against your package record.</p>`
       : `<p>Your £30 deposit will be deducted from your treatment cost.</p>`
     }
-
     <p>If you need to reschedule or cancel, please use one of the links below. At least 24 hours' notice is required for your deposit to remain transferable.</p>
-
     <div style="text-align:center;margin:22px 0;">
-      <a href="${rescheduleLink}"
-         style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
-        Manage Booking
-      </a>
-
-      <a href="${cancelLink}"
-         style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
-        Cancel Appointment
-      </a>
+      <a href="${rescheduleLink}" style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">Manage Booking</a>
+      <a href="${cancelLink}" style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">Cancel Appointment</a>
     </div>
-
     <p>If you have any questions, simply reply to this email.</p>
-
-    <p style="margin-top:20px;">
-      Kind regards,<br>
-      <strong>Marlese</strong><br>
-      BARE by Marlese
-    </p>
+    <p style="margin-top:20px;">Kind regards,<br><strong>Marlese</strong><br>BARE by Marlese</p>
   </div>
-</div>
-          `
+</div>`
         });
       }
 
@@ -658,7 +651,12 @@ export async function onRequest(context) {
         bookingId,
         rescheduleLink,
         cancelLink,
-        emailSent: Boolean(email)
+        emailSent: Boolean(email),
+        payment_status: paymentStatus,
+        payment_type: paymentType,
+        package_status: packageStatus,
+        sessions_total: sessionsTotal,
+        sessions_used: sessionsUsed
       }), {
         status: 200,
         headers: jsonHeaders
