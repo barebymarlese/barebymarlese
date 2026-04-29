@@ -521,6 +521,7 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     const appointmentTime = body.appointment_time;
     const bookingType = body.booking_type || "consultation";
     const packageType = body.package_type || null;
+    const tattooSize = body.tattoo_size || null;
     const amountPaid = Number(body.amount_paid || 0);
     const paymentReference = body.payment_reference || null;
 
