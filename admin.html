@@ -570,9 +570,13 @@ async function loadBookings(){
   <div class="action-stack">
     ${buildWhatsAppAction(booking)}
 
-    ${booking.booking_type === "treatment" && !isCancelled
-      ? `<button class="btn btn-secondary" onclick="useSession(${Number(booking.id)})">Use Session</button>`
-      : ""}
+    ${booking.booking_type === "treatment" && !isCancelled && booking.package_status !== "completed"
+  ? `<button class="btn btn-secondary" onclick="useSession(${Number(booking.id)})">Use Session</button>`
+  : ""}
+
+    ${booking.booking_type === "treatment" && booking.package_status === "completed"
+  ? `<span class="action-note">Package completed</span>`
+  : ""}  
 
     ${isCancelled
       ? "—"
