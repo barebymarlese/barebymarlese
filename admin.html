@@ -295,15 +295,23 @@ function escapeHtml(value){
     .replaceAll("'", "&#39;");
 }
 
+function toLocalDateString(date){
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function getWhenText(date, time){
   const now = new Date();
   const appt = new Date(`${date}T${time}:00`);
   const diffHours = (appt - now) / (1000 * 60 * 60);
 
-  const today = now.toISOString().slice(0, 10);
+  const today = toLocalDateString(now);
+
   const tomorrow = new Date(now);
   tomorrow.setDate(now.getDate() + 1);
-  const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+  const tomorrowStr = toLocalDateString(tomorrow);
 
   if (date === today) {
     return diffHours < 6 ? "later today" : "today";
