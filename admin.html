@@ -382,7 +382,7 @@ function buildWhatsAppAction(booking){
   const isConfirmed = booking.status === "confirmed";
   const phone = formatWhatsAppPhone(booking.phone);
   const isDue = isWhatsAppReminderWindow(booking);
-  const isSent = booking.reminder_sent === "yes";
+  const isSent = booking.whatsapp_reminder_sent === "yes";
 
   if (!isConfirmed) {
     return `<span class="action-note">WhatsApp unavailable</span>`;
