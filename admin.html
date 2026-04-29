@@ -578,9 +578,9 @@ async function loadBookings(){
   ? `<span class="action-note">Package completed</span>`
   : ""}  
 
-    ${isCancelled
-      ? "—"
-      : `<button class="btn btn-cancel" onclick="cancelBooking(${Number(booking.id)})">Cancel</button>`}
+    ${isCancelled || booking.package_status === "completed"
+  ? "—"
+  : `<button class="btn btn-cancel" onclick="cancelBooking(${Number(booking.id)})">Cancel</button>`}
   </div>
 </td>
       `;
