@@ -83,7 +83,18 @@ async function confirmBooking(){
   if(!selectedDate||!selectedTime){status.textContent="Please choose a treatment time.";status.className="error";return;}
   status.textContent="Saving your treatment booking...";status.className="";
   try{
-    const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({booking_type:"treatment",package_type:packageKey,amount_paid:selectedPackage.amount,client_name:name,email,phone,appointment_date:selectedDate,appointment_time:selectedTime})});
+    const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+  booking_type:"treatment",
+  package_type:"six_sessions",
+  tattoo_size:packageKey,
+  amount_paid:selectedPackage.amount,
+  client_name:name,
+  email,
+  phone,
+  appointment_date:selectedDate,
+  appointment_time:selectedTime
+  })
+});
 if(res.ok){
   localStorage.removeItem("bareTreatmentPaid");
   localStorage.removeItem("bareTreatmentPackage");
