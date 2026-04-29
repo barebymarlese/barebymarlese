@@ -475,16 +475,20 @@ function formatPaymentStatus(status){
 
 function buildPaymentBadge(booking){
   const status = booking.payment_status || "unpaid";
+  const amount = Number(booking.amount_paid || 0);
+  const amountText = amount > 0 
+    ? `<br><span class="action-note">£${amount}</span>` 
+    : "";
 
   if (status === "paid") {
-    return `<span class="badge paid">Paid</span>`;
+    return `<span class="badge paid">Paid</span>${amountText}`;
   }
 
   if (status === "deposit_paid") {
-    return `<span class="badge deposit">Deposit paid</span>`;
+    return `<span class="badge deposit">Deposit paid</span>${amountText}`;
   }
 
-  return `<span class="badge unpaid">Unpaid</span>`;
+  return `<span class="badge unpaid">Unpaid</span>${amountText}`;
 }
 
 function formatPackageType(packageType){
