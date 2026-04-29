@@ -138,6 +138,23 @@ export async function onRequest(context) {
     });
   }
 
+  if (request.method === "POST" && url.searchParams.get("admin") === "use-session") {
+  const body = await request.json();
+  const id = body.id;
+
+  if (!id) return new Response("Missing booking ID", { status: 400 });
+
+  await env.DB.prepare(`
+    UPDATE appointments
+    SET sessions_used = sessions_used + 1
+    WHERE id = ?
+  `).bind(id).run();
+
+  return new Response(JSON.stringify({ success: true }), {
+    headers: { "Content-Type": "application/json" }
+  });
+}
+  
   if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
     const id = url.searchParams.get("id");
     const token = url.searchParams.get("token");
