@@ -382,6 +382,7 @@ function buildWhatsAppAction(booking){
   const isConfirmed = booking.status === "confirmed";
   const phone = formatWhatsAppPhone(booking.phone);
   const isDue = isWhatsAppReminderWindow(booking);
+  const isSent = booking.reminder_sent === "yes";
 
   if (!isConfirmed) {
     return `<span class="action-note">WhatsApp unavailable</span>`;
@@ -391,14 +392,25 @@ function buildWhatsAppAction(booking){
     return `<span class="action-note">No phone number</span>`;
   }
 
+  // ✅ Already sent → greyed out
+  if (isSent) {
+    return `<span class="btn btn-whatsapp" aria-disabled="true">Reminder sent</span>`;
+  }
+
+  // ❌ Not yet in window
   if (!isDue) {
-    return `<a class="btn btn-whatsapp" aria-disabled="true">WhatsApp 24h before</a>`;
+    return `<span class="action-note">Available 24h before</span>`;
   }
 
   const message = encodeURIComponent(buildWhatsAppMessage(booking));
 
+  // ✅ Active button
   return `
-    <a class="btn btn-whatsapp ready" href="https://wa.me/${phone}?text=${message}" target="_blank" rel="noopener">
+    <a class="btn btn-whatsapp ready"
+       href="https://wa.me/${phone}?text=${message}"
+       target="_blank"
+       rel="noopener"
+       onclick="markReminderSent(${booking.id})">
       Send WhatsApp
     </a>
   `;
