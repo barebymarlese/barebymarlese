@@ -138,7 +138,7 @@ export async function onRequest(context) {
     });
   }
 
-  if (request.method === "POST" && url.searchParams.get("admin") === "use-session") {
+if (request.method === "POST" && url.searchParams.get("admin") === "use-session") {
   const body = await request.json();
   const id = body.id;
 
@@ -151,8 +151,8 @@ export async function onRequest(context) {
   `).bind(id).run();
 
   return new Response(JSON.stringify({ success: true }), {
-  headers: jsonHeaders
-});
+    headers: jsonHeaders
+  });
 }
   
   if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
