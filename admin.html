@@ -482,7 +482,7 @@ function buildPaymentBadge(booking){
   const status = booking.payment_status || "unpaid";
   const amount = Number(booking.amount_paid || 0);
   const amountText = amount > 0 
-    ? `<br><span class="action-note">£${amount}</span>` 
+    ? `<br><span class="action-note payment-amount">£${amount}</span>` 
     : "";
 
   if (status === "paid") {
