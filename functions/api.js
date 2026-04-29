@@ -89,6 +89,7 @@ export async function onRequest(context) {
         status,
         booking_type,
         package_type,
+        tattoo_size,
         amount_paid,
         payment_status,
         payment_type,
