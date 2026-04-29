@@ -144,13 +144,42 @@ if (request.method === "POST" && url.searchParams.get("admin") === "use-session"
 
   if (!id) return new Response("Missing booking ID", { status: 400 });
 
+  const booking = await env.DB.prepare(`
+    SELECT sessions_used, sessions_total
+    FROM appointments
+    WHERE id = ?
+  `).bind(id).first();
+
+  if (!booking) {
+    return new Response("Booking not found", { status: 404 });
+  }
+
+  const currentUsed = Number(booking.sessions_used || 0);
+  const total = Number(booking.sessions_total || 0);
+
+  // 🚫 Stop going over package
+  if (total > 0 && currentUsed >= total) {
+    return new Response("All sessions already used", { status: 409 });
+  }
+
+  const newUsed = currentUsed + 1;
+
+  // ✅ Auto-complete package
+  const newPackageStatus = (total > 0 && newUsed >= total)
+    ? "completed"
+    : "active";
+
   await env.DB.prepare(`
     UPDATE appointments
-    SET sessions_used = sessions_used + 1
+    SET sessions_used = ?, package_status = ?
     WHERE id = ?
-  `).bind(id).run();
+  `).bind(newUsed, newPackageStatus, id).run();
 
-  return new Response(JSON.stringify({ success: true }), {
+  return new Response(JSON.stringify({
+    success: true,
+    sessions_used: newUsed,
+    package_status: newPackageStatus
+  }), {
     headers: jsonHeaders
   });
 }
