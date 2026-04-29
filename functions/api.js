@@ -78,16 +78,16 @@ export async function onRequest(context) {
   }
 
   if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
-  const bookings = await env.DB.prepare(
-    `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid, reschedule_token, whatsapp_reminder_sent
-     FROM appointments
-     ORDER BY appointment_date ASC, appointment_time ASC`
-  ).all();
+  const bookings = await env.DB.prepare(`
+    SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, package_type, amount_paid, reschedule_token, whatsapp_reminder_sent, aftercare_sent
+    FROM appointments
+    ORDER BY appointment_date ASC, appointment_time ASC
+  `).all();
 
-    return new Response(JSON.stringify(bookings.results), {
-      headers: jsonHeaders
-    });
-  }
+  return new Response(JSON.stringify(bookings.results), {
+    headers: jsonHeaders
+  });
+}
 
   if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
     const body = await request.json();
