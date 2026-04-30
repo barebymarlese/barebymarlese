@@ -41,11 +41,18 @@ const pricing = {
 
 const params = new URLSearchParams(window.location.search);
 const paid = params.get("paid");
-const packageKeyFromUrl = (params.get("package") || "").toLowerCase();
+const packageKeyFromUrl = (params.get("package") || params.get("size") || "").toLowerCase();
+const typeFromUrl = (params.get("type") || "bundle").toLowerCase();
+const priceTypeFromUrl = (params.get("price") || "deducted").toLowerCase();
 
-if (paid === "true" && packageDetails[packageKeyFromUrl]) {
+const safeType = typeFromUrl === "single" ? "single" : "bundle";
+const safePriceType = priceTypeFromUrl === "full" ? "full" : "deducted";
+
+if (paid === "true") {
   localStorage.setItem("bareTreatmentPaid", "true");
   localStorage.setItem("bareTreatmentPackage", packageKeyFromUrl);
+  localStorage.setItem("bareTreatmentType", safeType);
+  localStorage.setItem("bareTreatmentPriceType", safePriceType);
 }
 
 const hasPaid = localStorage.getItem("bareTreatmentPaid") === "true";
