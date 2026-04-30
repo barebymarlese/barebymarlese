@@ -499,7 +499,104 @@
           </ul>
         </div>
       </div>
+     
+<div class="section">
+  <h2 class="section-title">Current System State (Operational Overview)</h2>
 
+  <div class="grid-2">
+
+    <div class="panel">
+      <h3>Booking System</h3>
+      <ul>
+        <li>Custom Cloudflare + D1 booking system</li>
+        <li>Separate consultation and treatment slot logic</li>
+        <li>Prevents double bookings and past bookings</li>
+        <li>Handles reschedule and cancellation via secure token links</li>
+        <li>Tracks treatment packages and sessions</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Payment Logic</h3>
+      <ul>
+        <li>£30 consultation deposit system in place</li>
+        <li>Deposit marked as <strong>deposit_paid</strong></li>
+        <li>Deducted from treatment cost</li>
+        <li>Package sessions tracked automatically</li>
+        <li>Manual override via admin <strong>mark-paid</strong> endpoint</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Email System</h3>
+      <ul>
+        <li>Fully integrated with Resend</li>
+        <li>Booking, confirmation, reschedule and cancellation emails</li>
+        <li>Admin and client notifications</li>
+        <li>24h reminders sent automatically</li>
+        <li>Aftercare emails sent post-treatment</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Consultation System</h3>
+      <ul>
+        <li>Advanced consultation form with file uploads</li>
+        <li>Signature capture included</li>
+        <li>PDF generated via Cloudflare Browser Rendering</li>
+        <li>PDF emailed and stored via inbox workflow</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Security & Protection</h3>
+      <ul>
+        <li>Cloudflare hosting and protection layer</li>
+        <li>No CMS or plugin vulnerabilities</li>
+        <li>Turnstile bot protection</li>
+        <li>Strict file validation and sanitisation</li>
+        <li>Admin access protected</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Automation Layer</h3>
+      <ul>
+        <li>Scheduled Worker handles automation</li>
+        <li>Marks past bookings as completed</li>
+        <li>Sends reminders automatically</li>
+        <li>Sends aftercare emails</li>
+        <li>Updates package status</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Error Monitoring</h3>
+      <ul>
+        <li>Error alerts added across all Workers</li>
+        <li>Booking, consultation and reminder systems covered</li>
+        <li>Instant email notification if a failure occurs</li>
+        <li>Significantly reduces operational risk</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h3>Backup Strategy</h3>
+      <ul>
+        <li>Monthly manual D1 export</li>
+        <li>Email records retained via Resend/Gmail</li>
+        <li>Consultation PDFs stored in inbox</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="note-box">
+    <strong>Final Note</strong><br>
+    The system is fully operational and production-ready. Remaining improvements are minor and include replacing the review link placeholder and maintaining regular data backups.
+  </div>
+</div>
+      
       <div class="note-box">
         <strong>Important</strong><br>
         This document is a secure business structure overview. It includes your platforms, workflow, and account map, but does not expose passwords inside the file. That keeps it suitable for local admin use, printing, or private reference without putting account access at risk.
