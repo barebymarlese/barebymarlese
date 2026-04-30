@@ -60,6 +60,8 @@ const packageKey = localStorage.getItem("bareTreatmentPackage");
 const type = localStorage.getItem("bareTreatmentType") || "bundle";
 const priceType = localStorage.getItem("bareTreatmentPriceType") || "deducted";
 
+const content = document.getElementById("content");
+
 let selectedPackage;
 
 if (type === "single") {
@@ -68,7 +70,11 @@ if (type === "single") {
   selectedPackage = pricing.bundle[priceType]?.[packageKey];
 }
 
-const content = document.getElementById("content");
+if (!selectedPackage) {
+  renderLocked();
+  throw new Error("Invalid package or payment state");
+}
+
 let selectedDate = "";
 let selectedTime = "";
 
