@@ -671,6 +671,7 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
           reschedule_token,
           booking_type,
           package_type,
+          tattoo_size,
           amount_paid,
           payment_status,
           payment_type,
