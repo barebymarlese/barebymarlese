@@ -1,0 +1,15 @@
+{
+  "name": "BARE Admin",
+  "short_name": "BARE Admin",
+  "start_url": "/admin.html",
+  "display": "standalone",
+  "background_color": "#cacdc6",
+  "theme_color": "#5e6959",
+  "icons": [
+    {
+      "src": "/logov4.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
