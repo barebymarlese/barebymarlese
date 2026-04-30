@@ -61,8 +61,7 @@ function goToPayment(packageKey, type){
 document.getElementById("packages").innerHTML = packages.map(pkg => `
   <div class="package">
     <div>
-      <h2>${escapeHtml(pkg.name)}</h2>
-      <p class="size">${escapeHtml(pkg.size)}</p>
+      <h2>${escapeHtml(pkg.name)}</h2>      
     </div>
 <div class="price">
   <strong>${escapeHtml(pkg.bundlePrice)}</strong>
