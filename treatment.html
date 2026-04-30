@@ -151,11 +151,11 @@ document.getElementById("packages").innerHTML = packages.map(pkg => `
 <div class="price">
  
   <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_deducted')">
-    Bundle (Consultation Completed) – ${pkg.bundlePrice}
+    Consultation Completed – ${pkg.bundlePrice}
   </button>
 
   <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_full')">
-    Bundle (No Consultation) – ${pkg.fullPrice}
+    No Consultation – ${pkg.fullPrice}
   </button>
 
   <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'single')">
