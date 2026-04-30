@@ -129,7 +129,7 @@ async function confirmBooking(){
   try{
     const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
   booking_type:"treatment",
-  package_type:"six_sessions",
+  package_type: type === "single" ? "single_session" : "six_sessions",
   tattoo_size:packageKey,
   amount_paid:selectedPackage.amount / 100,
   client_name:name,
