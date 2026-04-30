@@ -55,9 +55,28 @@ if (paid === "true") {
   localStorage.setItem("bareTreatmentPriceType", safePriceType);
 }
 
+const safePriceType = priceTypeFromUrl === "full" ? "full" : "deducted";
+
+if (paid === "true") {
+  localStorage.setItem("bareTreatmentPaid", "true");
+  localStorage.setItem("bareTreatmentPackage", packageKeyFromUrl);
+  localStorage.setItem("bareTreatmentType", safeType);
+  localStorage.setItem("bareTreatmentPriceType", safePriceType);
+}
+
 const hasPaid = localStorage.getItem("bareTreatmentPaid") === "true";
 const packageKey = localStorage.getItem("bareTreatmentPackage");
-const selectedPackage = packageDetails[packageKey];
+const type = localStorage.getItem("bareTreatmentType") || "bundle";
+const priceType = localStorage.getItem("bareTreatmentPriceType") || "deducted";
+
+let selectedPackage;
+
+if (type === "single") {
+  selectedPackage = pricing.single[packageKey];
+} else {
+  selectedPackage = pricing.bundle[priceType]?.[packageKey];
+}
+
 const content = document.getElementById("content");
 let selectedDate = "";
 let selectedTime = "";
