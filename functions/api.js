@@ -461,8 +461,9 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
       });
 
     } catch (e) {
-      return new Response("That slot is already taken", { status: 409 });
-    }
+  await sendErrorAlert(env, "Reschedule booking error", e.stack || e.message || e);
+  return new Response("That slot is already taken", { status: 409 });
+}
   }
 
   if (request.method === "POST" && url.searchParams.get("cancel") === "confirm") {
