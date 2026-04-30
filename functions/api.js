@@ -616,26 +616,26 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
       }
     }
 
-    if (bookingType === "treatment") {
-      paymentType = "treatment_payment";
+if (bookingType === "treatment") {
+  paymentType = "treatment_payment";
 
-      if (packageType === "single") {
-        sessionsTotal = 1;
-        packageStatus = "active";
-      }
+  if (packageType === "single_session") {
+    sessionsTotal = 1;
+    packageStatus = "active";
+  }
 
-      if (packageType === "three_sessions") {
-        sessionsTotal = 3;
-        packageStatus = "active";
-      }
+  if (packageType === "three_sessions") {
+    sessionsTotal = 3;
+    packageStatus = "active";
+  }
 
-      if (packageType === "six_sessions") {
-        sessionsTotal = 6;
-        packageStatus = "active";
-      }
+  if (packageType === "six_sessions") {
+    sessionsTotal = 6;
+    packageStatus = "active";
+  }
 
-      paymentStatus = amountPaid > 0 ? "paid" : "unpaid";
-    }
+  paymentStatus = amountPaid > 0 ? "paid" : "unpaid";
+}
 
     const packageDisplay = packageType
       ? packageType.replaceAll("_", " ").replace(/\b\w/g, char => char.toUpperCase())
