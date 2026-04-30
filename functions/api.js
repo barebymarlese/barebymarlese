@@ -818,3 +818,30 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
 
   return new Response("Method not allowed", { status: 405 });
 }
+async function sendErrorAlert(env, title, details) {
+  try {
+    if (!env.RESEND_API_KEY || !env.FROM_EMAIL || !env.TO_EMAIL) return;
+
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: env.FROM_EMAIL,
+        to: env.TO_EMAIL,
+        subject: `BARE System Alert: ${title}`,
+        html: `
+          <p><strong>${title}</strong></p>
+          <pre style="white-space:pre-wrap;">${String(details)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")}</pre>
+        `
+      })
+    });
+  } catch (e) {
+    // fail silently to avoid alert loops
+  }
+}
