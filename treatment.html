@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="/faviconv4.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
 :root{--bg:#cacdc6;--ink:#24221a;--olive:#5e6959;--olive-dark:#4f5a4b;--stone:#878274;--card:#f8f8f6;--line:rgba(36,34,26,.12)}
 *{box-sizing:border-box}html,body{margin:0;padding:0}
@@ -35,70 +36,93 @@ h1{margin:18px 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight
 
 .packages{background:white;border:1px solid var(--line);border-radius:22px;padding:18px 20px}
 
-.package{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:18px 0;border-bottom:1px solid rgba(36,34,26,.12)}
-.package:last-child{border-bottom:0}
-
-.package h2{margin:0;font-size:18px;font-weight:500;letter-spacing:.08em}
-
-/* 👉 NEW CLEAN BUTTON LAYOUT */
-.price{
-  display:flex;
-  gap:8px;
-  justify-content:flex-end;
+/* NEW CARD LAYOUT */
+.package{
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:22px;
   align-items:center;
-  flex-wrap:nowrap;
-  text-align:right;
+  padding:22px 0;
+  border-bottom:1px solid rgba(36,34,26,.10);
 }
 
-/* 👉 BUTTON FIX */
+.package:last-child{border-bottom:0}
+
+.package h2{
+  margin:0;
+  font-size:19px;
+  font-weight:500;
+  letter-spacing:.08em;
+}
+
+.price{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
 .btn{
   appearance:none;
-  border:0;
+  border:1px solid rgba(94,105,89,.18);
   cursor:pointer;
-  display:inline-flex;
-  align-items:center;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
   justify-content:center;
-  min-height:46px;
-  padding:13px 16px;
-  border-radius:14px;
+  min-height:64px;
+  padding:12px 14px;
+  border-radius:16px;
   text-decoration:none;
   font-family:inherit;
   font-weight:700;
-  font-size:13px;
-  transition:transform .18s ease,opacity .18s ease,background .18s ease;
-  background:var(--olive);
+  font-size:12px;
+  line-height:1.25;
+  background:linear-gradient(180deg,var(--olive),var(--olive-dark));
   color:#fff;
-  margin-top:0;
-  white-space:nowrap;
+  text-align:left;
 }
 
-.btn:hover{transform:translateY(-1px);background:var(--olive-dark)}
+.btn strong{font-size:15px;margin-top:4px}
+
+.btn:hover{transform:translateY(-1px);opacity:.95}
 
 .notice{margin-top:22px;padding:14px 16px;background:rgba(135,130,116,.10);border:1px solid rgba(135,130,116,.18);border-radius:14px;font-size:13px;line-height:1.65;color:rgba(36,34,26,.76)}
 
 footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:12px}
 
-/* 👉 MOBILE */
 @media(max-width:900px){
-  .price{
-    flex-wrap:wrap;
-    justify-content:flex-start;
-  }
-}
-
-@media(max-width:700px){
-  .page{padding:22px 12px}
-  .hero{padding:34px 20px 22px}
-  .content{padding:18px}
-  .packages{padding:10px 16px}
-  .package{grid-template-columns:1fr}
-  .price{text-align:left}
-  .btn{width:100%}
+  .package{grid-template-columns:1fr;gap:14px}
+  .price{grid-template-columns:1fr}
 }
 </style>
 </head>
+
 <body>
-<div class="page"><div class="shell"><div class="brand">BARE <span class="brand-divider">|</span><span class="brand-sub">by Marlese</span></div><div class="card"><div class="hero"><span class="kicker">Treatment Packages</span><h1>Choose Your Treatment Payment</h1><p class="sub">Select the agreed payment option, complete checkout, then book your treatment appointment.</p></div><div class="content"><p class="bundle-note">Treatment payment options<br>Bundles and single sessions</p><div class="packages" id="packages"></div><div class="notice"><strong>Important:</strong> Only continue with the package agreed during your consultation and patch test. After payment, you will be taken to the treatment booking calendar.</div></div></div><footer>© BARE by Marlese</footer></div></div>
+<div class="page">
+<div class="shell">
+<div class="brand">BARE <span class="brand-divider">|</span><span class="brand-sub">by Marlese</span></div>
+
+<div class="card">
+<div class="hero">
+<span class="kicker">Treatment Packages</span>
+<h1>Choose Your Treatment Payment</h1>
+<p class="sub">Select your option, complete checkout, then book your appointment.</p>
+</div>
+
+<div class="content">
+<p class="bundle-note">Bundles and single sessions</p>
+<div class="packages" id="packages"></div>
+
+<div class="notice">
+<strong>Important:</strong> Only continue with the package agreed during your consultation.
+</div>
+</div>
+</div>
+
+<footer>© BARE by Marlese</footer>
+</div>
+</div>
+
 <script>
 const stripeLinks = {
   bundle_full: {
@@ -123,50 +147,39 @@ const stripeLinks = {
     xl: "https://buy.stripe.com/eVq5kFeeuedtgvn8ea8g00b"
   }
 };
-  
+
 const packages = [
-  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£360", fullPrice:"£390", singlePrice:"£70", save:"Save £60", size:"1cm-3cm x 1cm-3cm" },
-  { key:"small", name:"Small Tattoo", bundlePrice:"£495", fullPrice:"£525", singlePrice:"£95", save:"Save £75", size:"4cm-8cm x 4cm-8cm" },
-  { key:"medium", name:"Medium Tattoo", bundlePrice:"£620", fullPrice:"£650", singlePrice:"£120", save:"Save £100", size:"9cm-13cm x 9cm-13cm" },
-  { key:"large", name:"Large Tattoo", bundlePrice:"£820", fullPrice:"£850", singlePrice:"£160", save:"Save £140", size:"14cm-20cm x 14cm-20cm" },
-  { key:"xl", name:"XL Tattoo", bundlePrice:"£1050", fullPrice:"£1080", singlePrice:"£200", save:"Save £150", size:"20cm-24cm x 20cm-24cm" }
+  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£360", fullPrice:"£390", singlePrice:"£70" },
+  { key:"small", name:"Small Tattoo", bundlePrice:"£495", fullPrice:"£525", singlePrice:"£95" },
+  { key:"medium", name:"Medium Tattoo", bundlePrice:"£620", fullPrice:"£650", singlePrice:"£120" },
+  { key:"large", name:"Large Tattoo", bundlePrice:"£820", fullPrice:"£850", singlePrice:"£160" },
+  { key:"xl", name:"XL Tattoo", bundlePrice:"£1050", fullPrice:"£1080", singlePrice:"£200" }
 ];
 
-function escapeHtml(value){return String(value||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
-
 function goToPayment(packageKey, type){
-  const link = stripeLinks[type]?.[packageKey];
-  if(!link || link.includes("PASTE_")){
-    alert("Stripe payment link not added yet for this package.");
-    return;
-  }
-  window.location.href = link;
+  window.location.href = stripeLinks[type][packageKey];
 }
 
 document.getElementById("packages").innerHTML = packages.map(pkg => `
-  <div class="package">
-    <div>
-      <h2>${escapeHtml(pkg.name)}</h2>      
-    </div>
-<div class="price">
- 
-<button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_deducted')">
-  <span>Consultation completed</span>
-  <strong>${pkg.bundlePrice}</strong>
-</button>
-
-<button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_full')">
-  <span>No consultation</span>
-  <strong>${pkg.fullPrice}</strong>
-</button>
-
-<button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'single')">
-  <span>Single session</span>
-  <strong>${pkg.singlePrice}</strong>
-</button>
-</div>
+<div class="package">
+  <h2>${pkg.name}</h2>
+  <div class="price">
+    <button class="btn" onclick="goToPayment('${pkg.key}','bundle_deducted')">
+      <span>Consultation completed</span>
+      <strong>${pkg.bundlePrice}</strong>
+    </button>
+    <button class="btn" onclick="goToPayment('${pkg.key}','bundle_full')">
+      <span>No consultation</span>
+      <strong>${pkg.fullPrice}</strong>
+    </button>
+    <button class="btn" onclick="goToPayment('${pkg.key}','single')">
+      <span>Single session</span>
+      <strong>${pkg.singlePrice}</strong>
+    </button>
   </div>
+</div>
 `).join("");
 </script>
+
 </body>
 </html>
