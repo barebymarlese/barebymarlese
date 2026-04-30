@@ -142,6 +142,8 @@ async function confirmBooking(){
 if(res.ok){
   localStorage.removeItem("bareTreatmentPaid");
   localStorage.removeItem("bareTreatmentPackage");
+  localStorage.removeItem("bareTreatmentType");
+  localStorage.removeItem("bareTreatmentPriceType");
 
   content.innerHTML = `
     <div class="success-card">
