@@ -49,8 +49,8 @@ const packages = [
 
 function escapeHtml(value){return String(value||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
 
-function goToPayment(packageKey){
-  const link = stripeLinks[packageKey];
+function goToPayment(packageKey, type){
+  const link = stripeLinks[type]?.[packageKey];
   if(!link || link.includes("PASTE_")){
     alert("Stripe payment link not added yet for this package.");
     return;
