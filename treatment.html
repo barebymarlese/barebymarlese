@@ -67,7 +67,9 @@ document.getElementById("packages").innerHTML = packages.map(pkg => `
     <div class="price">
       <strong>${escapeHtml(pkg.price)}</strong>
       <span class="save">${escapeHtml(pkg.save)}</span>
-      <button class="btn" type="button" onclick="goToPayment('${pkg.key}')">Pay & Book</button>
+      <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_deducted')">Bundle - Consultation Completed</button>
+      <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_full')">Bundle - No Consultation Required</button>
+      <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'single')">Single Session</button>
     </div>
   </div>
 `).join("");
