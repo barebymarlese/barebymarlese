@@ -16,13 +16,29 @@ body{font-family:'Montserrat',Arial,sans-serif;background:radial-gradient(circle
 <div class="page"><div class="shell"><div class="brand">BARE <span class="brand-divider">|</span><span class="brand-sub">by Marlese</span></div><div class="card"><div class="hero"><span class="kicker">Treatment Packages</span><h1>Choose Your 6‑Session Bundle</h1><p class="sub">Select the agreed package, complete payment, then book your first treatment appointment.</p></div><div class="content"><p class="bundle-note">6‑Session Bundle<br>South Oxfordshire — commit & save</p><div class="packages" id="packages"></div><div class="notice"><strong>Important:</strong> Only continue with the package agreed during your consultation and patch test. After payment, you will be taken to the treatment booking calendar.</div></div></div><footer>© BARE by Marlese</footer></div></div>
 <script>
 const stripeLinks = {
-  tiny: "https://buy.stripe.com/bJe00lb2i6L13IBdyu8g001",
-  small: "https://buy.stripe.com/14A3cx7Q64CT5QJgKG8g002",
-  medium: "https://buy.stripe.com/9B6aEZ9Yeedt3IB7a68g003",
-  large: "https://buy.stripe.com/6oUfZjeeu6L1djb8ea8g004",
-  xl: "https://buy.stripe.com/7sYbJ33zQ7P55QJ0LI8g005"
+  bundle_full: {
+    tiny: "https://buy.stripe.com/bJe00lb2i6L13IBdyu8g001",
+    small: "https://buy.stripe.com/14A3cx7Q64CT5QJgKG8g002",
+    medium: "https://buy.stripe.com/9B6aEZ9Yeedt3IB7a68g003",
+    large: "https://buy.stripe.com/6oUfZjeeu6L1djb8ea8g004",
+    xl: "https://buy.stripe.com/7sYbJ33zQ7P55QJ0LI8g005"
+  },
+  bundle_deducted: {
+    tiny: "https://buy.stripe.com/28EfZj3zQc5l92Vami8g00a",
+    small: "https://buy.stripe.com/9B6aEZ6M2d9penf6628g009",
+    medium: "https://buy.stripe.com/bJe6oJeeu0mDcf72TQ8g008",
+    large: "https://buy.stripe.com/fZu6oJ7Q69Xd92VgKG8g007",
+    xl: "https://buy.stripe.com/cNi00lgmCedt7YR51Y8g006"
+  },
+  single: {
+    tiny: "https://buy.stripe.com/cNi6oJ2vM3yP6UN0LI8g00f",
+    small: "https://buy.stripe.com/9B64gBb2i6L16UN3XU8g00e",
+    medium: "https://buy.stripe.com/dRm28t8Uad9pfrj8ea8g00d",
+    large: "https://buy.stripe.com/8x23cx1rI8T9gvn2TQ8g00c",
+    xl: "https://buy.stripe.com/eVq5kFeeuedtgvn8ea8g00b"
+  }
 };
-
+  
 const packages = [
   { key:"tiny", name:"Tiny Tattoo", price:"£360", save:"Save £60", size:"1cm-3cm x 1cm-3cm" },
   { key:"small", name:"Small Tattoo", price:"£495", save:"Save £75", size:"4cm-8cm x 4cm-8cm" },
