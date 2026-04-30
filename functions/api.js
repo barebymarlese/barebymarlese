@@ -812,9 +812,9 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
       });
 
     } catch (e) {
-  await sendErrorAlert(env, "New booking error", e.stack || e.message || e);
-  return new Response("Slot already taken", { status: 409 });
-}
+      await sendErrorAlert(env, "New booking error", e.stack || e.message || e);
+      return new Response("Slot already taken", { status: 409 });
+    }
   }
 
   return new Response("Method not allowed", { status: 405 });
