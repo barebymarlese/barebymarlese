@@ -40,11 +40,11 @@ const stripeLinks = {
 };
   
 const packages = [
-  { key:"tiny", name:"Tiny Tattoo", price:"£360", save:"Save £60", size:"1cm-3cm x 1cm-3cm" },
-  { key:"small", name:"Small Tattoo", price:"£495", save:"Save £75", size:"4cm-8cm x 4cm-8cm" },
-  { key:"medium", name:"Medium Tattoo", price:"£620", save:"Save £100", size:"9cm-13cm x 9cm-13cm" },
-  { key:"large", name:"Large Tattoo", price:"£820", save:"Save £140", size:"14cm-20cm x 14cm-20cm" },
-  { key:"xl", name:"XL Tattoo", price:"£1050", save:"Save £150", size:"20cm-24cm x 20cm-24cm" }
+  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£360", fullPrice:"£390", singlePrice:"£70", save:"Save £60", size:"1cm-3cm x 1cm-3cm" },
+  { key:"small", name:"Small Tattoo", bundlePrice:"£495", fullPrice:"£525", singlePrice:"£95", save:"Save £75", size:"4cm-8cm x 4cm-8cm" },
+  { key:"medium", name:"Medium Tattoo", bundlePrice:"£620", fullPrice:"£650", singlePrice:"£120", save:"Save £100", size:"9cm-13cm x 9cm-13cm" },
+  { key:"large", name:"Large Tattoo", bundlePrice:"£820", fullPrice:"£850", singlePrice:"£160", save:"Save £140", size:"14cm-20cm x 14cm-20cm" },
+  { key:"xl", name:"XL Tattoo", bundlePrice:"£1050", fullPrice:"£1080", singlePrice:"£200", save:"Save £150", size:"20cm-24cm x 20cm-24cm" }
 ];
 
 function escapeHtml(value){return String(value||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");}
@@ -64,13 +64,22 @@ document.getElementById("packages").innerHTML = packages.map(pkg => `
       <h2>${escapeHtml(pkg.name)}</h2>
       <p class="size">${escapeHtml(pkg.size)}</p>
     </div>
-    <div class="price">
-      <strong>${escapeHtml(pkg.price)}</strong>
-      <span class="save">${escapeHtml(pkg.save)}</span>
-      <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_deducted')">Bundle - Consultation Completed</button>
-      <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_full')">Bundle - No Consultation Required</button>
-      <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'single')">Single Session</button>
-    </div>
+<div class="price">
+  <strong>${escapeHtml(pkg.bundlePrice)}</strong>
+  <span class="save">${escapeHtml(pkg.save)}</span>
+
+  <button class="btn" onclick="goToPayment('${pkg.key}', 'bundle_deducted')">
+    Bundle (Consultation Completed) – ${pkg.bundlePrice}
+  </button>
+
+  <button class="btn" onclick="goToPayment('${pkg.key}', 'bundle_full')">
+    Bundle (No Consultation) – ${pkg.fullPrice}
+  </button>
+
+  <button class="btn" onclick="goToPayment('${pkg.key}', 'single')">
+    Single Session – ${pkg.singlePrice}
+  </button>
+</div>
   </div>
 `).join("");
 </script>
