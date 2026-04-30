@@ -150,17 +150,20 @@ document.getElementById("packages").innerHTML = packages.map(pkg => `
     </div>
 <div class="price">
  
-  <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_deducted')">
-    Consultation Completed – ${pkg.bundlePrice}
-  </button>
+<button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_deducted')">
+  <span>Consultation completed</span>
+  <strong>${pkg.bundlePrice}</strong>
+</button>
 
-  <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_full')">
-    No Consultation – ${pkg.fullPrice}
-  </button>
+<button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'bundle_full')">
+  <span>No consultation</span>
+  <strong>${pkg.fullPrice}</strong>
+</button>
 
-  <button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'single')">
-    Single Session – ${pkg.singlePrice}
-  </button>
+<button class="btn" type="button" onclick="goToPayment('${pkg.key}', 'single')">
+  <span>Single session</span>
+  <strong>${pkg.singlePrice}</strong>
+</button>
 </div>
   </div>
 `).join("");
