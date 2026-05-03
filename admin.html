@@ -367,7 +367,7 @@ footer{
         <div class="summary-pill" id="summary-pill">Loading bookings...</div>
         <div class="actions">
           <button class="btn btn-secondary" type="button" onclick="loadBookings()">Refresh</button>
-          <a class="btn btn-primary" href="/booking.html?session_id=test">Open Booking Page</a>
+          <a class="btn btn-primary" href="/booking.html">Open Booking Page</a>
         </div>
       </div>
 
@@ -404,6 +404,7 @@ footer{
 <script src="/config.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const API_BASE = CONFIG.apiBase || window.location.origin;
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
@@ -517,7 +518,7 @@ Please note a minimum of 24 hours’ notice is required for your deposit to rema
 ${manageLink}
 
 Kind regards,
-Marlese
+${CONFIG.ownerName || "Marlese"}
 ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
@@ -644,7 +645,7 @@ async function loadBookings(){
   body.innerHTML = "";
 
   try{
-    const res = await fetch("/api?admin=bookings");
+    const res = await fetch(`${API_BASE}/api?admin=bookings`);
 
     if (!res.ok) {
       throw new Error("Could not load bookings");
@@ -722,7 +723,7 @@ async function cancelBooking(id){
     return;
   }
 
-  const res = await fetch("/api?admin=cancel", {
+  const res = await fetch(`${API_BASE}/api?admin=cancel`, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({id})
@@ -737,7 +738,7 @@ async function cancelBooking(id){
 
 async function markReminderSent(id){
   try {
-    const res = await fetch("/api?admin=reminder-sent", {
+    const res = await fetch(`${API_BASE}/api?admin=reminder-sent`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({ id })
@@ -760,7 +761,7 @@ async function useSession(id){
     return;
   }
 
-  const res = await fetch("/api?admin=use-session", {
+  const res = await fetch(`${API_BASE}/api?admin=use-session`, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({id})
@@ -786,7 +787,7 @@ async function markPaid(id){
     return;
   }
 
-  const res = await fetch("/api?admin=mark-paid", {
+  const res = await fetch(`${API_BASE}/api?admin=mark-paid`, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
