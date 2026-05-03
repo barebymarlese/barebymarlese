@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title id="page-title"></title>
+  <title>Consultation Form | BARE by Marlese</title>
 <script>
 const isLiveDomain =
   location.hostname === "barebymarlese.com" ||
@@ -396,8 +396,8 @@ header .logo *{
 <header class="nav">
   <div class="wrap nav-inner">
     <a class="logo" href="index.html" aria-label="BARE by Marlese">
-      <span class="bare" id="brand-main">BARE |</span>
-      <span class="by" id="brand-sub">by Marlese</span>
+      <span class="bare">BARE |</span>
+      <span class="by">by Marlese</span>
     </a>
   </div>
 </header>
@@ -1167,32 +1167,12 @@ if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   </main>
 
   <footer>
-    <span id="footer-brand">© BARE by Marlese</span> | <a href="/privacy.html">Privacy Policy</a>
+    © BARE by Marlese | <a href="/privacy.html">Privacy Policy</a>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-  <script src="/config.js"></script>
 
   <script>
-    const CONFIG = window.SITE_CONFIG || {};
-
-    document.title = `Consultation Form | ${CONFIG.businessName || "BARE by Marlese"}`;
-
-    const brandMain = document.getElementById("brand-main");
-    const brandSub = document.getElementById("brand-sub");
-    const footerBrand = document.getElementById("footer-brand");
-
-    if (brandMain) {
-      brandMain.textContent = `${CONFIG.brandMain || "BARE"} |`;
-    }
-
-    if (brandSub) {
-      brandSub.textContent = CONFIG.brandSub || "by Marlese";
-    }
-
-    if (footerBrand) {
-      footerBrand.textContent = `© ${CONFIG.businessName || "BARE by Marlese"}`;
-    }
     
     // Fitzpatrick test integration (auto-fill)
     const fitzValueEl = document.getElementById("fitzpatrick_value");
