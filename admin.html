@@ -345,10 +345,7 @@ footer{
 <body>
 <div class="page">
   <div class="shell">
-    <div class="brand">
-      BARE <span class="brand-divider">|</span>
-      <span class="brand-sub">by Marlese</span>
-    </div>
+    <div class="brand" id="brand-name"></div>
 
     <div class="card">
       <div class="hero">
@@ -403,6 +400,10 @@ footer{
 <script src="/config.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const brandEl = document.getElementById("brand-name");
+if (brandEl) {
+  brandEl.textContent = CONFIG.businessName || "BARE by Marlese";
+}
 
 function escapeHtml(value){
   return String(value || "")
