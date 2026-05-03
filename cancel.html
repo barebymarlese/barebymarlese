@@ -278,7 +278,7 @@ if (footerBrand) {
   footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
 }
 
-const siteDomain = CONFIG.domain || "https://barebymarlese.com";
+const siteDomain = CONFIG.domain || window.location.origin;
 const businessName = CONFIG.businessName || "BARE by Marlese";
 const keepAppointmentButton = document.getElementById("keep-appointment-btn");
 if (keepAppointmentButton) {
