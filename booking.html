@@ -265,14 +265,16 @@ This appointment must be completed before booking treatment sessions.
 <script>
 const CONFIG = window.SITE_CONFIG || {};
 const API_BASE = CONFIG.domain || window.location.origin;
+
+const pageTitle = document.getElementById("page-title");
 const faviconLink = document.getElementById("favicon-link");
+
+if (pageTitle) {
+  pageTitle.textContent = `Book Consultation & Patch Test | ${CONFIG.businessName || "BARE by Marlese"}`;
+}
 
 if (faviconLink) {
   faviconLink.href = CONFIG.favicon || "/faviconv4.png";
-}
-const pageTitle = document.getElementById("page-title");
-if (pageTitle) {
-  pageTitle.textContent = `Book Consultation & Patch Test | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
 async function loadAvailableSlots(date) {
