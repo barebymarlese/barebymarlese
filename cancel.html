@@ -222,7 +222,6 @@ footer{
   .hero{padding:34px 20px 22px}
   .content{padding:18px}
   .btn{width:100%;margin:6px 0}
-  .logo-wrap img{max-width:140px}
 }
 </style>
 </head>
@@ -265,7 +264,7 @@ footer{
             Cancel Appointment
           </button>
 
-          <a class="btn btn-home" id="keep-appointment-btn" href="https://barebymarlese.com">
+          <a class="btn btn-home" id="keep-appointment-btn" href="#">
             Keep Appointment
           </a>
         </div>
@@ -281,22 +280,35 @@ footer{
 <script src="/config.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const style = CONFIG.brandStyle || {};
+
 const pageTitle = document.getElementById("page-title");
+const faviconLink = document.getElementById("favicon-link");
+const brandMain = document.getElementById("brand-main");
+const brandSub = document.getElementById("brand-sub");
+const footerBrand = document.getElementById("footer-brand");
 
 if (pageTitle) {
   pageTitle.textContent = `Cancel Appointment | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
-const brandMain = document.getElementById("brand-main");
-const brandSub = document.getElementById("brand-sub");
+
+if (faviconLink) {
+  faviconLink.href = CONFIG.favicon || "/faviconv4.png";
+}
 
 if (brandMain) {
   brandMain.textContent = CONFIG.brandMain || "BARE";
+  brandMain.style.letterSpacing = style.mainLetterSpacing || ".26em";
+  brandMain.style.fontSize = style.mainFontSize || "24px";
+  brandMain.style.fontWeight = style.mainWeight || "600";
 }
 
 if (brandSub) {
   brandSub.textContent = CONFIG.brandSub || "by Marlese";
+  brandSub.style.letterSpacing = style.subLetterSpacing || ".05em";
+  brandSub.style.fontSize = style.subFontSize || "15px";
+  brandSub.style.fontWeight = style.subWeight || "500";
 }
-const footerBrand = document.getElementById("footer-brand");
 
 if (footerBrand) {
   footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
