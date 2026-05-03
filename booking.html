@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="/config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Book Consultation & Patch Test | BARE by Marlese</title>
+<title id="page-title">Book Consultation & Patch Test | BARE by Marlese</title>
 
 <link rel="icon" type="image/png" href="/faviconv4.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -262,6 +263,14 @@ This appointment must be completed before booking treatment sessions.
 </script>
 
 <script>
+const CONFIG = window.SITE_CONFIG || {};
+
+const pageTitle = document.getElementById("page-title");
+if (pageTitle) {
+  pageTitle.textContent = `Book Consultation & Patch Test | ${CONFIG.businessName || "BARE by Marlese"}`;
+}
+
+async function loadAvailableSlots(date) {
 async function loadAvailableSlots(date) {
   const container = document.getElementById("available-slots");
   const status = document.getElementById("booking-status");
@@ -348,7 +357,7 @@ async function bookSlot(date, time) {
       appointment_date: date,
       appointment_time: time,
       booking_type: "consultation",
-      amount_paid: 30
+      amount_paid: CONFIG.deposit?.amountPence ? CONFIG.deposit.amountPence / 100 : 30
     })
   });
 
@@ -367,7 +376,7 @@ async function bookSlot(date, time) {
   status.className = "success";
 
   setTimeout(() => {
-    window.location.href = "https://barebymarlese.com";
+    window.location.href = CONFIG.domain || "/";
   }, 5000);
      
     } else {
