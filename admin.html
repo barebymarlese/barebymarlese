@@ -397,7 +397,7 @@ footer{
       </div>
     </div>
 
-    <footer>© BARE by Marlese | Booking administration</footer>
+    <footer>© <span id="footer-brand"></span> | Booking administration</footer>
   </div>
 </div>
 
@@ -406,6 +406,7 @@ footer{
 const CONFIG = window.SITE_CONFIG || {};
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
+const footerBrand = document.getElementById("footer-brand");
 
 if (brandMain) {
   brandMain.textContent = CONFIG.brandMain || "BARE";
@@ -413,6 +414,10 @@ if (brandMain) {
 
 if (brandSub) {
   brandSub.textContent = CONFIG.brandSub || "by Marlese";
+}
+
+if (footerBrand) {
+  footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
 }
 
 function escapeHtml(value){
@@ -491,8 +496,8 @@ function buildWhatsAppMessage(booking){
   const siteDomain = CONFIG.domain || "https://barebymarlese.com";
 
   const manageLink = booking.reschedule_token
-  ? `${siteDomain}/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
-  : siteDomain;
+    ? `${siteDomain}/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
+    : siteDomain;
 
   return `Hi ${name},
 
