@@ -335,7 +335,7 @@ footer{
 
         <div class="right">
           <div class="deposit-box">
-            <p class="section-title" style="margin-bottom:8px;">Consultation Deposit</p>
+            <p class="section-title" id="deposit-title" style="margin-bottom:8px;"></p>
             <p class="price" id="deposit-price">—</p>
             <p class="price-note">Secure checkout via Stripe.</p>
 
@@ -381,6 +381,11 @@ if (footerBrand) {
 }
 
 const deposit = CONFIG.deposit || {};
+const depositTitle = document.getElementById("deposit-title");
+
+if (depositTitle) {
+  depositTitle.textContent = deposit.label || "Consultation Deposit";
+}
 const siteDomain = CONFIG.domain || window.location.origin;
 
 const depositPrice = document.getElementById("deposit-price");
