@@ -2006,7 +2006,9 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
 
   if (footerBrand) {
     footerBrand.textContent =
-      `© ${CONFIG.businessName || "BARE by Marlese"} — ${homepage.footerText || "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire"}`;
+      "© " + (CONFIG.businessName || "BARE by Marlese") +
+      " — " +
+      (homepage.footerText || "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire");
   }
 
   function clearBareFormState(){
