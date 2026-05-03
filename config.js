@@ -56,7 +56,16 @@ Object.assign(window.SITE_CONFIG, {
   },
 
   packages: [
-    { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£360", fullPrice:"£390", singlePrice:"£75", bundleAmount:36000, fullAmount:39000, singleAmount:7000 },
+    { 
+  key:"tiny",
+  name:"Tiny Tattoo",
+  bundlePrice:"£360",
+  fullPrice:"£390",
+  singlePrice:"£75",
+  bundleAmount:36000,
+  fullAmount:39000,
+  singleAmount:7500
+},
     { key:"small", name:"Small Tattoo", bundlePrice:"£495", fullPrice:"£525", singlePrice:"£95", bundleAmount:49500, fullAmount:52500, singleAmount:9500 },
     { key:"medium", name:"Medium Tattoo", bundlePrice:"£620", fullPrice:"£650", singlePrice:"£120", bundleAmount:62000, fullAmount:65000, singleAmount:12000 },
     { key:"large", name:"Large Tattoo", bundlePrice:"£820", fullPrice:"£850", singlePrice:"£160", bundleAmount:82000, fullAmount:85000, singleAmount:16000 },
