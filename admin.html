@@ -407,7 +407,11 @@ const CONFIG = window.SITE_CONFIG || {};
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
+const pageTitle = document.getElementById("page-title");
 
+if (pageTitle) {
+  pageTitle.textContent = `Bookings Admin | ${CONFIG.businessName || "BARE by Marlese"}`;
+}
 if (brandMain) {
   brandMain.textContent = CONFIG.brandMain || "BARE";
 }
