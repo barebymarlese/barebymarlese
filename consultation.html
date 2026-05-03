@@ -71,17 +71,30 @@ if (isLiveDomain) {
       gap:12px;
       padding: 14px 20px;
     }
-    .logo{
-      display:flex;
-      align-items:baseline;
-      gap:12px;
-      letter-spacing:.26em;
-      font-weight:600;
-      text-transform:uppercase;
-      text-decoration:none;
-    }
-    .logo .bare{ color: var(--brand); font-size: 24px; }
-    .logo .by{ letter-spacing:.05em; font-weight:500; text-transform:none; color: var(--muted); font-size: 15px; }
+    .brand{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:0;
+  text-decoration:none;
+}
+
+#brand-main{
+  color:var(--brand);
+  text-transform:uppercase;
+}
+
+.brand-divider{
+  color:var(--brand);
+  opacity:.8;
+  margin:0 12px;
+  font-size:22px;
+}
+
+#brand-sub{
+  color:var(--muted);
+  text-transform:none;
+}
 
     main{ padding: 0; }
     section{ padding: 0; }
@@ -346,8 +359,7 @@ if (isLiveDomain) {
       .nav-inner{
         padding: 12px;
       }
-      .logo .bare{ font-size:21px; }
-      .logo .by{ font-size:13px; }
+     
       .doc-shell{
         width:100% !important;
         max-width:100% !important;
@@ -370,17 +382,17 @@ if (isLiveDomain) {
 
     }
      /* FORCE: no underline on logo on desktop + mobile */
-header .logo,
-header .logo:link,
-header .logo:visited,
-header .logo:hover,
-header .logo:active{
+header .brand,
+header .brand:link,
+header .brand:visited,
+header .brand:hover,
+header .brand:active{
   text-decoration: none !important;
   color: inherit !important;
 }
 
 /* also ensure inner text isn't underlined */
-header .logo *{
+header .brand *{
   text-decoration: none !important;
 }
   
@@ -396,9 +408,10 @@ header .logo *{
 <body>
 <header class="nav">
   <div class="wrap nav-inner">
-    <a class="logo" href="index.html" aria-label="BARE by Marlese">
-      <span class="bare" id="brand-main">BARE |</span>
-      <span class="by" id="brand-sub">by Marlese</span>
+    <a class="brand" href="index.html" aria-label="Home">
+      <span id="brand-main"></span>
+      <span class="brand-divider">|</span>
+      <span class="brand-sub" id="brand-sub"></span>
     </a>
   </div>
 </header>
@@ -1187,12 +1200,20 @@ if (pageTitle) {
   pageTitle.textContent = `Consultation Form | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
+const style = CONFIG.brandStyle || {};
+
 if (brandMain) {
-  brandMain.textContent = `${CONFIG.brandMain || "BARE"} |`;
+  brandMain.textContent = CONFIG.brandMain || "BARE";
+  brandMain.style.letterSpacing = style.mainLetterSpacing || ".26em";
+  brandMain.style.fontSize = style.mainFontSize || "24px";
+  brandMain.style.fontWeight = style.mainWeight || "600";
 }
 
 if (brandSub) {
   brandSub.textContent = CONFIG.brandSub || "by Marlese";
+  brandSub.style.letterSpacing = style.subLetterSpacing || ".05em";
+  brandSub.style.fontSize = style.subFontSize || "15px";
+  brandSub.style.fontWeight = style.subWeight || "500";
 }
 
 if (footerBrand) {
