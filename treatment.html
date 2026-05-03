@@ -132,6 +132,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
 const CONFIG = window.SITE_CONFIG || {};
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
+const footerBrand = document.getElementById("footer-brand");
 
 if (brandMain) {
   brandMain.textContent = CONFIG.brandMain || "BARE";
@@ -140,10 +141,11 @@ if (brandMain) {
 if (brandSub) {
   brandSub.textContent = CONFIG.brandSub || "by Marlese";
 }
-const footerBrand = document.getElementById("footer-brand");
+
 if (footerBrand) {
   footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
 }
+
 const stripeLinks = CONFIG.stripeLinks || {};
 const packages = CONFIG.packages || [];
 
