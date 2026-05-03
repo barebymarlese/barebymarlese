@@ -405,22 +405,17 @@ footer{
 <script>
 const CONFIG = window.SITE_CONFIG || {};
 const API_BASE = CONFIG.domain || window.location.origin;
-const CONFIG = window.SITE_CONFIG || {};
-const API_BASE = CONFIG.domain || window.location.origin;
 
-const qr = document.getElementById("qr-code");
-
-if (qr) {
-  qr.src = CONFIG.qrCode || "/assets/qr_treatment.png";
-}
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
 const pageTitle = document.getElementById("page-title");
+const qr = document.getElementById("qr-code");
 
 if (pageTitle) {
   pageTitle.textContent = `Bookings Admin | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
+
 if (brandMain) {
   brandMain.textContent = CONFIG.brandMain || "BARE";
 }
@@ -431,6 +426,10 @@ if (brandSub) {
 
 if (footerBrand) {
   footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
+}
+
+if (qr) {
+  qr.src = CONFIG.qrCode || "/assets/qr_treatment.png";
 }
 
 function escapeHtml(value){
