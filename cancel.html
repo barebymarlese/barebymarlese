@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Cancel Appointment | BARE by Marlese</title>
+<title id="page-title">Cancel Appointment | BARE by Marlese</title>
 
 <link rel="icon" type="image/png" href="/faviconv4.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -261,6 +261,11 @@ footer{
 <script src="/config.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const pageTitle = document.getElementById("page-title");
+
+if (pageTitle) {
+  pageTitle.textContent = `Cancel Appointment | ${CONFIG.businessName || "BARE by Marlese"}`;
+}
 const logoImg = document.getElementById("brand-logo");
 const footerBrand = document.getElementById("footer-brand");
 
@@ -391,7 +396,7 @@ async function confirmCancellation(){
       actions.innerHTML = "";
 
       setTimeout(() => {
-        window.location.href = "https://barebymarlese.com";
+        window.location.href = siteDomain;
       }, 5000);
 
     }else{
