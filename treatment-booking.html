@@ -12,31 +12,38 @@
 </head>
 <body>
 <div class="page"><div class="shell"><div class="brand">BARE <span class="brand-divider">|</span><span class="brand-sub">by Marlese</span></div><div class="card"><div class="hero"><span class="kicker">Treatment Calendar</span><h1>Book Your Treatment</h1><p class="sub">Choose your first treatment appointment after completing your package payment.</p></div><div class="content" id="content"></div></div><footer>© BARE by Marlese | Treatment booking</footer></div></div>
+<script src="/config.js"></script>
 <script>
+const CONFIG = window.SITE_CONFIG || {};
+const packages = CONFIG.packages || [];
+
 const pricing = {
   bundle: {
-    deducted: {
-      tiny: { label:"Tiny Tattoo - 6 Session Bundle", price:"£360", amount:36000 },
-      small: { label:"Small Tattoo - 6 Session Bundle", price:"£495", amount:49500 },
-      medium: { label:"Medium Tattoo - 6 Session Bundle", price:"£620", amount:62000 },
-      large: { label:"Large Tattoo - 6 Session Bundle", price:"£820", amount:82000 },
-      xl: { label:"XL Tattoo - 6 Session Bundle", price:"£1050", amount:105000 }
-    },
-    full: {
-      tiny: { label:"Tiny Tattoo - 6 Session Bundle", price:"£390", amount:39000 },
-      small: { label:"Small Tattoo - 6 Session Bundle", price:"£525", amount:52500 },
-      medium: { label:"Medium Tattoo - 6 Session Bundle", price:"£650", amount:65000 },
-      large: { label:"Large Tattoo - 6 Session Bundle", price:"£850", amount:85000 },
-      xl: { label:"XL Tattoo - 6 Session Bundle", price:"£1080", amount:108000 }
-    }
+    deducted: Object.fromEntries(packages.map(pkg => [
+      pkg.key,
+      {
+        label: `${pkg.name} - 6 Session Bundle`,
+        price: pkg.bundlePrice,
+        amount: pkg.bundleAmount
+      }
+    ])),
+    full: Object.fromEntries(packages.map(pkg => [
+      pkg.key,
+      {
+        label: `${pkg.name} - 6 Session Bundle`,
+        price: pkg.fullPrice,
+        amount: pkg.fullAmount
+      }
+    ]))
   },
-  single: {
-    tiny: { label:"Tiny Tattoo - Single Session", price:"£70", amount:7000 },
-    small: { label:"Small Tattoo - Single Session", price:"£95", amount:9500 },
-    medium: { label:"Medium Tattoo - Single Session", price:"£120", amount:12000 },
-    large: { label:"Large Tattoo - Single Session", price:"£160", amount:16000 },
-    xl: { label:"XL Tattoo - Single Session", price:"£200", amount:20000 }
-  }
+  single: Object.fromEntries(packages.map(pkg => [
+    pkg.key,
+    {
+      label: `${pkg.name} - Single Session`,
+      price: pkg.singlePrice,
+      amount: pkg.singleAmount
+    }
+  ]))
 };
 
 const params = new URLSearchParams(window.location.search);
@@ -156,7 +163,7 @@ if(res.ok){
   `;
 
   setTimeout(() => {
-    window.location.href = "https://barebymarlese.com";
+    window.location.href = CONFIG.domain || "/";
   }, 5000);
 
 } else {
