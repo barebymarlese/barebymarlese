@@ -30,6 +30,15 @@ Object.assign(window.SITE_CONFIG, {
     card: "#f8f8f6"
   },
 
+  brandStyle: {
+  mainLetterSpacing: ".26em",
+  subLetterSpacing: ".05em",
+  mainFontSize: "24px",
+  subFontSize: "15px",
+  mainWeight: "600",
+  subWeight: "500"
+},
+
   contact: {
     email: "marlese@barebymarlese.com",
     phone: "+447404127830",
