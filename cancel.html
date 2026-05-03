@@ -215,7 +215,7 @@ footer{
   <div class="shell">
 
     <div class="logo-wrap">
-      <img src="/logov4.png" alt="BARE by Marlese">
+      <img id="brand-logo" src="/logov4.png" alt="BARE by Marlese">
     </div>
 
     <div class="card">
@@ -245,7 +245,7 @@ footer{
             Cancel Appointment
           </button>
 
-          <a class="btn btn-home" href="https://barebymarlese.com">
+          <a class="btn btn-home" id="keep-appointment-btn" href="https://barebymarlese.com">
             Keep Appointment
           </a>
         </div>
@@ -254,11 +254,32 @@ footer{
       </div>
     </div>
 
-    <footer>© BARE by Marlese | Appointment cancellation</footer>
+    <footer>© <span id="footer-brand"></span> | Appointment cancellation</footer>
   </div>
 </div>
 
+<script src="/config.js"></script>
 <script>
+const CONFIG = window.SITE_CONFIG || {};
+const logoImg = document.getElementById("brand-logo");
+const footerBrand = document.getElementById("footer-brand");
+
+if (logoImg) {
+  logoImg.src = CONFIG.logo || "/logov4.png";
+  logoImg.alt = CONFIG.businessName || "BARE by Marlese";
+}
+
+if (footerBrand) {
+  footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
+}
+
+const siteDomain = CONFIG.domain || "https://barebymarlese.com";
+const businessName = CONFIG.businessName || "BARE by Marlese";
+const keepAppointmentButton = document.getElementById("keep-appointment-btn");
+if (keepAppointmentButton) {
+  keepAppointmentButton.href = siteDomain;
+}
+
 const params = new URLSearchParams(window.location.search);
 const bookingId = params.get("id");
 const token = params.get("token");
@@ -281,7 +302,7 @@ async function loadBooking(){
 
   if(!bookingId || !token){
     summary.innerHTML = "<p>Invalid cancellation link.</p>";
-    status.textContent = "Please contact BARE by Marlese if you need help with your appointment.";
+    status.textContent = `Please contact ${businessName} if you need help with your appointment.`;
     status.className = "error";
     return;
   }
@@ -291,7 +312,7 @@ async function loadBooking(){
 
     if(!res.ok){
       summary.innerHTML = "<p>This cancellation link is invalid or has expired.</p>";
-      status.textContent = "Please contact BARE by Marlese if you need help with your appointment.";
+      status.textContent = `Please contact ${businessName} if you need help with your appointment.`;
       status.className = "error";
       return;
     }
@@ -319,7 +340,7 @@ async function loadBooking(){
 
   }catch(err){
     summary.innerHTML = "<p>Could not load appointment details.</p>";
-    status.textContent = "Please try again or contact BARE by Marlese.";
+    status.textContent = `Please try again or contact ${businessName}.`;
     status.className = "error";
   }
 }
