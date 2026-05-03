@@ -19,6 +19,7 @@ Object.assign(window.SITE_CONFIG, {
 
   logo: "/logov4.png",
   favicon: "/faviconv4.png",
+  qrCode: "/assets/qr_treatment.png",
 
   colours: {
     bg: "#cacdc6",
