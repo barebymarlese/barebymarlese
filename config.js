@@ -5,12 +5,14 @@ Object.assign(window.SITE_CONFIG, {
   currency: "GBP",
   brandMain: "BARE",
   brandSub: "by Marlese",
+
   homepage: {
-  brandTop: "VTCT Level 5 Certified",
-  brandMainFull: "Laser Tattoo Removal Specialist",
-  brandLocation: "South Oxfordshire<br>Henley • Wallingford • Didcot",
-  footerText: "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire"
-},
+    brandTop: "VTCT Level 5 Certified",
+    brandMainFull: "Laser Tattoo Removal Specialist",
+    brandLocation: "South Oxfordshire<br>Henley • Wallingford • Didcot",
+    footerText: "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire"
+  },
+
   domain: "https://barebymarlese.com",
 
   logo: "/logov4.png",
