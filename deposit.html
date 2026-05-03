@@ -335,7 +335,7 @@ footer{
         <div class="right">
           <div class="deposit-box">
             <p class="section-title" style="margin-bottom:8px;">Consultation deposit</p>
-            <p class="price">£30</p>
+            <p class="price" id="deposit-price">£30</p>
             <p class="price-note">Secure checkout via Stripe.</p>
 
             <div class="flow">
@@ -351,9 +351,27 @@ footer{
         </div>
       </div>
     </div>
-    <footer>© BARE by Marlese</footer>
+        <footer>© BARE by Marlese</footer>
   </div>
 </div>
+
+<script src="/config.js"></script>
+<script>
+const CONFIG = window.SITE_CONFIG || {};
+const deposit = CONFIG.deposit || {};
+
+const depositPrice = document.getElementById("deposit-price");
+const depositButton = document.getElementById("pay-deposit-btn");
+
+if (depositPrice && deposit.amount) {
+  depositPrice.textContent = deposit.amount;
+}
+
+if (depositButton && deposit.stripeLink) {
+  depositButton.href = deposit.stripeLink;
+  depositButton.textContent = `Pay ${deposit.amount || "£30"} Deposit`;
+}
+</script>
 
 </body>
 </html>
