@@ -270,6 +270,16 @@ This appointment must be completed before booking treatment sessions.
 
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const brandMain = document.getElementById("brand-main");
+const brandSub = document.getElementById("brand-sub");
+
+if (brandMain) {
+  brandMain.textContent = CONFIG.brandMain || "BARE";
+}
+
+if (brandSub) {
+  brandSub.textContent = CONFIG.brandSub || "by Marlese";
+}
 const API_BASE = CONFIG.domain || window.location.origin;
 
 const pageTitle = document.getElementById("page-title");
