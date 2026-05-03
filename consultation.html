@@ -1195,9 +1195,14 @@ const pageTitle = document.getElementById("page-title");
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
+const faviconLink = document.getElementById("favicon-link");
 
 if (pageTitle) {
   pageTitle.textContent = `Consultation Form | ${CONFIG.businessName || "BARE by Marlese"}`;
+}
+
+if (faviconLink) {
+  faviconLink.href = CONFIG.favicon || "/faviconv4.png";
 }
 
 const style = CONFIG.brandStyle || {};
