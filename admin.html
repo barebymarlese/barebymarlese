@@ -411,6 +411,15 @@ const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
 const pageTitle = document.getElementById("page-title");
 const qr = document.getElementById("qr-code");
+const faviconLink = document.getElementById("favicon-link");
+
+if (qr) {
+  qr.src = CONFIG.qrCode || "/assets/qr_treatment.png";
+}
+
+if (faviconLink) {
+  faviconLink.href = CONFIG.favicon || "/faviconv4.png";
+}
 
 if (pageTitle) {
   pageTitle.textContent = `Bookings Admin | ${CONFIG.businessName || "BARE by Marlese"}`;
@@ -426,10 +435,6 @@ if (brandSub) {
 
 if (footerBrand) {
   footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
-}
-
-if (qr) {
-  qr.src = CONFIG.qrCode || "/assets/qr_treatment.png";
 }
 
 function escapeHtml(value){
