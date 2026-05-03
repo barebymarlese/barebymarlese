@@ -47,6 +47,7 @@ Object.assign(window.SITE_CONFIG, {
 
   deposit: {
     label: "Consultation Deposit",
+    heading: "Secure Your Consultation",
     amount: "£30",
     amountPence: 3000,
     stripeLink: "https://book.stripe.com/5kQ00l5HY6L1frj9ie8g000"
