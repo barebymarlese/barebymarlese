@@ -123,38 +123,12 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
 </div>
 </div>
 
+<script src="/config.js"></script>
 <script>
-const stripeLinks = {
-  bundle_full: {
-    tiny: "https://buy.stripe.com/bJe00lb2i6L13IBdyu8g001",
-    small: "https://buy.stripe.com/14A3cx7Q64CT5QJgKG8g002",
-    medium: "https://buy.stripe.com/9B6aEZ9Yeedt3IB7a68g003",
-    large: "https://buy.stripe.com/6oUfZjeeu6L1djb8ea8g004",
-    xl: "https://buy.stripe.com/7sYbJ33zQ7P55QJ0LI8g005"
-  },
-  bundle_deducted: {
-    tiny: "https://buy.stripe.com/28EfZj3zQc5l92Vami8g00a",
-    small: "https://buy.stripe.com/9B6aEZ6M2d9penf6628g009",
-    medium: "https://buy.stripe.com/bJe6oJeeu0mDcf72TQ8g008",
-    large: "https://buy.stripe.com/fZu6oJ7Q69Xd92VgKG8g007",
-    xl: "https://buy.stripe.com/cNi00lgmCedt7YR51Y8g006"
-  },
-  single: {
-    tiny: "https://buy.stripe.com/cNi6oJ2vM3yP6UN0LI8g00f",
-    small: "https://buy.stripe.com/9B64gBb2i6L16UN3XU8g00e",
-    medium: "https://buy.stripe.com/dRm28t8Uad9pfrj8ea8g00d",
-    large: "https://buy.stripe.com/8x23cx1rI8T9gvn2TQ8g00c",
-    xl: "https://buy.stripe.com/eVq5kFeeuedtgvn8ea8g00b"
-  }
-};
+const CONFIG = window.SITE_CONFIG || {};
 
-const packages = [
-  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£360", fullPrice:"£390", singlePrice:"£70" },
-  { key:"small", name:"Small Tattoo", bundlePrice:"£495", fullPrice:"£525", singlePrice:"£95" },
-  { key:"medium", name:"Medium Tattoo", bundlePrice:"£620", fullPrice:"£650", singlePrice:"£120" },
-  { key:"large", name:"Large Tattoo", bundlePrice:"£820", fullPrice:"£850", singlePrice:"£160" },
-  { key:"xl", name:"XL Tattoo", bundlePrice:"£1050", fullPrice:"£1080", singlePrice:"£200" }
-];
+const stripeLinks = CONFIG.stripeLinks || {};
+const packages = CONFIG.packages || [];
 
 function goToPayment(packageKey, type){
   window.location.href = stripeLinks[type][packageKey];
