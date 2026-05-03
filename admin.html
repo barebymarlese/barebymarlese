@@ -400,7 +400,10 @@ footer{
   </div>
 </div>
 
+<script src="/config.js"></script>
 <script>
+const CONFIG = window.SITE_CONFIG || {};
+
 function escapeHtml(value){
   return String(value || "")
     .replaceAll("&", "&amp;")
@@ -474,13 +477,15 @@ function buildWhatsAppMessage(booking){
     ? "treatment appointment"
     : "consultation & patch test";
 
+  const siteDomain = CONFIG.domain || "https://barebymarlese.com";
+
   const manageLink = booking.reschedule_token
-    ? `https://barebymarlese.com/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
-    : "https://barebymarlese.com";
+  ? `${siteDomain}/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
+  : siteDomain;
 
   return `Hi ${name},
 
-Just a gentle reminder that your ${type} with BARE by Marlese is ${when}.
+Just a gentle reminder that your ${type} with ${CONFIG.businessName || "BARE by Marlese"} is ${when}.
 
 Date: ${booking.appointment_date}
 Time: ${booking.appointment_time}
@@ -493,7 +498,7 @@ ${manageLink}
 
 Kind regards,
 Marlese
-BARE by Marlese`;
+${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
 function buildWhatsAppAction(booking){
