@@ -497,7 +497,7 @@ function buildWhatsAppMessage(booking){
     ? "treatment appointment"
     : "consultation & patch test";
 
-  const siteDomain = CONFIG.domain || "https://barebymarlese.com";
+  const siteDomain = CONFIG.domain || window.location.origin;
 
   const manageLink = booking.reschedule_token
     ? `${siteDomain}/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
