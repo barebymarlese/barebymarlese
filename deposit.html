@@ -376,7 +376,7 @@ if (footerBrand) {
 }
 
 const deposit = CONFIG.deposit || {};
-const siteDomain = CONFIG.domain || "https://barebymarlese.com";
+const siteDomain = CONFIG.domain || window.location.origin;
 
 const depositPrice = document.getElementById("deposit-price");
 const depositButton = document.getElementById("pay-deposit-btn");
