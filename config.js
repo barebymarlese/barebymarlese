@@ -2,7 +2,11 @@ window.SITE_CONFIG = window.SITE_CONFIG || {};
 
 Object.assign(window.SITE_CONFIG, {
   businessName: "BARE by Marlese",
+  ownerName: "Marlese",
   currency: "GBP",
+
+  domain: "https://barebymarlese.com",
+
   brandMain: "BARE",
   brandSub: "by Marlese",
 
@@ -12,8 +16,6 @@ Object.assign(window.SITE_CONFIG, {
     brandLocation: "South Oxfordshire<br>Henley • Wallingford • Didcot",
     footerText: "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire"
   },
-
-  domain: "https://barebymarlese.com",
 
   logo: "/logov4.png",
   favicon: "/faviconv4.png",
