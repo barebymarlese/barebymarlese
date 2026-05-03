@@ -40,14 +40,32 @@ body{
   margin:0 auto;
 }
 
-.logo-wrap{
+.brand{
   text-align:center;
   margin:0 0 18px;
 }
 
-.logo-wrap img{
-  max-width:160px;
-  height:auto;
+#brand-main{
+  color:#5e6959;
+  font-size:24px;
+  font-weight:600;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+}
+
+.brand-divider{
+  color:#5e6959;
+  opacity:.8;
+  margin:0 12px;
+  font-size:22px;
+}
+
+#brand-sub{
+  color:#878274;
+  font-size:15px;
+  font-weight:500;
+  letter-spacing:.05em;
+  text-transform:none;
 }
 
 .card{
@@ -214,9 +232,11 @@ footer{
 <div class="page">
   <div class="shell">
 
-    <div class="logo-wrap">
-      <img id="brand-logo" src="/logov4.png" alt="BARE by Marlese">
-    </div>
+  <div class="brand">
+    <span id="brand-main"></span>
+    <span class="brand-divider">|</span>
+   <span id="brand-sub"></span>
+</div>
 
     <div class="card">
       <div class="hero">
@@ -266,7 +286,16 @@ const pageTitle = document.getElementById("page-title");
 if (pageTitle) {
   pageTitle.textContent = `Cancel Appointment | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
-const logoImg = document.getElementById("brand-logo");
+const brandMain = document.getElementById("brand-main");
+const brandSub = document.getElementById("brand-sub");
+
+if (brandMain) {
+  brandMain.textContent = CONFIG.brandMain || "BARE";
+}
+
+if (brandSub) {
+  brandSub.textContent = CONFIG.brandSub || "by Marlese";
+}
 const footerBrand = document.getElementById("footer-brand");
 
 if (logoImg) {
