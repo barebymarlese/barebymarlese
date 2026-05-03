@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Consultation Deposit | BARE by Marlese</title>
+<title id="page-title">Consultation Deposit | BARE by Marlese</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/png" href="/faviconv4.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -359,6 +359,11 @@ footer{
 <script src="/config.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const pageTitle = document.getElementById("page-title");
+
+if (pageTitle) {
+  pageTitle.textContent = `Consultation Deposit | ${CONFIG.businessName || "BARE by Marlese"}`;
+}
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
