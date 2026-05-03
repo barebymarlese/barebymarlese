@@ -208,6 +208,12 @@ max-width:100%;
 
 <div class="wrap">
 
+  <div class="brand">
+    <span id="brand-main"></span>
+    <span class="brand-divider">|</span>
+    <span id="brand-sub"></span>
+  </div>
+
 <h1>Book Consultation & Patch Test</h1>
 
 <div class="steps">
