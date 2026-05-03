@@ -264,7 +264,12 @@ This appointment must be completed before booking treatment sessions.
 
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const API_BASE = CONFIG.domain || window.location.origin;
+const faviconLink = document.getElementById("favicon-link");
 
+if (faviconLink) {
+  faviconLink.href = CONFIG.favicon || "/faviconv4.png";
+}
 const pageTitle = document.getElementById("page-title");
 if (pageTitle) {
   pageTitle.textContent = `Book Consultation & Patch Test | ${CONFIG.businessName || "BARE by Marlese"}`;
@@ -279,7 +284,7 @@ async function loadAvailableSlots(date) {
   container.innerHTML = '<div class="slot-message">Loading available times...</div>';
 
   try {
-    const res = await fetch(`/api?date=${encodeURIComponent(date)}`);
+    const res = await fetch(`${API_BASE}/api?date=${encodeURIComponent(date)}`)
     const data = await res.json();
     const slots = data.slots || [];
     const nextAvailable = data.nextAvailable || null;
@@ -346,7 +351,7 @@ async function bookSlot(date, time) {
   status.className = "";
 
   try {
-  const res = await fetch("/api", {
+  const res = await fetch(`${API_BASE}/api`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
