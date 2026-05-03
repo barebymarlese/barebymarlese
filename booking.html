@@ -284,7 +284,7 @@ async function loadAvailableSlots(date) {
   container.innerHTML = '<div class="slot-message">Loading available times...</div>';
 
   try {
-    const res = await fetch(`${API_BASE}/api?date=${encodeURIComponent(date)}`)
+    const res = await fetch(`${API_BASE}/api?date=${encodeURIComponent(date)}`);
     const data = await res.json();
     const slots = data.slots || [];
     const nextAvailable = data.nextAvailable || null;
