@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title id="page-title">Consultation Deposit | BARE by Marlese</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" href="/faviconv4.png">
+<link id="favicon-link" rel="icon" type="image/png" href="/faviconv4.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -277,14 +277,14 @@ footer{
 <div class="page">
   <div class="shell">
     <div class="brand">
-  <span id="brand-main"></span>
-  <span class="brand-divider">|</span>
-  <span class="brand-sub" id="brand-sub"></span>
-</div>
+      <span id="brand-main"></span>
+      <span class="brand-divider">|</span>
+      <span class="brand-sub" id="brand-sub"></span>
+    </div>
     <div class="card">
       <div class="hero">
         <span class="kicker">Step 2 of 3</span>
-        <h1>Secure Your Consultation</h1>
+        <h1 id="hero-heading">Secure Your Consultation</h1>
         <p class="sub">
           To continue with booking, please pay your consultation deposit below.
           Your flow remains simple and clear: consultation, deposit, then booking.
@@ -307,7 +307,7 @@ footer{
             <div class="point">
               <div class="check">✓</div>
               <div>
-                <strong>£30 fully deducted from treatment cost</strong>
+                <strong><span id="deposit-deducted-amount">£30</span> fully deducted from treatment cost</strong>
                 <p>Your deposit is not an additional fee. It is taken off your treatment total.</p>
               </div>
             </div>
@@ -330,7 +330,7 @@ footer{
           </div>
 
           <div class="divider"></div>
-          <a class="back-btn" href="https://barebymarlese.com/" id="back-home-btn" aria-label="Back to BARE by Marlese">← Back to BARE by Marlese</a>
+          <a class="back-btn" href="/" id="back-home-btn">← Back</a>
         </div>
 
         <div class="right">
@@ -346,7 +346,7 @@ footer{
             </div>
 
             <div class="action-wrap">
-              <a class="btn btn-primary" href="https://book.stripe.com/5kQ00l5HY6L1frj9ie8g000" id="pay-deposit-btn">Pay £30 Deposit</a>
+              <a class="btn btn-primary" href="#" id="pay-deposit-btn">Pay Deposit</a>
             </div>
           </div>
         </div>
@@ -359,14 +359,29 @@ footer{
 <script src="/config.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
-const pageTitle = document.getElementById("page-title");
+const siteDomain = CONFIG.domain || window.location.origin;
+const businessName = CONFIG.businessName || "BARE by Marlese";
+const deposit = CONFIG.deposit || {};
 
-if (pageTitle) {
-  pageTitle.textContent = `Consultation Deposit | ${CONFIG.businessName || "BARE by Marlese"}`;
-}
+const pageTitle = document.getElementById("page-title");
+const faviconLink = document.getElementById("favicon-link");
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
+const heroHeading = document.getElementById("hero-heading");
+const depositTitle = document.getElementById("deposit-title");
+const depositPrice = document.getElementById("deposit-price");
+const depositButton = document.getElementById("pay-deposit-btn");
+const backHomeButton = document.getElementById("back-home-btn");
+const depositDeductedAmount = document.getElementById("deposit-deducted-amount");
+
+if (pageTitle) {
+  pageTitle.textContent = `Consultation Deposit | ${businessName}`;
+}
+
+if (faviconLink) {
+  faviconLink.href = CONFIG.favicon || "/faviconv4.png";
+}
 
 if (brandMain) {
   brandMain.textContent = CONFIG.brandMain || "BARE";
@@ -377,34 +392,34 @@ if (brandSub) {
 }
 
 if (footerBrand) {
-  footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
+  footerBrand.textContent = businessName;
 }
 
-const deposit = CONFIG.deposit || {};
-const depositTitle = document.getElementById("deposit-title");
+if (heroHeading) {
+  heroHeading.textContent = deposit.heading || "Secure Your Consultation";
+}
 
 if (depositTitle) {
   depositTitle.textContent = deposit.label || "Consultation Deposit";
 }
-const siteDomain = CONFIG.domain || window.location.origin;
 
-const depositPrice = document.getElementById("deposit-price");
-const depositButton = document.getElementById("pay-deposit-btn");
-const backHomeButton = document.getElementById("back-home-btn");
-
-if (depositPrice && deposit.amount) {
-  depositPrice.textContent = deposit.amount;
+if (depositPrice) {
+  depositPrice.textContent = deposit.amount || "£30";
 }
 
-if (depositButton && deposit.stripeLink) {
-  depositButton.href = deposit.stripeLink;
+if (depositDeductedAmount) {
+  depositDeductedAmount.textContent = deposit.amount || "£30";
+}
+
+if (depositButton) {
+  depositButton.href = deposit.stripeLink || "#";
   depositButton.textContent = `Pay ${deposit.amount || "£30"} Deposit`;
 }
 
 if (backHomeButton) {
   backHomeButton.href = siteDomain;
-  backHomeButton.setAttribute("aria-label", `Back to ${CONFIG.businessName || "BARE by Marlese"}`);
-  backHomeButton.textContent = `← Back to ${CONFIG.businessName || "BARE by Marlese"}`;
+  backHomeButton.setAttribute("aria-label", `Back to ${businessName}`);
+  backHomeButton.textContent = `← Back to ${businessName}`;
 }
 </script>
 
