@@ -345,7 +345,11 @@ footer{
 <body>
 <div class="page">
   <div class="shell">
-    <div class="brand" id="brand-name"></div>
+    <div class="brand">
+  <span id="brand-main"></span>
+  <span class="brand-divider">|</span>
+  <span class="brand-sub" id="brand-sub"></span>
+</div>
 
     <div class="card">
       <div class="hero">
@@ -400,9 +404,15 @@ footer{
 <script src="/config.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
-const brandEl = document.getElementById("brand-name");
-if (brandEl) {
-  brandEl.textContent = CONFIG.businessName || "BARE by Marlese";
+const brandMain = document.getElementById("brand-main");
+const brandSub = document.getElementById("brand-sub");
+
+if (brandMain) {
+  brandMain.textContent = CONFIG.brandMain || "BARE";
+}
+
+if (brandSub) {
+  brandSub.textContent = CONFIG.brandSub || "by Marlese";
 }
 
 function escapeHtml(value){
