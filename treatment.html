@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Treatment Packages | BARE by Marlese</title>
+<title id="page-title">Treatment Packages | BARE by Marlese</title>
+<link id="favicon-link" rel="icon" type="image/png" href="/faviconv4.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/png" href="/faviconv4.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -108,7 +108,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
 
 <div class="card">
 <div class="hero">
-<span class="kicker">Treatment Packages</span>
+<span class="kicker" id="page-kicker"></span>
 <h1>Choose Your Treatment Payment</h1>
 <p class="sub">Select your option, complete checkout, then book your appointment.</p>
 </div>
@@ -128,50 +128,62 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
 </div>
 
 <script src="/config.js"></script>
+<script src="/branding.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
-const brandMain = document.getElementById("brand-main");
-const brandSub = document.getElementById("brand-sub");
-const footerBrand = document.getElementById("footer-brand");
+const pageTitle = document.getElementById("page-title");
 
-if (brandMain) {
-  brandMain.textContent = CONFIG.brandMain || "BARE";
+if (pageTitle) {
+  pageTitle.textContent = `${CONFIG.pages?.treatmentTitle || "Treatment Packages"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
-
-if (brandSub) {
-  brandSub.textContent = CONFIG.brandSub || "by Marlese";
-}
-
-if (footerBrand) {
-  footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
+const kicker = document.getElementById("page-kicker");
+if (kicker) {
+  kicker.textContent = CONFIG.pages?.treatmentTitle || "Treatment Packages";
 }
 
 const stripeLinks = CONFIG.stripeLinks || {};
-const packages = CONFIG.packages || [];
+const packages = Array.isArray(CONFIG.packages) ? CONFIG.packages : [];
 
 function goToPayment(packageKey, type){
-  window.location.href = stripeLinks[type][packageKey];
+  const link = stripeLinks?.[type]?.[packageKey];
+
+  if (!link) {
+    alert("Payment link is not set up for this option.");
+    return;
+  }
+
+  window.location.href = link;
 }
 
-document.getElementById("packages").innerHTML = packages.map(pkg => `
-<div class="package">
-  <h2>${pkg.name}</h2>
-  <div class="price">
-    <button class="btn" onclick="goToPayment('${pkg.key}','bundle_deducted')">
-      <span>Consultation completed</span>
-      <strong>${pkg.bundlePrice}</strong>
-    </button>
-    <button class="btn" onclick="goToPayment('${pkg.key}','bundle_full')">
-      <span>No consultation</span>
-      <strong>${pkg.fullPrice}</strong>
-    </button>
-    <button class="btn" onclick="goToPayment('${pkg.key}','single')">
-      <span>Single session</span>
-      <strong>${pkg.singlePrice}</strong>
-    </button>
-  </div>
-</div>
-`).join("");
+const packagesContainer = document.getElementById("packages");
+
+if (!packages.length) {
+  packagesContainer.innerHTML = `
+    <p style="text-align:center;padding:20px;">
+      No packages configured.
+    </p>
+  `;
+} else {
+  packagesContainer.innerHTML = packages.map(pkg => `
+    <div class="package">
+      <h2>${pkg.name}</h2>
+      <div class="price">
+        <button class="btn" onclick="goToPayment('${pkg.key}','bundle_deducted')">
+          <span>Consultation completed</span>
+          <strong>${pkg.bundlePrice}</strong>
+        </button>
+        <button class="btn" onclick="goToPayment('${pkg.key}','bundle_full')">
+          <span>No consultation</span>
+          <strong>${pkg.fullPrice}</strong>
+        </button>
+        <button class="btn" onclick="goToPayment('${pkg.key}','single')">
+          <span>Single session</span>
+          <strong>${pkg.singlePrice}</strong>
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
 </script>
 
 </body>
