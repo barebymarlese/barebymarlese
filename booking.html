@@ -289,7 +289,7 @@ This appointment must be completed before booking treatment sessions.
 
   const allowed = localStorage.getItem("bareDepositGate");
   const ts = Number(localStorage.getItem("bareDepositGateTs") || "0");
-  const twelveHours = 12 * 60 * 60 * 1000;
+  const twelveHours = 30 * 24 * 60 * 60 * 1000;
 
   if (allowed !== "allowed" || !ts || (Date.now() - ts) > twelveHours) {
     window.location.href = "deposit.html";
