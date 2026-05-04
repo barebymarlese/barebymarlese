@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Reschedule Appointment | BARE by Marlese</title>
+<title id="page-title">Reschedule Appointment | BARE by Marlese</title>
 
 <meta property="og:title" content="Reschedule Appointment | BARE by Marlese">
 <meta property="og:description" content="Manage your appointment with BARE by Marlese.">
@@ -53,15 +53,32 @@ body{
   margin:0 auto;
 }
 
-.logo-wrap{
+.brand{
   text-align:center;
   margin:0 0 18px;
 }
 
-.logo-wrap img{
-  max-width:160px;
-  height:auto;
-  display:inline-block;
+#brand-main{
+  color:#5e6959;
+  font-size:24px;
+  font-weight:600;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+}
+
+.brand-divider{
+  color:#5e6959;
+  opacity:.8;
+  margin:0 12px;
+  font-size:22px;
+}
+
+#brand-sub{
+  color:#878274;
+  font-size:15px;
+  font-weight:500;
+  letter-spacing:.05em;
+  text-transform:none;
 }
 
 .card{
@@ -266,9 +283,11 @@ footer{
 <div class="page">
   <div class="shell">
 
-    <div class="logo-wrap">
-      <img id="brand-logo" src="/logov4.png" alt="BARE by Marlese">
-    </div>
+<div class="brand">
+  <span id="brand-main"></span>
+  <span class="brand-divider">|</span>
+  <span class="brand-sub" id="brand-sub"></span>
+</div>
 
     <div class="card">
       <div class="hero">
@@ -300,20 +319,14 @@ footer{
 </div>
 
 <script src="/config.js"></script>
+<script src="/branding.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
-const logoImg = document.getElementById("brand-logo");
-const footerBrand = document.getElementById("footer-brand");
+const pageTitle = document.getElementById("page-title");
 
-if (logoImg) {
-  logoImg.src = CONFIG.logo || "/logov4.png";
-  logoImg.alt = CONFIG.businessName || "BARE by Marlese";
+if (pageTitle) {
+  pageTitle.textContent = `${CONFIG.pages?.rescheduleTitle || "Reschedule Appointment"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
-
-if (footerBrand) {
-  footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
-}
-
 const businessName = CONFIG.businessName || "BARE by Marlese";
 
 const params = new URLSearchParams(window.location.search);
@@ -481,7 +494,7 @@ async function confirmReschedule(){
       document.getElementById("available-slots").innerHTML = "";
 
       setTimeout(() => {
-        window.location.href = "https://barebymarlese.com";
+        window.location.href = CONFIG.domain || "/";
       }, 5000);
 
     }else{
