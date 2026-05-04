@@ -56,7 +56,8 @@ Object.assign(window.SITE_CONFIG, {
     adminTitle: "Bookings Admin",
     cancelTitle: "Cancel Appointment",
     depositTitle: "Consultation Deposit",
-    consultationTitle: "Consultation Form"
+    consultationTitle: "Consultation Form",
+    treatmentTitle: "Treatment Packages"
   },
 
 
