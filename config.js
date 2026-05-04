@@ -3,7 +3,7 @@ window.SITE_CONFIG = window.SITE_CONFIG || {};
 Object.assign(window.SITE_CONFIG, {
   businessName: "BARE by Marlese",
   ownerName: "Marlese",
-  currency: "GBP",
+  currency: "£",
 
   domain: "https://barebymarlese.com",
   
