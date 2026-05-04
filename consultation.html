@@ -1198,7 +1198,7 @@ const footerBrand = document.getElementById("footer-brand");
 const faviconLink = document.getElementById("favicon-link");
 
 if (pageTitle) {
-  pageTitle.textContent = `Consultation Form | ${CONFIG.businessName || "BARE by Marlese"}`;
+  pageTitle.textContent = `${CONFIG.pages?.consultationTitle || "Consultation Form"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
 if (faviconLink) {
