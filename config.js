@@ -57,7 +57,8 @@ Object.assign(window.SITE_CONFIG, {
   bookingTitle: "Book Consultation & Patch Test",
   adminTitle: "Bookings Admin",
   cancelTitle: "Cancel Appointment",
-  depositTitle: "Consultation Deposit"
+  depositTitle: "Consultation Deposit",
+  consultationTitle: "Consultation Form"
 },
 
   stripeLinks: {
