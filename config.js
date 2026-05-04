@@ -1,23 +1,22 @@
 window.SITE_CONFIG = window.SITE_CONFIG || {};
 
 Object.assign(window.SITE_CONFIG, {
+
+  /* =========================================================
+     🔹 CORE SETTINGS (MOST IMPORTANT)
+     ========================================================= */
   businessName: "BARE by Marlese",
   ownerName: "Marlese",
+  domain: "https://barebymarlese.com",
+  consultationWorkerUrl: "https://bare-consultation-worker.barebymarlese.workers.dev",
   currency: "£",
 
-  domain: "https://barebymarlese.com",
-  
-  consultationWorkerUrl: "https://bare-consultation-worker.barebymarlese.workers.dev",
 
+  /* =========================================================
+     🔹 BRANDING (LOGO, NAME STYLE, VISUAL IDENTITY)
+     ========================================================= */
   brandMain: "BARE",
   brandSub: "by Marlese",
-
-  homepage: {
-    brandTop: "VTCT Level 5 Certified",
-    brandMainFull: "Laser Tattoo Removal Specialist",
-    brandLocation: "South Oxfordshire<br>Henley • Wallingford • Didcot",
-    footerText: "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire"
-  },
 
   logo: "/logov4.png",
   favicon: "/faviconv4.png",
@@ -33,20 +32,47 @@ Object.assign(window.SITE_CONFIG, {
   },
 
   brandStyle: {
-  mainLetterSpacing: ".26em",
-  subLetterSpacing: ".05em",
-  mainFontSize: "24px",
-  subFontSize: "15px",
-  mainWeight: "600",
-  subWeight: "500"
-},
+    mainLetterSpacing: ".26em",
+    subLetterSpacing: ".05em",
+    mainFontSize: "24px",
+    subFontSize: "15px",
+    mainWeight: "600",
+    subWeight: "500"
+  },
 
+
+  /* =========================================================
+     🔹 WEBSITE TEXT CONTENT
+     ========================================================= */
+  homepage: {
+    brandTop: "VTCT Level 5 Certified",
+    brandMainFull: "Laser Tattoo Removal Specialist",
+    brandLocation: "South Oxfordshire<br>Henley • Wallingford • Didcot",
+    footerText: "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire"
+  },
+
+  pages: {
+    bookingTitle: "Book Consultation & Patch Test",
+    adminTitle: "Bookings Admin",
+    cancelTitle: "Cancel Appointment",
+    depositTitle: "Consultation Deposit",
+    consultationTitle: "Consultation Form"
+  },
+
+
+  /* =========================================================
+     🔹 CONTACT DETAILS
+     ========================================================= */
   contact: {
     email: "marlese@barebymarlese.com",
     phone: "+447404127830",
     instagram: "https://www.instagram.com/barebymarlese"
   },
 
+
+  /* =========================================================
+     🔹 CONSULTATION DEPOSIT (STEP 2 FLOW)
+     ========================================================= */
   deposit: {
     label: "Consultation Deposit",
     heading: "Secure Your Consultation",
@@ -55,14 +81,10 @@ Object.assign(window.SITE_CONFIG, {
     stripeLink: "https://book.stripe.com/5kQ00l5HY6L1frj9ie8g000"
   },
 
- pages: {
-  bookingTitle: "Book Consultation & Patch Test",
-  adminTitle: "Bookings Admin",
-  cancelTitle: "Cancel Appointment",
-  depositTitle: "Consultation Deposit",
-  consultationTitle: "Consultation Form"
-},
 
+  /* =========================================================
+     🔹 STRIPE PAYMENT LINKS (TREATMENTS)
+     ========================================================= */
   stripeLinks: {
     bundle_full: {
       tiny: "https://buy.stripe.com/bJe00lb2i6L13IBdyu8g001",
@@ -87,6 +109,10 @@ Object.assign(window.SITE_CONFIG, {
     }
   },
 
+
+  /* =========================================================
+     🔹 PACKAGE PRICING
+     ========================================================= */
   packages: [
     { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£360", fullPrice:"£390", singlePrice:"£70", bundleAmount:36000, fullAmount:39000, singleAmount:7000 },
     { key:"small", name:"Small Tattoo", bundlePrice:"£495", fullPrice:"£525", singlePrice:"£95", bundleAmount:49500, fullAmount:52500, singleAmount:9500 },
@@ -95,6 +121,10 @@ Object.assign(window.SITE_CONFIG, {
     { key:"xl", name:"XL Tattoo", bundlePrice:"£1050", fullPrice:"£1080", singlePrice:"£200", bundleAmount:105000, fullAmount:108000, singleAmount:20000 }
   ],
 
+
+  /* =========================================================
+     🔹 BOOKING LOGIC (AVAILABLE SLOTS)
+     ========================================================= */
   booking: {
     consultationSlots: {
       weekday: ["17:00","17:30","18:00","18:30","19:00"],
@@ -105,4 +135,5 @@ Object.assign(window.SITE_CONFIG, {
       saturday: ["09:00","10:00","11:00"]
     }
   }
+
 });
