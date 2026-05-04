@@ -323,7 +323,7 @@ async function loadBooking(){
   }
 
   try{
-    const res = await fetch(`${siteDomain}/api?cancel=booking&id=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(token)}`)
+    const res = await fetch(`${siteDomain}/api?cancel=booking&id=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(token)}`);
 
     if(!res.ok){
       summary.innerHTML = "<p>This cancellation link is invalid or has expired.</p>";
