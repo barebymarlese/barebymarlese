@@ -429,16 +429,15 @@ const API_BASE = CONFIG.domain || window.location.origin;
 const pageTitle = document.getElementById("page-title");
 const qr = document.getElementById("qr-code");
 
-// QR (page-specific)
 if (qr) {
   qr.src = CONFIG.qrCode || "/assets/qr_treatment.png";
 }
 
-// Page title (page-specific)
 if (pageTitle) {
   pageTitle.textContent = `Bookings Admin | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
-</script>
+
+function escapeHtml(value){
 
 function escapeHtml(value){
   return String(value || "")
