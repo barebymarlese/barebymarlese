@@ -426,50 +426,19 @@ footer{
 const CONFIG = window.SITE_CONFIG || {};
 const API_BASE = CONFIG.domain || window.location.origin;
 
-const brandMain = document.getElementById("brand-main");
-const brandSub = document.getElementById("brand-sub");
-const footerBrand = document.getElementById("footer-brand");
 const pageTitle = document.getElementById("page-title");
 const qr = document.getElementById("qr-code");
-const faviconLink = document.getElementById("favicon-link");
 
-const style = CONFIG.brandStyle || {};
-
-// QR
+// QR (page-specific)
 if (qr) {
   qr.src = CONFIG.qrCode || "/assets/qr_treatment.png";
 }
 
-// Favicon
-if (faviconLink) {
-  faviconLink.href = CONFIG.favicon || "/faviconv4.png";
-}
-
-// Page title
+// Page title (page-specific)
 if (pageTitle) {
   pageTitle.textContent = `Bookings Admin | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
-
-// Brand MAIN
-if (brandMain) {
-  brandMain.textContent = CONFIG.brandMain || "BARE";
-  brandMain.style.letterSpacing = style.mainLetterSpacing || ".26em";
-  brandMain.style.fontSize = style.mainFontSize || "24px";
-  brandMain.style.fontWeight = style.mainWeight || "600";
-}
-
-// Brand SUB
-if (brandSub) {
-  brandSub.textContent = CONFIG.brandSub || "by Marlese";
-  brandSub.style.letterSpacing = style.subLetterSpacing || ".05em";
-  brandSub.style.fontSize = style.subFontSize || "15px";
-  brandSub.style.fontWeight = style.subWeight || "500";
-}
-
-// Footer
-if (footerBrand) {
-  footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
-}
+</script>
 
 function escapeHtml(value){
   return String(value || "")
