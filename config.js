@@ -8,6 +8,7 @@ Object.assign(window.SITE_CONFIG, {
   businessName: "BARE by Marlese",
   ownerName: "Marlese",
   domain: "https://barebymarlese.com",
+  apiBase: "https://barebymarlese.com",
   consultationWorkerUrl: "https://bare-consultation-worker.barebymarlese.workers.dev",
   currency: "£",
 
