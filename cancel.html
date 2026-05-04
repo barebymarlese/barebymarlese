@@ -288,7 +288,7 @@ if (pageTitle) {
   pageTitle.textContent = `${CONFIG.pages?.cancelTitle || "Cancel Appointment"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
-const siteDomain = CONFIG.domain || window.location.origin;
+const siteDomain = CONFIG.apiBase || window.location.origin;
 const businessName = CONFIG.businessName || "BARE by Marlese";
 const keepAppointmentButton = document.getElementById("keep-appointment-btn");
 if (keepAppointmentButton) {
