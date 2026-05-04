@@ -434,7 +434,7 @@ if (qr) {
 }
 
 if (pageTitle) {
-  pageTitle.textContent = `Bookings Admin | ${CONFIG.businessName || "BARE by Marlese"}`;
+  pageTitle.textContent = `${CONFIG.pages?.adminTitle || "Bookings Admin"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
 function escapeHtml(value){
