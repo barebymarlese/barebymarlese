@@ -426,7 +426,7 @@ header .brand *{
         <p class="con-small">Fields marked with <span class="required-star">*</span> are required.</p>
 
         <div class="con-card">
-          <form id="consultation-form" autocomplete="off" action="https://bare-consultation-worker.barebymarlese.workers.dev" method="POST" enctype="multipart/form-data">
+          <form id="consultation-form" autocomplete="off" method="POST" enctype="multipart/form-data">
                 
                 <!-- Honeypot anti-spam -->
                 <input type="text" name="website" style="display:none;">
@@ -1190,6 +1190,10 @@ if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
 
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+const consultationForm = document.getElementById("consultation-form");
+if (consultationForm) {
+  consultationForm.action = CONFIG.consultationWorkerUrl || "";
+}
 
 const pageTitle = document.getElementById("page-title");
 
