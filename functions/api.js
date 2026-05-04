@@ -643,7 +643,7 @@ if (bookingType === "treatment") {
 
 const displayAmount = amountPaid > 1000
   ? (amountPaid / 100).toFixed(2)
-  : amountPaid.toFixed(2);
+  : Number(amountPaid).toFixed(2);
 
 const priceDisplay = amountPaid ? `£${displayAmount}` : null;
 
