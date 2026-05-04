@@ -289,7 +289,7 @@ const brandSub = document.getElementById("brand-sub");
 const footerBrand = document.getElementById("footer-brand");
 
 if (pageTitle) {
-  pageTitle.textContent = `Cancel Appointment | ${CONFIG.businessName || "BARE by Marlese"}`;
+  pageTitle.textContent = `${CONFIG.pages?.cancelTitle || "Cancel Appointment"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
 if (faviconLink) {
