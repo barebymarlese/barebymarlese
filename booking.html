@@ -276,6 +276,7 @@ This appointment must be completed before booking treatment sessions.
 </div>
 
 <script src="/config.js"></script>
+<script src="/branding.js"></script>
 <script>
 (function() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -298,35 +299,8 @@ This appointment must be completed before booking treatment sessions.
 
 <script>
 const CONFIG = window.SITE_CONFIG || {};
-const style = CONFIG.brandStyle || {};
 const API_BASE = CONFIG.apiBase || window.location.origin;
-
-const brandMain = document.getElementById("brand-main");
-const brandSub = document.getElementById("brand-sub");
 const pageTitle = document.getElementById("page-title");
-const faviconLink = document.getElementById("favicon-link");
-  
-if (brandMain) {
-  brandMain.textContent = CONFIG.brandMain || "BARE";
-  brandMain.style.letterSpacing = style.mainLetterSpacing || ".26em";
-  brandMain.style.fontSize = style.mainFontSize || "24px";
-  brandMain.style.fontWeight = style.mainWeight || "600";
-}
-
-if (brandSub) {
-  brandSub.textContent = CONFIG.brandSub || "by Marlese";
-  brandSub.style.letterSpacing = style.subLetterSpacing || ".05em";
-  brandSub.style.fontSize = style.subFontSize || "15px";
-  brandSub.style.fontWeight = style.subWeight || "500";
-}
-
-if (pageTitle) {
-  pageTitle.textContent = `${CONFIG.pages?.bookingTitle || "Book Consultation & Patch Test"} | ${CONFIG.businessName || "BARE by Marlese"}`;
-}
-
-if (faviconLink) {
-  faviconLink.href = CONFIG.favicon || "/faviconv4.png";
-}
 
 async function loadAvailableSlots(date) {
   const container = document.getElementById("available-slots");
