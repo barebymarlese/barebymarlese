@@ -384,7 +384,7 @@ const backHomeButton = document.getElementById("back-home-btn");
 const depositDeductedAmount = document.getElementById("deposit-deducted-amount");
 
 if (pageTitle) {
-  pageTitle.textContent = `Consultation Deposit | ${businessName}`;
+  pageTitle.textContent = `${CONFIG.pages?.depositTitle || "Consultation Deposit"} | ${businessName}`;
 }
 
 if (faviconLink) {
