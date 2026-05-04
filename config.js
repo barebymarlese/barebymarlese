@@ -6,6 +6,7 @@ Object.assign(window.SITE_CONFIG, {
   currency: "GBP",
 
   domain: "https://barebymarlese.com",
+  
   consultationWorkerUrl: "https://bare-consultation-worker.barebymarlese.workers.dev",
 
   brandMain: "BARE",
