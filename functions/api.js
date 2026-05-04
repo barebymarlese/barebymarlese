@@ -638,10 +638,14 @@ if (bookingType === "treatment") {
 }
 
     const packageDisplay = packageType
-      ? packageType.replaceAll("_", " ").replace(/\b\w/g, char => char.toUpperCase())
-      : null;
+  ? packageType.replaceAll("_", " ").replace(/\b\w/g, char => char.toUpperCase())
+  : null;
 
-    const priceDisplay = amountPaid ? `£${amountPaid}` : null;
+const displayAmount = amountPaid > 1000
+  ? (amountPaid / 100).toFixed(2)
+  : amountPaid.toFixed(2);
+
+const priceDisplay = amountPaid ? `£${displayAmount}` : null;
 
     if (!appointmentDate || !appointmentTime) {
       return new Response("Missing appointment date or time", { status: 400 });
