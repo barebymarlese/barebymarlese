@@ -53,6 +53,13 @@ Object.assign(window.SITE_CONFIG, {
     stripeLink: "https://book.stripe.com/5kQ00l5HY6L1frj9ie8g000"
   },
 
+ pages: {
+  bookingTitle: "Book Consultation & Patch Test",
+  adminTitle: "Bookings Admin",
+  cancelTitle: "Cancel Appointment",
+  depositTitle: "Consultation Deposit"
+},
+
   stripeLinks: {
     bundle_full: {
       tiny: "https://buy.stripe.com/bJe00lb2i6L13IBdyu8g001",
