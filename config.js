@@ -2,9 +2,6 @@ window.SITE_CONFIG = window.SITE_CONFIG || {};
 
 Object.assign(window.SITE_CONFIG, {
 
-  /* =========================================================
-     🔹 CORE SETTINGS (MOST IMPORTANT)
-     ========================================================= */
   businessName: "BARE by Marlese",
   ownerName: "Marlese",
   domain: "https://barebymarlese.com",
@@ -12,10 +9,6 @@ Object.assign(window.SITE_CONFIG, {
   consultationWorkerUrl: "https://bare-consultation-worker.barebymarlese.workers.dev",
   currency: "£",
 
-
-  /* =========================================================
-     🔹 BRANDING (LOGO, NAME STYLE, VISUAL IDENTITY)
-     ========================================================= */
   brandMain: "BARE",
   brandSub: "by Marlese",
 
@@ -41,10 +34,6 @@ Object.assign(window.SITE_CONFIG, {
     subWeight: "500"
   },
 
-
-  /* =========================================================
-     🔹 WEBSITE TEXT CONTENT
-     ========================================================= */
   homepage: {
     brandTop: "VTCT Level 5 Certified",
     brandMainFull: "Laser Tattoo Removal Specialist",
@@ -60,23 +49,15 @@ Object.assign(window.SITE_CONFIG, {
     consultationTitle: "Consultation Form",
     treatmentTitle: "Treatment Packages",
     treatmentBookingTitle: "Treatment Booking",
-    rescheduleTitle: "Reschedule Appointment",
+    rescheduleTitle: "Reschedule Appointment"
   },
 
-
-  /* =========================================================
-     🔹 CONTACT DETAILS
-     ========================================================= */
   contact: {
     email: "marlese@barebymarlese.com",
     phone: "+447404127830",
     instagram: "https://www.instagram.com/barebymarlese"
   },
 
-
-  /* =========================================================
-     🔹 CONSULTATION DEPOSIT (STEP 2 FLOW)
-     ========================================================= */
   deposit: {
     label: "Consultation Deposit",
     heading: "Secure Your Consultation",
@@ -85,10 +66,6 @@ Object.assign(window.SITE_CONFIG, {
     stripeLink: "https://book.stripe.com/5kQ00l5HY6L1frj9ie8g000"
   },
 
-
-  /* =========================================================
-     🔹 STRIPE PAYMENT LINKS (TREATMENTS)
-     ========================================================= */
   stripeLinks: {
     bundle_full: {
       tiny: "https://buy.stripe.com/bJe00lb2i6L13IBdyu8g001",
@@ -113,22 +90,14 @@ Object.assign(window.SITE_CONFIG, {
     }
   },
 
-
-  /* =========================================================
-     🔹 PACKAGE PRICING
-     ========================================================= */
   packages: [
-    { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£360", fullPrice:"£390", singlePrice:"£70", bundleAmount:36000, fullAmount:39000, singleAmount:7000 },
-    { key:"small", name:"Small Tattoo", bundlePrice:"£495", fullPrice:"£525", singlePrice:"£95", bundleAmount:49500, fullAmount:52500, singleAmount:9500 },
-    { key:"medium", name:"Medium Tattoo", bundlePrice:"£620", fullPrice:"£650", singlePrice:"£120", bundleAmount:62000, fullAmount:65000, singleAmount:12000 },
-    { key:"large", name:"Large Tattoo", bundlePrice:"£820", fullPrice:"£850", singlePrice:"£160", bundleAmount:82000, fullAmount:85000, singleAmount:16000 },
-    { key:"xl", name:"XL Tattoo", bundlePrice:"£1050", fullPrice:"£1080", singlePrice:"£200", bundleAmount:105000, fullAmount:108000, singleAmount:20000 }
+    { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£330", fullPrice:"£360", singlePrice:"£70", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
+    { key:"small", name:"Small Tattoo", bundlePrice:"£465", fullPrice:"£495", singlePrice:"£95", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
+    { key:"medium", name:"Medium Tattoo", bundlePrice:"£590", fullPrice:"£620", singlePrice:"£120", bundleAmount:59000, fullAmount:62000, singleAmount:12000 },
+    { key:"large", name:"Large Tattoo", bundlePrice:"£790", fullPrice:"£820", singlePrice:"£160", bundleAmount:79000, fullAmount:82000, singleAmount:16000 },
+    { key:"xl", name:"XL Tattoo", bundlePrice:"£1020", fullPrice:"£1050", singlePrice:"£200", bundleAmount:102000, fullAmount:105000, singleAmount:20000 }
   ],
 
-
-  /* =========================================================
-     🔹 BOOKING LOGIC (AVAILABLE SLOTS)
-     ========================================================= */
   booking: {
     consultationSlots: {
       weekday: ["17:00","17:30","18:00","18:30","19:00"],
