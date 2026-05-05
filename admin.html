@@ -352,7 +352,28 @@ footer{
 
 @media(max-width:820px){
   .page{padding:22px 12px}
-  .hero{padding:34px 20px 22px}
+
+  .hero{
+    padding:34px 20px 22px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .qr-box{
+    position:static;
+    order:1;
+    margin:12px auto 18px;
+  }
+
+  .kicker{order:2}
+  .hero h1{order:3}
+  .hero .sub{order:4}
+
+  .qr-box img{
+    width:110px;
+  }
+
   .toolbar,.content{padding:18px}
   .actions{width:100%}
   .btn{width:100%}
