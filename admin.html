@@ -605,11 +605,6 @@ function buildAftercareStatus(booking){
   return `<span style="color:#9b2f2f;font-weight:700;">✕ Not sent</span>`;
 }
 
-function formatPaymentStatus(status){
-  if (!status) return "Unpaid";
-  return String(status).replaceAll("_", " ");
-}
-
 function buildPaymentBadge(booking){
   const status = booking.payment_status || "unpaid";
   const amount = Number(booking.amount_paid || 0);
