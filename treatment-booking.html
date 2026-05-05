@@ -63,6 +63,11 @@ const pricing = {
 
 const params = new URLSearchParams(window.location.search);
 const paid = params.get("paid");
+const sessionId = params.get("session_id");
+
+if (sessionId) {
+  localStorage.setItem("bare_payment_reference", sessionId);
+}
 const packageKeyFromUrl = (params.get("package") || params.get("size") || "").toLowerCase();
 const typeFromUrl = (params.get("type") || "bundle").toLowerCase();
 const priceTypeFromUrl = (params.get("price") || "deducted").toLowerCase();
@@ -155,7 +160,8 @@ async function confirmBooking(){
   email,
   phone,
   appointment_date:selectedDate,
-  appointment_time:selectedTime
+  appointment_time:selectedTime,
+  payment_reference: localStorage.getItem("bare_payment_reference") || null
   })
 });
 if(res.ok){
