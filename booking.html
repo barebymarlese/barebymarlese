@@ -283,9 +283,10 @@ This appointment must be completed before booking treatment sessions.
   const sessionId = urlParams.get('session_id');
 
   if (sessionId) {
-    localStorage.setItem("bareDepositGate", "allowed");
-    localStorage.setItem("bareDepositGateTs", String(Date.now()));
-  }
+   localStorage.setItem("bareDepositGate", "allowed");
+   localStorage.setItem("bareDepositGateTs", String(Date.now()));
+   localStorage.setItem("bare_payment_reference", sessionId);
+ }
 
   const allowed = localStorage.getItem("bareDepositGate");
   const ts = Number(localStorage.getItem("bareDepositGateTs") || "0");
@@ -388,7 +389,8 @@ async function bookSlot(date, time) {
       appointment_date: date,
       appointment_time: time,
       booking_type: "consultation",
-      amount_paid: CONFIG.deposit?.amountPence ? CONFIG.deposit.amountPence / 100 : 30
+      amount_paid: CONFIG.deposit?.amountPence ? CONFIG.deposit.amountPence / 100 : 30,
+      payment_reference: localStorage.getItem("bare_payment_reference") || null
     })
   });
 
