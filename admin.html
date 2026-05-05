@@ -592,19 +592,24 @@ function formatPaymentStatus(status){
 function buildPaymentBadge(booking){
   const status = booking.payment_status || "unpaid";
   const amount = Number(booking.amount_paid || 0);
-  const amountText = amount > 0 
-    ? `<br><span class="action-note payment-amount">£${amount}</span>` 
+
+  const amountText = amount > 0
+    ? `<br><span class="action-note payment-amount">£${amount}</span>`
+    : "";
+
+  const stripeText = booking.payment_reference
+    ? `<br><span class="action-note">Stripe linked</span>`
     : "";
 
   if (status === "paid") {
-    return `<span class="badge paid">Paid</span>${amountText}`;
+    return `<span class="badge paid">Paid</span>${amountText}${stripeText}`;
   }
 
   if (status === "deposit_paid") {
-    return `<span class="badge deposit">Deposit paid</span>${amountText}`;
+    return `<span class="badge deposit">Deposit paid</span>${amountText}${stripeText}`;
   }
 
-  return `<span class="badge unpaid">Unpaid</span>${amountText}`;
+  return `<span class="badge unpaid">Unpaid</span>${amountText}${stripeText}`;
 }
 
 function formatPackageType(packageType){
