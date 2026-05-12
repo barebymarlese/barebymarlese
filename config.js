@@ -13,7 +13,7 @@ Object.assign(window.SITE_CONFIG, {
   brandSub: "by Marlese",
 
   logo: "/logov4.png",
-  favicon: "/faviconv4.png",
+  favicon: "/favicon.png",
   qrCode: "/assets/qr_treatment.png",
 
   colours: {
