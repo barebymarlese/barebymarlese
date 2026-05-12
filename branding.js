@@ -26,6 +26,6 @@
   }
 
   if (faviconLink) {
-    faviconLink.href = CONFIG.favicon || "/faviconv4.png";
+    faviconLink.href = CONFIG.favicon || "/favicon.png";
   }
 })();
