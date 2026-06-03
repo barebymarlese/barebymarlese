@@ -1,4 +1,4 @@
-window.SITE_CONFIG = window.SITE_CONFIG || {};x
+window.SITE_CONFIG = window.SITE_CONFIG || {};
 
 Object.assign(window.SITE_CONFIG, {
 
