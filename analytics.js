@@ -1,6 +1,5 @@
 (function () {
   const GA_ID = window.SITE_CONFIG?.analytics?.ga4MeasurementId;
-
   if (!GA_ID) return;
 
   const script = document.createElement("script");
@@ -9,12 +8,7 @@
   document.head.appendChild(script);
 
   window.dataLayer = window.dataLayer || [];
-
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-
-  window.gtag = gtag;
+  window.gtag = function(){ dataLayer.push(arguments); };
 
   gtag("js", new Date());
   gtag("config", GA_ID);
