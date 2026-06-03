@@ -9,6 +9,10 @@ Object.assign(window.SITE_CONFIG, {
   consultationWorkerUrl: "https://bare-consultation-worker.barebymarlese.workers.dev",
   currency: "£",
 
+  analytics: {
+  ga4MeasurementId: "G-1Z8SPFBHJC"
+},
+
   brandMain: "BARE",
   brandSub: "by Marlese",
 
