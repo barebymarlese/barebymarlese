@@ -167,9 +167,7 @@ if (kicker) {
 
 const stripeLinks = CONFIG.stripeLinks || {};
 
-const packages = Array.isArray(CONFIG.friendsPackages) && CONFIG.friendsPackages.length
-  ? CONFIG.friendsPackages
-  : CONFIG.packages || [];
+const packages = CONFIG.friendsPackages || [];
 
 function goToPayment(packageKey, type){
   const link = stripeLinks?.[type]?.[packageKey];
