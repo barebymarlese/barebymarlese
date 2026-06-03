@@ -92,19 +92,19 @@ Object.assign(window.SITE_CONFIG, {
   },
 
   packages: [
-    { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£330", fullPrice:"£360", singlePrice:"£70", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
-    { key:"small", name:"Small Tattoo", bundlePrice:"£465", fullPrice:"£495", singlePrice:"£95", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
-    { key:"medium", name:"Medium Tattoo", bundlePrice:"£590", fullPrice:"£620", singlePrice:"£120", bundleAmount:59000, fullAmount:62000, singleAmount:12000 },
-    { key:"large", name:"Large Tattoo", bundlePrice:"£790", fullPrice:"£820", singlePrice:"£160", bundleAmount:79000, fullAmount:82000, singleAmount:16000 },
-    { key:"xl", name:"XL Tattoo", bundlePrice:"£1020", fullPrice:"£1050", singlePrice:"£200", bundleAmount:102000, fullAmount:105000, singleAmount:20000 }
-  ],
+  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
+  { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3465", fullPrice:"\u00A3495", singlePrice:"\u00A395", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
+  { key:"medium", name:"Medium Tattoo", bundlePrice:"\u00A3590", fullPrice:"\u00A3620", singlePrice:"\u00A3120", bundleAmount:59000, fullAmount:62000, singleAmount:12000 },
+  { key:"large", name:"Large Tattoo", bundlePrice:"\u00A3790", fullPrice:"\u00A3820", singlePrice:"\u00A3160", bundleAmount:79000, fullAmount:82000, singleAmount:16000 },
+  { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A31020", fullPrice:"\u00A31050", singlePrice:"\u00A3200", bundleAmount:102000, fullAmount:105000, singleAmount:20000 }
+],
 
-  friendsPackages: [
-  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£250", fullPrice:"£270", singlePrice:"£55", bundleAmount:25000, fullAmount:27000, singleAmount:5500 },
-  { key:"small", name:"Small Tattoo", bundlePrice:"£350", fullPrice:"£370", singlePrice:"£70", bundleAmount:35000, fullAmount:37000, singleAmount:7000 },
-  { key:"medium", name:"Medium Tattoo", bundlePrice:"£440", fullPrice:"£465", singlePrice:"£90", bundleAmount:44000, fullAmount:46500, singleAmount:9000 },
-  { key:"large", name:"Large Tattoo", bundlePrice:"£595", fullPrice:"£615", singlePrice:"£120", bundleAmount:59500, fullAmount:61500, singleAmount:12000 },
-  { key:"xl", name:"XL Tattoo", bundlePrice:"£765", fullPrice:"£785", singlePrice:"£150", bundleAmount:76500, fullAmount:78500, singleAmount:15000 }
+friendsPackages: [
+  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3250", fullPrice:"\u00A3270", singlePrice:"\u00A355", bundleAmount:25000, fullAmount:27000, singleAmount:5500 },
+  { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3350", fullPrice:"\u00A3370", singlePrice:"\u00A370", bundleAmount:35000, fullAmount:37000, singleAmount:7000 },
+  { key:"medium", name:"Medium Tattoo", bundlePrice:"\u00A3440", fullPrice:"\u00A3465", singlePrice:"\u00A390", bundleAmount:44000, fullAmount:46500, singleAmount:9000 },
+  { key:"large", name:"Large Tattoo", bundlePrice:"\u00A3595", fullPrice:"\u00A3615", singlePrice:"\u00A3120", bundleAmount:59500, fullAmount:61500, singleAmount:12000 },
+  { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A3765", fullPrice:"\u00A3785", singlePrice:"\u00A3150", bundleAmount:76500, fullAmount:78500, singleAmount:15000 }
 ],
   
   booking: {
