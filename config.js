@@ -48,6 +48,7 @@ Object.assign(window.SITE_CONFIG, {
     depositTitle: "Consultation Deposit",
     consultationTitle: "Consultation Form",
     treatmentTitle: "Treatment Packages",
+    friendsTitle: "Friends & Family Pricing",
     treatmentBookingTitle: "Treatment Booking",
     rescheduleTitle: "Reschedule Appointment"
   },
@@ -98,6 +99,14 @@ Object.assign(window.SITE_CONFIG, {
     { key:"xl", name:"XL Tattoo", bundlePrice:"£1020", fullPrice:"£1050", singlePrice:"£200", bundleAmount:102000, fullAmount:105000, singleAmount:20000 }
   ],
 
+  friendsPackages: [
+  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"£250", fullPrice:"£270", singlePrice:"£55", bundleAmount:25000, fullAmount:27000, singleAmount:5500 },
+  { key:"small", name:"Small Tattoo", bundlePrice:"£350", fullPrice:"£370", singlePrice:"£70", bundleAmount:35000, fullAmount:37000, singleAmount:7000 },
+  { key:"medium", name:"Medium Tattoo", bundlePrice:"£440", fullPrice:"£465", singlePrice:"£90", bundleAmount:44000, fullAmount:46500, singleAmount:9000 },
+  { key:"large", name:"Large Tattoo", bundlePrice:"£595", fullPrice:"£615", singlePrice:"£120", bundleAmount:59500, fullAmount:61500, singleAmount:12000 },
+  { key:"xl", name:"XL Tattoo", bundlePrice:"£765", fullPrice:"£785", singlePrice:"£150", bundleAmount:76500, fullAmount:78500, singleAmount:15000 }
+],
+  
   booking: {
     consultationSlots: {
       weekday: ["17:00","17:30","18:00","18:30","19:00"],
