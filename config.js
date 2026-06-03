@@ -100,11 +100,11 @@ Object.assign(window.SITE_CONFIG, {
 ],
 
 friendsPackages: [
-  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3250", fullPrice:"\u00A3270", singlePrice:"\u00A355", bundleAmount:25000, fullAmount:27000, singleAmount:5500 },
-  { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3350", fullPrice:"\u00A3370", singlePrice:"\u00A370", bundleAmount:35000, fullAmount:37000, singleAmount:7000 },
-  { key:"medium", name:"Medium Tattoo", bundlePrice:"\u00A3440", fullPrice:"\u00A3465", singlePrice:"\u00A390", bundleAmount:44000, fullAmount:46500, singleAmount:9000 },
-  { key:"large", name:"Large Tattoo", bundlePrice:"\u00A3595", fullPrice:"\u00A3615", singlePrice:"\u00A3120", bundleAmount:59500, fullAmount:61500, singleAmount:12000 },
-  { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A3765", fullPrice:"\u00A3785", singlePrice:"\u00A3150", bundleAmount:76500, fullAmount:78500, singleAmount:15000 }
+  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"GBP 250", fullPrice:"GBP 270", singlePrice:"GBP 55", bundleAmount:25000, fullAmount:27000, singleAmount:5500 },
+  { key:"small", name:"Small Tattoo", bundlePrice:"GBP 350", fullPrice:"GBP 370", singlePrice:"GBP 70", bundleAmount:35000, fullAmount:37000, singleAmount:7000 },
+  { key:"medium", name:"Medium Tattoo", bundlePrice:"GBP 440", fullPrice:"GBP 465", singlePrice:"GBP 90", bundleAmount:44000, fullAmount:46500, singleAmount:9000 },
+  { key:"large", name:"Large Tattoo", bundlePrice:"GBP 595", fullPrice:"GBP 615", singlePrice:"GBP 120", bundleAmount:59500, fullAmount:61500, singleAmount:12000 },
+  { key:"xl", name:"XL Tattoo", bundlePrice:"GBP 765", fullPrice:"GBP 785", singlePrice:"GBP 150", bundleAmount:76500, fullAmount:78500, singleAmount:15000 }
 ],
   
   booking: {
