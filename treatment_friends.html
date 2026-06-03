@@ -158,15 +158,17 @@ const CONFIG = window.SITE_CONFIG || {};
 const pageTitle = document.getElementById("page-title");
 
 if (pageTitle) {
-  pageTitle.textContent = `${CONFIG.pages?.treatmentTitle || "Treatment Packages"} | ${CONFIG.businessName || "BARE by Marlese"}`;
+  pageTitle.textContent = `${CONFIG.pages?.friendsTitle || "Friends & Family Pricing"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 const kicker = document.getElementById("page-kicker");
 if (kicker) {
-  kicker.textContent = CONFIG.pages?.treatmentTitle || "Treatment Packages";
+  kicker.textContent = CONFIG.pages?.friendsTitle || "Friends & Family Pricing";
 }
 
-const stripeLinks = CONFIG.stripeLinks || {};
-const packages = Array.isArray(CONFIG.packages) ? CONFIG.packages : [];
+const stripeLinks = CONFIG.stripeLinksFriends || CONFIG.stripeLinks || {};
+const packages = Array.isArray(CONFIG.friendsPackages)
+  ? CONFIG.friendsPackages
+  : [];
 
 function goToPayment(packageKey, type){
   const link = stripeLinks?.[type]?.[packageKey];
