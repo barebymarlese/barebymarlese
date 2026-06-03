@@ -95,6 +95,30 @@ Object.assign(window.SITE_CONFIG, {
     }
   },
 
+  stripeLinksFriends: {
+  bundle_full: {
+    tiny: "FRIENDS_TINY_NO_CONSULTATION_LINK",
+    small: "FRIENDS_SMALL_NO_CONSULTATION_LINK",
+    medium: "FRIENDS_MEDIUM_NO_CONSULTATION_LINK",
+    large: "FRIENDS_LARGE_NO_CONSULTATION_LINK",
+    xl: "FRIENDS_XL_NO_CONSULTATION_LINK"
+  },
+  bundle_deducted: {
+    tiny: "FRIENDS_TINY_CONSULTATION_COMPLETED_LINK",
+    small: "FRIENDS_SMALL_CONSULTATION_COMPLETED_LINK",
+    medium: "FRIENDS_MEDIUM_CONSULTATION_COMPLETED_LINK",
+    large: "FRIENDS_LARGE_CONSULTATION_COMPLETED_LINK",
+    xl: "FRIENDS_XL_CONSULTATION_COMPLETED_LINK"
+  },
+  single: {
+    tiny: "FRIENDS_TINY_SINGLE_LINK",
+    small: "FRIENDS_SMALL_SINGLE_LINK",
+    medium: "FRIENDS_MEDIUM_SINGLE_LINK",
+    large: "FRIENDS_LARGE_SINGLE_LINK",
+    xl: "FRIENDS_XL_SINGLE_LINK"
+  }
+},
+
   packages: [
   { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
   { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3465", fullPrice:"\u00A3495", singlePrice:"\u00A395", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
