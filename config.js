@@ -10,7 +10,7 @@ Object.assign(window.SITE_CONFIG, {
   currency: "£",
 
   analytics: {
-  ga4MeasurementId: "G-1Z8SPFBHJC"
+  ga4MeasurementId: "G-CFX28N49FM"
 },
 
   brandMain: "BARE",
