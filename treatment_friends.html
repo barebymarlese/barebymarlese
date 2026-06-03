@@ -165,10 +165,11 @@ if (kicker) {
   kicker.textContent = CONFIG.pages?.friendsTitle || "Friends & Family Pricing";
 }
 
-const stripeLinks = CONFIG.stripeLinksFriends || CONFIG.stripeLinks || {};
-const packages = Array.isArray(CONFIG.friendsPackages)
+const stripeLinks = CONFIG.stripeLinks || {};
+
+const packages = Array.isArray(CONFIG.friendsPackages) && CONFIG.friendsPackages.length
   ? CONFIG.friendsPackages
-  : [];
+  : CONFIG.packages || [];
 
 function goToPayment(packageKey, type){
   const link = stripeLinks?.[type]?.[packageKey];
