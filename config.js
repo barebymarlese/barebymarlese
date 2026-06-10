@@ -54,6 +54,7 @@ Object.assign(window.SITE_CONFIG, {
     treatmentTitle: "Treatment Packages",
     friendsTitle: "Friends & Family Pricing",
     treatmentBookingTitle: "Treatment Booking",
+    carbonTreatmentTitle: "Fungal Nail & Carbon Facial Treatments",
     rescheduleTitle: "Reschedule Appointment"
   },
 
