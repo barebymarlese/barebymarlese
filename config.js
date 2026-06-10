@@ -52,9 +52,7 @@ Object.assign(window.SITE_CONFIG, {
     depositTitle: "Consultation Deposit",
     consultationTitle: "Consultation Form",
     treatmentTitle: "Treatment Packages",
-    friendsTitle: "Friends & Family Pricing",
     treatmentBookingTitle: "Treatment Booking",
-    carbonTreatmentTitle: "Fungal Nail & Carbon Facial Treatments",
     rescheduleTitle: "Reschedule Appointment"
   },
 
@@ -96,32 +94,6 @@ Object.assign(window.SITE_CONFIG, {
     }
   },
 
-  stripeLinksFriends: {
-  bundle_full: {
-    tiny: "https://buy.stripe.com/cNi9AV5HY9Xd3IB3XU8g00p",
-    small: "https://buy.stripe.com/9B64gBdaq4CTcf7gKG8g00o",
-    medium: "https://buy.stripe.com/cNi8wR2vM3yP7YR8ea8g00n",
-    large: "https://buy.stripe.com/fZufZj0nEfhx0wp6628g00m",
-    xl: "https://buy.stripe.com/fZu6oJ9Yeedtenfbqm8g00l"
-  },
-
-  bundle_deducted: {
-    tiny: "https://buy.stripe.com/bJeeVffiy0mDbb3dyu8g00u",
-    small: "https://buy.stripe.com/9B6cN78Ua7P5a6Zdyu8g00t",
-    medium: "https://buy.stripe.com/4gM8wRb2ifhxfrj51Y8g00s",
-    large: "https://buy.stripe.com/3cIeVfgmC3yPfrj2TQ8g00r",
-    xl: "https://buy.stripe.com/00wcN74DU0mD92V8ea8g00q"
-  },
-
-  single: {
-    tiny: "https://buy.stripe.com/6oUeVfc6mfhxenfeCy8g00g",
-    small: "https://buy.stripe.com/6oU9AV8Ua9Xdenf7a68g00h",
-    medium: "https://buy.stripe.com/7sYdRbgmCedt4MFeCy8g00i",
-    large: "https://buy.stripe.com/dRm14pdaq5GXenfeCy8g00j",
-    xl: "https://buy.stripe.com/8x26oJeeu6L1bb3fGC8g00k"
-  }
-},
-
 stripeLinksCarbon: {
   carbon_single: "https://buy.stripe.com/fZu9AVgmC3yP0wp0LI8g00v",
   carbon_course3: "https://buy.stripe.com/bJe7sN0nE5GX3IB9ie8g00w",
@@ -140,14 +112,6 @@ stripeLinksCarbon: {
   { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A31020", fullPrice:"\u00A31050", singlePrice:"\u00A3200", bundleAmount:102000, fullAmount:105000, singleAmount:20000 }
 ],
 
-friendsPackages: [
-  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3240", fullPrice:"\u00A3270", singlePrice:"\u00A355", bundleAmount:25000, fullAmount:27000, singleAmount:5500 },
-  { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3340", fullPrice:"\u00A3370", singlePrice:"\u00A370", bundleAmount:35000, fullAmount:37000, singleAmount:7000 },
-  { key:"medium", name:"Medium Tattoo", bundlePrice:"\u00A3435", fullPrice:"\u00A3465", singlePrice:"\u00A390", bundleAmount:44000, fullAmount:46500, singleAmount:9000 },
-  { key:"large", name:"Large Tattoo", bundlePrice:"\u00A3585", fullPrice:"\u00A3615", singlePrice:"\u00A3120", bundleAmount:59500, fullAmount:61500, singleAmount:12000 },
-  { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A3755", fullPrice:"\u00A3785", singlePrice:"\u00A3150", bundleAmount:76500, fullAmount:78500, singleAmount:15000 }
-],
-
 carbonPackages: [
   { key:"carbon_single", name:"Single Carbon Facial", price:"\u00A385", amount:8500 },
   { key:"carbon_course3", name:"Course of 3 Treatments", price:"\u00A3225", amount:22500 },
@@ -155,7 +119,6 @@ carbonPackages: [
   { key:"fungal_single_nail", name:"Single Nail", price:"\u00A345", amount:4500 },
   { key:"fungal_one_foot", name:"One Foot (Up to 5 Nails)", price:"\u00A385", amount:8500 },
   { key:"fungal_both_feet", name:"Both Feet", price:"\u00A3120", amount:12000 },
-
   { key:"fungal_course4_one_foot", name:"Course of 4 Sessions (One Foot)", price:"\u00A3300", amount:30000 },
   { key:"fungal_course4_both_feet", name:"Course of 4 Sessions (Both Feet)", price:"\u00A3420", amount:42000 }
 ],
