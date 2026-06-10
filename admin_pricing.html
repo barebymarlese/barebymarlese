@@ -28,7 +28,7 @@ h1{margin:18px 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight
 .sub{max-width:680px;margin:0 auto;font-size:15px;line-height:1.7;color:rgba(36,34,26,.78)}
 
 .content{padding:26px}
-.qr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
 .qr-card{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;text-align:center}
 .qr-card h2{margin:0 0 16px;font-size:18px;font-weight:600;letter-spacing:.06em}
 .qr-card img{max-width:350px;width:100%;border-radius:20px;display:block;margin:0 auto}
@@ -42,7 +42,6 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
 @media(max-width:800px){
   .page{padding:18px 10px}
   .content{padding:18px}
-  .qr-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
