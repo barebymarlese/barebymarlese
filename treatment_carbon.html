@@ -39,7 +39,23 @@ h1{margin:18px 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight
 .price-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:16px 18px;border:1px solid rgba(36,34,26,.10);border-radius:16px;background:#f8f8f6}
 .price-row h3{margin:0;font-size:15px;font-weight:600;letter-spacing:.04em;color:var(--ink)}
 .price-row p{margin:4px 0 0;font-size:12px;line-height:1.5;color:rgba(36,34,26,.65)}
-.price{font-size:18px;font-weight:700;color:#fff;background:linear-gradient(180deg,var(--olive),var(--olive-dark));padding:11px 16px;border-radius:14px;white-space:nowrap}
+.price{
+  font-size:18px;
+  font-weight:700;
+  color:#fff;
+  background:linear-gradient(180deg,var(--olive),var(--olive-dark));
+  padding:11px 16px;
+  border-radius:14px;
+  white-space:nowrap;
+  border:none;
+  cursor:pointer;
+  font-family:inherit;
+}
+
+.price:hover{
+  opacity:.95;
+  transform:translateY(-1px);
+}
 
 .notice{margin-top:22px;padding:14px 16px;background:rgba(135,130,116,.10);border:1px solid rgba(135,130,116,.18);border-radius:14px;font-size:13px;line-height:1.65;color:rgba(36,34,26,.76)}
 .actions{margin-top:22px;text-align:center}
@@ -90,7 +106,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <h3>Single Carbon Facial</h3>
         <p>One carbon laser facial treatment.</p>
       </div>
-      <div class="price">£85</div>
+      <button class="price" onclick="goToCarbonPayment('fungal_one_foot')">£85</button>
     </div>
 
     <div class="price-row">
@@ -98,7 +114,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <h3>Course of 3 Treatments</h3>
         <p>Recommended course of three treatments (£75 per treatment).</p>
       </div>
-      <div class="price">£225</div>
+      <button class="price" onclick="goToCarbonPayment('carbon_course3')">£225</button>
     </div>
   </div>
 </div>
@@ -116,7 +132,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <h3>Single Nail</h3>
         <p>Suitable where only one toenail requires treatment.</p>
       </div>
-      <div class="price">£45</div>
+      <button class="price" onclick="goToCarbonPayment('fungal_single_nail')">£45</button>
     </div>
 
     <div class="price-row">
@@ -124,7 +140,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <h3>One Foot (Up to 5 Nails)</h3>
         <p>For affected nails on one foot only.</p>
       </div>
-      <div class="price">£85</div>
+      <button class="price" onclick="goToCarbonPayment('carbon_single')">£85</button>
     </div>
 
     <div class="price-row">
@@ -132,7 +148,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <h3>Both Feet</h3>
         <p>For affected nails across both feet.</p>
       </div>
-      <div class="price">£120</div>
+      <button class="price" onclick="goToCarbonPayment('fungal_both_feet')">£120</button>
     </div>
 
     <div class="price-row">
@@ -140,7 +156,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <h3>Course of 4 Sessions (One Foot)</h3>
         <p>Discounted treatment package for one foot.</p>
       </div>
-      <div class="price">£300</div>
+      <button class="price" onclick="goToCarbonPayment('fungal_course4_one_foot')">£300</button>
     </div>
 
     <div class="price-row">
@@ -148,7 +164,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <h3>Course of 4 Sessions (Both Feet)</h3>
         <p>Discounted treatment package for both feet.</p>
       </div>
-      <div class="price">£420</div>
+      <button class="price" onclick="goToCarbonPayment('fungal_course4_both_feet')">£420</button>
     </div>
 
   </div>
@@ -181,6 +197,17 @@ if (pageTitle) {
 
 if (kicker) {
   kicker.textContent = "Additional Treatments";
+}
+
+function goToCarbonPayment(key){
+  const link = CONFIG.stripeLinksCarbon?.[key];
+
+  if (!link) {
+    alert("Payment link not configured.");
+    return;
+  }
+
+  window.location.href = link;
 }
 </script>
 </body>
