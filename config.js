@@ -97,25 +97,27 @@ Object.assign(window.SITE_CONFIG, {
 
   stripeLinksFriends: {
   bundle_full: {
-    tiny: "FRIENDS_TINY_NO_CONSULTATION_LINK",
-    small: "FRIENDS_SMALL_NO_CONSULTATION_LINK",
-    medium: "FRIENDS_MEDIUM_NO_CONSULTATION_LINK",
-    large: "FRIENDS_LARGE_NO_CONSULTATION_LINK",
-    xl: "FRIENDS_XL_NO_CONSULTATION_LINK"
+    tiny: "https://buy.stripe.com/cNi9AV5HY9Xd3IB3XU8g00p",
+    small: "https://buy.stripe.com/9B64gBdaq4CTcf7gKG8g00o",
+    medium: "https://buy.stripe.com/cNi8wR2vM3yP7YR8ea8g00n",
+    large: "https://buy.stripe.com/fZufZj0nEfhx0wp6628g00m",
+    xl: "https://buy.stripe.com/fZu6oJ9Yeedtenfbqm8g00l"
   },
+
   bundle_deducted: {
-    tiny: "FRIENDS_TINY_CONSULTATION_COMPLETED_LINK",
-    small: "FRIENDS_SMALL_CONSULTATION_COMPLETED_LINK",
-    medium: "FRIENDS_MEDIUM_CONSULTATION_COMPLETED_LINK",
-    large: "FRIENDS_LARGE_CONSULTATION_COMPLETED_LINK",
-    xl: "FRIENDS_XL_CONSULTATION_COMPLETED_LINK"
+    tiny: "https://buy.stripe.com/bJeeVffiy0mDbb3dyu8g00u",
+    small: "https://buy.stripe.com/9B6cN78Ua7P5a6Zdyu8g00t",
+    medium: "https://buy.stripe.com/4gM8wRb2ifhxfrj51Y8g00s",
+    large: "https://buy.stripe.com/3cIeVfgmC3yPfrj2TQ8g00r",
+    xl: "https://buy.stripe.com/00wcN74DU0mD92V8ea8g00q"
   },
+
   single: {
-    tiny: "FRIENDS_TINY_SINGLE_LINK",
-    small: "FRIENDS_SMALL_SINGLE_LINK",
-    medium: "FRIENDS_MEDIUM_SINGLE_LINK",
-    large: "FRIENDS_LARGE_SINGLE_LINK",
-    xl: "FRIENDS_XL_SINGLE_LINK"
+    tiny: "https://buy.stripe.com/6oUeVfc6mfhxenfeCy8g00g",
+    small: "https://buy.stripe.com/6oU9AV8Ua9Xdenf7a68g00h",
+    medium: "https://buy.stripe.com/7sYdRbgmCedt4MFeCy8g00i",
+    large: "https://buy.stripe.com/dRm14pdaq5GXenfeCy8g00j",
+    xl: "https://buy.stripe.com/8x26oJeeu6L1bb3fGC8g00k"
   }
 },
 
