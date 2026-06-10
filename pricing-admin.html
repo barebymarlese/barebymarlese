@@ -1,23 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pricing & QR Codes | BARE by Marlese</title>
+<link id="favicon-link" rel="icon" type="image/png" href="/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#cacdc6;--ink:#24221a;--olive:#5e6959;--olive-dark:#4f5a4b;--stone:#878274;--card:#f8f8f6;--line:rgba(36,34,26,.12)}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+
+body{font-family:'Montserrat',Arial,sans-serif;background:radial-gradient(circle at top,rgba(255,255,255,.45),transparent 30%),linear-gradient(180deg,#d8dbd4 0%,var(--bg) 100%);color:var(--ink);min-height:100vh}
+
+.page{min-height:100vh;padding:28px 16px}
+.shell{width:100%;max-width:1100px;margin:0 auto}
+
+.brand{text-align:center;margin:0 0 18px}
+#brand-main{color:#5e6959;font-size:24px;font-weight:600;letter-spacing:.26em;text-transform:uppercase}
+.brand-divider{color:#5e6959;opacity:.8;margin:0 12px;font-size:22px}
+#brand-sub{color:#878274;font-size:15px;font-weight:500;letter-spacing:.05em}
+
+.card{background:rgba(248,248,246,.9);border:1px solid var(--line);border-radius:28px;box-shadow:0 18px 60px rgba(36,34,26,.10);overflow:hidden;backdrop-filter:blur(6px)}
+.hero{padding:40px 28px 24px;text-align:center;background:linear-gradient(180deg,rgba(94,105,89,.08),rgba(94,105,89,0) 100%);border-bottom:1px solid var(--line)}
+.kicker{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(94,105,89,.10);color:var(--olive);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:18px 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight:600}
+.sub{max-width:680px;margin:0 auto;font-size:15px;line-height:1.7;color:rgba(36,34,26,.78)}
+
+.content{padding:26px}
+.qr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.qr-card{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;text-align:center}
+.qr-card h2{margin:0 0 16px;font-size:18px;font-weight:600;letter-spacing:.06em}
+.qr-card img{max-width:350px;width:100%;border-radius:20px;display:block;margin:0 auto}
+.qr-card a{text-decoration:none;color:var(--ink)}
+
+.actions{margin-top:22px;text-align:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 16px;border-radius:14px;text-decoration:none;font-family:inherit;font-weight:600;font-size:14px;background:var(--olive);color:#fff}
+
+footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:12px}
+
+@media(max-width:800px){
+  .page{padding:18px 10px}
+  .content{padding:18px}
+  .qr-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<div class="page">
+<div class="shell">
+
+<div class="brand">
+  <span id="brand-main"></span>
+  <span class="brand-divider">|</span>
+  <span class="brand-sub" id="brand-sub"></span>
+</div>
+
 <div class="card">
   <div class="hero">
     <span class="kicker">Private Admin</span>
     <h1>Pricing & QR Codes</h1>
-    <p class="sub">Use these QR codes for treatments and friends & family pricing.</p>
+    <p class="sub">Use these QR codes for treatment pricing and friends & family pricing.</p>
   </div>
 
   <div class="content">
+    <div class="qr-grid">
 
-    <h2>Treatment Packages</h2>
-    <img src="/assets/qr_treatment.png"
-         alt="Treatment QR"
-         style="max-width:350px;width:100%;border-radius:20px;">
+      <div class="qr-card">
+        <a href="/treatment.html" target="_blank">
+          <h2>Treatment Packages</h2>
+          <img src="/assets/qr_treatment.png" alt="Treatment Packages QR Code">
+        </a>
+      </div>
 
-    <br><br><br>
+      <div class="qr-card">
+        <a href="/treatment_friends.html" target="_blank">
+          <h2>Friends & Family</h2>
+          <img src="/assets/qr-code_friends.png" alt="Friends and Family QR Code">
+        </a>
+      </div>
 
-    <h2>Friends & Family</h2>
-    <img src="/assets/qr-code_friends.png"
-         alt="Friends QR"
-         style="max-width:350px;width:100%;border-radius:20px;">
+    </div>
 
+    <div class="actions">
+      <a class="btn" href="/admin.html">Back to Admin</a>
+    </div>
   </div>
 </div>
+
+<footer>© <span id="footer-brand"></span> | Pricing administration</footer>
+
+</div>
+</div>
+
+<script src="/config.js"></script>
+<script src="/branding.js"></script>
+</body>
+</html>
