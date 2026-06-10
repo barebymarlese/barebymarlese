@@ -121,6 +121,16 @@ Object.assign(window.SITE_CONFIG, {
   }
 },
 
+stripeLinksCarbon: {
+  carbon_single: "https://buy.stripe.com/fZu9AVgmC3yP0wp0LI8g00v",
+  carbon_course3: "https://buy.stripe.com/bJe7sN0nE5GX3IB9ie8g00w",
+  fungal_single_nail: "https://buy.stripe.com/3cIdRbfiy0mD7YR3XU8g00x",
+  fungal_one_foot: "https://buy.stripe.com/5kQdRb0nE5GX4MF0LI8g00y",
+  fungal_both_feet: "https://buy.stripe.com/7sY00lfiy2uL2Exbqm8g00z",
+  fungal_course4_one_foot: "https://buy.stripe.com/4gM9AVgmC1qH6UN0LI8g00A",
+  fungal_course4_both_feet: "https://buy.stripe.com/dRmbJ39Ye7P54MF51Y8g00B"
+},
+
   packages: [
   { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
   { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3465", fullPrice:"\u00A3495", singlePrice:"\u00A395", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
@@ -135,6 +145,18 @@ friendsPackages: [
   { key:"medium", name:"Medium Tattoo", bundlePrice:"\u00A3435", fullPrice:"\u00A3465", singlePrice:"\u00A390", bundleAmount:44000, fullAmount:46500, singleAmount:9000 },
   { key:"large", name:"Large Tattoo", bundlePrice:"\u00A3585", fullPrice:"\u00A3615", singlePrice:"\u00A3120", bundleAmount:59500, fullAmount:61500, singleAmount:12000 },
   { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A3755", fullPrice:"\u00A3785", singlePrice:"\u00A3150", bundleAmount:76500, fullAmount:78500, singleAmount:15000 }
+],
+
+carbonPackages: [
+  { key:"carbon_single", name:"Single Carbon Facial", price:"\u00A385", amount:8500 },
+  { key:"carbon_course3", name:"Course of 3 Treatments", price:"\u00A3225", amount:22500 },
+
+  { key:"fungal_single_nail", name:"Single Nail", price:"\u00A345", amount:4500 },
+  { key:"fungal_one_foot", name:"One Foot (Up to 5 Nails)", price:"\u00A385", amount:8500 },
+  { key:"fungal_both_feet", name:"Both Feet", price:"\u00A3120", amount:12000 },
+
+  { key:"fungal_course4_one_foot", name:"Course of 4 Sessions (One Foot)", price:"\u00A3300", amount:30000 },
+  { key:"fungal_course4_both_feet", name:"Course of 4 Sessions (Both Feet)", price:"\u00A3420", amount:42000 }
 ],
   
   booking: {
