@@ -101,21 +101,6 @@ body{
   border-bottom:1px solid var(--line);
 }
   
-.qr-box{
-  position:absolute;
-  top:20px;
-  right:20px;
-  background:white;
-  padding:10px;
-  border-radius:14px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.08);
-}
-
-.qr-box img{
-  width:120px;
-  display:block;
-}
-
 .kicker{
   display:inline-block;
   padding:8px 14px;
@@ -397,10 +382,6 @@ footer{
   <h1>Bookings Dashboard</h1>
   <p class="sub">View bookings, client contact details, send manual WhatsApp reminders, and cancel bookings when needed.</p>
 
-  <!-- ✅ QR CODE -->
-  <div class="qr-box">
-    <img id="qr-code" alt="QR Code">
-  </div>
 </div>
 
       <div class="toolbar">
@@ -408,6 +389,7 @@ footer{
         <div class="actions">
           <button class="btn btn-secondary" type="button" onclick="loadBookings()">Refresh</button>
           <a class="btn btn-primary" href="/booking.html">Open Booking Page</a>
+          <a class="btn btn-primary" href="/pricing-admin.html">Pricing & QR Codes</a>
         </div>
       </div>
 
@@ -448,11 +430,6 @@ const CONFIG = window.SITE_CONFIG || {};
 const API_BASE = CONFIG.apiBase || window.location.origin;
 
 const pageTitle = document.getElementById("page-title");
-const qr = document.getElementById("qr-code");
-
-if (qr) {
-  qr.src = CONFIG.qrCode || "/assets/qr_treatment.png";
-}
 
 if (pageTitle) {
   pageTitle.textContent = `${CONFIG.pages?.adminTitle || "Bookings Admin"} | ${CONFIG.businessName || "BARE by Marlese"}`;
