@@ -117,7 +117,7 @@ export async function onRequest(context) {
 
   const booking = await env.DB.prepare(
     `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, reschedule_token
-     FROM appointments
+     FROM appointments,treatment_category,treatment_name
      WHERE id = ?`
   ).bind(id).first();
 
@@ -690,7 +690,7 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
   VALUES (
     ?, ?, ?, ?, ?,
     'confirmed',
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?
   )`
 )
 .bind(
@@ -709,7 +709,9 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
   sessionsTotal,
   sessionsUsed,
   packageStatus,
-  paymentReference
+  paymentReference,
+  treatmentCategory,
+  treatmentName
 )
 .run();
 
