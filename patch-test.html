@@ -665,6 +665,7 @@
         const data = new FormData();
 
         data.append("client_name", document.getElementById("clientName")?.value || "");
+        data.append("treatment_type", document.getElementById("treatmentType")?.value || "");
         data.append("date_of_birth", document.getElementById("dateOfBirth")?.value || "");
         data.append("test_date", document.getElementById("testDate")?.value || "");
         data.append("test_area", document.getElementById("testArea")?.value || "");
