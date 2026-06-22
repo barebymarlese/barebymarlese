@@ -294,9 +294,9 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     }
 
     const booking = await env.DB.prepare(
-      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
-       FROM appointments
-       WHERE id = ? AND reschedule_token = ?`
+      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, treatment_category, treatment_name
+   FROM appointments
+   WHERE id = ? AND reschedule_token = ?`
     ).bind(id, token).first();
 
     if (!booking) {
@@ -317,9 +317,9 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     }
 
     const booking = await env.DB.prepare(
-      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type
-       FROM appointments
-       WHERE id = ? AND reschedule_token = ?`
+      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, treatment_category, treatment_name
+   FROM appointments
+   WHERE id = ? AND reschedule_token = ?`
     ).bind(id, token).first();
 
     if (!booking) {
