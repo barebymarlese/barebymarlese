@@ -600,6 +600,8 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     const bookingType = body.booking_type || "consultation";
     const packageType = body.package_type || null;
     const tattooSize = body.tattoo_size || null;
+    const treatmentCategory = body.treatment_category || null;
+    const treatmentName = body.treatment_name || null;
     const amountPaid = Number(body.amount_paid || 0);
     const paymentReference = body.payment_reference || null;
 
