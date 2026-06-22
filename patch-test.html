@@ -494,37 +494,34 @@
             </div>
 
             <div class="settings-grid">
-                <div>
-                    <label class="con-label">Machine Serial No.</label>
-                    <input type="text" id="serialNo" class="con-input" placeholder="e.g. SN-12345">
-                </div>
-                <div>
-                    <label class="con-label">Wavelength</label>
-                    <input type="text" id="wavelength" class="con-input" placeholder="1064/532nm">
-                </div>
-            </div>
+    <div>
+        <label class="con-label">Machine Serial No.</label>
+        <input type="text" id="serialNo" class="con-input" placeholder="e.g. SN-12345">
+    </div>
+    <div>
+        <label class="con-label">Wavelength</label>
+        <input type="text" id="wavelength" class="con-input" placeholder="1064/532nm">
+    </div>
+</div>
 
-            <div class="settings-grid">
-                <div>
-                    <label class="con-label">Joules (J/cm²)</label>
-                    <input type="text" id="joules" class="con-input" placeholder="e.g. 1.2J">
-                </div>
-                <div>
-                    <label class="con-label">Pulse Width (ms)</label>
-                    <input type="text" id="pulse" class="con-input" placeholder="e.g. 20ms">
-                </div>
-            </div>
+<div class="settings-grid" style="margin-bottom: 15px;">
+    <div>
+        <label class="con-label">Joules (J/cm²)</label>
+        <input type="text" id="joules" class="con-input" placeholder="e.g. 1.2J">
+    </div>
+    <div>
+        <label class="con-label">Number of Test Shots</label>
+        <input type="text" id="testShots" class="con-input" placeholder="e.g. 3 pulses">
+    </div>
+</div>
 
-            <div class="settings-grid" style="margin-bottom: 15px;">
-                <div>
-                    <label class="con-label">Spot Size (mm)</label>
-                    <input type="text" id="spot" class="con-input" placeholder="e.g. 10mm">
-                </div>
-                <div>
-                    <label class="con-label">Number of Test Shots</label>
-                    <input type="text" id="testShots" class="con-input" placeholder="e.g. 3 pulses">
-                </div>
-            </div>
+<div class="settings-grid" style="margin-bottom: 15px;">
+    <div>
+        <label class="con-label">Earliest Safe Treatment Date</label>
+        <input type="date" id="earliestTreatmentDate" class="con-input">
+    </div>
+    <div></div>
+</div>
 
             <div class="settings-grid" style="margin-bottom: 15px;">
                 <div>
@@ -619,8 +616,6 @@
         document.getElementById('serialNo').value = "";
         document.getElementById('wavelength').value = "";
         document.getElementById('joules').value = "";
-        document.getElementById('pulse').value = "";
-        document.getElementById('spot').value = "";
         document.getElementById('testShots').value = "";
         document.getElementById('earliestTreatmentDate').value = "";
         document.getElementById('eyePro').checked = true;
@@ -675,8 +670,6 @@
     data.append("serial_no", document.getElementById("serialNo")?.value || "");
     data.append("wavelength", document.getElementById("wavelength")?.value || "");
     data.append("joules", document.getElementById("joules")?.value || "");
-    data.append("pulse", document.getElementById("pulse")?.value || "");
-    data.append("spot", document.getElementById("spot")?.value || "");
     data.append("test_shots", document.getElementById("testShots")?.value || "");
     data.append("earliest_treatment_date", document.getElementById("earliestTreatmentDate")?.value || "");
     data.append("eye_protection", document.getElementById("eyePro")?.checked ? "Yes" : "No");
