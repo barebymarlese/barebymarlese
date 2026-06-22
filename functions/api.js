@@ -685,7 +685,11 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
           package_status,
           payment_reference
         )
-        VALUES (?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`
+        VALUES (
+  ?, ?, ?, ?, ?,
+  'confirmed',
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+)
       )
       .bind(
         clientName,
