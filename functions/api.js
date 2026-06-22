@@ -686,10 +686,12 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
           payment_reference
         )
         VALUES (
-  ?, ?, ?, ?, ?,
-  'confirmed',
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-)
+          ?, ?, ?, ?, ?,
+          'confirmed',
+          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        )`
+      )
+      .bind(
       )
       .bind(
         clientName,
