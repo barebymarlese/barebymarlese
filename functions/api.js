@@ -755,7 +755,12 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
       <p><strong>Date:</strong> ${safeDate}</p>
       <p><strong>Time:</strong> ${safeTime}</p>
       <p><strong>Type:</strong> ${escapeHtml(bookingType)}</p>
-      ${packageDisplay ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>` : ""}
+      ${treatmentName
+  ? `<p><strong>Treatment:</strong> ${escapeHtml(treatmentName)}</p>`
+  : packageDisplay
+    ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>`
+    : ""
+}
       ${priceDisplay ? `<p><strong>Amount Paid:</strong> ${escapeHtml(priceDisplay)}</p>` : ""}
       <p><strong>Payment Status:</strong> ${safePaymentStatus}</p>
       ${bookingType === "treatment" ? `<p><strong>Package Status:</strong> ${safePackageStatus}</p><p><strong>Sessions Used:</strong> ${safeSessions}</p>` : ""}
@@ -789,7 +794,12 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
     }
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
       <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
-      ${packageDisplay ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>` : ""}
+      ${treatmentName
+  ? `<p><strong>Treatment:</strong> ${escapeHtml(treatmentName)}</p>`
+  : packageDisplay
+    ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>`
+    : ""
+}
       ${priceDisplay ? `<p><strong>Amount Paid:</strong> ${escapeHtml(priceDisplay)}</p>` : ""}
       ${bookingType === "treatment" ? `<p><strong>Sessions:</strong> ${safeSessions}</p>` : ""}
       <p><strong>Date:</strong> ${safeDate}</p>
