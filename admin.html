@@ -623,7 +623,9 @@ function buildPackageInfo(booking){
 
   return `
     <div class="package-text">
-      ${escapeHtml(formatPackageType(booking.package_type))}
+      ${booking.treatment_name
+        ? escapeHtml(booking.treatment_name)
+        : escapeHtml(formatPackageType(booking.package_type))}
       ${booking.tattoo_size ? `<br>${escapeHtml(formatTattooSize(booking.tattoo_size))}` : ""}
       <br>
       <span class="action-note">${escapeHtml(booking.package_status || "none")}</span>
