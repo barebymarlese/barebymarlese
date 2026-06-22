@@ -665,53 +665,51 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
       const rescheduleToken = crypto.randomUUID();
 
       const insertResult = await env.DB.prepare(
-        `INSERT INTO appointments
-        (
-          client_name,
-          email,
-          phone,
-          appointment_date,
-          appointment_time,
-          status,
-          reschedule_token,
-          booking_type,
-          package_type,
-          tattoo_size,
-          amount_paid,
-          payment_status,
-          payment_type,
-          sessions_total,
-          sessions_used,
-          package_status,
-          payment_reference
-        )
-        VALUES (
-          ?, ?, ?, ?, ?,
-          'confirmed',
-          ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-        )`
-      )
-      .bind(
-      )
-      .bind(
-        clientName,
-        email,
-        phone,
-        appointmentDate,
-        appointmentTime,
-        rescheduleToken,
-        bookingType,
-        packageType,
-        tattooSize,
-        amountPaid,
-        paymentStatus,
-        paymentType,
-        sessionsTotal,
-        sessionsUsed,
-        packageStatus,
-        paymentReference
-      )
-      .run();
+  `INSERT INTO appointments
+  (
+    client_name,
+    email,
+    phone,
+    appointment_date,
+    appointment_time,
+    status,
+    reschedule_token,
+    booking_type,
+    package_type,
+    tattoo_size,
+    amount_paid,
+    payment_status,
+    payment_type,
+    sessions_total,
+    sessions_used,
+    package_status,
+    payment_reference
+  )
+  VALUES (
+    ?, ?, ?, ?, ?,
+    'confirmed',
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  )`
+)
+.bind(
+  clientName,
+  email,
+  phone,
+  appointmentDate,
+  appointmentTime,
+  rescheduleToken,
+  bookingType,
+  packageType,
+  tattooSize,
+  amountPaid,
+  paymentStatus,
+  paymentType,
+  sessionsTotal,
+  sessionsUsed,
+  packageStatus,
+  paymentReference
+)
+.run();
 
       const bookingId = insertResult.meta.last_row_id;
       const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
