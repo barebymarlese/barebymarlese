@@ -462,9 +462,22 @@
             </div>
 
             <div class="settings-grid">
+    <div>
+        <label class="con-label">Treatment Type</label>
+        <select id="treatmentType" class="con-input">
+            <option value="">Select</option>
+            <option value="Tattoo Removal">Tattoo Removal</option>
+            <option value="Carbon Facial">Carbon Facial</option>
+            <option value="Fungal Toenail">Fungal Toenail Treatment</option>
+        </select>
+    </div>
+    <div></div>
+</div>
+            
+            <div class="settings-grid">
                 <div>
                     <label class="con-label">Test Area</label>
-                    <input type="text" id="testArea" class="con-input" placeholder="Exact location + size (e.g. 2cm area, left inner forearm)">
+                    <input type="text" id="testArea" class="con-input" placeholder="Treatment area (e.g. left forearm tattoo, full face, right big toenail)">
                 </div>
                 <div>
                     <label class="con-label">Fitzpatrick Type</label>
@@ -525,7 +538,8 @@
             <div class="reaction-container" id="reactionContainer" style="margin-bottom: 20px;">
                 <div class="pill" onclick="toggleReaction(this)">Normal Erythema</div>
                 <div class="pill" onclick="toggleReaction(this)">Perifollicular Edema</div>
-                <div class="pill" onclick="toggleReaction(this)">Urticaria (Hives)</div>
+                <div class="pill" onclick="toggleReaction(this)">Mild Swelling</div>
+                <div class="pill" onclick="toggleReaction(this)">Warmth</div>
                 <div class="pill" onclick="toggleReaction(this)">Mild Blistering</div>
                 <div class="pill" onclick="toggleReaction(this)">Frosting</div>
                 <div class="pill" onclick="toggleReaction(this)">Pinpoint Bleeding</div>
@@ -545,7 +559,7 @@
                 <strong style="text-transform: uppercase; letter-spacing: 0.05em;">Declaration & Consent</strong>
                 <ul style="margin: 8px 0 0 0; padding-left: 18px; list-style-type: disc;">
                     <li>I acknowledge that a patch test has been performed to test for adverse reactions or pigment changes.</li>
-                    <li>Laser tattoo removal carries risks including blistering, scarring, and pigmentation changes. Results vary and complete removal cannot be guaranteed.</li>
+                    <li>Laser treatments carry risks including redness, swelling, blistering, pigmentation changes, scarring, and infection. Results vary between individuals and treatment types and cannot be guaranteed.</li>
                     <li>I will monitor the area for <strong>24-48 hours</strong> and report any adverse reactions (e.g. excessive swelling, blistering, or signs of infection) before proceeding with full treatment.</li>
                     <li>I consent to <strong>photographs</strong> being taken of the treated area for my clinical records and insurance purposes.</li>
                     <li>I confirm that I have received and understood the <strong>aftercare instructions</strong> and agree to follow them to minimize the risk of complications.</li>
