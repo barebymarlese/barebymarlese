@@ -335,13 +335,14 @@ async function loadBooking(){
     const booking = await res.json();
 
     summary.innerHTML = `
-      <p><strong>Appointment details</strong></p>
-      <p><strong>Name:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
-      <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
-      <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
-      <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
-      <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
-    `;
+  <p><strong>Appointment details</strong></p>
+  <p><strong>Name:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
+  <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+  <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+  <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
+  ${booking.treatment_name ? `<p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>` : ""}
+  <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
+`;
 
     if(booking.status !== "confirmed"){
       status.textContent = "This appointment has already been cancelled or can no longer be changed.";
