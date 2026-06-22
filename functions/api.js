@@ -97,6 +97,8 @@ export async function onRequest(context) {
         sessions_used,
         package_status,
         payment_reference,
+        treatment_category,
+        treatment_name,
         reschedule_token,
         whatsapp_reminder_sent,
         aftercare_sent
@@ -116,10 +118,10 @@ export async function onRequest(context) {
   if (!id) return new Response("Missing booking ID", { status: 400 });
 
   const booking = await env.DB.prepare(
-    `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, reschedule_token
-     FROM appointments,treatment_category,treatment_name
-     WHERE id = ?`
-  ).bind(id).first();
+  `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, reschedule_token, treatment_category, treatment_name
+   FROM appointments
+   WHERE id = ?`
+).bind(id).first();
 
   if (!booking) {
     return new Response("Booking not found", { status: 404 });
@@ -685,13 +687,16 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
     sessions_total,
     sessions_used,
     package_status,
-    payment_reference
+    payment_reference,
+    treatment_category,
+    treatment_name
   )
   VALUES (
-    ?, ?, ?, ?, ?,
-    'confirmed',
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?
-  )`
+  ?, ?, ?, ?, ?,
+  'confirmed',
+  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+  ?, ?
+)`
 )
 .bind(
   clientName,
