@@ -32,6 +32,7 @@ if (pageTitle) {
 }
 
 const packages = CONFIG.packages || [];
+const carbonPackages = CONFIG.carbonPackages || [];
 
 const pricing = {
   bundle: {
@@ -72,6 +73,8 @@ if (sessionId) {
 const packageKeyFromUrl = (params.get("package") || params.get("size") || "").toLowerCase();
 const typeFromUrl = (params.get("type") || "bundle").toLowerCase();
 const priceTypeFromUrl = (params.get("price") || "deducted").toLowerCase();
+const treatmentCategoryFromUrl = (params.get("treatment") || "tattoo").toLowerCase();
+const sessionsFromUrl = Number(params.get("sessions") || 0);
 
 const safeType = typeFromUrl === "single" ? "single" : "bundle";
 const safePriceType = priceTypeFromUrl === "full" ? "full" : "deducted";
@@ -81,18 +84,31 @@ if (paid === "true") {
   localStorage.setItem("bareTreatmentPackage", packageKeyFromUrl);
   localStorage.setItem("bareTreatmentType", safeType);
   localStorage.setItem("bareTreatmentPriceType", safePriceType);
+  localStorage.setItem("bareTreatmentCategory", treatmentCategoryFromUrl);
+  localStorage.setItem("bareTreatmentSessions", String(sessionsFromUrl));
 }
 
 const hasPaid = localStorage.getItem("bareTreatmentPaid") === "true";
 const packageKey = localStorage.getItem("bareTreatmentPackage");
 const type = localStorage.getItem("bareTreatmentType") || "bundle";
 const priceType = localStorage.getItem("bareTreatmentPriceType") || "deducted";
+const treatmentCategory = localStorage.getItem("bareTreatmentCategory") || "tattoo";
+const treatmentSessions = Number(localStorage.getItem("bareTreatmentSessions") || 0);
 
 const content = document.getElementById("content");
 
 let selectedPackage;
 
-if (type === "single") {
+if (treatmentCategory === "carbon" || treatmentCategory === "fungal") {
+  const foundPackage = carbonPackages.find(pkg => pkg.key === packageKey);
+  if (foundPackage) {
+    selectedPackage = {
+      label: foundPackage.name,
+      price: foundPackage.price,
+      amount: foundPackage.amount
+    };
+  }
+} else if (type === "single") {
   selectedPackage = pricing.single[packageKey];
 } else {
   selectedPackage = pricing.bundle[priceType]?.[packageKey];
@@ -154,8 +170,10 @@ async function confirmBooking(){
   try{
     const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
   booking_type:"treatment",
-  package_type: type === "single" ? "single_session" : "six_sessions",
-  tattoo_size:packageKey,
+  package_type: treatmentSessions > 1 ? `${treatmentSessions}_sessions` : (type === "single" ? "single_session" : "six_sessions"),
+  tattoo_size: treatmentCategory === "tattoo" ? packageKey : null,
+  treatment_category: treatmentCategory,
+  treatment_name: selectedPackage.label,
   amount_paid:selectedPackage.amount / 100,
   client_name:name,
   email,
@@ -170,6 +188,8 @@ if(res.ok){
   localStorage.removeItem("bareTreatmentPackage");
   localStorage.removeItem("bareTreatmentType");
   localStorage.removeItem("bareTreatmentPriceType");
+  localStorage.removeItem("bareTreatmentCategory");
+  localStorage.removeItem("bareTreatmentSessions");
 
   content.innerHTML = `
     <div class="success-card">
