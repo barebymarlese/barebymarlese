@@ -546,14 +546,7 @@
 
             <div class="disclaimer">
                 <strong style="text-transform: uppercase; letter-spacing: 0.05em;">Declaration & Consent</strong>
-                <ul style="margin: 8px 0 0 0; padding-left: 18px; list-style-type: disc;">
-                    <li>I acknowledge that a patch test has been performed to test for adverse reactions or pigment changes.</li>
-                    <li>Laser treatments carry risks including redness, swelling, blistering, pigmentation changes, scarring, and infection. Results vary between individuals and treatment types and cannot be guaranteed.</li>
-                    <li>I will monitor the area for <strong>24-48 hours</strong> and report any adverse reactions (e.g. excessive swelling, blistering, or signs of infection) before proceeding with full treatment.</li>
-                    <li>I consent to <strong>photographs</strong> being taken of the treated area for my clinical records and insurance purposes.</li>
-                    <li>I confirm that I have received and understood the <strong>aftercare instructions</strong> and agree to follow them to minimize the risk of complications.</li>
-                    <li>I confirm there have been no changes to my medical history, medication, or recent sun exposure since my initial consultation.</li>
-                </ul>
+                <ul id="consentList" style="margin: 8px 0 0 0; padding-left: 18px; list-style-type: disc;"></ul>
             </div>
 
             <div style="display:flex; justify-content:space-between; align-items:flex-end;">
@@ -580,6 +573,43 @@
     const PATCH_TEST_WORKER_URL = "https://bare-patchtest-worker.barebymarlese.workers.dev";
     const BRAND_TITLE = "Patch Test Form | BARE by Marlese";
 
+    const consentText = {
+        "Tattoo Removal": [
+            "I acknowledge that a patch test has been performed to test for adverse reactions or pigment changes.",
+            "Laser tattoo removal carries risks including blistering, scarring, pigmentation changes, infection, and incomplete removal. Results vary and complete removal cannot be guaranteed.",
+            "I will monitor the area for 24–48 hours and report any adverse reactions before proceeding with full treatment.",
+            "I consent to photographs being taken of the treated area for my clinical records and insurance purposes.",
+            "I confirm that I have received and understood the aftercare instructions and agree to follow them to minimise the risk of complications.",
+            "I confirm there have been no changes to my medical history, medication, or recent sun exposure since my initial consultation."
+        ],
+        "Carbon Facial": [
+            "I acknowledge that a patch test has been performed to assess skin suitability before Carbon Facial treatment.",
+            "Carbon Facial treatment may cause temporary redness, warmth, sensitivity, dryness, tingling, or mild irritation. Results vary and cannot be guaranteed.",
+            "I will monitor the area for 24–48 hours and report any unexpected reaction before proceeding with full treatment.",
+            "I consent to photographs being taken of the treated area for my clinical records and insurance purposes.",
+            "I confirm that I have received and understood the aftercare instructions and agree to follow them to minimise the risk of complications.",
+            "I confirm there have been no changes to my medical history, medication, skincare products, active skin conditions, or recent sun exposure since my initial consultation."
+        ],
+        "Fungal Toenail": [
+            "I acknowledge that a patch test has been performed to assess suitability before Fungal Toenail treatment.",
+            "Laser treatment for fungal toenails may cause temporary warmth, sensitivity, mild discomfort, redness around the nail, or temporary nail changes. Results vary and cannot be guaranteed.",
+            "I understand that fungal nail improvement can take time and may require multiple sessions, good foot hygiene, and ongoing aftercare.",
+            "I will monitor the treated area for 24–48 hours and report any unexpected reaction before proceeding with full treatment.",
+            "I consent to photographs being taken of the treated area for my clinical records and insurance purposes.",
+            "I confirm that I have received and understood the aftercare instructions and agree to follow them to minimise the risk of complications.",
+            "I confirm there have been no changes to my medical history, medication, nail condition, skin condition, or recent sun exposure since my initial consultation."
+        ]
+    };
+
+    function updateConsentText() {
+        const treatment = document.getElementById("treatmentType")?.value || "Tattoo Removal";
+        const list = document.getElementById("consentList");
+        if (!list) return;
+
+        const items = consentText[treatment] || consentText["Tattoo Removal"];
+        list.innerHTML = items.map(item => `<li>${item}</li>`).join("");
+    }
+
     function toggleReaction(element) { element.classList.toggle('selected'); }
 
     const canvas = document.getElementById('signature-pad');
@@ -604,6 +634,7 @@
         document.getElementById('dateOfBirth').value = "";
         document.getElementById('testArea').value = "";
         document.getElementById('treatmentType').value = "";
+        updateConsentText();
         document.getElementById('skinType').value = "";
         document.getElementById('serialNo').value = "";
         document.getElementById('wavelength').value = "";
@@ -721,6 +752,13 @@
     window.addEventListener("load", () => {
         const testDateEl = document.getElementById("testDate");
         if (testDateEl) testDateEl.valueAsDate = new Date();
+
+        updateConsentText();
+
+        const treatmentTypeEl = document.getElementById("treatmentType");
+        if (treatmentTypeEl) {
+            treatmentTypeEl.addEventListener("change", updateConsentText);
+        }
     });
 </script>
 </body>
