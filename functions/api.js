@@ -600,6 +600,48 @@ if (request.method === "POST" && url.searchParams.get("admin") === "block-date")
   });
 }
 
+if (request.method === "POST" && url.searchParams.get("admin") === "block-range") {
+  const body = await request.json();
+
+  const startDate = body.start_date;
+  const endDate = body.end_date;
+  const reason = body.reason || "";
+
+  if (!startDate || !endDate) {
+    return new Response("Missing dates", { status: 400 });
+  }
+
+  if (endDate < startDate) {
+    return new Response("End date cannot be before start date", { status: 400 });
+  }
+
+  const current = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+
+  while (current <= end) {
+
+    const year = current.getFullYear();
+    const month = String(current.getMonth() + 1).padStart(2, "0");
+    const day = String(current.getDate()).padStart(2, "0");
+
+    const dateString = `${year}-${month}-${day}`;
+
+    await env.DB.prepare(`
+      INSERT OR REPLACE INTO blocked_dates
+      (block_date, reason)
+      VALUES (?, ?)
+    `).bind(dateString, reason).run();
+
+    current.setDate(current.getDate() + 1);
+  }
+
+  return new Response(JSON.stringify({
+    success: true
+  }), {
+    headers: jsonHeaders
+  });
+}
+  
 if (request.method === "POST" && url.searchParams.get("admin") === "unblock-date") {
   const body = await request.json();
   const blockDate = body.block_date;
