@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Laser Tattoo Removal Aftercare | BARE by Marlese</title>
+    <title>Treatment Aftercare | BARE by Marlese</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,7 @@
             border-radius: 24px;
             box-shadow: var(--shadow);
             padding: 30px 44px;
-            max-width: 880px;
+            max-width: 960px;
             width: 95%;
             margin: 20px auto;
         }
@@ -88,8 +88,30 @@
             font-size: 12px;
             line-height: 1.7;
             color: var(--heading-dark);
-            max-width: 620px;
+            max-width: 680px;
             margin: 0 auto 20px;
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 0 0 18px;
+        }
+
+        .quick-links a {
+            display: inline-block;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.3);
+            border: 1px solid rgba(36,34,26,0.08);
+            color: var(--heading-dark);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
         }
 
         .con-section {
@@ -98,6 +120,16 @@
             border: 1px solid rgba(255,255,255,0.4);
             background: linear-gradient(145deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
             box-shadow: inset 0 1px 3px rgba(255,255,255,0.2);
+            margin-bottom: 18px;
+        }
+
+        .treatment-heading {
+            margin: 0 0 14px;
+            font-size: 13px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--heading-dark);
+            text-align: center;
         }
 
         .grid {
@@ -187,12 +219,6 @@
             cursor: pointer;
         }
 
-        .btn-ghost {
-            background: transparent;
-            border: 1px solid rgba(36,34,26,0.2);
-            color: var(--heading-dark);
-        }
-
         @media screen and (max-width: 700px) {
             body { display: block; padding: 0; }
             .con-card { width: 94vw; margin: 10px auto; padding: 20px; }
@@ -240,24 +266,33 @@
             .intro {
                 font-size: 10px !important;
                 line-height: 1.5 !important;
-                margin: 0 auto 14px !important;
-                max-width: 560px !important;
+                margin: 0 auto 12px !important;
+                max-width: 620px !important;
             }
+
+            .quick-links, .no-print { display: none !important; }
 
             .con-section {
                 background: #e2e4df !important;
                 border: 1px solid rgba(255,255,255,0.5) !important;
                 box-shadow: none !important;
                 border-radius: 16px !important;
-                padding: 16px 16px !important;
+                padding: 14px 14px !important;
+                margin-bottom: 10px !important;
+                break-inside: avoid;
+            }
+
+            .treatment-heading {
+                font-size: 10px !important;
+                margin-bottom: 8px !important;
             }
 
             .grid {
-                gap: 10px 12px !important;
+                gap: 8px 10px !important;
             }
 
             .panel {
-                padding: 12px 12px 10px !important;
+                padding: 10px 10px 8px !important;
                 border-radius: 12px !important;
             }
 
@@ -271,16 +306,16 @@
             }
 
             .panel li {
-                font-size: 9px !important;
-                line-height: 1.38 !important;
-                margin-bottom: 4px !important;
+                font-size: 8.5px !important;
+                line-height: 1.34 !important;
+                margin-bottom: 3px !important;
             }
 
             .note-box {
-                font-size: 9px !important;
-                line-height: 1.38 !important;
-                margin-top: 10px !important;
-                padding: 10px 12px !important;
+                font-size: 8.6px !important;
+                line-height: 1.35 !important;
+                margin-top: 8px !important;
+                padding: 9px 11px !important;
                 border-left-width: 4px !important;
             }
 
@@ -289,8 +324,6 @@
                 font-size: 8.8px !important;
                 line-height: 1.45 !important;
             }
-
-            .no-print { display: none !important; }
         }
     </style>
 </head>
@@ -301,13 +334,21 @@
             <span class="by">by Marlese</span>
         </div>
 
-        <h2 class="section-title">Laser Tattoo Removal Aftercare</h2>
+        <h2 class="section-title">Treatment Aftercare</h2>
         <p class="intro">
-            Please follow these aftercare instructions carefully after your laser tattoo removal treatment.
-            Proper aftercare supports healing, reduces the risk of complications, and helps protect your results.
+            Please follow the aftercare instructions for the treatment you have received.
+            Proper aftercare supports healing, reduces the risk of irritation or complications, and helps protect your results.
         </p>
 
-        <div class="con-section">
+        <div class="quick-links no-print">
+            <a href="#tattoo">Tattoo Removal</a>
+            <a href="#carbon">Carbon Facial</a>
+            <a href="#fungal">Fungal Nail</a>
+        </div>
+
+        <div class="con-section" id="tattoo">
+            <h3 class="treatment-heading">Laser Tattoo Removal Aftercare</h3>
+
             <div class="grid">
                 <div class="panel">
                     <h3>First 24 Hours</h3>
@@ -368,14 +409,143 @@
                 Laser tattoo removal carries risks including blistering, scarring, and pigmentation changes.
                 Healing varies from person to person, and multiple sessions are usually required for best results.
             </div>
+        </div>
 
-            <div class="footer">
-                For questions or concerns, please contact <a href="https://barebymarlese.com/" style="color:#5e6959; font-weight:700; text-decoration:none;">barebymarlese.com</a>
+        <div class="con-section" id="carbon">
+            <h3 class="treatment-heading">Carbon Laser Facial Aftercare</h3>
+
+            <div class="grid">
+                <div class="panel">
+                    <h3>First 24 Hours</h3>
+                    <ul>
+                        <li>Keep the skin clean and avoid touching the face unnecessarily.</li>
+                        <li>Use gentle skincare only.</li>
+                        <li>Avoid makeup for the rest of the day where possible.</li>
+                        <li>Drink water and allow the skin to settle naturally.</li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <h3>What to Avoid</h3>
+                    <ul>
+                        <li>Avoid retinoids, exfoliants, acids, peels, scrubs, and active skincare for 5 to 7 days.</li>
+                        <li>Avoid fake tan on the face until the skin has fully settled.</li>
+                        <li>Avoid hot baths, saunas, steam rooms, and intense exercise for 24 to 48 hours.</li>
+                        <li>Do not pick, scratch, or aggressively cleanse the skin.</li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <h3>Skin Protection</h3>
+                    <ul>
+                        <li>Use SPF 50 daily after treatment.</li>
+                        <li>Avoid direct sun exposure and sunbeds.</li>
+                        <li>Keep the skin moisturised with a gentle, non-perfumed product.</li>
+                        <li>Resume active skincare only once the skin feels calm and comfortable.</li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <h3>Normal Reactions</h3>
+                    <ul>
+                        <li>Mild redness</li>
+                        <li>Warmth or tightness</li>
+                        <li>Slight sensitivity</li>
+                        <li>Mild dryness or flaking</li>
+                        <li>Temporary breakouts as the skin clears</li>
+                    </ul>
+                </div>
+
+                <div class="panel wide">
+                    <h3>When to Contact Your Practitioner</h3>
+                    <ul>
+                        <li>Redness, heat, or swelling that worsens instead of settling</li>
+                        <li>Blistering, broken skin, or unusual irritation</li>
+                        <li>Any reaction that feels unexpected or causes concern</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="note-box">
+                <strong>Important</strong><br>
+                Carbon laser facial treatment can leave the skin temporarily more sensitive.
+                Sun protection and gentle skincare are especially important after treatment.
             </div>
         </div>
 
+        <div class="con-section" id="fungal">
+            <h3 class="treatment-heading">Fungal Nail Laser Treatment Aftercare</h3>
+
+            <div class="grid">
+                <div class="panel">
+                    <h3>After Treatment</h3>
+                    <ul>
+                        <li>Keep the feet clean and dry.</li>
+                        <li>Put on clean socks after treatment.</li>
+                        <li>Wear breathable footwear where possible.</li>
+                        <li>Allow nails to grow out naturally over time.</li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <h3>Footwear & Hygiene</h3>
+                    <ul>
+                        <li>Change socks daily and after exercise.</li>
+                        <li>Avoid sharing towels, socks, shoes, or nail tools.</li>
+                        <li>Disinfect or replace old footwear where possible to reduce reinfection risk.</li>
+                        <li>Keep nail clippers and files clean and separate.</li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <h3>What to Avoid</h3>
+                    <ul>
+                        <li>Avoid nail varnish, gel polish, or acrylic overlays unless advised it is suitable.</li>
+                        <li>Avoid tight, sweaty footwear for long periods.</li>
+                        <li>Do not pick or cut the nail too aggressively.</li>
+                        <li>Avoid walking barefoot in communal wet areas.</li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <h3>Normal Expectations</h3>
+                    <ul>
+                        <li>The nail may look unchanged immediately after treatment.</li>
+                        <li>Healthy nail growth can take several months.</li>
+                        <li>Multiple sessions may be recommended.</li>
+                        <li>Good foot hygiene supports the best outcome.</li>
+                    </ul>
+                </div>
+
+                <div class="panel wide">
+                    <h3>When to Contact Your Practitioner</h3>
+                    <ul>
+                        <li>Pain, swelling, or redness around the nail</li>
+                        <li>Discharge, bleeding, or signs of infection</li>
+                        <li>Any reaction that feels unusual or causes concern</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="note-box">
+                <strong>Important</strong><br>
+                Fungal nail laser treatment supports improvement over time, but nail growth is slow.
+                Results vary depending on the nail, the severity of the infection, footwear habits, and ongoing hygiene.
+            </div>
+        </div>
+
+        <div class="note-box">
+            <strong>General Advice</strong><br>
+            These instructions are general aftercare guidance. If you feel unwell, experience severe pain, or notice signs of infection,
+            seek appropriate medical advice. If you are unsure whether a reaction is normal, please contact BARE by Marlese.
+        </div>
+
+        <div class="footer">
+            For questions or concerns, please contact
+            <a href="https://barebymarlese.com/" style="color:#5e6959; font-weight:700; text-decoration:none;">barebymarlese.com</a>
+        </div>
+
         <div class="print-actions no-print">
-            
             <button class="btn" onclick="window.print()">Create PDF</button>
         </div>
     </div>
