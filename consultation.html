@@ -403,6 +403,10 @@ header .brand *{
   font-weight:700;
 }
 
+.treatment-hidden{
+  display:none !important;
+}
+
 </style>
 </head>
 
@@ -431,6 +435,7 @@ header .brand *{
                 
                 <!-- Honeypot anti-spam -->
                 <input type="text" name="website" style="display:none;">
+                <input type="hidden" name="treatment_type" id="treatment_type" value="Tattoo Removal">
             <!-- Client details -->
             <div class="con-section">
               <div class="con-h3">Client Details</div>
@@ -442,6 +447,14 @@ header .brand *{
                   <label class="con-label" for="dob">Date of Birth *</label>
                   <input class="con-input" type="date" id="dob" name="dob" required>
                 </div>
+                <div class="con-field">
+                  <label class="con-label" for="treatment_select">Treatment Type *</label>
+                  <select class="con-select" id="treatment_select" required>
+                    <option value="Tattoo Removal" selected>Tattoo Removal</option>
+                    <option value="Carbon Facial">Carbon Facial</option>
+                    <option value="Fungal Nail Treatment">Fungal Nail Treatment</option>
+                  </select>
+                </div>
               </div>
 
               <label class="con-label">Contact Number <span class="required-star">*</span></label>
@@ -449,7 +462,7 @@ header .brand *{
             </div>
 
             <!-- Tattoo info -->
-            <div class="con-section">
+            <div class="con-section tattoo-only-section" id="tattoo-info-section">
               <div class="con-h3">Tattoo Information</div>
 
              <label class="con-label">Approximate age of tattoo <span class="required-star">*</span></label>
@@ -472,7 +485,7 @@ header .brand *{
 
             
             <!-- Tattoo Characteristics -->
-            <div class="con-section">
+            <div class="con-section tattoo-only-section" id="tattoo-characteristics-section">
               <div class="con-h3">Tattoo Characteristics</div>
 
               <label class="con-label">Type of tattoo <span class="required-star">*</span></label>
@@ -652,7 +665,7 @@ header .brand *{
     <input type="checkbox" name="explicit_consent" value="Yes" required>
     <span class="con-mark"></span>
     <span>
-      I give informed consent to undergo laser tattoo removal treatment, understanding the risks, healing process, and that results vary.
+      I give informed consent to undergo <span data-treatment-copy="selected-treatment">laser tattoo removal</span> treatment, understanding the risks, healing process, and that results vary.
     </span>
   </label>
 
@@ -1006,7 +1019,7 @@ header .brand *{
               <input class="con-input" type="text" name="smoke_vape_frequency" placeholder="e.g. 5 cigarettes per day or vape daily">
 
               <div class="con-small">
-                Smoking and vaping can slow the body’s ability to clear tattoo pigment and may extend the number of sessions required.
+                Smoking and vaping can affect healing and treatment outcomes. For tattoo removal, it may also slow the body’s ability to clear tattoo pigment.
               </div>
             </div>
 
@@ -1019,18 +1032,18 @@ header .brand *{
               <textarea class="con-textarea" name="additional_info" rows="3" placeholder="Optional"></textarea>
 
               <label class="con-label">What outcome are you hoping for?</label>
-              <textarea class="con-textarea" name="treatment_goal" rows="2" placeholder="Full removal, fading for cover-up, lightening, etc."></textarea>
+              <textarea class="con-textarea" name="treatment_goal" id="treatment_goal" rows="2" placeholder="Full removal, fading for cover-up, lightening, clearer skin, improved nail appearance, etc."></textarea>
             </div>
 
             <!-- Photos -->
             <div class="con-section">
               <div class="con-h3">Photos</div>
               <p class="con-small" style="margin:0 0 12px;">
-                 Clear photos help us estimate sessions and treatment suitability before your consultation. 
+                 Clear photos help us assess treatment suitability before your consultation. 
                 Please avoid filters. Include one close-up and one photo showing the surrounding area.
               </p>
 
-<label class="con-label" for="tattoo_photos">Upload tattoo photos (optional)</label>
+<label class="con-label" for="tattoo_photos" id="photo-upload-label">Upload treatment photos (optional)</label>
 <input class="con-input" id="tattoo_photos" type="file" name="tattoo_photos" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple>
 
 <p class="con-small" style="margin:10px 0 0;">
@@ -1064,14 +1077,14 @@ header .brand *{
 
             
             <!-- Aftercare acknowledgement -->
-            <div class="con-consent" style="margin-top:14px;">
+            <div class="con-consent" id="aftercare-acknowledgement" style="margin-top:14px;">
               <div class="con-h3">Treatment & Aftercare Acknowledgement <span class="required-star">*</span></div>
 
               <label class="con-opt" style="margin-top:10px;">
                 <input type="checkbox" name="aftercare_understood" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  I understand that laser tattoo removal requires proper aftercare, including avoiding sun exposure, not picking blisters or scabs, and allowing appropriate healing time between sessions.
+                  <span id="aftercare-understood-copy">I understand that laser tattoo removal requires proper aftercare, including avoiding sun exposure, not picking blisters or scabs, and allowing appropriate healing time between sessions.</span>
                 </span>
               </label>
 
@@ -1079,7 +1092,7 @@ header .brand *{
                 <input type="checkbox" name="patch_test_acknowledgement" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  I understand that a patch test may be required before treatment and that treatment suitability will be confirmed during consultation.
+                  <span id="patch-test-copy">I understand that a patch test may be required before treatment and that treatment suitability will be confirmed during consultation.</span>
                 </span>
               </label>
 
@@ -1087,7 +1100,7 @@ header .brand *{
                 <input type="checkbox" name="risk_acknowledgement" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  I understand that laser tattoo removal carries risks including but not limited to blistering, scabbing, swelling, infection, changes in skin pigmentation (hypopigmentation or hyperpigmentation), incomplete removal, and potential scarring.
+                  <span id="risk-copy">I understand that laser tattoo removal carries risks including but not limited to blistering, scabbing, swelling, infection, changes in skin pigmentation (hypopigmentation or hyperpigmentation), incomplete removal, and potential scarring.</span>
                 </span>
               </label>
 
@@ -1095,7 +1108,7 @@ header .brand *{
                 <input type="checkbox" name="no_guarantee_results" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  I understand that no guarantee has been made regarding the outcome of treatment and that results vary depending on individual factors including skin type, ink composition, depth, and aftercare compliance.
+                  <span id="no-guarantee-copy">I understand that no guarantee has been made regarding the outcome of treatment and that results vary depending on individual factors including skin type, ink composition, depth, and aftercare compliance.</span>
                 </span>
               </label>
 
@@ -1103,7 +1116,7 @@ header .brand *{
                 <input type="checkbox" name="client_responsibility" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  I understand that failure to follow aftercare instructions may increase the risk of adverse effects and may affect treatment results, and I accept responsibility for following all aftercare guidance provided.
+                  <span id="client-responsibility-copy">I understand that failure to follow aftercare instructions may increase the risk of adverse effects and may affect treatment results, and I accept responsibility for following all aftercare guidance provided.</span>
                 </span>
               </label>
 
@@ -1202,6 +1215,115 @@ if (pageTitle) {
   pageTitle.textContent = `${CONFIG.pages?.consultationTitle || "Consultation Form"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
+const treatmentTypeInput = document.getElementById("treatment_type");
+const treatmentSelect = document.getElementById("treatment_select");
+const formHeading = document.querySelector(".section-title");
+
+function getTreatmentFromUrl(){
+  try{
+    const params = new URLSearchParams(window.location.search);
+    const raw = (params.get("treatment") || params.get("type") || "").toLowerCase();
+    if(raw.includes("carbon")) return "Carbon Facial";
+    if(raw.includes("fungal") || raw.includes("nail")) return "Fungal Nail Treatment";
+    if(raw.includes("tattoo")) return "Tattoo Removal";
+  }catch(e){}
+  return "";
+}
+
+function treatmentLabel(value){
+  if(value === "Carbon Facial") return "carbon laser facial";
+  if(value === "Fungal Nail Treatment") return "fungal nail treatment";
+  return "laser tattoo removal";
+}
+
+function setRequiredInSection(section, isRequired){
+  if(!section) return;
+  section.querySelectorAll("input, select, textarea").forEach((el) => {
+    if(isRequired){
+      if(el.dataset.wasRequired === "true") el.required = true;
+      el.disabled = false;
+    }else{
+      if(el.required) el.dataset.wasRequired = "true";
+      el.required = false;
+      el.disabled = true;
+    }
+  });
+}
+
+function setText(id, value){
+  const el = document.getElementById(id);
+  if(el) el.textContent = value;
+}
+
+function applyTreatmentType(selectedTreatment){
+  const treatment = selectedTreatment || "Tattoo Removal";
+  const isTattoo = treatment === "Tattoo Removal";
+
+  if(treatmentTypeInput) treatmentTypeInput.value = treatment;
+  if(treatmentSelect && treatmentSelect.value !== treatment) treatmentSelect.value = treatment;
+  try{ localStorage.setItem("bareTreatmentType", treatment); }catch(e){}
+
+  if(formHeading) formHeading.textContent = `${treatment} Consultation Form`;
+
+  document.querySelectorAll(".tattoo-only-section").forEach((section) => {
+    section.classList.toggle("treatment-hidden", !isTattoo);
+    setRequiredInSection(section, isTattoo);
+  });
+
+  document.querySelectorAll('[data-none-group="tattoo-colours"]').forEach((group) => {
+    if(isTattoo){
+      group.setAttribute("data-required-group", "tattoo-colours");
+    }else{
+      group.removeAttribute("data-required-group");
+      group.querySelectorAll('input[type="checkbox"]').forEach((input) => input.checked = false);
+    }
+  });
+
+  document.querySelectorAll('[data-treatment-copy="selected-treatment"]').forEach((el) => {
+    el.textContent = treatmentLabel(treatment);
+  });
+
+  const photoLabel = document.getElementById("photo-upload-label");
+  const goal = document.getElementById("treatment_goal");
+
+  if(isTattoo){
+    if(photoLabel) photoLabel.textContent = "Upload tattoo photos (optional)";
+    if(goal) goal.placeholder = "Full removal, fading for cover-up, lightening, etc.";
+    setText("aftercare-understood-copy", "I understand that laser tattoo removal requires proper aftercare, including avoiding sun exposure, not picking blisters or scabs, and allowing appropriate healing time between sessions.");
+    setText("patch-test-copy", "I understand that a patch test may be required before treatment and that treatment suitability will be confirmed during consultation.");
+    setText("risk-copy", "I understand that laser tattoo removal carries risks including but not limited to blistering, scabbing, swelling, infection, changes in skin pigmentation (hypopigmentation or hyperpigmentation), incomplete removal, and potential scarring.");
+    setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that results vary depending on individual factors including skin type, ink composition, depth, and aftercare compliance.");
+    setText("client-responsibility-copy", "I understand that failure to follow aftercare instructions may increase the risk of adverse effects and may affect treatment results, and I accept responsibility for following all aftercare guidance provided.");
+  }else if(treatment === "Carbon Facial"){
+    if(photoLabel) photoLabel.textContent = "Upload facial skin photos (optional)";
+    if(goal) goal.placeholder = "Brighter skin, smoother texture, clearer pores, oil control, glow, etc.";
+    setText("aftercare-understood-copy", "I understand that carbon laser facial aftercare may include avoiding sun exposure, heat treatments, exfoliating acids, retinol/Retin-A, harsh skincare and makeup for the advised period after treatment.");
+    setText("patch-test-copy", "I understand that treatment suitability and whether a patch test is required will be confirmed during consultation.");
+    setText("risk-copy", "I understand that carbon laser facial treatment may carry risks including temporary redness, warmth, dryness, sensitivity, breakouts, pigmentation changes, irritation or an unsuitable reaction depending on skin type, products and aftercare.");
+    setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that results vary depending on skin type, skin condition, skincare products, lifestyle and aftercare compliance.");
+    setText("client-responsibility-copy", "I accept responsibility for following all aftercare guidance provided, including sun protection and avoiding unsuitable skincare or active products as advised.");
+  }else{
+    if(photoLabel) photoLabel.textContent = "Upload nail photos (optional)";
+    if(goal) goal.placeholder = "Clearer nail appearance, reduction in fungal-looking changes, healthier nail growth, etc.";
+    setText("aftercare-understood-copy", "I understand that fungal nail laser aftercare may include keeping feet clean and dry, following hygiene guidance, avoiding re-contamination, and allowing time for healthy nail growth.");
+    setText("patch-test-copy", "I understand that treatment suitability and whether a patch test is required will be confirmed during consultation.");
+    setText("risk-copy", "I understand that fungal nail laser treatment may carry risks including temporary warmth, sensitivity, discomfort, nail or skin irritation, and that results may vary depending on severity, nail growth and aftercare.");
+    setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that visible improvement depends on individual factors including nail growth, severity, hygiene and aftercare compliance.");
+    setText("client-responsibility-copy", "I accept responsibility for following all aftercare and hygiene guidance provided to reduce the risk of re-contamination and support treatment results.");
+  }
+
+  try{ updateColourScoring(); }catch(e){}
+}
+
+const initialTreatment = getTreatmentFromUrl() || localStorage.getItem("bareTreatmentType") || "Tattoo Removal";
+applyTreatmentType(initialTreatment);
+
+if(treatmentSelect){
+  treatmentSelect.addEventListener("change", () => {
+    applyTreatmentType(treatmentSelect.value);
+  });
+}
+
   
     
     // Fitzpatrick test integration (auto-fill)
@@ -1252,6 +1374,7 @@ if (pageTitle) {
       if(signedAtDisplayNode) signedAtDisplayNode.textContent = "Waiting for signature...";
 
       try{
+        applyTreatmentType(treatmentSelect?.value || localStorage.getItem("bareTreatmentType") || "Tattoo Removal");
         updateColourScoring();
       }catch(e){}
     }
@@ -1449,9 +1572,11 @@ const form = document.getElementById("consultation-form");
     function validateRequiredCheckboxGroups(){
       const requiredGroups = [...document.querySelectorAll("[data-required-group]")];
       for(const group of requiredGroups){
-        const hasChecked = [...group.querySelectorAll('input[type="checkbox"]')].some((input) => input.checked);
+        const section = group.closest(".con-section");
+        if(section && section.classList.contains("treatment-hidden")) continue;
+        const enabledCheckboxes = [...group.querySelectorAll('input[type="checkbox"]')].filter((input) => !input.disabled);
+        const hasChecked = enabledCheckboxes.some((input) => input.checked);
         if(!hasChecked){
-          const section = group.closest(".con-section");
           const title = section?.querySelector(".con-h3")?.textContent?.trim() || "this section";
           setStatus(`Please complete ${title}.`, "error");
           statusEl.style.display = "block";
@@ -1467,8 +1592,8 @@ const form = document.getElementById("consultation-form");
       const email = (form.querySelector('[name="email"]')?.value || "").trim().toLowerCase();
       const dob = (form.querySelector('[name="dob"]')?.value || "").trim();
       const phone = (form.querySelector('[name="phone"]')?.value || "").replace(/\s+/g, "").trim();
-      const tattooLocation = (form.querySelector('[name="tattoo_location"]')?.value || "").trim().toLowerCase();
-      return [fullName, email, dob, phone, tattooLocation].join("|");
+      const treatment = (form.querySelector('[name="treatment_type"]')?.value || "Tattoo Removal").trim().toLowerCase();
+      return [fullName, email, dob, phone, treatment].join("|");
     }
 
     function isDuplicateRecentSubmission(){
