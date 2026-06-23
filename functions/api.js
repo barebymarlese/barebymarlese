@@ -560,6 +560,51 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     });
   }
 
+  if (request.method === "GET" && url.searchParams.get("admin") === "blocked-dates") {
+  const blocked = await env.DB.prepare(`
+    SELECT id, block_date, reason, created_at
+    FROM blocked_dates
+    ORDER BY block_date ASC
+  `).all();
+
+  return new Response(JSON.stringify(blocked.results), {
+    headers: jsonHeaders
+  });
+}
+
+if (request.method === "POST" && url.searchParams.get("admin") === "block-date") {
+  const body = await request.json();
+  const blockDate = body.block_date;
+  const reason = body.reason || "";
+
+  if (!blockDate) return new Response("Missing date", { status: 400 });
+
+  await env.DB.prepare(`
+    INSERT OR REPLACE INTO blocked_dates (block_date, reason)
+    VALUES (?, ?)
+  `).bind(blockDate, reason).run();
+
+  return new Response(JSON.stringify({ success: true }), {
+    headers: jsonHeaders
+  });
+}
+
+if (request.method === "POST" && url.searchParams.get("admin") === "unblock-date") {
+  const body = await request.json();
+  const blockDate = body.block_date;
+
+  if (!blockDate) return new Response("Missing date", { status: 400 });
+
+  await env.DB.prepare(`
+    DELETE FROM blocked_dates
+    WHERE block_date = ?
+  `).bind(blockDate).run();
+
+  return new Response(JSON.stringify({ success: true }), {
+    headers: jsonHeaders
+  });
+}
+
   if (request.method === "GET") {
     const date = url.searchParams.get("date");
 
@@ -571,7 +616,23 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     }
 
     const bookingType = url.searchParams.get("type") || "consultation";
-    const allSlots = getSlotsByType(bookingType, date);
+
+const blockedDate = await env.DB.prepare(`
+  SELECT block_date, reason
+  FROM blocked_dates
+  WHERE block_date = ?
+`).bind(date).first();
+
+if (blockedDate) {
+  return new Response(JSON.stringify({
+    slots: [],
+    nextAvailable: null,
+    blocked: true,
+    reason: blockedDate.reason || ""
+  }), { headers: jsonHeaders });
+}
+
+const allSlots = getSlotsByType(bookingType, date);
 
     const booked = await env.DB.prepare(
       "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND booking_type = ? AND status = 'confirmed'"
@@ -659,6 +720,16 @@ const priceDisplay = amountPaid ? `£${displayAmount}` : null;
     if (!appointmentDate || !appointmentTime) {
       return new Response("Missing appointment date or time", { status: 400 });
     }
+
+    const blockedDate = await env.DB.prepare(`
+  SELECT block_date, reason
+  FROM blocked_dates
+  WHERE block_date = ?
+`).bind(appointmentDate).first();
+
+if (blockedDate) {
+  return new Response("This date is unavailable", { status: 409 });
+}
 
     const validSlots = getSlotsByType(bookingType, appointmentDate);
 
