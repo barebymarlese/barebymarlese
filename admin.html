@@ -859,15 +859,56 @@ async function loadBlockedDates(){
       return;
     }
 
-    list.innerHTML = dates.map(item => `
-      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(36,34,26,.10);">
-        <div>
-          <strong>${escapeHtml(item.block_date)}</strong>
-          ${item.reason ? `<br><span class="action-note">${escapeHtml(item.reason)}</span>` : ""}
+    const sorted = dates.sort((a, b) => a.block_date.localeCompare(b.block_date));
+    const groups = [];
+
+    sorted.forEach(item => {
+      const reason = item.reason || "";
+      const last = groups[groups.length - 1];
+
+      if (!last) {
+        groups.push({
+          start: item.block_date,
+          end: item.block_date,
+          reason
+        });
+        return;
+      }
+
+      const nextDate = new Date(`${last.end}T00:00:00`);
+      nextDate.setDate(nextDate.getDate() + 1);
+
+      const year = nextDate.getFullYear();
+      const month = String(nextDate.getMonth() + 1).padStart(2, "0");
+      const day = String(nextDate.getDate()).padStart(2, "0");
+      const expectedNext = `${year}-${month}-${day}`;
+
+      if (item.block_date === expectedNext && reason === last.reason) {
+        last.end = item.block_date;
+      } else {
+        groups.push({
+          start: item.block_date,
+          end: item.block_date,
+          reason
+        });
+      }
+    });
+
+    list.innerHTML = groups.map(group => {
+      const label = group.start === group.end
+        ? group.start
+        : `${group.start} to ${group.end}`;
+
+      return `
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(36,34,26,.10);">
+          <div>
+            <strong>${escapeHtml(label)}</strong>
+            ${group.reason ? `<br><span class="action-note">${escapeHtml(group.reason)}</span>` : ""}
+          </div>
+          <button class="btn btn-cancel" type="button" onclick="unblockDateRange('${escapeHtml(group.start)}','${escapeHtml(group.end)}')">Unblock</button>
         </div>
-        <button class="btn btn-cancel" type="button" onclick="unblockDate('${escapeHtml(item.block_date)}')">Unblock</button>
-      </div>
-    `).join("");
+      `;
+    }).join("");
 
   } catch (err) {
     list.textContent = "Could not load blocked dates.";
@@ -941,6 +982,36 @@ async function blockDateRange(){
   } else {
     alert("Could not block date range.");
   }
+}
+
+async function unblockDateRange(startDate, endDate){
+  const label = startDate === endDate ? startDate : `${startDate} to ${endDate}`;
+
+  if (!confirm(`Unblock ${label}?`)) {
+    return;
+  }
+
+  const current = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+
+  while (current <= end) {
+    const year = current.getFullYear();
+    const month = String(current.getMonth() + 1).padStart(2, "0");
+    const day = String(current.getDate()).padStart(2, "0");
+    const dateString = `${year}-${month}-${day}`;
+
+    await fetch(`${API_BASE}/api?admin=unblock-date`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        block_date: dateString
+      })
+    });
+
+    current.setDate(current.getDate() + 1);
+  }
+
+  loadBlockedDates();
 }
 
 async function unblockDate(blockDateValue){
