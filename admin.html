@@ -394,7 +394,23 @@ footer{
       </div>
 
       <div class="content">
-        <div class="table-wrap">
+
+  <div style="background:white;border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:18px;">
+    <h2 style="margin:0 0 12px;font-size:16px;color:var(--olive);">Block Dates</h2>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <input type="date" id="block-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
+      <input type="text" id="block-reason" placeholder="Reason optional" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;min-width:220px;">
+      <button class="btn btn-primary" type="button" onclick="blockDate()">Block Date</button>
+      <button class="btn btn-secondary" type="button" onclick="loadBlockedDates()">Refresh Blocked Dates</button>
+    </div>
+
+    <div id="blocked-dates-list" style="margin-top:14px;font-size:13px;color:rgba(36,34,26,.78);">
+      Loading blocked dates...
+    </div>
+  </div>
+
+  <div class="table-wrap">
           <div id="message" class="message">Loading bookings...</div>
 
           <table id="bookings-table" style="display:none;">
@@ -815,7 +831,94 @@ async function markPaid(id){
   }
 }
 
+
+async function loadBlockedDates(){
+  const list = document.getElementById("blocked-dates-list");
+  if (!list) return;
+
+  list.textContent = "Loading blocked dates...";
+
+  try {
+    const res = await fetch(`${API_BASE}/api?admin=blocked-dates`);
+
+    if (!res.ok) {
+      throw new Error("Could not load blocked dates");
+    }
+
+    const dates = await res.json();
+
+    if (!dates.length) {
+      list.innerHTML = `<span class="action-note">No blocked dates.</span>`;
+      return;
+    }
+
+    list.innerHTML = dates.map(item => `
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(36,34,26,.10);">
+        <div>
+          <strong>${escapeHtml(item.block_date)}</strong>
+          ${item.reason ? `<br><span class="action-note">${escapeHtml(item.reason)}</span>` : ""}
+        </div>
+        <button class="btn btn-cancel" type="button" onclick="unblockDate('${escapeHtml(item.block_date)}')">Unblock</button>
+      </div>
+    `).join("");
+
+  } catch (err) {
+    list.textContent = "Could not load blocked dates.";
+  }
+}
+
+async function blockDate(){
+  const dateInput = document.getElementById("block-date");
+  const reasonInput = document.getElementById("block-reason");
+
+  const blockDateValue = dateInput?.value || "";
+  const reason = reasonInput?.value || "";
+
+  if (!blockDateValue) {
+    alert("Please choose a date to block.");
+    return;
+  }
+
+  const res = await fetch(`${API_BASE}/api?admin=block-date`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      block_date: blockDateValue,
+      reason
+    })
+  });
+
+  if (res.ok) {
+    if (dateInput) dateInput.value = "";
+    if (reasonInput) reasonInput.value = "";
+    loadBlockedDates();
+  } else {
+    alert("Could not block date.");
+  }
+}
+
+async function unblockDate(blockDateValue){
+  if (!confirm(`Unblock ${blockDateValue}?`)) {
+    return;
+  }
+
+  const res = await fetch(`${API_BASE}/api?admin=unblock-date`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      block_date: blockDateValue
+    })
+  });
+
+  if (res.ok) {
+    loadBlockedDates();
+  } else {
+    alert("Could not unblock date.");
+  }
+}
+
 loadBookings();
+loadBlockedDates();
 </script>
 </body>
 </html>
