@@ -350,7 +350,18 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     }
 
     const bookingType = existingBooking.booking_type || "consultation";
-    const validSlots = getSlotsByType(bookingType, appointment_date);
+
+const blockedDate = await env.DB.prepare(`
+  SELECT block_date, reason
+  FROM blocked_dates
+  WHERE block_date = ?
+`).bind(appointment_date).first();
+
+if (blockedDate) {
+  return new Response("This date is unavailable", { status: 409 });
+}
+
+const validSlots = getSlotsByType(bookingType, appointment_date);
 
     if (!validSlots.includes(appointment_time)) {
       return new Response("Invalid appointment time", { status: 400 });
