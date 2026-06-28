@@ -398,18 +398,12 @@ footer{
   <div style="background:white;border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:18px;">
     <h2 style="margin:0 0 12px;font-size:16px;color:var(--olive);">Block Dates</h2>
 
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
-      <input type="date" id="block-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
-      <input type="text" id="block-reason" placeholder="Reason optional" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;min-width:220px;">
-      <button class="btn btn-primary" type="button" onclick="blockDate()">Block Single Date</button>
-      <button class="btn btn-secondary" type="button" onclick="loadBlockedDates()">Refresh Blocked Dates</button>
-    </div>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:12px;border-top:1px solid rgba(36,34,26,.10);">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
       <input type="date" id="block-start-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
       <input type="date" id="block-end-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
-      <input type="text" id="block-range-reason" placeholder="Range reason optional" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;min-width:220px;">
+      <input type="text" id="block-range-reason" placeholder="Reason optional" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;min-width:220px;">
       <button class="btn btn-primary" type="button" onclick="blockDateRange()">Block Date Range</button>
+      <button class="btn btn-secondary" type="button" onclick="loadBlockedDates()">Refresh Blocked Dates</button>
     </div>
 
     <div id="blocked-dates-list" style="margin-top:14px;font-size:13px;color:rgba(36,34,26,.78);">
