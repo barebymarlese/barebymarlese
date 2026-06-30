@@ -548,6 +548,17 @@
                 </div>
             </div>
 
+            <div style="margin-bottom:20px;">
+                <label class="con-label">Practitioner's Notes</label>
+                <textarea
+                    id="practitionerNotes"
+                    class="con-input"
+                    rows="5"
+                    style="height:120px; padding:12px; resize:vertical;"
+                    placeholder="Clinical observations, client feedback, parameter adjustments, skin response, advice given, recommendations, or any additional notes."
+                ></textarea>
+            </div>
+
             <div class="disclaimer">
                 <strong style="text-transform: uppercase; letter-spacing: 0.05em;">Declaration & Consent</strong>
                 <ul id="consentList" style="margin: 8px 0 0 0; padding-left: 18px; list-style-type: disc;"></ul>
@@ -646,6 +657,7 @@
         document.getElementById('testShots').value = "";
         document.getElementById('earliestTreatmentDate').value = "";
         document.getElementById('eyePro').checked = true;
+        document.getElementById('practitionerNotes').value = "";
         document.title = BRAND_TITLE;
         const testDateEl = document.getElementById('testDate');
         if (testDateEl) testDateEl.valueAsDate = new Date();
@@ -700,6 +712,7 @@
     data.append("test_shots", document.getElementById("testShots")?.value || "");
     data.append("earliest_treatment_date", document.getElementById("earliestTreatmentDate")?.value || "");
     data.append("eye_protection", document.getElementById("eyePro")?.checked ? "Yes" : "No");
+    data.append("practitioner_notes", document.getElementById("practitionerNotes")?.value || "");
 
     const selectedReactions = [...document.querySelectorAll(".pill.selected")]
         .map(p => p.textContent.trim())
