@@ -762,8 +762,9 @@
             }
 
         } catch (err) {
-            setStatus("Connection error", "error");
-        }
+    console.error("Patch test error:", err);
+    setStatus("Connection error: " + (err.message || err), "error");
+}
     }
 
     window.addEventListener("load", () => {
