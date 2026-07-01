@@ -541,13 +541,11 @@
         </div>
 
 <div class="footer">
-    <strong id="legal-name">BARE BY MARLESE LTD</strong><br>
-    <span id="registered-in">Registered in England and Wales</span><br>
-    Company No. <span id="company-number">17311204</span><br>
+    <strong id="legal-name"></strong><br>
+    <span id="registered-in"></span><br>
+    Company No. <span id="company-number"></span><br>
     For questions or concerns, please contact
-    <a id="website-link" href="https://barebymarlese.com/" style="color:#5e6959; font-weight:700; text-decoration:none;">
-        barebymarlese.com
-    </a>
+    <a id="website-link" href="#" style="color:#5e6959; font-weight:700; text-decoration:none;"></a>
 </div>
 
 <div class="print-actions no-print">
@@ -566,16 +564,16 @@
   const websiteLink = document.getElementById("website-link");
 
   if (legalName) {
-  legalName.textContent = CONFIG.legalName || "";
-}
+    legalName.textContent = CONFIG.legalName || "";
+  }
 
-if (registeredIn) {
-  registeredIn.textContent = CONFIG.registeredIn || "";
-}
+  if (registeredIn) {
+    registeredIn.textContent = CONFIG.registeredIn || "";
+  }
 
-if (companyNumber) {
-  companyNumber.textContent = CONFIG.companyNumber || "";
-}
+  if (companyNumber) {
+    companyNumber.textContent = CONFIG.companyNumber || "";
+  }
 
   if (websiteLink && CONFIG.domain) {
     websiteLink.href = CONFIG.domain;
