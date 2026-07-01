@@ -1195,7 +1195,8 @@ if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   </main>
 
   <footer>
-  © <span id="footer-brand"></span> |
+  © <span id="footer-legal-name"></span>
+  <span id="footer-company-details"></span> |
   <a href="/privacy.html">Privacy Policy</a>
 </footer>
 
@@ -1210,7 +1211,29 @@ if (consultationForm) {
 }
 
 const pageTitle = document.getElementById("page-title");
+// Footer company information
+const footerLegalName = document.getElementById("footer-legal-name");
+const footerCompanyDetails = document.getElementById("footer-company-details");
 
+if (footerLegalName) {
+  footerLegalName.textContent = CONFIG.legalName || CONFIG.businessName || "";
+}
+
+if (footerCompanyDetails) {
+  const details = [];
+
+  if (CONFIG.registeredIn) {
+    details.push(CONFIG.registeredIn);
+  }
+
+  if (CONFIG.companyNumber) {
+    details.push(`Company No. ${CONFIG.companyNumber}`);
+  }
+
+  footerCompanyDetails.textContent = details.length
+    ? ` | ${details.join(" | ")}`
+    : "";
+}
 if (pageTitle) {
   pageTitle.textContent = `${CONFIG.pages?.consultationTitle || "Consultation Form"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
