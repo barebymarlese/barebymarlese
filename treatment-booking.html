@@ -18,13 +18,28 @@
   <span id="brand-main"></span>
   <span class="brand-divider">|</span>
   <span class="brand-sub" id="brand-sub"></span>
-</div><div class="card"><div class="hero"><span class="kicker">Treatment Calendar</span><h1>Book Your Treatment</h1><p class="sub">Choose your first treatment appointment after completing your package payment.</p></div><div class="content" id="content"></div></div><footer>© <span id="footer-brand"></span> | Treatment booking</footer></div></div>
+</div><div class="card"><div class="hero"><span class="kicker">Treatment Calendar</span><h1>Book Your Treatment</h1><p class="sub">Choose your first treatment appointment after completing your package payment.</p></div><div class="content" id="content"></div></div><footer>
+  <div style="line-height:1.7;">
+    <strong id="legal-name"></strong><br>
+    <span id="registered-in"></span><br>
+    Company No. <span id="company-number"></span>
+  </div>
+  <div style="margin-top:10px;">Treatment booking</div>
+</footer></div></div>
 
 <script src="/config.js"></script>
 <script src="/analytics.js"></script>
 <script src="/branding.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+
+const legalName=document.getElementById("legal-name");
+const registeredIn=document.getElementById("registered-in");
+const companyNumber=document.getElementById("company-number");
+
+if(legalName){legalName.textContent=CONFIG.legalName||"";}
+if(registeredIn){registeredIn.textContent=CONFIG.registeredIn||"";}
+if(companyNumber){companyNumber.textContent=CONFIG.companyNumber||"";}
 
 const pageTitle = document.getElementById("page-title");
 if (pageTitle) {
