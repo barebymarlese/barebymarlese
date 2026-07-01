@@ -141,7 +141,39 @@
 
   <div class="note"><strong>Important</strong><br>Privacy wording should be kept aligned with your live booking, form and payment providers. If any provider changes, this policy should be updated to match.</div>
 
-  <footer>© BARE by Marlese | <a href="/privacy.html">Privacy Policy</a></footer>
+  <footer>
+  <div style="margin-top:10px; line-height:1.7; letter-spacing:.03em; text-transform:none;">
+    <strong id="legal-name"></strong><br>
+    <span id="registered-in"></span><br>
+    Company No. <span id="company-number"></span>
+  </div>
+
+  <div style="margin-top:10px;">
+    <a href="/privacy.html">Privacy Policy</a>
+  </div>
+</footer>
 </div>
+<script src="/config.js"></script>
+<script>
+(function () {
+  const CONFIG = window.SITE_CONFIG || {};
+
+  const legalName = document.getElementById("legal-name");
+  const registeredIn = document.getElementById("registered-in");
+  const companyNumber = document.getElementById("company-number");
+
+  if (legalName) {
+    legalName.textContent = CONFIG.legalName || "";
+  }
+
+  if (registeredIn) {
+    registeredIn.textContent = CONFIG.registeredIn || "";
+  }
+
+  if (companyNumber) {
+    companyNumber.textContent = CONFIG.companyNumber || "";
+  }
+})();
+</script>
 </body>
 </html>
