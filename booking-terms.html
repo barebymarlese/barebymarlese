@@ -111,11 +111,7 @@
 
   <div class="note"><strong>Important</strong><br>By booking a consultation, patch test, or treatment appointment, you agree to these booking terms and understand that treatment suitability and outcomes vary between individuals.</div>
 
-  <footer>
-  <div>
-    © <span id="business-name"></span>
-  </div>
-
+<footer>
   <div style="margin-top:10px; line-height:1.7; letter-spacing:.03em; text-transform:none;">
     <strong id="legal-name"></strong><br>
     <span id="registered-in"></span><br>
@@ -129,19 +125,15 @@
   </div>
 </footer>
 </div>
+
 <script src="/config.js"></script>
 <script>
 (function () {
   const CONFIG = window.SITE_CONFIG || {};
 
-  const businessName = document.getElementById("business-name");
   const legalName = document.getElementById("legal-name");
   const registeredIn = document.getElementById("registered-in");
   const companyNumber = document.getElementById("company-number");
-
-  if (businessName) {
-    businessName.textContent = CONFIG.businessName || "";
-  }
 
   if (legalName) {
     legalName.textContent = CONFIG.legalName || "";
