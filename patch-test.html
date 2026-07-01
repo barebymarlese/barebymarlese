@@ -573,7 +573,13 @@
             </div>
         </div>
 
-<a href="https://barebymarlese.com/patch-test.html" class="website-link">https://barebymarlese.com/patch-test.html</a>
+<a id="website-link" href="#" class="website-link"></a>
+
+<div style="text-align:center; margin-top:12px; font-size:10px; line-height:1.6; color:#878274;">
+    <strong id="legal-name"></strong><br>
+    <span id="registered-in"></span><br>
+    Company No. <span id="company-number"></span>
+</div>
 
 <div class="con-actions no-print">
     <button class="con-btn con-btn-ghost" onclick="clearSig()">Clear</button>
@@ -584,9 +590,33 @@
 
 </div>
 
+<script src="/config.js"></script>
 <script>
     const PATCH_TEST_WORKER_URL = "https://bare-patchtest-worker.barebymarlese.workers.dev";
     const BRAND_TITLE = "Patch Test Form | BARE by Marlese";
+    const CONFIG = window.SITE_CONFIG || {};
+
+    const websiteLink = document.getElementById("website-link");
+    const legalName = document.getElementById("legal-name");
+    const registeredIn = document.getElementById("registered-in");
+    const companyNumber = document.getElementById("company-number");
+
+    if (websiteLink && CONFIG.domain) {
+        websiteLink.href = `${CONFIG.domain}/patch-test.html`;
+        websiteLink.textContent = `${CONFIG.domain.replace(/^https?:\/\//, "")}/patch-test.html`;
+    }
+
+    if (legalName) {
+        legalName.textContent = CONFIG.legalName || "";
+    }
+
+    if (registeredIn) {
+        registeredIn.textContent = CONFIG.registeredIn || "";
+    }
+
+    if (companyNumber) {
+        companyNumber.textContent = CONFIG.companyNumber || "";
+    }
 
     const consentText = {
         "Tattoo Removal": [
