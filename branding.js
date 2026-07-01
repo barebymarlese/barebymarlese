@@ -4,7 +4,6 @@
 
   const brandMain = document.getElementById("brand-main");
   const brandSub = document.getElementById("brand-sub");
-  const footerBrand = document.getElementById("footer-brand");
   const faviconLink = document.getElementById("favicon-link");
 
   if (brandMain) {
@@ -19,10 +18,6 @@
     brandSub.style.letterSpacing = style.subLetterSpacing || ".05em";
     brandSub.style.fontSize = style.subFontSize || "15px";
     brandSub.style.fontWeight = style.subWeight || "500";
-  }
-
-  if (footerBrand) {
-    footerBrand.textContent = CONFIG.businessName || "BARE by Marlese";
   }
 
   if (faviconLink) {
