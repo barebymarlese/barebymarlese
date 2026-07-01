@@ -359,7 +359,11 @@ footer{
         </div>
       </div>
     </div>
-    <footer>© <span id="footer-brand"></span></footer>
+    <footer>
+  <strong id="legal-name"></strong><br>
+  <span id="registered-in"></span><br>
+  Company No. <span id="company-number"></span>
+</footer>
   </div>
 </div>
 
@@ -375,13 +379,15 @@ const pageTitle = document.getElementById("page-title");
 const faviconLink = document.getElementById("favicon-link");
 const brandMain = document.getElementById("brand-main");
 const brandSub = document.getElementById("brand-sub");
-const footerBrand = document.getElementById("footer-brand");
 const heroHeading = document.getElementById("hero-heading");
 const depositTitle = document.getElementById("deposit-title");
 const depositPrice = document.getElementById("deposit-price");
 const depositButton = document.getElementById("pay-deposit-btn");
 const backHomeButton = document.getElementById("back-home-btn");
 const depositDeductedAmount = document.getElementById("deposit-deducted-amount");
+const legalName = document.getElementById("legal-name");
+const registeredIn = document.getElementById("registered-in");
+const companyNumber = document.getElementById("company-number");
 
 if (pageTitle) {
   pageTitle.textContent = `${CONFIG.pages?.depositTitle || "Consultation Deposit"} | ${businessName}`;
@@ -405,8 +411,16 @@ if (brandSub) {
   brandSub.style.fontWeight = style.subWeight || "500";
 }
 
-if (footerBrand) {
-  footerBrand.textContent = businessName;
+if (legalName) {
+  legalName.textContent = CONFIG.legalName || "";
+}
+
+if (registeredIn) {
+  registeredIn.textContent = CONFIG.registeredIn || "";
+}
+
+if (companyNumber) {
+  companyNumber.textContent = CONFIG.companyNumber || "";
 }
 
 if (heroHeading) {
