@@ -566,15 +566,15 @@
   const websiteLink = document.getElementById("website-link");
 
   if (legalName) {
-    legalName.textContent = CONFIG.legalName || "BARE BY MARLESE LTD";
-  }
+  legalName.textContent = CONFIG.legalName || "";
+}
 
-  if (registeredIn) {
-    registeredIn.textContent = CONFIG.registeredIn || "Registered in England and Wales";
-  }
+if (registeredIn) {
+  registeredIn.textContent = CONFIG.registeredIn || "";
+}
 
-  if (companyNumber) {
-    companyNumber.textContent = CONFIG.companyNumber || "";
+if (companyNumber) {
+  companyNumber.textContent = CONFIG.companyNumber || "";
 }
 
   if (websiteLink && CONFIG.domain) {
