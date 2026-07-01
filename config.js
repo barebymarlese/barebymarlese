@@ -2,7 +2,7 @@ window.SITE_CONFIG = window.SITE_CONFIG || {};
 
 Object.assign(window.SITE_CONFIG, {
 
-  businessName: "BARE BY MARLESE LTD",
+  businessName: "BARE by Marlese",
   legalName: "BARE BY MARLESE LTD",
   companyNumber: "17311204",
   registeredIn: "Registered in England and Wales",
