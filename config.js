@@ -43,7 +43,7 @@ Object.assign(window.SITE_CONFIG, {
 
   homepage: {
     brandTop: "VTCT Level 5 Certified",
-    brandMainFull: "Laser Tattoo Removal Specialist",
+    brandMainFull: "Advanced Laser Treatments"
     brandLocation: "South Oxfordshire<br>Henley • Wallingford • Didcot",
     footerText: "Specialist Laser Tattoo Removal Clinic | Henley-on-Thames • Wallingford • Didcot • Oxfordshire"
   },
