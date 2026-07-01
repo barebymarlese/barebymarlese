@@ -77,13 +77,35 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
   </div>
 </div>
 
-<footer>© <span id="footer-brand"></span></footer>
+<footer>
+  <div style="line-height:1.7;">
+    <strong id="legal-name"></strong><br>
+    <span id="registered-in"></span><br>
+    Company No. <span id="company-number"></span>
+  </div>
+</footer>
 </div></div>
 
 <script src="/config.js"></script>
 <script src="/branding.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+
+const legalName = document.getElementById("legal-name");
+const registeredIn = document.getElementById("registered-in");
+const companyNumber = document.getElementById("company-number");
+
+if (legalName) {
+  legalName.textContent = CONFIG.legalName || "";
+}
+
+if (registeredIn) {
+  registeredIn.textContent = CONFIG.registeredIn || "";
+}
+
+if (companyNumber) {
+  companyNumber.textContent = CONFIG.companyNumber || "";
+}
 const pageTitle = document.getElementById("page-title");
 if (pageTitle) pageTitle.textContent = `Treatments & Pricing | ${CONFIG.businessName || "BARE by Marlese"}`;
 
