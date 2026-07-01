@@ -540,14 +540,48 @@
             seek appropriate medical advice. If you are unsure whether a reaction is normal, please contact BARE by Marlese.
         </div>
 
-        <div class="footer">
-            For questions or concerns, please contact
-            <a href="https://barebymarlese.com/" style="color:#5e6959; font-weight:700; text-decoration:none;">barebymarlese.com</a>
-        </div>
+<div class="footer">
+    <strong id="legal-name">BARE BY MARLESE LTD</strong><br>
+    <span id="registered-in">Registered in England and Wales</span><br>
+    Company No. <span id="company-number">17311204</span><br>
+    For questions or concerns, please contact
+    <a id="website-link" href="https://barebymarlese.com/" style="color:#5e6959; font-weight:700; text-decoration:none;">
+        barebymarlese.com
+    </a>
+</div>
 
-        <div class="print-actions no-print">
-            <button class="btn" onclick="window.print()">Create PDF</button>
-        </div>
-    </div>
+<div class="print-actions no-print">
+    <button class="btn" onclick="window.print()">Create PDF</button>
+</div>
+</div>
+
+<script src="/config.js"></script>
+<script>
+(function () {
+  const CONFIG = window.SITE_CONFIG || {};
+
+  const legalName = document.getElementById("legal-name");
+  const registeredIn = document.getElementById("registered-in");
+  const companyNumber = document.getElementById("company-number");
+  const websiteLink = document.getElementById("website-link");
+
+  if (legalName) {
+    legalName.textContent = CONFIG.legalName || "BARE BY MARLESE LTD";
+  }
+
+  if (registeredIn) {
+    registeredIn.textContent = CONFIG.registeredIn || "Registered in England and Wales";
+  }
+
+  if (companyNumber) {
+    companyNumber.textContent = CONFIG.companyNumber || "17311204";
+  }
+
+  if (websiteLink && CONFIG.domain) {
+    websiteLink.href = CONFIG.domain;
+    websiteLink.textContent = CONFIG.domain.replace(/^https?:\/\//, "");
+  }
+})();
+</script>
 </body>
 </html>
