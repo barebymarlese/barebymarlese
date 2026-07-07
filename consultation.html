@@ -1173,9 +1173,20 @@ header .brand *{
 <div id="turnstile-container" style="margin-top:16px;"></div>
 
 <script>
+let turnstileWidgetId = null;
+let turnstileTokenReady = false;
+
+function onTurnstileSuccess(token) {
+  turnstileTokenReady = true;
+}
+
+function onTurnstileExpired() {
+  turnstileTokenReady = false;
+}
+
 if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   document.getElementById("turnstile-container").innerHTML =
-    '<div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8"></div>';
+    '<div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileExpired"></div>';
 }
 </script>
 
@@ -1795,10 +1806,35 @@ const form = document.getElementById("consultation-form");
         submitBtn.textContent = "SENDING…";
       }
 
-      setStatus("Sending…", "success");
-      statusEl.style.display = "block";
+      setStatus("Checking security…", "success");
+statusEl.style.display = "block";
 
-      const data = new FormData(form);
+if (typeof isLiveDomain !== "undefined" && isLiveDomain && window.turnstile) {
+  if (!turnstileTokenReady) {
+    turnstile.reset();
+
+    await new Promise((resolve, reject) => {
+      const started = Date.now();
+
+      const checkToken = setInterval(() => {
+        if (turnstileTokenReady) {
+          clearInterval(checkToken);
+          resolve();
+        }
+
+        if (Date.now() - started > 10000) {
+          clearInterval(checkToken);
+          reject(new Error("Security check could not be completed."));
+        }
+      }, 250);
+    });
+  }
+}
+
+setStatus("Sending…", "success");
+statusEl.style.display = "block";
+
+const data = new FormData(form);
 
 try{
   const res = await fetch(form.action, {
