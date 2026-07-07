@@ -1811,6 +1811,7 @@ statusEl.style.display = "block";
 
 if (typeof isLiveDomain !== "undefined" && isLiveDomain && window.turnstile) {
   if (!turnstileTokenReady) {
+    turnstileTokenReady = false;
     turnstile.reset();
 
     await new Promise((resolve, reject) => {
