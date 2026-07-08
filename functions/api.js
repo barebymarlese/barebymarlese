@@ -1499,11 +1499,15 @@ if (blockedDate) {
 .run();
 
       const bookingId = insertResult.meta.last_row_id;
-      if (bookingType === "treatment" && sessionsTotal > 1) {
+
+let firstSessionId = null;
+let firstSessionToken = null;
+
+if (bookingType === "treatment" && sessionsTotal > 1) {
   for (let i = 1; i <= sessionsTotal; i++) {
     const sessionToken = crypto.randomUUID();
 
-    await env.DB.prepare(`
+    const sessionInsert = await env.DB.prepare(`
       INSERT INTO treatment_sessions
       (
         appointment_id,
@@ -1522,10 +1526,20 @@ if (blockedDate) {
       i === 1 ? "booked" : "pending",
       sessionToken
     ).run();
+
+    if (i === 1) {
+      firstSessionId = sessionInsert.meta.last_row_id;
+      firstSessionToken = sessionToken;
+    }
   }
 }
-      const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
-      const cancelLink = `https://barebymarlese.com/cancel.html?id=${bookingId}&token=${rescheduleToken}`;
+      const rescheduleLink = firstSessionId && firstSessionToken
+  ? `https://barebymarlese.com/reschedule.html?session_id=${firstSessionId}&token=${firstSessionToken}`
+  : `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
+
+      const cancelLink = firstSessionId && firstSessionToken
+  ? `https://barebymarlese.com/cancel.html?session_id=${firstSessionId}&token=${firstSessionToken}`
+  : `https://barebymarlese.com/cancel.html?id=${bookingId}&token=${rescheduleToken}`;
 
       const safeName = escapeHtml(clientName);
       const safeEmail = escapeHtml(email || "Not provided");
