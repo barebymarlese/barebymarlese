@@ -850,6 +850,31 @@ if (blockedDate) {
 .run();
 
       const bookingId = insertResult.meta.last_row_id;
+      if (bookingType === "treatment" && sessionsTotal > 1) {
+  for (let i = 1; i <= sessionsTotal; i++) {
+    const sessionToken = crypto.randomUUID();
+
+    await env.DB.prepare(`
+      INSERT INTO treatment_sessions
+      (
+        appointment_id,
+        session_number,
+        appointment_date,
+        appointment_time,
+        status,
+        reschedule_token
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(
+      bookingId,
+      i,
+      i === 1 ? appointmentDate : null,
+      i === 1 ? appointmentTime : null,
+      i === 1 ? "booked" : "pending",
+      sessionToken
+    ).run();
+  }
+}
       const rescheduleLink = `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
       const cancelLink = `https://barebymarlese.com/cancel.html?id=${bookingId}&token=${rescheduleToken}`;
 
@@ -936,7 +961,7 @@ if (blockedDate) {
       <p><strong>Phone:</strong> ${safePhone}</p>
     </div>
     ${bookingType === "treatment"
-      ? `<p>Your treatment booking has been saved against your package record.</p>`
+      ? `<p>Your first treatment session has been booked. If you purchased a treatment package, your remaining sessions can be arranged after your first appointment.</p>`
       : `<p>Your £30 deposit will be deducted from your treatment cost.</p>`
     }
     <p>If you need to reschedule or cancel, please use one of the links below. At least 24 hours' notice is required for your deposit to remain transferable.</p>
