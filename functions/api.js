@@ -981,6 +981,100 @@ if (session.email) {
     AND status = 'booked'
   `).bind(appointment_date, appointment_time, session_id, token).run();
 
+  const sessionManageLink = `https://barebymarlese.com/reschedule.html?session_id=${session.id}&token=${session.reschedule_token}`;
+const sessionCancelLink = `https://barebymarlese.com/cancel.html?session_id=${session.id}&token=${session.reschedule_token}`;
+
+await sendEmail({
+  to: env.TO_EMAIL,
+  subject: `Treatment Session ${session.session_number} Rescheduled`,
+  html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <h2>Treatment Session Rescheduled</h2>
+
+    <p><strong>Client:</strong> ${escapeHtml(session.client_name || "Client")}</p>
+    <p><strong>Session:</strong> ${session.session_number}</p>
+    <p><strong>Treatment:</strong> ${escapeHtml(session.treatment_name || "Treatment")}</p>
+
+    <hr>
+
+    <p><strong>Previous Date:</strong> ${escapeHtml(session.old_date)}</p>
+    <p><strong>Previous Time:</strong> ${escapeHtml(session.old_time)}</p>
+
+    <br>
+
+    <p><strong>New Date:</strong> ${escapeHtml(appointment_date)}</p>
+    <p><strong>New Time:</strong> ${escapeHtml(appointment_time)}</p>
+
+  </div>
+</div>
+`
+});
+
+if (session.email) {
+
+  await sendEmail({
+    to: session.email,
+    subject: `Treatment Session ${session.session_number} Updated – BARE by Marlese`,
+    html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <h2>Treatment Session Updated</h2>
+
+    <p>Hi ${escapeHtml(session.client_name || "there")},</p>
+
+    <p>Your treatment session has been successfully rescheduled.</p>
+
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+
+      <p><strong>Previous Date:</strong> ${escapeHtml(session.old_date)}</p>
+      <p><strong>Previous Time:</strong> ${escapeHtml(session.old_time)}</p>
+
+      <hr>
+
+      <p><strong>New Date:</strong> ${escapeHtml(appointment_date)}</p>
+      <p><strong>New Time:</strong> ${escapeHtml(appointment_time)}</p>
+
+    </div>
+
+    <div style="text-align:center;margin:22px 0;">
+
+      <a href="${sessionManageLink}"
+         style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
+        Manage Session
+      </a>
+
+      <a href="${sessionCancelLink}"
+         style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">
+        Cancel Session
+      </a>
+
+    </div>
+
+    <p>If you have any questions, simply reply to this email.</p>
+
+    <p style="margin-top:20px;">
+      Kind regards,<br>
+      <strong>Marlese</strong><br>
+      BARE by Marlese
+    </p>
+
+  </div>
+</div>
+`
+  });
+
+}
+
   return new Response(JSON.stringify({
     success: true,
     session_id,
