@@ -303,10 +303,28 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
       return new Response("Booking not found", { status: 404 });
     }
 
+    if (booking.booking_type === "treatment") {
+  const sessions = await env.DB.prepare(`
+    SELECT
+      id,
+      session_number,
+      appointment_date,
+      appointment_time,
+      status,
+      reschedule_token
+    FROM treatment_sessions
+    WHERE appointment_id = ?
+    ORDER BY session_number ASC
+  `).bind(id).all();
+
+  booking.sessions = sessions.results || [];
+}
+
     return new Response(JSON.stringify(booking), {
       headers: jsonHeaders
     });
   }
+
 
   if (request.method === "GET" && url.searchParams.get("cancel") === "booking") {
     const id = url.searchParams.get("id");
