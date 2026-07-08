@@ -78,38 +78,63 @@ export async function onRequest(context) {
   }
 
   if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
-    const bookings = await env.DB.prepare(`
-      SELECT
-        id,
-        client_name,
-        email,
-        phone,
-        appointment_date,
-        appointment_time,
-        status,
-        booking_type,
-        package_type,
-        tattoo_size,
-        amount_paid,
-        payment_status,
-        payment_type,
-        sessions_total,
-        sessions_used,
-        package_status,
-        payment_reference,
-        treatment_category,
-        treatment_name,
-        reschedule_token,
-        whatsapp_reminder_sent,
-        aftercare_sent
-      FROM appointments
-      ORDER BY appointment_date ASC, appointment_time ASC
-    `).all();
 
-    return new Response(JSON.stringify(bookings.results), {
-      headers: jsonHeaders
-    });
+  const bookings = await env.DB.prepare(`
+    SELECT
+      id,
+      client_name,
+      email,
+      phone,
+      appointment_date,
+      appointment_time,
+      status,
+      booking_type,
+      package_type,
+      tattoo_size,
+      amount_paid,
+      payment_status,
+      payment_type,
+      sessions_total,
+      sessions_used,
+      package_status,
+      payment_reference,
+      treatment_category,
+      treatment_name,
+      reschedule_token,
+      whatsapp_reminder_sent,
+      aftercare_sent
+    FROM appointments
+    ORDER BY appointment_date ASC, appointment_time ASC
+  `).all();
+
+  for (const booking of bookings.results) {
+
+    if (booking.booking_type === "treatment") {
+
+      const sessions = await env.DB.prepare(`
+        SELECT
+          id,
+          session_number,
+          appointment_date,
+          appointment_time,
+          status,
+          reschedule_token
+        FROM treatment_sessions
+        WHERE appointment_id = ?
+        ORDER BY session_number ASC
+      `).bind(booking.id).all();
+
+      booking.sessions = sessions.results || [];
+
+    }
+
   }
+
+  return new Response(JSON.stringify(bookings.results), {
+    headers: jsonHeaders
+  });
+
+}
 
   if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
   const body = await request.json();
