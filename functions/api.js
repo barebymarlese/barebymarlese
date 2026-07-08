@@ -1134,6 +1134,67 @@ if (session.email) {
     AND status = 'booked'
   `).bind(session_id, token).run();
 
+  await sendEmail({
+  to: env.TO_EMAIL,
+  subject: `Treatment Session ${session.session_number} Cancelled`,
+  html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <h2>Treatment Session Cancelled</h2>
+
+    <p><strong>Client:</strong> ${escapeHtml(session.client_name || "Client")}</p>
+    <p><strong>Session:</strong> ${session.session_number}</p>
+    <p><strong>Treatment:</strong> ${escapeHtml(session.treatment_name || "Treatment")}</p>
+    <p><strong>Date:</strong> ${escapeHtml(session.appointment_date)}</p>
+    <p><strong>Time:</strong> ${escapeHtml(session.appointment_time)}</p>
+    <p><strong>Late cancellation:</strong> ${lateCancellation ? "Yes" : "No"}</p>
+  </div>
+</div>
+`
+});
+
+if (session.email) {
+  await sendEmail({
+    to: session.email,
+    subject: `Treatment Session ${session.session_number} Cancelled – BARE by Marlese`,
+    html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+
+    <h2>Treatment Session Cancelled</h2>
+
+    <p>Hi ${escapeHtml(session.client_name || "there")},</p>
+
+    <p>Your treatment session has been cancelled.</p>
+
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p><strong>Date:</strong> ${escapeHtml(session.appointment_date)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(session.appointment_time)}</p>
+      <p><strong>Late cancellation:</strong> ${lateCancellation ? "Yes" : "No"}</p>
+    </div>
+
+    <p>A minimum of 24 hours’ notice is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from your bundle.</p>
+
+    <p>If you need to rebook this session, please contact me directly.</p>
+
+    <p style="margin-top:20px;">
+      Kind regards,<br>
+      <strong>Marlese</strong><br>
+      BARE by Marlese
+    </p>
+  </div>
+</div>
+`
+  });
+}
+
   return new Response(JSON.stringify({
     success: true,
     cancelled: true,
