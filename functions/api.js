@@ -113,13 +113,17 @@ export async function onRequest(context) {
 
       const sessions = await env.DB.prepare(`
         SELECT
-          id,
-          session_number,
-          appointment_date,
-          appointment_time,
-          status,
-          reschedule_token
-        FROM treatment_sessions
+  id,
+  session_number,
+  appointment_date,
+  appointment_time,
+  status,
+  reschedule_token,
+  last_cancelled_date,
+  last_cancelled_time,
+  cancelled_at,
+  cancelled_count
+FROM treatment_sessions
         WHERE appointment_id = ?
         ORDER BY session_number ASC
       `).bind(booking.id).all();
