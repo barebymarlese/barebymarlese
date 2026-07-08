@@ -803,6 +803,77 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
     headers: jsonHeaders
   });
 }
+  if (request.method === "POST" && url.searchParams.get("session") === "complete") {
+  const body = await request.json();
+  const { session_id } = body;
+
+  if (!session_id) {
+    return new Response("Missing session ID", { status: 400 });
+  }
+
+  const session = await env.DB.prepare(`
+    SELECT
+      s.id,
+      s.appointment_id,
+      s.session_number,
+      s.status,
+      a.sessions_total
+    FROM treatment_sessions s
+    JOIN appointments a ON a.id = s.appointment_id
+    WHERE s.id = ?
+  `).bind(session_id).first();
+
+  if (!session) {
+    return new Response("Session not found", { status: 404 });
+  }
+
+  if (session.status !== "booked") {
+    return new Response("Only booked sessions can be marked completed", { status: 409 });
+  }
+
+  await env.DB.prepare(`
+    UPDATE treatment_sessions
+    SET status = 'completed',
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = ?
+  `).bind(session_id).run();
+
+  const completed = await env.DB.prepare(`
+    SELECT COUNT(*) AS count
+    FROM treatment_sessions
+    WHERE appointment_id = ?
+    AND status = 'completed'
+  `).bind(session.appointment_id).first();
+
+  const completedCount = Number(completed.count || 0);
+  const total = Number(session.sessions_total || 0);
+
+  await env.DB.prepare(`
+    UPDATE appointments
+    SET sessions_used = ?,
+        package_status = CASE
+          WHEN ? > 0 AND ? >= ? THEN 'completed'
+          ELSE 'active'
+        END
+    WHERE id = ?
+  `).bind(
+    completedCount,
+    total,
+    completedCount,
+    total,
+    session.appointment_id
+  ).run();
+
+  return new Response(JSON.stringify({
+    success: true,
+    session_id,
+    appointment_id: session.appointment_id,
+    sessions_used: completedCount,
+    package_status: total > 0 && completedCount >= total ? "completed" : "active"
+  }), {
+    headers: jsonHeaders
+  });
+}
   if (request.method === "GET") {
     const date = url.searchParams.get("date");
 
