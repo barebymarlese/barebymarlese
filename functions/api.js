@@ -829,7 +829,53 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
     AND reschedule_token = ?
     AND status = 'pending'
   `).bind(appointment_date, appointment_time, session_id, token).run();
+  
+const sessionManageLink = `https://barebymarlese.com/reschedule.html?session_id=${session.id}&token=${session.reschedule_token}`;
+const sessionCancelLink = `https://barebymarlese.com/cancel.html?session_id=${session.id}&token=${session.reschedule_token}`;
 
+await sendEmail({
+  to: env.TO_EMAIL,
+  subject: `Treatment Session ${session.session_number} Booked`,
+  html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+    <p><strong>Client:</strong> ${escapeHtml(session.client_name || "Client")}</p>
+    <p><strong>Session:</strong> ${escapeHtml(session.session_number)}</p>
+    <p><strong>Treatment:</strong> ${escapeHtml(session.treatment_name || "Treatment")}</p>
+    <p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
+    <p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
+  </div>
+</div>`
+});
+
+if (session.email) {
+  await sendEmail({
+    to: session.email,
+    subject: `Treatment Session ${session.session_number} Confirmed – BARE by Marlese`,
+    html: `
+<div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;">
+    <div style="text-align:center;font-size:18px;font-weight:700;letter-spacing:.12em;color:#5e6959;">
+      BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
+    </div>
+    <p>Hi ${escapeHtml(session.client_name || "there")},</p>
+    <p>Your treatment session ${escapeHtml(session.session_number)} has been booked.</p>
+    <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
+      <p><strong>Date:</strong> ${escapeHtml(appointment_date)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(appointment_time)}</p>
+    </div>
+    <div style="text-align:center;margin:22px 0;">
+      <a href="${sessionManageLink}" style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">Manage Session</a>
+      <a href="${sessionCancelLink}" style="display:inline-block;background:#878274;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">Cancel Session</a>
+    </div>
+    <p>Kind regards,<br><strong>Marlese</strong><br>BARE by Marlese</p>
+  </div>
+</div>`
+  });
+}
   return new Response(JSON.stringify({
     success: true,
     session_id,
