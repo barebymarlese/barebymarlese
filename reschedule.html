@@ -350,7 +350,10 @@ const token = params.get("token");
 
 let selectedDate = "";
 let selectedTime = "";
-let bookingType = "consultation";  
+let bookingType = "consultation";
+let activeSessionId = null;
+let activeSessionToken = null;
+let activeMode = "reschedule";
 
 function escapeHtml(value){
   return String(value || "")
@@ -394,15 +397,34 @@ async function loadBooking(){
     const booking = await res.json();
     bookingType = booking.booking_type || "consultation";
 
+    const sessionsHtml = Array.isArray(booking.sessions) && booking.sessions.length
+      ? `
+        <hr style="border:0;border-top:1px solid rgba(36,34,26,.12);margin:16px 0;">
+        <p><strong>Your treatment package</strong></p>
+        ${booking.sessions.map(session => `
+          <div style="padding:10px 0;border-bottom:1px solid rgba(36,34,26,.08);">
+            <p><strong>Session ${session.session_number}:</strong> ${escapeHtml(session.status)}</p>
+            ${session.appointment_date ? `<p>${escapeHtml(session.appointment_date)} at ${escapeHtml(session.appointment_time)}</p>` : ""}
+            ${session.status === "pending" ? `
+              <button class="btn btn-primary" type="button" onclick="startBookSession(${session.id}, '${session.reschedule_token}')">
+                Book Session ${session.session_number}
+              </button>
+            ` : ""}
+          </div>
+        `).join("")}
+      `
+      : "";
+
     summary.innerHTML = `
-  <p><strong>Appointment details</strong></p>
-  <p><strong>Name:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
-  <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
-  <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
-  <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
-  ${booking.treatment_name ? `<p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>` : ""}
-  <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
-`;
+      <p><strong>Appointment details</strong></p>
+      <p><strong>Name:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
+      <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+      <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
+      ${booking.treatment_name ? `<p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>` : ""}
+      <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
+      ${sessionsHtml}
+    `;
 
     if(booking.status !== "confirmed"){
       status.textContent = "This appointment can no longer be rescheduled.";
@@ -415,6 +437,25 @@ async function loadBooking(){
     status.textContent = `Please try again or contact ${businessName}.`;
     status.className = "error";
   }
+}
+
+function startBookSession(sessionId, sessionToken){
+  activeMode = "book-session";
+  activeSessionId = sessionId;
+  activeSessionToken = sessionToken;
+  bookingType = "treatment";
+  selectedDate = "";
+  selectedTime = "";
+
+  const dateInput = document.getElementById("booking-date");
+  if (dateInput) dateInput.value = "";
+
+  document.getElementById("available-slots").innerHTML =
+    '<div class="slot-message">Choose a date to book this treatment session.</div>';
+
+  const status = document.getElementById("status");
+  status.textContent = "";
+  status.className = "";
 }
 
 async function loadAvailableSlots(date){
@@ -446,7 +487,7 @@ async function loadAvailableSlots(date){
     `).join("") + `
       <div style="width:100%; margin-top:18px;">
         <button id="confirm-reschedule-btn" class="btn btn-primary" type="button" style="display:none;" onclick="confirmReschedule()">
-          Confirm New Appointment
+          ${activeMode === "book-session" ? "Confirm Session Booking" : "Confirm New Appointment"}
         </button>
       </div>
     `;
@@ -470,7 +511,9 @@ function selectSlot(date, time, button){
 
   const confirmBtn = document.getElementById("confirm-reschedule-btn");
   confirmBtn.style.display = "inline-flex";
-  confirmBtn.textContent = `Confirm ${time}`;
+  confirmBtn.textContent = activeMode === "book-session"
+    ? `Confirm session at ${time}`
+    : `Confirm ${time}`;
 }
 
 async function confirmReschedule(){
@@ -480,25 +523,40 @@ async function confirmReschedule(){
     return;
   }
 
-  status.textContent = "Updating your appointment...";
+  status.textContent = activeMode === "book-session"
+    ? "Booking your treatment session..."
+    : "Updating your appointment...";
   status.className = "";
 
-  try{
-    const res = await fetch("/api?reschedule=update", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
+  const endpoint = activeMode === "book-session"
+    ? "/api?session=book"
+    : "/api?reschedule=update";
+
+  const payload = activeMode === "book-session"
+    ? {
+        session_id: activeSessionId,
+        token: activeSessionToken,
+        appointment_date: selectedDate,
+        appointment_time: selectedTime
+      }
+    : {
         id: bookingId,
         token: token,
         appointment_date: selectedDate,
         appointment_time: selectedTime
-      })
+      };
+
+  try{
+    const res = await fetch(endpoint, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
     });
 
     if(res.ok){
       status.innerHTML = `
         <div class="success-card">
-          <p class="success">Your appointment has been updated.</p>
+          <p class="success">${activeMode === "book-session" ? "Your treatment session has been booked." : "Your appointment has been updated."}</p>
           <p><strong>New date:</strong> ${escapeHtml(selectedDate)}</p>
           <p><strong>New time:</strong> ${escapeHtml(selectedTime)}</p>
           <p>Please check your inbox and junk/spam folder for any updated booking information.</p>
@@ -512,7 +570,7 @@ async function confirmReschedule(){
 
       setTimeout(() => {
         window.location.href = CONFIG.domain || "/";
-      }, 5000);
+      }, activeMode === "book-session" ? 2500 : 5000);
 
     }else{
       const text = await res.text();
