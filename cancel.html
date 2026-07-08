@@ -300,15 +300,16 @@ if (legalName) legalName.textContent = CONFIG.legalName || "";
 if (registeredIn) registeredIn.textContent = CONFIG.registeredIn || "";
 if (companyNumber) companyNumber.textContent = CONFIG.companyNumber || "";
 
-
 const pageTitle = document.getElementById("page-title");
 
 if (pageTitle) {
   pageTitle.textContent = `${CONFIG.pages?.cancelTitle || "Cancel Appointment"} | ${CONFIG.businessName || "BARE by Marlese"}`;
 }
 
-const siteDomain = CONFIG.apiBase || window.location.origin;
+const apiBase = CONFIG.apiBase || window.location.origin;
+const siteDomain = CONFIG.domain || window.location.origin;
 const businessName = CONFIG.businessName || "BARE by Marlese";
+
 const keepAppointmentButton = document.getElementById("keep-appointment-btn");
 if (keepAppointmentButton) {
   keepAppointmentButton.href = siteDomain;
@@ -316,9 +317,12 @@ if (keepAppointmentButton) {
 
 const params = new URLSearchParams(window.location.search);
 const bookingId = params.get("id");
+const sessionId = params.get("session_id");
 const token = params.get("token");
+const isSessionMode = Boolean(sessionId);
 
 let bookingLoaded = false;
+let loadedBooking = null;
 
 function escapeHtml(value){
   return String(value || "")
@@ -329,12 +333,30 @@ function escapeHtml(value){
     .replaceAll("'", "&#39;");
 }
 
+function updatePageWording(){
+  const heading = document.querySelector("h1");
+  const sub = document.querySelector(".sub");
+  const cancelBtn = document.getElementById("cancel-btn");
+
+  if (isSessionMode) {
+    if (heading) heading.textContent = "Cancel Treatment Session";
+    if (sub) sub.textContent = "Please review your treatment session details below before confirming your cancellation.";
+    if (cancelBtn) cancelBtn.textContent = "Cancel Treatment Session";
+  } else {
+    if (heading) heading.textContent = "Cancel Appointment";
+    if (sub) sub.textContent = "Please review your appointment details below before confirming your cancellation.";
+    if (cancelBtn) cancelBtn.textContent = "Cancel Appointment";
+  }
+}
+
 async function loadBooking(){
   const summary = document.getElementById("booking-summary");
   const status = document.getElementById("status");
   const cancelBtn = document.getElementById("cancel-btn");
 
-  if(!bookingId || !token){
+  updatePageWording();
+
+  if((!bookingId && !sessionId) || !token){
     summary.innerHTML = "<p>Invalid cancellation link.</p>";
     status.textContent = `Please contact ${businessName} if you need help with your appointment.`;
     status.className = "error";
@@ -342,7 +364,9 @@ async function loadBooking(){
   }
 
   try{
-    const res = await fetch(`${siteDomain}/api?cancel=booking&id=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(token)}`);
+    const res = isSessionMode
+      ? await fetch(`${apiBase}/api?session=booking&session_id=${encodeURIComponent(sessionId)}&token=${encodeURIComponent(token)}`)
+      : await fetch(`${apiBase}/api?cancel=booking&id=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(token)}`);
 
     if(!res.ok){
       summary.innerHTML = "<p>This cancellation link is invalid or has expired.</p>";
@@ -352,19 +376,36 @@ async function loadBooking(){
     }
 
     const booking = await res.json();
+    loadedBooking = booking;
 
-    summary.innerHTML = `
-  <p><strong>Appointment details</strong></p>
-  <p><strong>Name:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
-  <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
-  <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
-  <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
-  ${booking.treatment_name ? `<p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>` : ""}
-  <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
-`;
+    summary.innerHTML = isSessionMode
+      ? `
+        <p><strong>Treatment session details</strong></p>
+        <p><strong>Name:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
+        <p><strong>Session:</strong> ${escapeHtml(booking.session_number)}</p>
+        <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+        <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+        ${booking.treatment_name ? `<p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>` : ""}
+        <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
+      `
+      : `
+        <p><strong>Appointment details</strong></p>
+        <p><strong>Name:</strong> ${escapeHtml(booking.client_name || "Client")}</p>
+        <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
+        <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+        <p><strong>Type:</strong> ${escapeHtml(booking.booking_type || "consultation")}</p>
+        ${booking.treatment_name ? `<p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>` : ""}
+        <p><strong>Status:</strong> ${escapeHtml(booking.status)}</p>
+      `;
 
-    if(booking.status !== "confirmed"){
-      status.textContent = "This appointment has already been cancelled or can no longer be changed.";
+    const canCancel = isSessionMode
+      ? booking.status === "booked"
+      : booking.status === "confirmed";
+
+    if(!canCancel){
+      status.textContent = isSessionMode
+        ? "This treatment session has already been cancelled, completed, or can no longer be changed."
+        : "This appointment has already been cancelled or can no longer be changed.";
       status.className = "error";
       cancelBtn.disabled = true;
       return;
@@ -389,23 +430,41 @@ async function confirmCancellation(){
     return;
   }
 
-  const confirmed = window.confirm("Are you sure you want to cancel this appointment?");
+  const confirmed = window.confirm(
+    isSessionMode
+      ? "Are you sure you want to cancel this treatment session?"
+      : "Are you sure you want to cancel this appointment?"
+  );
+
   if(!confirmed){
     return;
   }
 
   cancelBtn.disabled = true;
-  status.textContent = "Cancelling your appointment...";
+  status.textContent = isSessionMode
+    ? "Cancelling your treatment session..."
+    : "Cancelling your appointment...";
   status.className = "";
 
-  try{
-    const res = await fetch(`${siteDomain}/api?cancel=confirm`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
+  const endpoint = isSessionMode
+    ? `${apiBase}/api?session=cancel`
+    : `${apiBase}/api?cancel=confirm`;
+
+  const payload = isSessionMode
+    ? {
+        session_id: sessionId,
+        token: token
+      }
+    : {
         id: bookingId,
         token: token
-      })
+      };
+
+  try{
+    const res = await fetch(endpoint, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
     });
 
     if(res.ok){
@@ -413,10 +472,12 @@ async function confirmCancellation(){
 
       status.innerHTML = `
         <div class="success-card">
-          <p class="success">Your appointment has been cancelled.</p>
+          <p class="success">${isSessionMode ? "Your treatment session has been cancelled." : "Your appointment has been cancelled."}</p>
           <p>Please check your inbox and junk/spam folder for your cancellation confirmation.</p>
           <p><strong>Late cancellation:</strong> ${data.lateCancellation ? "Yes" : "No"}</p>
-          <p><strong>Deposit transferable:</strong> ${data.depositTransferable ? "Yes" : "No"}</p>
+          ${!isSessionMode && typeof data.depositTransferable !== "undefined"
+            ? `<p><strong>Deposit transferable:</strong> ${data.depositTransferable ? "Yes" : "No"}</p>`
+            : ""}
           <p style="margin-top:10px; font-size:13px; color:#878274;">
             Redirecting you back to the website...
           </p>
@@ -431,13 +492,15 @@ async function confirmCancellation(){
 
     }else{
       const text = await res.text();
-      status.textContent = text || "Could not cancel this appointment.";
+      status.textContent = text || (isSessionMode ? "Could not cancel this treatment session." : "Could not cancel this appointment.");
       status.className = "error";
       cancelBtn.disabled = false;
     }
 
   }catch(err){
-    status.textContent = "There was a problem cancelling your appointment. Please try again.";
+    status.textContent = isSessionMode
+      ? "There was a problem cancelling this treatment session. Please try again."
+      : "There was a problem cancelling your appointment. Please try again.";
     status.className = "error";
     cancelBtn.disabled = false;
   }
