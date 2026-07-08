@@ -841,6 +841,7 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
     headers: jsonHeaders
   });
 }
+  
   if (request.method === "POST" && url.searchParams.get("session") === "reschedule") {
   const body = await request.json();
   const { session_id, token, appointment_date, appointment_time } = body;
@@ -943,6 +944,65 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
     previous_time: session.old_time,
     appointment_date,
     appointment_time
+  }), {
+    headers: jsonHeaders
+  });
+}
+  if (request.method === "POST" && url.searchParams.get("session") === "cancel") {
+  const body = await request.json();
+  const { session_id, token } = body;
+
+  if (!session_id || !token) {
+    return new Response("Missing session cancellation details", { status: 400 });
+  }
+
+  const session = await env.DB.prepare(`
+    SELECT
+      s.id,
+      s.appointment_id,
+      s.session_number,
+      s.appointment_date,
+      s.appointment_time,
+      s.status,
+      s.reschedule_token,
+      a.client_name,
+      a.email,
+      a.phone,
+      a.treatment_name
+    FROM treatment_sessions s
+    JOIN appointments a ON a.id = s.appointment_id
+    WHERE s.id = ?
+    AND s.reschedule_token = ?
+  `).bind(session_id, token).first();
+
+  if (!session) {
+    return new Response("Session not found", { status: 404 });
+  }
+
+  if (session.status !== "booked") {
+    return new Response("Only booked sessions can be cancelled", { status: 409 });
+  }
+
+  const lateCancellation = isLateCancellation(session.appointment_date, session.appointment_time);
+
+  await env.DB.prepare(`
+    UPDATE treatment_sessions
+    SET status = 'cancelled',
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = ?
+    AND reschedule_token = ?
+    AND status = 'booked'
+  `).bind(session_id, token).run();
+
+  return new Response(JSON.stringify({
+    success: true,
+    cancelled: true,
+    session_id,
+    appointment_id: session.appointment_id,
+    session_number: session.session_number,
+    appointment_date: session.appointment_date,
+    appointment_time: session.appointment_time,
+    lateCancellation
   }), {
     headers: jsonHeaders
   });
