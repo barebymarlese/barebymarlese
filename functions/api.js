@@ -687,11 +687,36 @@ if (blockedDate) {
 
 const allSlots = getSlotsByType(bookingType, date);
 
-    const booked = await env.DB.prepare(
-      "SELECT appointment_time FROM appointments WHERE appointment_date = ? AND booking_type = ? AND status = 'confirmed'"
-    ).bind(date, bookingType).all();
+    let bookedTimes = [];
 
-    const bookedTimes = booked.results.map(row => row.appointment_time);
+if (bookingType === "treatment") {
+  const booked = await env.DB.prepare(`
+    SELECT appointment_time
+    FROM appointments
+    WHERE appointment_date = ?
+    AND booking_type = 'treatment'
+    AND status = 'confirmed'
+
+    UNION
+
+    SELECT appointment_time
+    FROM treatment_sessions
+    WHERE appointment_date = ?
+    AND status = 'booked'
+  `).bind(date, date).all();
+
+  bookedTimes = booked.results.map(row => row.appointment_time);
+} else {
+  const booked = await env.DB.prepare(`
+    SELECT appointment_time
+    FROM appointments
+    WHERE appointment_date = ?
+    AND booking_type = ?
+    AND status = 'confirmed'
+  `).bind(date, bookingType).all();
+
+  bookedTimes = booked.results.map(row => row.appointment_time);
+}
 
     const availableSlots = allSlots.filter(slot => {
       return !bookedTimes.includes(slot) && !isPastSlot(date, slot);
