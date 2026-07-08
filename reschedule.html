@@ -448,25 +448,6 @@ async function loadBooking(){
   }
 }
 
-function startBookSession(sessionId, sessionToken){
-  activeMode = "book-session";
-  activeSessionId = sessionId;
-  activeSessionToken = sessionToken;
-  bookingType = "treatment";
-  selectedDate = "";
-  selectedTime = "";
-
-  const dateInput = document.getElementById("booking-date");
-  if (dateInput) dateInput.value = "";
-
-  document.getElementById("available-slots").innerHTML =
-    '<div class="slot-message">Choose a date to book this treatment session.</div>';
-
-  const status = document.getElementById("status");
-  status.textContent = "";
-  status.className = "";
-}
-
 async function loadAvailableSlots(date){
   const container = document.getElementById("available-slots");
   const status = document.getElementById("status");
