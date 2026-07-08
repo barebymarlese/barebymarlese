@@ -1128,9 +1128,13 @@ if (session.email) {
   await env.DB.prepare(`
   UPDATE treatment_sessions
   SET status = 'pending',
-      appointment_date = NULL,
-      appointment_time = NULL,
-      updated_at = CURRENT_TIMESTAMP
+    last_cancelled_date = appointment_date,
+    last_cancelled_time = appointment_time,
+    cancelled_at = CURRENT_TIMESTAMP,
+    cancelled_count = COALESCE(cancelled_count, 0) + 1,
+    appointment_date = NULL,
+    appointment_time = NULL,
+    updated_at = CURRENT_TIMESTAMP
   WHERE id = ?
   AND reschedule_token = ?
   AND status = 'booked'
