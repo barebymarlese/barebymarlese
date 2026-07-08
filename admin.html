@@ -711,9 +711,16 @@ function buildSessionInfo(booking){
         const status = String(session.status || "pending");
         const isPending = status === "pending";
         const isBooked = status === "booked";
-        const dateText = session.appointment_date
-          ? `<span class="session-date">${escapeHtml(session.appointment_date)} at ${escapeHtml(session.appointment_time)}</span>`
-          : `<span class="action-note" style="text-align:left;margin-top:3px;">Not booked yet</span>`;
+        const cancelledText = session.last_cancelled_date
+  ? `<span class="action-note" style="text-align:left;margin-top:3px;color:#8a3b3b;">
+      Last cancelled: ${escapeHtml(session.last_cancelled_date)} at ${escapeHtml(session.last_cancelled_time || "")}
+      ${Number(session.cancelled_count || 0) > 1 ? `<br>Cancelled ${Number(session.cancelled_count)} times` : ""}
+    </span>`
+  : "";
+
+const dateText = session.appointment_date
+  ? `<span class="session-date">${escapeHtml(session.appointment_date)} at ${escapeHtml(session.appointment_time)}</span>`
+  : `<span class="action-note" style="text-align:left;margin-top:3px;">Not booked yet</span>${cancelledText}`;
 
         return `
           <div class="session-row ${escapeHtml(status)}">
