@@ -364,6 +364,26 @@ footer{
   .btn{width:100%}
   .summary-pill{width:100%;justify-content:center;border-radius:14px;text-align:center}
 }
+
+.session-list{display:flex;flex-direction:column;gap:8px;min-width:190px}
+.session-row{border:1px solid rgba(36,34,26,.10);border-radius:12px;padding:8px;background:#f8f8f6;font-size:12px;line-height:1.45;color:rgba(36,34,26,.78)}
+.session-row strong{color:var(--olive-dark)}
+.session-row.booked{background:rgba(94,105,89,.08)}
+.session-row.completed{background:rgba(47,125,50,.10)}
+.session-row.pending{background:#fff}
+.session-date{display:block;margin-top:3px;font-weight:600;color:var(--ink)}
+.session-actions{margin-top:7px;display:flex;gap:6px;flex-wrap:wrap}
+.admin-modal{position:fixed;inset:0;background:rgba(36,34,26,.42);display:none;align-items:center;justify-content:center;padding:18px;z-index:9999}
+.admin-modal.open{display:flex}
+.admin-modal-card{width:100%;max-width:560px;background:#f8f8f6;border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 60px rgba(36,34,26,.24);padding:22px}
+.admin-modal-card h2{margin:0 0 8px;color:var(--olive);font-size:20px}
+.admin-modal-card p{font-size:14px;line-height:1.6;color:rgba(36,34,26,.75)}
+.admin-modal-card input{width:100%;padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;margin:8px 0 12px}
+.modal-slots{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.modal-slot{min-height:38px;padding:9px 12px;border-radius:10px;background:var(--olive);color:white;border:0;font-family:inherit;font-weight:700;cursor:pointer}
+.modal-slot.selected{outline:3px solid rgba(94,105,89,.22);background:var(--olive-dark)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}
+
 </style>
 </head>
 
@@ -436,6 +456,25 @@ footer{
       </div>
     </div>
 
+
+
+  <div class="admin-modal" id="session-modal" aria-hidden="true">
+    <div class="admin-modal-card">
+      <h2 id="session-modal-title">Book Treatment Session</h2>
+      <p id="session-modal-summary">Choose a treatment date and time for this package session.</p>
+      <label for="session-date">Choose date</label>
+      <input type="date" id="session-date">
+      <div id="session-slots" class="modal-slots">
+        <span class="action-note">Choose a date to view available treatment times.</span>
+      </div>
+      <p id="session-modal-status" class="action-note"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" onclick="closeSessionModal()">Cancel</button>
+        <button class="btn btn-primary" type="button" onclick="confirmAdminSessionBooking()">Save Session</button>
+      </div>
+    </div>
+  </div>
+
     <footer>© <span id="footer-brand"></span> | Booking administration</footer>
   </div>
 </div>
@@ -445,6 +484,8 @@ footer{
 <script>
 const CONFIG = window.SITE_CONFIG || {};
 const API_BASE = CONFIG.apiBase || window.location.origin;
+
+let activeAdminSession = null;
 
 const pageTitle = document.getElementById("page-title");
 
@@ -657,8 +698,38 @@ function buildSessionInfo(booking){
 
   const used = Number(booking.sessions_used || 0);
   const total = Number(booking.sessions_total || 0);
+  const sessions = Array.isArray(booking.sessions) ? booking.sessions : [];
 
-  return `<span class="package-text">${used}/${total} used</span>`;
+  if (!sessions.length) {
+    return `<span class="package-text">${used}/${total} used</span>`;
+  }
+
+  return `
+    <div class="session-list">
+      <div class="package-text">${used}/${total} used</div>
+      ${sessions.map(session => {
+        const status = String(session.status || "pending");
+        const isPending = status === "pending";
+        const dateText = session.appointment_date
+          ? `<span class="session-date">${escapeHtml(session.appointment_date)} at ${escapeHtml(session.appointment_time)}</span>`
+          : `<span class="action-note" style="text-align:left;margin-top:3px;">Not booked yet</span>`;
+
+        return `
+          <div class="session-row ${escapeHtml(status)}">
+            <strong>Session ${escapeHtml(session.session_number)}</strong> - ${escapeHtml(status)}
+            ${dateText}
+            ${isPending ? `
+              <div class="session-actions">
+                <button class="btn btn-secondary" type="button" onclick="openSessionModal(${Number(booking.id)}, ${Number(session.id)}, '${escapeHtml(session.reschedule_token)}', ${Number(session.session_number)}, '${escapeHtml(booking.client_name || "Client")}')">
+                  Book Session
+                </button>
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
 }
   
 async function loadBookings(){
@@ -832,6 +903,144 @@ async function markPaid(id){
   }
 }
 
+
+
+function setSessionModalMinDate(){
+  const dateInput = document.getElementById("session-date");
+  if (!dateInput) return;
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  dateInput.min = `${yyyy}-${mm}-${dd}`;
+}
+
+function openSessionModal(appointmentId, sessionId, sessionToken, sessionNumber, clientName){
+  activeAdminSession = {
+    appointmentId,
+    sessionId,
+    sessionToken,
+    sessionNumber,
+    clientName,
+    selectedDate: "",
+    selectedTime: ""
+  };
+
+  const modal = document.getElementById("session-modal");
+  const title = document.getElementById("session-modal-title");
+  const summary = document.getElementById("session-modal-summary");
+  const dateInput = document.getElementById("session-date");
+  const slots = document.getElementById("session-slots");
+  const status = document.getElementById("session-modal-status");
+
+  title.textContent = `Book Session ${sessionNumber}`;
+  summary.textContent = `${clientName} - choose the date and time for treatment session ${sessionNumber}.`;
+  dateInput.value = "";
+  slots.innerHTML = `<span class="action-note">Choose a date to view available treatment times.</span>`;
+  status.textContent = "";
+  status.className = "action-note";
+
+  setSessionModalMinDate();
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeSessionModal(){
+  const modal = document.getElementById("session-modal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  activeAdminSession = null;
+}
+
+async function loadSessionSlots(date){
+  const slots = document.getElementById("session-slots");
+  const status = document.getElementById("session-modal-status");
+
+  if (!activeAdminSession) return;
+
+  activeAdminSession.selectedDate = "";
+  activeAdminSession.selectedTime = "";
+  status.textContent = "";
+  slots.innerHTML = `<span class="action-note">Loading available times...</span>`;
+
+  try {
+    const res = await fetch(`${API_BASE}/api?type=treatment&date=${encodeURIComponent(date)}`);
+    const data = await res.json();
+    const availableSlots = data.slots || [];
+
+    if (!Array.isArray(availableSlots) || !availableSlots.length) {
+      slots.innerHTML = `<span class="action-note">No treatment availability for this date.</span>`;
+      return;
+    }
+
+    slots.innerHTML = availableSlots.map(slot => `
+      <button class="modal-slot" type="button" onclick="selectAdminSessionSlot('${escapeHtml(date)}', '${escapeHtml(slot)}', this)">${escapeHtml(slot)}</button>
+    `).join("");
+  } catch (err) {
+    slots.innerHTML = `<span class="action-note">Could not load available times.</span>`;
+  }
+}
+
+function selectAdminSessionSlot(date, time, button){
+  if (!activeAdminSession) return;
+
+  activeAdminSession.selectedDate = date;
+  activeAdminSession.selectedTime = time;
+
+  document.querySelectorAll(".modal-slot").forEach(btn => btn.classList.remove("selected"));
+  button.classList.add("selected");
+}
+
+async function confirmAdminSessionBooking(){
+  const status = document.getElementById("session-modal-status");
+
+  if (!activeAdminSession || !activeAdminSession.selectedDate || !activeAdminSession.selectedTime) {
+    status.textContent = "Please choose a date and time.";
+    status.className = "error";
+    return;
+  }
+
+  status.textContent = "Booking treatment session...";
+  status.className = "action-note";
+
+  try {
+    const res = await fetch(`${API_BASE}/api?session=book`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        session_id: activeAdminSession.sessionId,
+        token: activeAdminSession.sessionToken,
+        appointment_date: activeAdminSession.selectedDate,
+        appointment_time: activeAdminSession.selectedTime
+      })
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      status.textContent = text || "Could not book session.";
+      status.className = "error";
+      return;
+    }
+
+    status.textContent = "Session booked.";
+    status.className = "success";
+
+    setTimeout(() => {
+      closeSessionModal();
+      loadBookings();
+    }, 700);
+  } catch (err) {
+    status.textContent = "There was a problem booking this session.";
+    status.className = "error";
+  }
+}
+
+const sessionDateInput = document.getElementById("session-date");
+if (sessionDateInput) {
+  sessionDateInput.addEventListener("change", function(e){
+    if (e.target.value) loadSessionSlots(e.target.value);
+  });
+}
 
 async function loadBlockedDates(){
   const list = document.getElementById("blocked-dates-list");
