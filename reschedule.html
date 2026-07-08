@@ -346,7 +346,9 @@ const businessName = CONFIG.businessName || "BARE by Marlese";
 
 const params = new URLSearchParams(window.location.search);
 const bookingId = params.get("id");
+const sessionId = params.get("session_id");
 const token = params.get("token");
+const isSessionMode = Boolean(sessionId);
 
 let selectedDate = "";
 let selectedTime = "";
@@ -377,7 +379,7 @@ async function loadBooking(){
   const summary = document.getElementById("booking-summary");
   const status = document.getElementById("status");
 
-  if(!bookingId || !token){
+  if((!bookingId && !sessionId) || !token){
     summary.innerHTML = "<p>Invalid reschedule link.</p>";
     status.textContent = `Please contact ${businessName} if you need help changing your appointment.`;
     status.className = "error";
@@ -385,7 +387,9 @@ async function loadBooking(){
   }
 
   try{
-    const res = await fetch(`/api?reschedule=booking&id=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(token)}`);
+    const res = isSessionMode
+  ? await fetch(`/api?session=booking&session_id=${encodeURIComponent(sessionId)}&token=${encodeURIComponent(token)}`)
+  : await fetch(`/api?reschedule=booking&id=${encodeURIComponent(bookingId)}&token=${encodeURIComponent(token)}`);
 
     if(!res.ok){
       summary.innerHTML = "<p>This reschedule link is invalid or has expired.</p>";
@@ -397,6 +401,13 @@ async function loadBooking(){
     const booking = await res.json();
     bookingType = booking.booking_type || "consultation";
 
+    if (isSessionMode) {
+  activeMode = "session-reschedule";
+  activeSessionId = booking.id;
+  activeSessionToken = token;
+  bookingType = "treatment";
+}
+
     const sessionsHtml = Array.isArray(booking.sessions) && booking.sessions.length
       ? `
         <hr style="border:0;border-top:1px solid rgba(36,34,26,.12);margin:16px 0;">
@@ -404,12 +415,7 @@ async function loadBooking(){
         ${booking.sessions.map(session => `
           <div style="padding:10px 0;border-bottom:1px solid rgba(36,34,26,.08);">
             <p><strong>Session ${session.session_number}:</strong> ${escapeHtml(session.status)}</p>
-            ${session.appointment_date ? `<p>${escapeHtml(session.appointment_date)} at ${escapeHtml(session.appointment_time)}</p>` : ""}
-            ${session.status === "pending" ? `
-              <button class="btn btn-primary" type="button" onclick="startBookSession(${session.id}, '${session.reschedule_token}')">
-                Book Session ${session.session_number}
-              </button>
-            ` : ""}
+            ${session.appointment_date ? `<p>${escapeHtml(session.appointment_date)} at ${escapeHtml(session.appointment_time)}</p>` : ""}      
           </div>
         `).join("")}
       `
@@ -426,11 +432,14 @@ async function loadBooking(){
       ${sessionsHtml}
     `;
 
-    if(booking.status !== "confirmed"){
-      status.textContent = "This appointment can no longer be rescheduled.";
-      status.className = "error";
-      document.getElementById("booking-date").disabled = true;
-    }
+    if (
+  (isSessionMode && booking.status !== "booked") ||
+  (!isSessionMode && booking.status !== "confirmed")
+){
+  status.textContent = "This appointment can no longer be rescheduled.";
+  status.className = "error";
+  document.getElementById("booking-date").disabled = true;
+}
 
   }catch(err){
     summary.innerHTML = "<p>Could not load appointment details.</p>";
@@ -528,11 +537,11 @@ async function confirmReschedule(){
     : "Updating your appointment...";
   status.className = "";
 
-  const endpoint = activeMode === "book-session"
-    ? "/api?session=book"
-    : "/api?reschedule=update";
+  const endpoint = activeMode === "session-reschedule"
+  ? "/api?session=reschedule"
+  : "/api?reschedule=update";
 
-  const payload = activeMode === "book-session"
+  const payload = activeMode === "session-reschedule"
     ? {
         session_id: activeSessionId,
         token: activeSessionToken,
