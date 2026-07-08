@@ -477,7 +477,7 @@ async function loadAvailableSlots(date){
     `).join("") + `
       <div style="width:100%; margin-top:18px;">
         <button id="confirm-reschedule-btn" class="btn btn-primary" type="button" style="display:none;" onclick="confirmReschedule()">
-          ${activeMode === "book-session" ? "Confirm Session Booking" : "Confirm New Appointment"}
+          ${activeMode === "session-reschedule" ? "Confirm Treatment Session" : "Confirm New Appointment"}
         </button>
       </div>
     `;
@@ -501,8 +501,8 @@ function selectSlot(date, time, button){
 
   const confirmBtn = document.getElementById("confirm-reschedule-btn");
   confirmBtn.style.display = "inline-flex";
-  confirmBtn.textContent = activeMode === "book-session"
-    ? `Confirm session at ${time}`
+  confirmBtn.textContent = activeMode === "session-reschedule"
+    ? `Confirm treatment session at ${time}`
     : `Confirm ${time}`;
 }
 
@@ -513,8 +513,8 @@ async function confirmReschedule(){
     return;
   }
 
-  status.textContent = activeMode === "book-session"
-    ? "Booking your treatment session..."
+  status.textContent = activeMode === "session-reschedule"
+    ? "Updating your treatment session..."
     : "Updating your appointment...";
   status.className = "";
 
@@ -546,7 +546,7 @@ async function confirmReschedule(){
     if(res.ok){
       status.innerHTML = `
         <div class="success-card">
-          <p class="success">${activeMode === "book-session" ? "Your treatment session has been booked." : "Your appointment has been updated."}</p>
+          <p class="success">${activeMode === "session-reschedule" ? "Your treatment session has been updated." : "Your appointment has been updated."}</p>
           <p><strong>New date:</strong> ${escapeHtml(selectedDate)}</p>
           <p><strong>New time:</strong> ${escapeHtml(selectedTime)}</p>
           <p>Please check your inbox and junk/spam folder for any updated booking information.</p>
@@ -560,7 +560,7 @@ async function confirmReschedule(){
 
       setTimeout(() => {
         window.location.href = CONFIG.domain || "/";
-      }, activeMode === "book-session" ? 2500 : 5000);
+      }, 5000);
 
     }else{
       const text = await res.text();
