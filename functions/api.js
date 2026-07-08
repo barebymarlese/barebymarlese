@@ -700,6 +700,44 @@ if (request.method === "POST" && url.searchParams.get("admin") === "unblock-date
     headers: jsonHeaders
   });
 }
+if (request.method === "GET" && url.searchParams.get("session") === "booking") {
+  const sessionId = url.searchParams.get("session_id");
+  const token = url.searchParams.get("token");
+
+  if (!sessionId || !token) {
+    return new Response("Missing session details", { status: 400 });
+  }
+
+  const session = await env.DB.prepare(`
+    SELECT
+      s.id,
+      s.appointment_id,
+      s.session_number,
+      s.appointment_date,
+      s.appointment_time,
+      s.status,
+      s.reschedule_token,
+      a.client_name,
+      a.email,
+      a.phone,
+      a.booking_type,
+      a.treatment_name,
+      a.package_type,
+      a.tattoo_size
+    FROM treatment_sessions s
+    JOIN appointments a ON a.id = s.appointment_id
+    WHERE s.id = ?
+    AND s.reschedule_token = ?
+  `).bind(sessionId, token).first();
+
+  if (!session) {
+    return new Response("Session not found", { status: 404 });
+  }
+
+  return new Response(JSON.stringify(session), {
+    headers: jsonHeaders
+  });
+}
 if (request.method === "POST" && url.searchParams.get("session") === "book") {
   const body = await request.json();
   const { session_id, token, appointment_date, appointment_time } = body;
@@ -874,6 +912,7 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
     headers: jsonHeaders
   });
 }
+  
   if (request.method === "GET") {
     const date = url.searchParams.get("date");
 
