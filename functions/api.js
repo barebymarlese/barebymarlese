@@ -675,7 +675,109 @@ if (request.method === "POST" && url.searchParams.get("admin") === "unblock-date
     headers: jsonHeaders
   });
 }
+if (request.method === "POST" && url.searchParams.get("session") === "book") {
+  const body = await request.json();
+  const { session_id, token, appointment_date, appointment_time } = body;
 
+  if (!session_id || !token || !appointment_date || !appointment_time) {
+    return new Response("Missing session booking details", { status: 400 });
+  }
+
+  const session = await env.DB.prepare(`
+    SELECT
+      s.id,
+      s.appointment_id,
+      s.session_number,
+      s.status,
+      s.reschedule_token,
+      a.client_name,
+      a.email,
+      a.phone,
+      a.treatment_name,
+      a.package_type,
+      a.tattoo_size
+    FROM treatment_sessions s
+    JOIN appointments a ON a.id = s.appointment_id
+    WHERE s.id = ?
+    AND s.reschedule_token = ?
+  `).bind(session_id, token).first();
+
+  if (!session) {
+    return new Response("Session not found", { status: 404 });
+  }
+
+  if (session.status !== "pending") {
+    return new Response("This session is not available to book", { status: 409 });
+  }
+
+  const blockedDate = await env.DB.prepare(`
+    SELECT block_date
+    FROM blocked_dates
+    WHERE block_date = ?
+  `).bind(appointment_date).first();
+
+  if (blockedDate) {
+    return new Response("This date is unavailable", { status: 409 });
+  }
+
+  const validSlots = getSlotsByType("treatment", appointment_date);
+
+  if (!validSlots.includes(appointment_time)) {
+    return new Response("Invalid appointment time", { status: 400 });
+  }
+
+  if (isPastSlot(appointment_date, appointment_time)) {
+    return new Response("This appointment time has already passed", { status: 400 });
+  }
+
+  const clash = await env.DB.prepare(`
+    SELECT appointment_time
+    FROM appointments
+    WHERE appointment_date = ?
+    AND appointment_time = ?
+    AND booking_type = 'treatment'
+    AND status = 'confirmed'
+
+    UNION
+
+    SELECT appointment_time
+    FROM treatment_sessions
+    WHERE appointment_date = ?
+    AND appointment_time = ?
+    AND status = 'booked'
+  `).bind(
+    appointment_date,
+    appointment_time,
+    appointment_date,
+    appointment_time
+  ).first();
+
+  if (clash) {
+    return new Response("That slot is already taken", { status: 409 });
+  }
+
+  await env.DB.prepare(`
+    UPDATE treatment_sessions
+    SET appointment_date = ?,
+        appointment_time = ?,
+        status = 'booked',
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = ?
+    AND reschedule_token = ?
+    AND status = 'pending'
+  `).bind(appointment_date, appointment_time, session_id, token).run();
+
+  return new Response(JSON.stringify({
+    success: true,
+    session_id,
+    appointment_id: session.appointment_id,
+    session_number: session.session_number,
+    appointment_date,
+    appointment_time
+  }), {
+    headers: jsonHeaders
+  });
+}
   if (request.method === "GET") {
     const date = url.searchParams.get("date");
 
