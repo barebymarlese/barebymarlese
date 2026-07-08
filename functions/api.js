@@ -1126,13 +1126,15 @@ if (session.email) {
   const lateCancellation = isLateCancellation(session.appointment_date, session.appointment_time);
 
   await env.DB.prepare(`
-    UPDATE treatment_sessions
-    SET status = 'cancelled',
-        updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-    AND reschedule_token = ?
-    AND status = 'booked'
-  `).bind(session_id, token).run();
+  UPDATE treatment_sessions
+  SET status = 'pending',
+      appointment_date = NULL,
+      appointment_time = NULL,
+      updated_at = CURRENT_TIMESTAMP
+  WHERE id = ?
+  AND reschedule_token = ?
+  AND status = 'booked'
+`).bind(session_id, token).run();
 
   await sendEmail({
   to: env.TO_EMAIL,
@@ -1182,7 +1184,7 @@ if (session.email) {
 
     <p>A minimum of 24 hours’ notice is required to cancel or reschedule an appointment. Late cancellations or missed appointments may result in the session being deducted from your bundle.</p>
 
-    <p>If you need to rebook this session, please contact me directly.</p>
+    <p>Your session is now available to rebook. Please reply to this email and I will arrange a new date and time for you.</p>
 
     <p style="margin-top:20px;">
       Kind regards,<br>
