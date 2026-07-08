@@ -710,6 +710,7 @@ function buildSessionInfo(booking){
       ${sessions.map(session => {
         const status = String(session.status || "pending");
         const isPending = status === "pending";
+        const isBooked = status === "booked";
         const dateText = session.appointment_date
           ? `<span class="session-date">${escapeHtml(session.appointment_date)} at ${escapeHtml(session.appointment_time)}</span>`
           : `<span class="action-note" style="text-align:left;margin-top:3px;">Not booked yet</span>`;
@@ -722,6 +723,13 @@ function buildSessionInfo(booking){
               <div class="session-actions">
                 <button class="btn btn-secondary" type="button" onclick="openSessionModal(${Number(booking.id)}, ${Number(session.id)}, '${escapeHtml(session.reschedule_token)}', ${Number(session.session_number)}, '${escapeHtml(booking.client_name || "Client")}')">
                   Book Session
+                </button>
+              </div>
+            ` : ""}
+            ${isBooked ? `
+              <div class="session-actions">
+                <button class="btn btn-secondary" type="button" onclick="completeSession(${Number(session.id)})">
+                  Mark Completed
                 </button>
               </div>
             ` : ""}
@@ -784,10 +792,6 @@ async function loadBookings(){
         <td>
   <div class="action-stack">
     ${buildWhatsAppAction(booking)}
-
-    ${booking.booking_type === "treatment" && !isCancelled && booking.package_status !== "completed"
-  ? `<button class="btn btn-secondary" onclick="useSession(${Number(booking.id)})">Use Session</button>`
-  : ""}
 
     ${booking.booking_type === "treatment" && booking.package_status === "completed"
   ? `<span class="action-note">Package completed</span>`
@@ -856,21 +860,22 @@ async function markReminderSent(id){
   }
 }
 
-async function useSession(id){
-  if(!confirm("Mark one session as used?")){
+async function completeSession(sessionId){
+  if(!confirm("Mark this treatment session as completed?")){
     return;
   }
 
-  const res = await fetch(`${API_BASE}/api?admin=use-session`, {
+  const res = await fetch(`${API_BASE}/api?session=complete`, {
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({id})
+    body:JSON.stringify({ session_id: sessionId })
   });
 
   if(res.ok){
     loadBookings();
   }else{
-    alert("Could not update session.");
+    const text = await res.text();
+    alert(text || "Could not mark session completed.");
   }
 }
 async function markPaid(id){
