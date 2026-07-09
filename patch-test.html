@@ -522,7 +522,7 @@
 <div class="settings-grid" style="margin-bottom: 15px;">
     <div>
         <label class="con-label">Earliest Safe Treatment Date</label>
-        <input type="date" id="earliestTreatmentDate" class="con-input">
+        <input type="date" id="earliestTreatmentDate" class="con-input" readonly>
     </div>
     <div></div>
 </div>
@@ -797,17 +797,41 @@
 }
     }
 
+const testDate = document.getElementById("testDate");
+const safeDate = document.getElementById("earliestTreatmentDate");
+
+testDate.addEventListener("change", () => {
+    if (!testDate.value) {
+        safeDate.value = "";
+        return;
+    }
+
+    const d = new Date(testDate.value);
+    d.setDate(d.getDate() + 2); // 48 hours later
+
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+
+    safeDate.value = `${yyyy}-${mm}-${dd}`;
+});
     window.addEventListener("load", () => {
-        const testDateEl = document.getElementById("testDate");
-        if (testDateEl) testDateEl.valueAsDate = new Date();
+    const testDateEl = document.getElementById("testDate");
 
-        updateConsentText();
+    if (testDateEl) {
+        testDateEl.valueAsDate = new Date();
 
-        const treatmentTypeEl = document.getElementById("treatmentType");
-        if (treatmentTypeEl) {
-            treatmentTypeEl.addEventListener("change", updateConsentText);
-        }
-    });
+        // Trigger the automatic calculation of the earliest treatment date
+        testDateEl.dispatchEvent(new Event("change"));
+    }
+
+    updateConsentText();
+
+    const treatmentTypeEl = document.getElementById("treatmentType");
+    if (treatmentTypeEl) {
+        treatmentTypeEl.addEventListener("change", updateConsentText);
+    }
+});
 </script>
 </body>
 </html>
