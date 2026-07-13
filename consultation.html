@@ -1853,9 +1853,20 @@ try{
     localStorage.setItem("bare_customer_email", submittedData.get("email") || "");
     localStorage.setItem("bare_customer_phone", submittedData.get("phone") || "");
 
-    localStorage.setItem("bareFromConsultation", "true");
-    try{ localStorage.setItem("bareTreatmentType", treatmentTypeInput?.value || treatmentSelect?.value || "Tattoo Removal"); }catch(e){}
-    location.href = "deposit.html";
+    const selectedTreatment =
+  treatmentTypeInput?.value ||
+  treatmentSelect?.value ||
+  "Tattoo Removal";
+
+localStorage.setItem("bareFromConsultation", "true");
+
+try {
+  localStorage.setItem("bareTreatmentType", selectedTreatment);
+} catch (e) {}
+
+location.href =
+  "deposit.html?treatment=" +
+  encodeURIComponent(selectedTreatment);
   }else{
     const errorText = await res.text();
     setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
