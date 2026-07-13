@@ -631,15 +631,39 @@ if (depositDeductedAmount) {
 }
 
 if (depositButton) {
-  depositButton.href = deposit.stripeLink || "#";
+  const consultationStripeLinks = deposit.stripeLinks || {};
+
+  let selectedStripeLink = consultationStripeLinks.tattoo || "#";
+
+  if (selectedTreatment === "Carbon Facial") {
+    selectedStripeLink = consultationStripeLinks.carbon || "#";
+  } else if (selectedTreatment === "Fungal Nail Treatment") {
+    selectedStripeLink = consultationStripeLinks.fungal || "#";
+  }
+
+  depositButton.href = selectedStripeLink;
   depositButton.textContent = `Pay ${deposit.amount || "£30"} Deposit`;
 
   depositButton.addEventListener("click", (event) => {
+    if (!selectedStripeLink || selectedStripeLink === "#") {
+      event.preventDefault();
+      alert("The payment link is not available. Please contact BARE by Marlese.");
+      return;
+    }
+
     if (selectedTreatment !== "Tattoo Removal") {
-      const selectedOption = document.querySelector('input[name="treatment_option"]:checked');
+      const selectedOption = document.querySelector(
+        'input[name="treatment_option"]:checked'
+      );
+
       if (!selectedOption) {
         event.preventDefault();
-        treatmentChoice?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        treatmentChoice?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
         return;
       }
     }
