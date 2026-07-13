@@ -289,8 +289,8 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
   UPDATE appointments
   SET payment_status = 'paid',
       amount_paid = CASE
-        WHEN ? > 0 THEN ?
         WHEN full_price > 0 THEN full_price
+        WHEN ? > 0 THEN COALESCE(amount_paid, 0) + ?
         ELSE amount_paid
       END,
       remaining_balance = 0
