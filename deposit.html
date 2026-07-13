@@ -259,6 +259,61 @@ h1{
 .flash-message strong{
   color:var(--olive-dark);
 }
+
+.treatment-choice{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#f4f5f3;
+}
+.treatment-choice[hidden]{display:none}
+.treatment-choice-title{
+  margin:0 0 10px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--olive);
+}
+.option-list{display:grid;gap:9px}
+.option-card{
+  display:grid;
+  grid-template-columns:20px 1fr auto;
+  gap:10px;
+  align-items:center;
+  padding:12px;
+  border:1px solid rgba(36,34,26,.12);
+  border-radius:12px;
+  background:white;
+  cursor:pointer;
+}
+.option-card input{margin:0}
+.option-card strong{display:block;font-size:13px}
+.option-card small{display:block;margin-top:3px;color:rgba(36,34,26,.65);line-height:1.4}
+.option-card .option-price{font-size:13px;font-weight:700;color:var(--olive-dark);white-space:nowrap}
+.balance-summary{
+  margin-top:14px;
+  padding:14px;
+  border-radius:13px;
+  background:rgba(94,105,89,.10);
+  border:1px solid rgba(94,105,89,.16);
+}
+.balance-summary p{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin:6px 0;
+  font-size:13px;
+  line-height:1.45;
+}
+.balance-summary .remaining{
+  padding-top:8px;
+  border-top:1px solid rgba(36,34,26,.12);
+  font-weight:700;
+  color:var(--olive-dark);
+}
+
 footer{
   text-align:center;
   padding:18px 10px 0;
@@ -292,10 +347,7 @@ footer{
       <div class="hero">
         <span class="kicker">Step 2 of 3</span>
         <h1 id="hero-heading">Secure Your Consultation</h1>
-        <p class="sub">
-          To continue with booking, please pay your consultation deposit below.
-          Your flow remains simple and clear: consultation, deposit, then booking your treatment.
-        </p>
+        <p class="sub" id="hero-subtext">To continue with booking, please pay your consultation deposit below.</p>
       </div>
 
       <div class="content">
@@ -306,8 +358,8 @@ footer{
             <div class="point">
               <div class="check">✓</div>
               <div>
-                <strong>Laser treatment consultation & patch test</strong>
-                <p>A calm, personalised review of your treatment area, skin type and suitability before treatment begins.</p>
+                <strong id="consultation-includes-title">Laser treatment consultation & patch test</strong>
+                <p id="consultation-includes-copy">A calm, personalised review of your treatment area, skin type and suitability before treatment begins.</p>
               </div>
             </div>
 
@@ -315,7 +367,7 @@ footer{
               <div class="check">✓</div>
               <div>
                 <strong><span id="deposit-deducted-amount">£30</span> fully deducted from treatment cost</strong>
-                <p>Your deposit is not an additional fee. It is taken off your treatment total.</p>
+                <p id="deposit-deduction-copy">Your deposit is not an additional fee. It is taken off your treatment total.</p>
               </div>
             </div>
 
@@ -347,9 +399,21 @@ footer{
             <p class="price-note">Secure checkout via Stripe.</p>
 
             <div class="flow">
-              <span>Step 1: Consultation</span>
-              <span>Step 2: Pay deposit</span>
-              <span>Step 3: Book</span>
+              <span id="flow-step-1">Step 1: Consultation</span>
+              <span id="flow-step-2">Step 2: Pay deposit</span>
+              <span id="flow-step-3">Step 3: Book</span>
+            </div>
+
+
+            <div class="treatment-choice" id="treatment-choice" hidden>
+              <p class="treatment-choice-title">Choose your treatment option</p>
+              <div class="option-list" id="treatment-option-list"></div>
+
+              <div class="balance-summary" id="balance-summary" hidden>
+                <p><span>Full treatment price</span><strong id="full-treatment-price">—</strong></p>
+                <p><span>Deposit paid now</span><strong id="deposit-paid-summary">£30</strong></p>
+                <p class="remaining"><span>Remaining on the day</span><strong id="remaining-balance">—</strong></p>
+              </div>
             </div>
 
             <div class="action-wrap">
@@ -389,6 +453,21 @@ const legalName = document.getElementById("legal-name");
 const registeredIn = document.getElementById("registered-in");
 const companyNumber = document.getElementById("company-number");
 
+const heroSubtext = document.getElementById("hero-subtext");
+const consultationIncludesTitle = document.getElementById("consultation-includes-title");
+const consultationIncludesCopy = document.getElementById("consultation-includes-copy");
+const depositDeductionCopy = document.getElementById("deposit-deduction-copy");
+const treatmentChoice = document.getElementById("treatment-choice");
+const treatmentOptionList = document.getElementById("treatment-option-list");
+const balanceSummary = document.getElementById("balance-summary");
+const fullTreatmentPrice = document.getElementById("full-treatment-price");
+const depositPaidSummary = document.getElementById("deposit-paid-summary");
+const remainingBalance = document.getElementById("remaining-balance");
+const flowStep1 = document.getElementById("flow-step-1");
+const flowStep2 = document.getElementById("flow-step-2");
+const flowStep3 = document.getElementById("flow-step-3");
+
+
 if (pageTitle) {
   pageTitle.textContent = `${CONFIG.pages?.depositTitle || "Consultation Deposit"} | ${businessName}`;
 }
@@ -423,12 +502,124 @@ if (companyNumber) {
   companyNumber.textContent = CONFIG.companyNumber || "";
 }
 
-if (heroHeading) {
-  heroHeading.textContent = deposit.heading || "Secure Your Consultation";
+const selectedTreatment = (() => {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get("treatment") || params.get("type");
+    if (fromUrl) {
+      const normalised = fromUrl.toLowerCase();
+      if (normalised.includes("carbon")) return "Carbon Facial";
+      if (normalised.includes("fungal") || normalised.includes("nail")) return "Fungal Nail Treatment";
+      if (normalised.includes("tattoo")) return "Tattoo Removal";
+    }
+    return localStorage.getItem("bareTreatmentType") || "Tattoo Removal";
+  } catch (e) {
+    return "Tattoo Removal";
+  }
+})();
+
+try {
+  localStorage.setItem("bareTreatmentType", selectedTreatment);
+} catch (e) {}
+
+const depositAmountNumber = Number(String(deposit.amount || "£30").replace(/[^0-9.]/g, "")) || 30;
+
+const treatmentOptions = {
+  "Carbon Facial": [
+    { id: "carbon_single", name: "Single Carbon Facial", fullPrice: 85 },
+    { id: "carbon_course3", name: "Course of 3 Carbon Facials", fullPrice: 225 }
+  ],
+  "Fungal Nail Treatment": [
+    { id: "fungal_single_nail", name: "Single Nail", fullPrice: 45 },
+    { id: "fungal_one_foot", name: "One Foot - up to 5 nails", fullPrice: 85 },
+    { id: "fungal_both_feet", name: "Both Feet", fullPrice: 120 },
+    { id: "fungal_course4_one_foot", name: "Course of 4 - One Foot", fullPrice: 300 },
+    { id: "fungal_course4_both_feet", name: "Course of 4 - Both Feet", fullPrice: 420 }
+  ]
+};
+
+function money(value) {
+  return `£${Number(value).toFixed(2).replace(".00", "")}`;
 }
 
-if (depositTitle) {
-  depositTitle.textContent = deposit.label || "Consultation Deposit";
+function saveTreatmentOption(option) {
+  const remaining = Math.max(0, option.fullPrice - depositAmountNumber);
+  try {
+    localStorage.setItem("bareTreatmentOption", option.id);
+    localStorage.setItem("bareTreatmentName", option.name);
+    localStorage.setItem("bareTreatmentFullPrice", String(option.fullPrice));
+    localStorage.setItem("bareDepositPaid", String(depositAmountNumber));
+    localStorage.setItem("bareRemainingBalance", String(remaining));
+  } catch (e) {}
+
+  if (fullTreatmentPrice) fullTreatmentPrice.textContent = money(option.fullPrice);
+  if (depositPaidSummary) depositPaidSummary.textContent = money(depositAmountNumber);
+  if (remainingBalance) remainingBalance.textContent = money(remaining);
+  if (balanceSummary) balanceSummary.hidden = false;
+}
+
+function renderTreatmentOptions() {
+  const options = treatmentOptions[selectedTreatment] || [];
+  if (!treatmentChoice || !treatmentOptionList || !options.length) return;
+
+  treatmentChoice.hidden = false;
+  treatmentOptionList.innerHTML = "";
+
+  let savedOption = "";
+  try {
+    savedOption = localStorage.getItem("bareTreatmentOption") || "";
+  } catch (e) {}
+
+  options.forEach((option, index) => {
+    const label = document.createElement("label");
+    label.className = "option-card";
+
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "treatment_option";
+    radio.value = option.id;
+    radio.required = true;
+
+    const copy = document.createElement("span");
+    copy.innerHTML = `<strong>${option.name}</strong><small>£30 deposit today, ${money(Math.max(0, option.fullPrice - depositAmountNumber))} remaining on the day</small>`;
+
+    const price = document.createElement("span");
+    price.className = "option-price";
+    price.textContent = money(option.fullPrice);
+
+    label.append(radio, copy, price);
+    treatmentOptionList.appendChild(label);
+
+    radio.addEventListener("change", () => saveTreatmentOption(option));
+
+    if (savedOption === option.id || (!savedOption && index === 0)) {
+      radio.checked = true;
+      saveTreatmentOption(option);
+    }
+  });
+}
+
+if (selectedTreatment === "Tattoo Removal") {
+  if (heroHeading) heroHeading.textContent = "Secure Your Consultation";
+  if (heroSubtext) heroSubtext.textContent = "Pay your £30 consultation deposit, then book your 30-minute consultation and patch test.";
+  if (depositTitle) depositTitle.textContent = "Tattoo Removal Consultation Deposit";
+  if (consultationIncludesTitle) consultationIncludesTitle.textContent = "Laser tattoo removal consultation & patch test";
+  if (consultationIncludesCopy) consultationIncludesCopy.textContent = "A personalised assessment of your tattoo, skin type and suitability before treatment begins.";
+  if (depositDeductionCopy) depositDeductionCopy.textContent = "Your £30 deposit is deducted from your later tattoo treatment or bundle cost.";
+  if (flowStep1) flowStep1.textContent = "Step 1: Consultation form";
+  if (flowStep2) flowStep2.textContent = "Step 2: Pay deposit";
+  if (flowStep3) flowStep3.textContent = "Step 3: Book consultation";
+} else {
+  if (heroHeading) heroHeading.textContent = `Secure Your ${selectedTreatment} Appointment`;
+  if (heroSubtext) heroSubtext.textContent = "Choose your treatment option, pay the £30 deposit, then book your 1-hour consultation and treatment appointment.";
+  if (depositTitle) depositTitle.textContent = `${selectedTreatment} Deposit`;
+  if (consultationIncludesTitle) consultationIncludesTitle.textContent = `${selectedTreatment} consultation & treatment appointment`;
+  if (consultationIncludesCopy) consultationIncludesCopy.textContent = "Your suitability will be assessed at the start of your appointment. If suitable, treatment will follow during the same 1-hour booking.";
+  if (depositDeductionCopy) depositDeductionCopy.textContent = "Your £30 deposit is deducted from the selected single treatment or package. The remaining balance is payable on the day.";
+  if (flowStep1) flowStep1.textContent = "Step 1: Choose option";
+  if (flowStep2) flowStep2.textContent = "Step 2: Pay £30 deposit";
+  if (flowStep3) flowStep3.textContent = "Step 3: Book 1-hour slot";
+  renderTreatmentOptions();
 }
 
 if (depositPrice) {
@@ -442,6 +633,22 @@ if (depositDeductedAmount) {
 if (depositButton) {
   depositButton.href = deposit.stripeLink || "#";
   depositButton.textContent = `Pay ${deposit.amount || "£30"} Deposit`;
+
+  depositButton.addEventListener("click", (event) => {
+    if (selectedTreatment !== "Tattoo Removal") {
+      const selectedOption = document.querySelector('input[name="treatment_option"]:checked');
+      if (!selectedOption) {
+        event.preventDefault();
+        treatmentChoice?.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+    }
+
+    try {
+      localStorage.setItem("bareTreatmentType", selectedTreatment);
+      localStorage.setItem("bareDepositPaid", String(depositAmountNumber));
+    } catch (e) {}
+  });
 }
 
 if (backHomeButton) {
