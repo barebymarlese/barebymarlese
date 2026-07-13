@@ -101,7 +101,6 @@ export async function onRequest(context) {
       treatment_category,
       treatment_name,
       reschedule_token,
-      whatsapp_reminder_sent,
       aftercare_sent
     FROM appointments
     ORDER BY appointment_date ASC, appointment_time ASC
