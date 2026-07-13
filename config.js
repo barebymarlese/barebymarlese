@@ -66,12 +66,17 @@ Object.assign(window.SITE_CONFIG, {
   },
 
   deposit: {
-    label: "Consultation Deposit",
-    heading: "Secure Your Consultation",
-    amount: "£30",
-    amountPence: 3000,
-    stripeLink: "https://book.stripe.com/5kQ00l5HY6L1frj9ie8g000"
-  },
+  label: "Consultation Deposit",
+  heading: "Secure Your Consultation",
+  amount: "£30",
+  amountPence: 3000,
+
+  stripeLinks: {
+    tattoo: "https://book.stripe.com/5kQ00l5HY6L1frj9ie8g000",
+    carbon: "https://buy.stripe.com/aFa7sN8Ua9Xdfrj7a68g00C",
+    fungal: "https://buy.stripe.com/3cI9AV4DU3yPa6Z9ie8g00D"
+  }
+},
 
   stripeLinks: {
     bundle_full: {
