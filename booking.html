@@ -167,6 +167,20 @@ margin-top:26px;
 flex-wrap:wrap;
 }
 
+.booking-summary{
+max-width:620px;
+margin:0 auto 22px;
+padding:16px 18px;
+background:#e7e9e4;
+border-radius:12px;
+text-align:left;
+font-size:14px;
+line-height:1.6;
+}
+.booking-summary[hidden]{display:none}
+.booking-summary p{margin:5px 0}
+.booking-summary strong{color:#5e6959}
+
 #booking-status{
 margin-top:20px;
 font-size:14px;
@@ -242,19 +256,26 @@ max-width:100%;
     <span id="brand-sub"></span>
   </div>
 
-<h1>Book Consultation & Patch Test</h1>
+<h1 id="booking-heading">Book Consultation & Patch Test</h1>
 
 <div class="steps">
   <span class="step completed">✓ Consultation Completed</span>
   <span class="step completed">✓ Deposit Paid</span>
-  <span class="step active">Step 3: Book Consultation & Patch Test</span>
+  <span class="step active" id="active-step">Step 3: Book Consultation & Patch Test</span>
 </div>
 
-<p>Please select your consultation and patch test appointment time below. This step becomes available once your deposit has been paid.</p>
-  <p class="sub">
-Your consultation includes a patch test and treatment assessment. 
+<p id="booking-intro">Please select your consultation and patch test appointment time below. This step becomes available once your deposit has been paid.</p>
+<p class="sub" id="booking-subtext">
+Your consultation includes a patch test and treatment assessment.
 This appointment must be completed before booking treatment sessions.
 </p>
+
+<div class="booking-summary" id="booking-summary" hidden>
+  <p><strong>Treatment:</strong> <span id="summary-treatment">—</span></p>
+  <p><strong>Full price:</strong> <span id="summary-full-price">—</span></p>
+  <p><strong>Deposit paid:</strong> <span id="summary-deposit">£30</span></p>
+  <p><strong>Remaining on the day:</strong> <span id="summary-remaining">—</span></p>
+</div>
 
 <div class="hours-strip">
   <strong>Opening Hours:</strong>
@@ -304,47 +325,127 @@ const CONFIG = window.SITE_CONFIG || {};
 const API_BASE = CONFIG.apiBase || window.location.origin;
 const pageTitle = document.getElementById("page-title");
 
+const treatmentType = localStorage.getItem("bareTreatmentType") || "Tattoo Removal";
+const treatmentName = localStorage.getItem("bareTreatmentName") || "";
+const treatmentOption = localStorage.getItem("bareTreatmentOption") || "";
+const fullPrice = Number(localStorage.getItem("bareTreatmentFullPrice") || "0");
+const depositPaid = Number(localStorage.getItem("bareDepositPaid") || "30");
+const remainingBalance = Number(localStorage.getItem("bareRemainingBalance") || Math.max(0, fullPrice - depositPaid));
+
+const isTattoo = treatmentType === "Tattoo Removal";
+const isCarbon = treatmentType === "Carbon Facial";
+const isFungal = treatmentType === "Fungal Nail Treatment";
+const slotType = isTattoo ? "consultation" : "treatment";
+const bookingType = isTattoo ? "consultation" : "treatment";
+const treatmentCategory = isCarbon ? "carbon" : isFungal ? "fungal" : null;
+
+const optionDetails = {
+  carbon_single: { packageType: "single_session", sessions: 1 },
+  carbon_course3: { packageType: "3_sessions", sessions: 3 },
+  fungal_single_nail: { packageType: "single_session", sessions: 1 },
+  fungal_one_foot: { packageType: "single_session", sessions: 1 },
+  fungal_both_feet: { packageType: "single_session", sessions: 1 },
+  fungal_course4_one_foot: { packageType: "4_sessions", sessions: 4 },
+  fungal_course4_both_feet: { packageType: "4_sessions", sessions: 4 }
+};
+
+const selectedOptionDetails = optionDetails[treatmentOption] || {
+  packageType: "single_session",
+  sessions: 1
+};
+
+function money(value) {
+  return `£${Number(value || 0).toFixed(2).replace(".00", "")}`;
+}
+
+function setPageCopy() {
+  const heading = document.getElementById("booking-heading");
+  const activeStep = document.getElementById("active-step");
+  const intro = document.getElementById("booking-intro");
+  const subtext = document.getElementById("booking-subtext");
+  const summary = document.getElementById("booking-summary");
+
+  if (isTattoo) {
+    if (pageTitle) pageTitle.textContent = `Book Consultation & Patch Test | ${CONFIG.businessName || "BARE by Marlese"}`;
+    if (heading) heading.textContent = "Book Consultation & Patch Test";
+    if (activeStep) activeStep.textContent = "Step 3: Book Consultation & Patch Test";
+    if (intro) intro.textContent = "Please select your 30-minute consultation and patch test appointment below.";
+    if (subtext) subtext.textContent = "Your consultation includes a patch test and treatment assessment. This appointment must be completed before booking treatment sessions.";
+    if (summary) summary.hidden = true;
+    return;
+  }
+
+  if (!treatmentName || !treatmentOption || !fullPrice) {
+    window.location.href = "deposit.html";
+    return;
+  }
+
+  if (pageTitle) pageTitle.textContent = `Book ${treatmentType} | ${CONFIG.businessName || "BARE by Marlese"}`;
+  if (heading) heading.textContent = `Book Your ${treatmentType}`;
+  if (activeStep) activeStep.textContent = "Step 3: Book 1-Hour Appointment";
+  if (intro) intro.textContent = "Please select a 1-hour consultation and treatment appointment.";
+  if (subtext) subtext.textContent = "Your suitability will be assessed at the start of the appointment. If treatment is suitable, it will follow during the same booking. No patch test appointment is required.";
+
+  document.getElementById("summary-treatment").textContent = treatmentName;
+  document.getElementById("summary-full-price").textContent = money(fullPrice);
+  document.getElementById("summary-deposit").textContent = money(depositPaid);
+  document.getElementById("summary-remaining").textContent = money(remainingBalance);
+  summary.hidden = false;
+}
+
+setPageCopy();
+
+const dateInput = document.getElementById("booking-date");
+if (dateInput) {
+  const today = new Date();
+  dateInput.min = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0")
+  ].join("-");
+}
+
 async function loadAvailableSlots(date) {
   const container = document.getElementById("available-slots");
   const status = document.getElementById("booking-status");
 
+  selectedDate = "";
+  selectedTime = "";
   status.textContent = "";
   status.className = "";
-  container.innerHTML = '<div class="slot-message">Loading available times...</div>';
+  container.innerHTML = `<div class="slot-message">Loading ${isTattoo ? "consultation" : "1-hour treatment"} times...</div>`;
 
   try {
-    const res = await fetch(`${API_BASE}/api?date=${encodeURIComponent(date)}`);
+    const res = await fetch(`${API_BASE}/api?type=${encodeURIComponent(slotType)}&date=${encodeURIComponent(date)}`);
     const data = await res.json();
     const slots = data.slots || [];
     const nextAvailable = data.nextAvailable || null;
 
     if (!Array.isArray(slots) || slots.length === 0) {
-      container.innerHTML = '<div class="slot-message">No availability for this date.</div>';
+      container.innerHTML = `<div class="slot-message">No ${isTattoo ? "consultation" : "treatment"} availability for this date.</div>`;
       return;
     }
 
     container.innerHTML = slots.map(slot => `
-  <button class="btn slot-btn ${slot === nextAvailable ? "next-slot" : ""}" type="button" onclick="selectSlot('${date}', '${slot}', this)">
-    ${slot === nextAvailable ? "Next available: " : ""}${slot}
-  </button>
-`).join("") + `
-  <div style="width:100%; margin-top:18px;">
-    <button id="confirm-booking-btn" class="btn" type="button" style="display:none;" onclick="confirmSelectedSlot()">
-      Confirm Appointment
-    </button>
-  </div>
-`;
+      <button class="btn slot-btn ${slot === nextAvailable ? "next-slot" : ""}" type="button" onclick="selectSlot('${date}', '${slot}', this)">
+        ${slot === nextAvailable ? "Next available: " : ""}${slot}
+      </button>
+    `).join("") + `
+      <div style="width:100%; margin-top:18px;">
+        <button id="confirm-booking-btn" class="btn" type="button" style="display:none;" onclick="confirmSelectedSlot()">
+          Confirm Appointment
+        </button>
+      </div>
+    `;
   } catch (err) {
     container.innerHTML = '<div class="slot-message">Could not load available times. Please try again.</div>';
   }
 }
 
 document.getElementById("booking-date").addEventListener("change", function(e) {
-  if (e.target.value) {
-    loadAvailableSlots(e.target.value);
-  }
+  if (e.target.value) loadAvailableSlots(e.target.value);
 });
-  
+
 let selectedDate = "";
 let selectedTime = "";
 
@@ -369,6 +470,7 @@ function confirmSelectedSlot() {
   if (!selectedDate || !selectedTime) return;
   bookSlot(selectedDate, selectedTime);
 }
+
 async function bookSlot(date, time) {
   const status = document.getElementById("booking-status");
 
@@ -379,42 +481,73 @@ async function bookSlot(date, time) {
   status.textContent = "Booking your appointment...";
   status.className = "";
 
+  const payload = {
+    client_name: name,
+    email,
+    phone,
+    appointment_date: date,
+    appointment_time: time,
+    booking_type: bookingType,
+    amount_paid: depositPaid,
+    payment_reference: localStorage.getItem("bare_payment_reference") || null
+  };
+
+  if (!isTattoo) {
+    payload.package_type = selectedOptionDetails.packageType;
+    payload.treatment_category = treatmentCategory;
+    payload.treatment_name = treatmentName;
+    payload.full_price = fullPrice;
+    payload.remaining_balance = remainingBalance;
+    payload.deposit_only = true;
+  }
+
   try {
-  const res = await fetch(`${API_BASE}/api`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      client_name: name,
-      email: email,
-      phone: phone,
-      appointment_date: date,
-      appointment_time: time,
-      booking_type: "consultation",
-      amount_paid: CONFIG.deposit?.amountPence ? CONFIG.deposit.amountPence / 100 : 30,
-      payment_reference: localStorage.getItem("bare_payment_reference") || null
-    })
-  });
+    const res = await fetch(`${API_BASE}/api`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
 
-   if (res.ok) {
-  document.getElementById("available-slots").innerHTML = "";
+    if (res.ok) {
+      document.getElementById("available-slots").innerHTML = "";
 
-  status.innerHTML = `
-    <div style="background:#f4f5f3;border-radius:12px;padding:18px;margin-top:18px;">
-      <p class="success">Thank you — your consultation and patch test has been booked.</p>
-      <p><strong>Date:</strong> ${date}</p>
-      <p><strong>Time:</strong> ${time}</p>
-      <p>Please check your inbox and junk/spam folder for your confirmation email and manage booking link.</p>
-      <p style="font-size:13px;color:#878274;">Redirecting you back to the website...</p>
-    </div>
-  `;
-  status.className = "success";
+      const treatmentLine = !isTattoo
+        ? `<p><strong>Treatment:</strong> ${treatmentName}</p>
+           <p><strong>Deposit paid:</strong> ${money(depositPaid)}</p>
+           <p><strong>Remaining on the day:</strong> ${money(remainingBalance)}</p>`
+        : "";
 
-  setTimeout(() => {
-    window.location.href = CONFIG.domain || "/";
-  }, 5000);
-     
+      status.innerHTML = `
+        <div style="background:#f4f5f3;border-radius:12px;padding:18px;margin-top:18px;">
+          <p class="success">${isTattoo
+            ? "Thank you — your consultation and patch test has been booked."
+            : `Thank you — your ${treatmentType.toLowerCase()} appointment has been booked.`}</p>
+          ${treatmentLine}
+          <p><strong>Date:</strong> ${date}</p>
+          <p><strong>Time:</strong> ${time}</p>
+          <p>Please check your inbox and junk/spam folder for your confirmation email and manage booking link.</p>
+          <p style="font-size:13px;color:#878274;">Redirecting you back to the website...</p>
+        </div>
+      `;
+      status.className = "success";
+
+      localStorage.removeItem("bareDepositGate");
+      localStorage.removeItem("bareDepositGateTs");
+
+      if (!isTattoo) {
+        localStorage.removeItem("bareTreatmentOption");
+        localStorage.removeItem("bareTreatmentName");
+        localStorage.removeItem("bareTreatmentFullPrice");
+        localStorage.removeItem("bareDepositPaid");
+        localStorage.removeItem("bareRemainingBalance");
+      }
+
+      setTimeout(() => {
+        window.location.href = CONFIG.domain || "/";
+      }, 5000);
     } else {
-      status.textContent = "That slot has just been taken. Please choose another time.";
+      const message = await res.text();
+      status.textContent = message || "That slot has just been taken. Please choose another time.";
       status.className = "error";
       loadAvailableSlots(date);
     }
