@@ -433,10 +433,18 @@ const validSlots = getSlotsByType(bookingType, appointment_date);
 
     try {
       await env.DB.prepare(
-        `UPDATE appointments
-         SET appointment_date = ?, appointment_time = ?
-         WHERE id = ? AND reschedule_token = ?`
-      ).bind(appointment_date, appointment_time, id, token).run();
+  `UPDATE appointments
+   SET appointment_date = ?,
+       appointment_time = ?,
+       reminder_sent = 'no'
+   WHERE id = ?
+   AND reschedule_token = ?`
+).bind(
+  appointment_date,
+  appointment_time,
+  id,
+  token
+).run();
 
       const manageLink = `https://barebymarlese.com/reschedule.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
       const cancelLink = `https://barebymarlese.com/cancel.html?id=${existingBooking.id}&token=${existingBooking.reschedule_token}`;
@@ -824,15 +832,21 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
   }
 
   await env.DB.prepare(`
-    UPDATE treatment_sessions
-    SET appointment_date = ?,
-        appointment_time = ?,
-        status = 'booked',
-        updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-    AND reschedule_token = ?
-    AND status = 'pending'
-  `).bind(appointment_date, appointment_time, session_id, token).run();
+  UPDATE treatment_sessions
+  SET appointment_date = ?,
+      appointment_time = ?,
+      status = 'booked',
+      reminder_sent = 'no',
+      updated_at = CURRENT_TIMESTAMP
+  WHERE id = ?
+  AND reschedule_token = ?
+  AND status = 'pending'
+`).bind(
+  appointment_date,
+  appointment_time,
+  session_id,
+  token
+).run();
   
 const sessionManageLink = `https://barebymarlese.com/reschedule.html?session_id=${session.id}&token=${session.reschedule_token}`;
 const sessionCancelLink = `https://barebymarlese.com/cancel.html?session_id=${session.id}&token=${session.reschedule_token}`;
@@ -976,14 +990,20 @@ if (session.email) {
   }
 
   await env.DB.prepare(`
-    UPDATE treatment_sessions
-    SET appointment_date = ?,
-        appointment_time = ?,
-        updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-    AND reschedule_token = ?
-    AND status = 'booked'
-  `).bind(appointment_date, appointment_time, session_id, token).run();
+  UPDATE treatment_sessions
+  SET appointment_date = ?,
+      appointment_time = ?,
+      reminder_sent = 'no',
+      updated_at = CURRENT_TIMESTAMP
+  WHERE id = ?
+  AND reschedule_token = ?
+  AND status = 'booked'
+`).bind(
+  appointment_date,
+  appointment_time,
+  session_id,
+  token
+).run();
 
   const sessionManageLink = `https://barebymarlese.com/reschedule.html?session_id=${session.id}&token=${session.reschedule_token}`;
 const sessionCancelLink = `https://barebymarlese.com/cancel.html?session_id=${session.id}&token=${session.reschedule_token}`;
