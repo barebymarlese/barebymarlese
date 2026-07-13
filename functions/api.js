@@ -231,22 +231,7 @@ FROM treatment_sessions
   });
 }
 
-  if (request.method === "POST" && url.searchParams.get("admin") === "reminder-sent") {
-    const body = await request.json();
-    const id = body.id;
-
-    if (!id) return new Response("Missing booking ID", { status: 400 });
-
-    await env.DB.prepare(
-      "UPDATE appointments SET whatsapp_reminder_sent = 'yes' WHERE id = ?"
-    ).bind(id).run();
-
-    return new Response(JSON.stringify({ success: true }), {
-      headers: jsonHeaders
-    });
-  }
-
-if (request.method === "POST" && url.searchParams.get("admin") === "use-session") {
+ if (request.method === "POST" && url.searchParams.get("admin") === "use-session") {
   const body = await request.json();
   const id = body.id;
 
