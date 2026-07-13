@@ -1572,7 +1572,7 @@ if (blockedDate) {
 let firstSessionId = null;
 let firstSessionToken = null;
 
-if (bookingType === "treatment" && sessionsTotal > 1) {
+if (bookingType === "treatment" && sessionsTotal >= 1) {
   for (let i = 1; i <= sessionsTotal; i++) {
     const sessionToken = crypto.randomUUID();
 
