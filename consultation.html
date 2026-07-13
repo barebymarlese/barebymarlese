@@ -1855,8 +1855,7 @@ try{
 
     localStorage.setItem("bareFromConsultation", "true");
     try{ localStorage.setItem("bareTreatmentType", treatmentTypeInput?.value || treatmentSelect?.value || "Tattoo Removal"); }catch(e){}
-      window.try{ localStorage.setItem("bareTreatmentType", treatmentTypeInput?.value || treatmentSelect?.value || "Tattoo Removal"); }catch(e){}
-      location.href = "deposit.html";
+    location.href = "deposit.html";
   }else{
     const errorText = await res.text();
     setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
