@@ -192,27 +192,6 @@ h1{
   border-radius:8px;
   font-size:12px;
 }
-.btn-whatsapp{
-  background:#5e6959;
-  color:#fff;
-  min-height:30px;
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:12px;
-  margin-bottom:4px;
-}
-.btn-whatsapp.ready{
-  background:#25D366;
-  color:#fff;
-}
-.btn-whatsapp[aria-disabled="true"]{
-  opacity:.45;
-  cursor:not-allowed;
-  pointer-events:none;
-  background:#eceee9;
-  color:rgba(36,34,26,.58);
-  border:1px solid rgba(94,105,89,.12);
-}
 .action-stack{
   display:flex;
   flex-direction:column;
@@ -403,7 +382,7 @@ footer{
       <div class="hero">
   <span class="kicker">Private Admin</span>
   <h1>Bookings Dashboard</h1>
-  <p class="sub">View bookings, client contact details, send manual WhatsApp reminders, and cancel bookings when needed.</p>
+  <p class="sub">View bookings, client contact details, manage treatment sessions, and cancel bookings when needed.</p>
 
 </div>
 
@@ -506,132 +485,6 @@ function escapeHtml(value){
     .replaceAll("'", "&#39;");
 }
 
-function toLocalDateString(date){
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function getWhenText(date, time){
-  const now = new Date();
-  const appt = new Date(`${date}T${time}:00`);
-  const diffHours = (appt - now) / (1000 * 60 * 60);
-
-  const today = toLocalDateString(now);
-
-  const tomorrow = new Date(now);
-  tomorrow.setDate(now.getDate() + 1);
-  const tomorrowStr = toLocalDateString(tomorrow);
-
-  if (date === today) {
-    return diffHours < 6 ? "later today" : "today";
-  }
-
-  if (date === tomorrowStr) {
-    return "tomorrow";
-  }
-
-  return `on ${date}`;
-}
-
-function formatWhatsAppPhone(phone){
-  let cleaned = String(phone || "").trim().replace(/[\s().-]/g, "");
-
-  if (!cleaned) return "";
-
-  if (cleaned.startsWith("00")) cleaned = cleaned.slice(2);
-  if (cleaned.startsWith("+")) cleaned = cleaned.slice(1);
-  if (cleaned.startsWith("07")) cleaned = "44" + cleaned.slice(1);
-
-  return cleaned.replace(/[^0-9]/g, "");
-}
-
-function getAppointmentDateTime(booking){
-  if (!booking.appointment_date || !booking.appointment_time) return null;
-  const dateTime = new Date(`${booking.appointment_date}T${booking.appointment_time}:00`);
-  return Number.isNaN(dateTime.getTime()) ? null : dateTime;
-}
-
-function isWhatsAppReminderWindow(booking){
-  const appointment = getAppointmentDateTime(booking);
-  if (!appointment) return false;
-
-  const now = new Date();
-  const hoursUntil = (appointment.getTime() - now.getTime()) / (1000 * 60 * 60);
-
-  return hoursUntil > 0 && hoursUntil <= 24;
-}
-
-function buildWhatsAppMessage(booking){
-  const name = booking.client_name || "there";
-  const when = getWhenText(booking.appointment_date, booking.appointment_time);
-  const type = booking.booking_type === "treatment"
-    ? "treatment appointment"
-    : "consultation & patch test";
-
-  const siteDomain = CONFIG.domain || window.location.origin;
-
-  const manageLink = booking.reschedule_token
-    ? `${siteDomain}/reschedule.html?id=${booking.id}&token=${booking.reschedule_token}`
-    : siteDomain;
-
-  return `Hi ${name},
-
-Just a gentle reminder that your ${type} with ${CONFIG.businessName || "BARE by Marlese"} is ${when}.
-
-Date: ${booking.appointment_date}
-Time: ${booking.appointment_time}
-
-Manage your booking using the link below.
-
-Please note a minimum of 24 hours’ notice is required for your deposit to remain transferable.
-
-${manageLink}
-
-Kind regards,
-${CONFIG.ownerName || "Marlese"}
-${CONFIG.businessName || "BARE by Marlese"}`;
-}
-
-function buildWhatsAppAction(booking){
-  const isConfirmed = booking.status === "confirmed";
-  const phone = formatWhatsAppPhone(booking.phone);
-  const isDue = isWhatsAppReminderWindow(booking);
-  const isSent = booking.whatsapp_reminder_sent === "yes";
-
-  if (!isConfirmed) {
-    return `<span class="action-note">WhatsApp unavailable</span>`;
-  }
-
-  if (!phone) {
-    return `<span class="action-note">No phone number</span>`;
-  }
-
-  // ✅ Already sent → greyed out
-  if (isSent) {
-    return `<span class="btn btn-whatsapp" aria-disabled="true">Reminder sent</span>`;
-  }
-
-  // ❌ Not yet in window
-  if (!isDue) {
-    return `<span class="action-note">Available 24h before</span>`;
-  }
-
-  const message = encodeURIComponent(buildWhatsAppMessage(booking));
-
-  // ✅ Active button
-  return `
-    <a class="btn btn-whatsapp ready"
-       href="https://wa.me/${phone}?text=${message}"
-       target="_blank"
-       rel="noopener"
-       onclick="markReminderSent(${booking.id})">
-      Send WhatsApp
-    </a>
-  `;
-}
-  
 function buildAftercareStatus(booking){
   if (booking.booking_type !== "treatment") {
     return `<span class="action-note">—</span>`;
@@ -875,8 +728,6 @@ async function loadBookings(){
         <td>${buildAftercareStatus(booking)}</td>
         <td>
   <div class="action-stack">
-    ${buildWhatsAppAction(booking)}
-
     ${booking.booking_type === "treatment" && booking.package_status === "completed"
   ? `<span class="action-note">Package completed</span>`
   : ""}  
@@ -921,26 +772,6 @@ async function cancelBooking(id){
     loadBookings();
   }else{
     alert("Could not cancel booking.");
-  }
-}
-
-async function markReminderSent(id){
-  try {
-    const res = await fetch(`${API_BASE}/api?admin=reminder-sent`, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ id })
-    });
-
-    if (!res.ok) {
-      console.error("Failed to mark reminder sent");
-      return;
-    }
-
-    setTimeout(loadBookings, 500);
-
-  } catch (e) {
-    console.error("Failed to mark reminder sent");
   }
 }
 
