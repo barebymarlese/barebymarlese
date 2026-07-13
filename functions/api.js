@@ -100,6 +100,8 @@ export async function onRequest(context) {
       payment_reference,
       treatment_category,
       treatment_name,
+      full_price,
+      remaining_balance,
       reschedule_token,
       aftercare_sent
     FROM appointments
@@ -284,14 +286,20 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
   if (!id) return new Response("Missing booking ID", { status: 400 });
 
   await env.DB.prepare(`
-    UPDATE appointments
-    SET payment_status = 'paid',
-        amount_paid = CASE
-          WHEN ? > 0 THEN ?
-          ELSE amount_paid
-        END
-    WHERE id = ?
-  `).bind(amountPaid, amountPaid, id).run();
+  UPDATE appointments
+  SET payment_status = 'paid',
+      amount_paid = CASE
+        WHEN ? > 0 THEN ?
+        WHEN full_price > 0 THEN full_price
+        ELSE amount_paid
+      END,
+      remaining_balance = 0
+  WHERE id = ?
+`).bind(
+  amountPaid,
+  amountPaid,
+  id
+).run();
 
   return new Response(JSON.stringify({ success: true }), {
     headers: jsonHeaders
@@ -1382,6 +1390,15 @@ if (bookingType === "treatment") {
     const amountPaid = Number(body.amount_paid || 0);
     const paymentReference = body.payment_reference || null;
 
+    const depositOnly = body.deposit_only === true;
+    const fullPrice = Number(body.full_price || 0);
+
+const remainingBalance = Number(
+  body.remaining_balance !== undefined
+    ? body.remaining_balance
+    : Math.max(0, fullPrice - amountPaid)
+);
+
     let paymentStatus = "unpaid";
     let paymentType = null;
     let sessionsTotal = 0;
@@ -1396,29 +1413,47 @@ if (bookingType === "treatment") {
     }
 
 if (bookingType === "treatment") {
-  paymentType = "treatment_payment";
+  paymentType = depositOnly
+    ? "treatment_deposit"
+    : "treatment_payment";
 
   if (packageType === "single_session") {
-  sessionsTotal = 1;
-  packageStatus = "active";
-}
+    sessionsTotal = 1;
+    packageStatus = "active";
+  }
 
-if (packageType === "three_sessions" || packageType === "3_sessions") {
-  sessionsTotal = 3;
-  packageStatus = "active";
-}
+  if (
+    packageType === "three_sessions" ||
+    packageType === "3_sessions"
+  ) {
+    sessionsTotal = 3;
+    packageStatus = "active";
+  }
 
-if (packageType === "4_sessions") {
-  sessionsTotal = 4;
-  packageStatus = "active";
-}
+  if (packageType === "4_sessions") {
+    sessionsTotal = 4;
+    packageStatus = "active";
+  }
 
-if (packageType === "six_sessions" || packageType === "6_sessions") {
-  sessionsTotal = 6;
-  packageStatus = "active";
-}
+  if (
+    packageType === "six_sessions" ||
+    packageType === "6_sessions"
+  ) {
+    sessionsTotal = 6;
+    packageStatus = "active";
+  }
 
-  paymentStatus = amountPaid > 0 ? "paid" : "unpaid";
+  if (depositOnly) {
+    paymentStatus =
+      amountPaid >= 30
+        ? "deposit_paid"
+        : "unpaid";
+  } else {
+    paymentStatus =
+      amountPaid > 0
+        ? "paid"
+        : "unpaid";
+  }
 }
 
     const packageDisplay = packageType
@@ -1429,7 +1464,25 @@ const displayAmount = amountPaid > 1000
   ? (amountPaid / 100).toFixed(2)
   : Number(amountPaid).toFixed(2);
 
-const priceDisplay = amountPaid ? `£${displayAmount}` : null;
+const priceDisplay = amountPaid
+  ? `£${displayAmount}`
+  : null;
+
+const fullPriceDisplay = fullPrice > 0
+  ? `£${Number(fullPrice).toFixed(2)}`
+  : null;
+
+const remainingBalanceDisplay = depositOnly
+  ? `£${Math.max(0, remainingBalance).toFixed(2)}`
+  : null;
+
+const isDepositTreatment =
+  bookingType === "treatment" &&
+  depositOnly &&
+  (
+    treatmentCategory === "carbon" ||
+    treatmentCategory === "fungal"
+  );
 
     if (!appointmentDate || !appointmentTime) {
       return new Response("Missing appointment date or time", { status: 400 });
@@ -1479,13 +1532,15 @@ if (blockedDate) {
     package_status,
     payment_reference,
     treatment_category,
-    treatment_name
+    treatment_name,
+    full_price,
+    remaining_balance
   )
   VALUES (
   ?, ?, ?, ?, ?,
   'confirmed',
   ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-  ?, ?
+  ?, ?, ?, ?
 )`
 )
 .bind(
@@ -1506,7 +1561,9 @@ if (blockedDate) {
   packageStatus,
   paymentReference,
   treatmentCategory,
-  treatmentName
+  treatmentName,
+  fullPrice,
+  remainingBalance
 )
 .run();
 
@@ -1564,9 +1621,12 @@ if (bookingType === "treatment" && sessionsTotal > 1) {
 
       await sendEmail({
         to: env.TO_EMAIL,
-        subject: bookingType === "treatment"
-          ? "New BARE by Marlese treatment booking"
-          : "New BARE by Marlese consultation booking",
+        subject: isDepositTreatment
+  ? `New ${treatmentName || "consultation and treatment"} booking`
+  : bookingType === "treatment"
+    ? "New BARE by Marlese treatment booking"
+    : "New BARE by Marlese consultation booking",
+        
         html: `
 <div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
@@ -1590,8 +1650,22 @@ if (bookingType === "treatment" && sessionsTotal > 1) {
     ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>`
     : ""
 }
-      ${priceDisplay ? `<p><strong>Amount Paid:</strong> ${escapeHtml(priceDisplay)}</p>` : ""}
-      <p><strong>Payment Status:</strong> ${safePaymentStatus}</p>
+      ${fullPriceDisplay
+  ? `<p><strong>Full Price:</strong> ${escapeHtml(fullPriceDisplay)}</p>`
+  : ""
+}
+
+${priceDisplay
+  ? `<p><strong>Amount Paid:</strong> ${escapeHtml(priceDisplay)}</p>`
+  : ""
+}
+
+${remainingBalanceDisplay
+  ? `<p><strong>Remaining on the day:</strong> ${escapeHtml(remainingBalanceDisplay)}</p>`
+  : ""
+}
+
+<p><strong>Payment Status:</strong> ${safePaymentStatus}</p>
       ${bookingType === "treatment" ? `<p><strong>Package Status:</strong> ${safePackageStatus}</p><p><strong>Sessions Used:</strong> ${safeSessions}</p>` : ""}
     </div>
     <p>This appointment has been saved in your Cloudflare D1 booking database.</p>
@@ -1602,9 +1676,11 @@ if (bookingType === "treatment" && sessionsTotal > 1) {
       if (email) {
         await sendEmail({
           to: email,
-          subject: bookingType === "treatment"
-            ? "Treatment Booking Confirmed – BARE by Marlese"
-            : "Consultation & Patch Test Confirmed – BARE by Marlese",
+          subject: isDepositTreatment
+  ? `${treatmentName || "Consultation & Treatment"} Confirmed – BARE by Marlese`
+  : bookingType === "treatment"
+    ? "Treatment Booking Confirmed – BARE by Marlese"
+    : "Consultation & Patch Test Confirmed – BARE by Marlese",
           html: `
 <div style="background:#cacdc6;padding:30px 15px;font-family:Arial,Helvetica,sans-serif;">
   <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;padding:28px 24px;color:#24221a;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
@@ -1612,15 +1688,56 @@ if (bookingType === "treatment" && sessionsTotal > 1) {
       BARE | <span style="font-weight:400;color:#878274;">by Marlese</span>
     </div>
     <div style="text-align:center;margin-top:6px;margin-bottom:18px;font-size:11px;letter-spacing:.18em;color:#878274;">
-      ${bookingType === "treatment" ? "TREATMENT BOOKING CONFIRMED" : "CONSULTATION & PATCH TEST CONFIRMED"}
+      ${isDepositTreatment
+  ? "CONSULTATION & TREATMENT CONFIRMED"
+  : bookingType === "treatment"
+    ? "TREATMENT BOOKING CONFIRMED"
+    : "CONSULTATION & PATCH TEST CONFIRMED"
+}
     </div>
     <p>Hi ${safeName},</p>
-    ${bookingType === "treatment"
-      ? `<p>Thank you for booking with <strong>BARE by Marlese</strong>. Your treatment appointment has been confirmed.</p>`
-      : `<p>Thank you for completing your consultation form and booking your consultation & patch test with <strong>BARE by Marlese</strong>.</p>
-         <p>Your consultation and patch test is confirmed for <strong>${safeDate}</strong> at <strong>${safeTime}</strong>.</p>
-         <p>Your details have been received and will be reviewed thoroughly before your appointment.</p>`
-    }
+    ${isDepositTreatment
+  ? `
+    <p>
+      Thank you for booking with
+      <strong>BARE by Marlese</strong>.
+      Your one-hour consultation and treatment appointment
+      has been confirmed.
+    </p>
+
+    <p>
+      Your suitability will be assessed at the start of the
+      appointment. If treatment is suitable, it will follow
+      during the same booking.
+    </p>
+  `
+  : bookingType === "treatment"
+    ? `
+      <p>
+        Thank you for booking with
+        <strong>BARE by Marlese</strong>.
+        Your treatment appointment has been confirmed.
+      </p>
+    `
+    : `
+      <p>
+        Thank you for completing your consultation form and
+        booking your consultation & patch test with
+        <strong>BARE by Marlese</strong>.
+      </p>
+
+      <p>
+        Your consultation and patch test is confirmed for
+        <strong>${safeDate}</strong> at
+        <strong>${safeTime}</strong>.
+      </p>
+
+      <p>
+        Your details have been received and will be reviewed
+        thoroughly before your appointment.
+      </p>
+    `
+}
     <div style="background:#f4f5f3;border-radius:10px;padding:16px;margin:18px 0;">
       <p style="margin:0 0 8px;"><strong>Appointment summary</strong></p>
       ${treatmentName
@@ -1629,16 +1746,63 @@ if (bookingType === "treatment" && sessionsTotal > 1) {
     ? `<p><strong>Package:</strong> ${escapeHtml(packageDisplay)} Tattoo Removal</p>`
     : ""
 }
-      ${priceDisplay ? `<p><strong>Amount Paid:</strong> ${escapeHtml(priceDisplay)}</p>` : ""}
-      ${bookingType === "treatment" ? `<p><strong>Sessions:</strong> ${safeSessions}</p>` : ""}
+      ${fullPriceDisplay
+  ? `<p><strong>Full Price:</strong> ${escapeHtml(fullPriceDisplay)}</p>`
+  : ""
+}
+
+${priceDisplay
+  ? `<p><strong>Deposit Paid:</strong> ${escapeHtml(priceDisplay)}</p>`
+  : ""
+}
+
+${remainingBalanceDisplay
+  ? `<p><strong>Remaining on the day:</strong> ${escapeHtml(remainingBalanceDisplay)}</p>`
+  : ""
+}
+
+${bookingType === "treatment"
+  ? `<p><strong>Sessions:</strong> ${safeSessions}</p>`
+  : ""
+}
       <p><strong>Date:</strong> ${safeDate}</p>
       <p><strong>Time:</strong> ${safeTime}</p>
       <p><strong>Phone:</strong> ${safePhone}</p>
     </div>
-    ${bookingType === "treatment"
-      ? `<p>Your first treatment session has been booked. If you purchased a treatment package, your remaining sessions can be arranged after your first appointment.</p>`
-      : `<p>Your £30 deposit will be deducted from your treatment cost.</p>`
+    ${isDepositTreatment
+  ? `
+    <p>
+      Your £30 deposit has been deducted from the selected
+      treatment or package. The remaining balance of
+      <strong>${escapeHtml(remainingBalanceDisplay || "£0.00")}</strong>
+      is payable on the day.
+    </p>
+
+    ${sessionsTotal > 1
+      ? `
+        <p>
+          This booking is for session 1 of ${sessionsTotal}.
+          Your remaining sessions can be arranged after your
+          first appointment.
+        </p>
+      `
+      : ""
     }
+  `
+  : bookingType === "treatment"
+    ? `
+      <p>
+        Your first treatment session has been booked.
+        If you purchased a treatment package, your remaining
+        sessions can be arranged after your first appointment.
+      </p>
+    `
+    : `
+      <p>
+        Your £30 deposit will be deducted from your treatment cost.
+      </p>
+    `
+}
     <p>If you need to reschedule or cancel, please use one of the links below. At least 24 hours' notice is required for your deposit to remain transferable.</p>
     <div style="text-align:center;margin:22px 0;">
       <a href="${rescheduleLink}" style="display:inline-block;background:#5e6959;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;margin:4px;">Manage Booking</a>
@@ -1661,7 +1825,10 @@ if (bookingType === "treatment" && sessionsTotal > 1) {
         payment_type: paymentType,
         package_status: packageStatus,
         sessions_total: sessionsTotal,
-        sessions_used: sessionsUsed
+        sessions_used: sessionsUsed,
+        deposit_only: depositOnly,
+        full_price: fullPrice,
+        remaining_balance: remainingBalance
       }), {
         status: 200,
         headers: jsonHeaders
