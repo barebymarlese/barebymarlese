@@ -291,6 +291,29 @@ tbody tr:last-child td{border-bottom:0}
   color:#8a3b3b;
 }
 
+.payment-breakdown{
+  margin-top:8px;
+  padding:9px 10px;
+  min-width:145px;
+  border-radius:10px;
+  background:#f4f5f3;
+  border:1px solid rgba(36,34,26,.10);
+  font-size:11px;
+  line-height:1.55;
+  color:rgba(36,34,26,.72);
+}
+.payment-breakdown strong{
+  color:var(--ink);
+}
+.payment-breakdown .outstanding{
+  color:#8a3b3b;
+  font-weight:700;
+}
+.payment-breakdown .settled{
+  color:#2f7d32;
+  font-weight:700;
+}
+
 .package-text{
   font-size:13px;
   line-height:1.45;
@@ -497,27 +520,55 @@ function buildAftercareStatus(booking){
   return `<span style="color:#9b2f2f;font-weight:700;">✕ Not sent</span>`;
 }
 
+function formatMoney(value){
+  const amount = Number(value || 0);
+  return `£${amount.toFixed(2).replace(".00", "")}`;
+}
+
 function buildPaymentBadge(booking){
   const status = booking.payment_status || "unpaid";
-  const amount = Number(booking.amount_paid || 0);
-
-  const amountText = amount > 0
-    ? `<br><span class="action-note payment-amount">£${amount}</span>`
-    : "";
+  const amountPaid = Number(booking.amount_paid || 0);
+  const fullPrice = Number(booking.full_price || 0);
+  const remainingBalance = Number(booking.remaining_balance || 0);
 
   const stripeText = booking.payment_reference
     ? `<br><span class="action-note">Stripe linked</span>`
     : "";
 
+  let badge = `<span class="badge unpaid">Unpaid</span>`;
+
   if (status === "paid") {
-    return `<span class="badge paid">Paid</span>${amountText}${stripeText}`;
+    badge = `<span class="badge paid">Paid</span>`;
+  } else if (status === "deposit_paid") {
+    badge = `<span class="badge deposit">Deposit paid</span>`;
   }
 
-  if (status === "deposit_paid") {
-    return `<span class="badge deposit">Deposit paid</span>${amountText}${stripeText}`;
+  const hasTreatmentPrice =
+    booking.booking_type === "treatment" &&
+    (fullPrice > 0 || remainingBalance > 0);
+
+  if (!hasTreatmentPrice) {
+    const amountText = amountPaid > 0
+      ? `<br><span class="action-note payment-amount">${formatMoney(amountPaid)}</span>`
+      : "";
+
+    return `${badge}${amountText}${stripeText}`;
   }
 
-  return `<span class="badge unpaid">Unpaid</span>${amountText}${stripeText}`;
+  const outstandingClass = remainingBalance > 0 ? "outstanding" : "settled";
+  const outstandingText = remainingBalance > 0
+    ? formatMoney(remainingBalance)
+    : "Paid in full";
+
+  return `
+    ${badge}
+    ${stripeText}
+    <div class="payment-breakdown">
+      <div>Full price: <strong>${formatMoney(fullPrice)}</strong></div>
+      <div>Paid: <strong>${formatMoney(amountPaid)}</strong></div>
+      <div class="${outstandingClass}">Outstanding: ${outstandingText}</div>
+    </div>
+  `;
 }
 
 function formatPackageType(packageType){
@@ -733,7 +784,9 @@ async function loadBookings(){
   : ""}  
   
     ${booking.payment_status !== "paid" && !isCancelled
-  ? `<button class="btn btn-secondary" onclick="markPaid(${Number(booking.id)})">Mark Paid</button>`
+  ? `<button class="btn btn-secondary" onclick="markPaid(${Number(booking.id)}, ${Number(booking.remaining_balance || 0)}, ${Number(booking.full_price || 0)}, ${Number(booking.amount_paid || 0)})">
+      ${Number(booking.remaining_balance || 0) > 0 ? "Mark Balance Paid" : "Mark Paid"}
+    </button>`
   : ""}
 
 ${isCancelled
@@ -793,8 +846,18 @@ async function completeSession(sessionId){
     alert(text || "Could not mark session completed.");
   }
 }
-async function markPaid(id){
-  const amount = prompt("Amount paid? Enter pounds only, e.g. 30 or 300");
+async function markPaid(id, remainingBalance = 0, fullPrice = 0, amountAlreadyPaid = 0){
+  const suggestedAmount = remainingBalance > 0
+    ? remainingBalance
+    : fullPrice > 0
+      ? Math.max(0, fullPrice - amountAlreadyPaid)
+      : "";
+
+  const promptMessage = remainingBalance > 0
+    ? `Outstanding balance is ${formatMoney(remainingBalance)}. Enter the amount received in pounds:`
+    : "Amount paid? Enter pounds only, e.g. 30 or 300";
+
+  const amount = prompt(promptMessage, suggestedAmount === "" ? "" : String(suggestedAmount));
 
   if(amount === null){
     return;
@@ -805,6 +868,16 @@ async function markPaid(id){
   if(Number.isNaN(amountPaid) || amountPaid < 0){
     alert("Please enter a valid amount.");
     return;
+  }
+
+  if(remainingBalance > 0 && amountPaid !== remainingBalance){
+    const continueWithDifferentAmount = confirm(
+      `The outstanding balance is ${formatMoney(remainingBalance)}, but you entered ${formatMoney(amountPaid)}. Continue and mark the booking fully paid?`
+    );
+
+    if(!continueWithDifferentAmount){
+      return;
+    }
   }
 
   const res = await fetch(`${API_BASE}/api?admin=mark-paid`, {
@@ -819,10 +892,10 @@ async function markPaid(id){
   if(res.ok){
     loadBookings();
   }else{
-    alert("Could not mark payment as paid.");
+    const message = await res.text();
+    alert(message || "Could not mark payment as paid.");
   }
 }
-
 
 
 function setSessionModalMinDate(){
