@@ -798,26 +798,31 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
   }
 
   const clash = await env.DB.prepare(`
-    SELECT appointment_time
-    FROM appointments
-    WHERE appointment_date = ?
-    AND appointment_time = ?
-    AND booking_type = 'treatment'
-    AND status = 'confirmed'
+  SELECT a.appointment_time
+  FROM appointments a
+  WHERE a.appointment_date = ?
+  AND a.appointment_time = ?
+  AND a.booking_type = 'treatment'
+  AND a.status = 'confirmed'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM treatment_sessions s
+    WHERE s.appointment_id = a.id
+  )
 
-    UNION
+  UNION
 
-    SELECT appointment_time
-    FROM treatment_sessions
-    WHERE appointment_date = ?
-    AND appointment_time = ?
-    AND status = 'booked'
-  `).bind(
-    appointment_date,
-    appointment_time,
-    appointment_date,
-    appointment_time
-  ).first();
+  SELECT appointment_time
+  FROM treatment_sessions
+  WHERE appointment_date = ?
+  AND appointment_time = ?
+  AND status = 'booked'
+`).bind(
+  appointment_date,
+  appointment_time,
+  appointment_date,
+  appointment_time
+).first();
 
   if (clash) {
     return new Response("That slot is already taken", { status: 409 });
@@ -954,28 +959,33 @@ if (session.email) {
   }
 
   const clash = await env.DB.prepare(`
-    SELECT appointment_time
-    FROM appointments
-    WHERE appointment_date = ?
-    AND appointment_time = ?
-    AND booking_type = 'treatment'
-    AND status = 'confirmed'
+  SELECT a.appointment_time
+  FROM appointments a
+  WHERE a.appointment_date = ?
+  AND a.appointment_time = ?
+  AND a.booking_type = 'treatment'
+  AND a.status = 'confirmed'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM treatment_sessions s
+    WHERE s.appointment_id = a.id
+  )
 
-    UNION
+  UNION
 
-    SELECT appointment_time
-    FROM treatment_sessions
-    WHERE appointment_date = ?
-    AND appointment_time = ?
-    AND status = 'booked'
-    AND id != ?
-  `).bind(
-    appointment_date,
-    appointment_time,
-    appointment_date,
-    appointment_time,
-    session_id
-  ).first();
+  SELECT appointment_time
+  FROM treatment_sessions
+  WHERE appointment_date = ?
+  AND appointment_time = ?
+  AND status = 'booked'
+  AND id != ?
+`).bind(
+  appointment_date,
+  appointment_time,
+  appointment_date,
+  appointment_time,
+  session_id
+).first();
 
   if (clash) {
     return new Response("That slot is already taken", { status: 409 });
@@ -1335,19 +1345,24 @@ const allSlots = getSlotsByType(bookingType, date);
 
 if (bookingType === "treatment") {
   const booked = await env.DB.prepare(`
-    SELECT appointment_time
-    FROM appointments
-    WHERE appointment_date = ?
-    AND booking_type = 'treatment'
-    AND status = 'confirmed'
+  SELECT a.appointment_time
+  FROM appointments a
+  WHERE a.appointment_date = ?
+  AND a.booking_type = 'treatment'
+  AND a.status = 'confirmed'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM treatment_sessions s
+    WHERE s.appointment_id = a.id
+  )
 
-    UNION
+  UNION
 
-    SELECT appointment_time
-    FROM treatment_sessions
-    WHERE appointment_date = ?
-    AND status = 'booked'
-  `).bind(date, date).all();
+  SELECT appointment_time
+  FROM treatment_sessions
+  WHERE appointment_date = ?
+  AND status = 'booked'
+`).bind(date, date).all();
 
   bookedTimes = booked.results.map(row => row.appointment_time);
 } else {
