@@ -1332,7 +1332,7 @@ function applyTreatmentType(selectedTreatment){
     if(photoLabel) photoLabel.textContent = "Upload facial skin photos (optional)";
     if(goal) goal.placeholder = "Brighter skin, smoother texture, clearer pores, oil control, glow, etc.";
     setText("aftercare-understood-copy", "I understand that carbon laser facial aftercare may include avoiding sun exposure, heat treatments, exfoliating acids, retinol/Retin-A, harsh skincare and makeup for the advised period after treatment.");
-    setText("patch-test-copy", "I understand that treatment suitability and whether a patch test is required will be confirmed during consultation.");
+    setText("patch-test-copy", "I understand that my treatment suitability will be assessed during the consultation immediately before treatment begins.");
     setText("risk-copy", "I understand that carbon laser facial treatment may carry risks including temporary redness, warmth, dryness, sensitivity, breakouts, pigmentation changes, irritation or an unsuitable reaction depending on skin type, products and aftercare.");
     setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that results vary depending on skin type, skin condition, skincare products, lifestyle and aftercare compliance.");
     setText("client-responsibility-copy", "I accept responsibility for following all aftercare guidance provided, including sun protection and avoiding unsuitable skincare or active products as advised.");
@@ -1340,7 +1340,7 @@ function applyTreatmentType(selectedTreatment){
     if(photoLabel) photoLabel.textContent = "Upload nail photos (optional)";
     if(goal) goal.placeholder = "Clearer nail appearance, reduction in fungal-looking changes, healthier nail growth, etc.";
     setText("aftercare-understood-copy", "I understand that fungal nail laser aftercare may include keeping feet clean and dry, following hygiene guidance, avoiding re-contamination, and allowing time for healthy nail growth.");
-    setText("patch-test-copy", "I understand that treatment suitability and whether a patch test is required will be confirmed during consultation.");
+    setText("patch-test-copy", "I understand that my treatment suitability will be assessed during the consultation immediately before treatment begins.");
     setText("risk-copy", "I understand that fungal nail laser treatment may carry risks including temporary warmth, sensitivity, discomfort, nail or skin irritation, and that results may vary depending on severity, nail growth and aftercare.");
     setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that visible improvement depends on individual factors including nail growth, severity, hygiene and aftercare compliance.");
     setText("client-responsibility-copy", "I accept responsibility for following all aftercare and hygiene guidance provided to reduce the risk of re-contamination and support treatment results.");
@@ -1854,7 +1854,9 @@ try{
     localStorage.setItem("bare_customer_phone", submittedData.get("phone") || "");
 
     localStorage.setItem("bareFromConsultation", "true");
-    window.location.href = "deposit.html";
+    try{ localStorage.setItem("bareTreatmentType", treatmentTypeInput?.value || treatmentSelect?.value || "Tattoo Removal"); }catch(e){}
+      window.try{ localStorage.setItem("bareTreatmentType", treatmentTypeInput?.value || treatmentSelect?.value || "Tattoo Removal"); }catch(e){}
+      location.href = "deposit.html";
   }else{
     const errorText = await res.text();
     setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
