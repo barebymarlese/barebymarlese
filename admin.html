@@ -496,28 +496,26 @@ footer{
   background:rgba(94,105,89,.04);
 }
 .calendar-day.blocked{
-  background:#7f8b79;
-  color:#fff;
+  background:#eceee9;
+  color:var(--ink);
+  border:1px solid rgba(94,105,89,.12);
 }
 .calendar-day.blocked .day-number{
   color:#fff;
 }
-.calendar-day.blocked .calendar-event{
-  background:rgba(255,255,255,.18);
-  color:#fff;
-  border:1px solid rgba(255,255,255,.22);
+.calendar-day.blocked .day-number{
+  color:var(--ink);
 }
+
+.calendar-day.blocked .calendar-event{
+  background:rgba(94,105,89,.12);
+  color:var(--ink);
+  border:1px solid rgba(94,105,89,.12);
+}
+
 .blocked-label{
-  display:inline-block;
-  margin-top:5px;
-  padding:4px 6px;
-  border-radius:7px;
-  background:rgba(255,255,255,.16);
+  background:var(--olive);
   color:#fff;
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:.04em;
-  text-transform:uppercase;
 }
 .day-number{
   font-size:12px;
