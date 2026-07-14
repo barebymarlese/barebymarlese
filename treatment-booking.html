@@ -47,7 +47,7 @@ if (pageTitle) {
 }
 
 const packages = CONFIG.packages || [];
-const carbonPackages = CONFIG.carbonPackages || [];
+const laserTreatmentPackages = CONFIG.laserTreatmentPackages || CONFIG.carbonPackages || [];
 
 const pricing = {
   bundle: {
@@ -115,13 +115,22 @@ const content = document.getElementById("content");
 let selectedPackage;
 
 if (treatmentCategory === "carbon" || treatmentCategory === "fungal") {
-  const foundPackage = carbonPackages.find(pkg => pkg.key === packageKey);
+  const foundPackage = laserTreatmentPackages.find(pkg => pkg.key === packageKey);
 
   if (foundPackage) {
     const isDeducted = priceType === "deducted";
 
     selectedPackage = {
       label: foundPackage.name,
+      packageType: ({
+        carbon_single: "single_session",
+        carbon_course3: "3_sessions",
+        fungal_single_nail: "single_nail",
+        fungal_one_foot: "one_foot",
+        fungal_both_feet: "both_feet",
+        fungal_course4_one_foot: "course4_one_foot",
+        fungal_course4_both_feet: "course4_both_feet"
+      })[foundPackage.key],
       price: isDeducted
         ? foundPackage.deductedPrice
         : foundPackage.price,
@@ -149,12 +158,13 @@ function escapeHtml(value){return String(value||"").replaceAll("&","&amp;").repl
 function setMinDate(){const dateInput=document.getElementById("booking-date");if(!dateInput)return;const today=new Date();const yyyy=today.getFullYear();const mm=String(today.getMonth()+1).padStart(2,"0");const dd=String(today.getDate()).padStart(2,"0");dateInput.min=`${yyyy}-${mm}-${dd}`;}
 
 function renderLocked(){
-  content.innerHTML = `<div class="locked"><h2>Treatment booking is locked</h2><p>This page unlocks after the package payment has been completed.</p><a class="btn btn-primary" href="/treatment.html">Choose Package</a></div>`;
+  content.innerHTML = `<div class="locked"><h2>Treatment booking is locked</h2><p>This page unlocks after payment. Your treatment booking will only be accepted after your consultation and patch test have been marked complete.</p><a class="btn btn-primary" href="/treatment.html">Choose Package</a></div>`;
 }
 
 function renderBooking(){
   content.innerHTML = `
     <div class="summary">
+      <p><strong>Eligibility:</strong> Consultation & Patch Test Required</p>
       <p><strong>Selected package:</strong> ${escapeHtml(selectedPackage.label)}</p>
       <p><strong>Paid:</strong> ${escapeHtml(selectedPackage.price)}</p>
     </div>
@@ -193,21 +203,15 @@ async function confirmBooking(){
     const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
   booking_type:"treatment",
   package_type:
-  treatmentCategory === "fungal"
-    ? packageKey.replace(/^fungal_/, "")
-    : treatmentCategory === "carbon"
+    treatmentCategory === "tattoo"
       ? (
-          packageKey === "carbon_course3"
-            ? "3_sessions"
-            : "single_session"
-        )
-      : (
           treatmentSessions > 1
             ? `${treatmentSessions}_sessions`
             : type === "single"
               ? "single_session"
               : "six_sessions"
-        ),
+        )
+      : selectedPackage.packageType,
   tattoo_size: treatmentCategory === "tattoo" ? packageKey : null,
   treatment_category: treatmentCategory,
   treatment_name: selectedPackage.label,
@@ -257,48 +261,12 @@ if(res.ok){
   }
 }
 
-const isBalanceOnlyTreatment =
-  treatmentCategory === "carbon" ||
-  treatmentCategory === "fungal";
-
 if (!hasPaid || !selectedPackage) {
   renderLocked();
-
-} else if (isBalanceOnlyTreatment) {
-  localStorage.removeItem("bareTreatmentPaid");
-  localStorage.removeItem("bareTreatmentPackage");
-  localStorage.removeItem("bareTreatmentType");
-  localStorage.removeItem("bareTreatmentPriceType");
-  localStorage.removeItem("bareTreatmentCategory");
-  localStorage.removeItem("bareTreatmentSessions");
-  localStorage.removeItem("bare_payment_reference");
-
-  content.innerHTML = `
-    <div class="success-card">
-      <p class="success">
-        Thank you — your balance payment has been received.
-      </p>
-
-      <p>
-        Your existing appointment remains confirmed.
-        You do not need to book another appointment.
-      </p>
-
-      <p>
-        Please show your Stripe payment confirmation to your practitioner.
-      </p>
-
-      <div style="margin-top:20px;text-align:center;">
-        <a class="btn btn-primary" href="/">
-          Return to BARE by Marlese
-        </a>
-      </div>
-    </div>
-  `;
-
 } else {
   renderBooking();
 }
+
 </script>
 </body>
 </html>
