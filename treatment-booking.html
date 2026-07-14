@@ -242,9 +242,46 @@ if(res.ok){
   }
 }
 
-if(!hasPaid || !selectedPackage){
+const isBalanceOnlyTreatment =
+  treatmentCategory === "carbon" ||
+  treatmentCategory === "fungal";
+
+if (!hasPaid || !selectedPackage) {
   renderLocked();
-}else{
+
+} else if (isBalanceOnlyTreatment) {
+  localStorage.removeItem("bareTreatmentPaid");
+  localStorage.removeItem("bareTreatmentPackage");
+  localStorage.removeItem("bareTreatmentType");
+  localStorage.removeItem("bareTreatmentPriceType");
+  localStorage.removeItem("bareTreatmentCategory");
+  localStorage.removeItem("bareTreatmentSessions");
+  localStorage.removeItem("bare_payment_reference");
+
+  content.innerHTML = `
+    <div class="success-card">
+      <p class="success">
+        Thank you — your balance payment has been received.
+      </p>
+
+      <p>
+        Your existing appointment remains confirmed.
+        You do not need to book another appointment.
+      </p>
+
+      <p>
+        Please show your Stripe payment confirmation to your practitioner.
+      </p>
+
+      <div style="margin-top:20px;text-align:center;">
+        <a class="btn btn-primary" href="/">
+          Return to BARE by Marlese
+        </a>
+      </div>
+    </div>
+  `;
+
+} else {
   renderBooking();
 }
 </script>
