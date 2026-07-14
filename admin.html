@@ -492,6 +492,35 @@ footer{
   box-shadow:inset 0 0 0 2px rgba(94,105,89,.55);
   background:rgba(94,105,89,.04);
 }
+.calendar-day.blocked{
+  background:var(--olive-dark);
+  color:#fff;
+}
+.calendar-day.blocked.outside{
+  background:var(--olive-dark);
+  color:#fff;
+  opacity:.92;
+}
+.calendar-day.blocked .day-number{
+  color:#fff;
+}
+.calendar-day.blocked .calendar-event{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.22);
+}
+.blocked-label{
+  display:inline-block;
+  margin-top:5px;
+  padding:4px 6px;
+  border-radius:7px;
+  background:rgba(255,255,255,.16);
+  color:#fff;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
 .day-number{
   font-size:12px;
   font-weight:700;
@@ -558,6 +587,7 @@ footer{
 .legend-dot.tattoo{background:rgba(91,103,117,.55)}
 .legend-dot.carbon{background:rgba(143,94,20,.55)}
 .legend-dot.fungal{background:rgba(47,125,50,.55)}
+.legend-dot.blocked{background:var(--olive-dark)}
 .booking-popover{
   position:fixed;
   inset:0;
@@ -662,6 +692,7 @@ footer{
                 <span class="legend-item"><span class="legend-dot tattoo"></span>Tattoo</span>
                 <span class="legend-item"><span class="legend-dot carbon"></span>Carbon</span>
                 <span class="legend-item"><span class="legend-dot fungal"></span>Fungal nail</span>
+                <span class="legend-item"><span class="legend-dot blocked"></span>Blocked date</span>
               </div>
             </div>
 
@@ -780,6 +811,7 @@ let adminBookings = [];
 let calendarCursor = new Date();
 calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
 let selectedCalendarBookingId = null;
+let blockedCalendarDates = new Set();
 
 const pageTitle = document.getElementById("page-title");
 
@@ -1160,12 +1192,14 @@ function renderCalendar(){
     date.setDate(gridStart.getDate() + i);
     const dateString = toLocalDateString(date);
     const outside = date.getMonth() !== month;
+    const isBlocked = blockedCalendarDates.has(dateString);
     const dayAppointments = appointments.filter(item => item.date === dateString);
     const visible = dayAppointments.slice(0, 3);
 
     html += `
-      <div class="calendar-day ${outside ? "outside" : ""} ${dateString === today ? "today" : ""}">
+      <div class="calendar-day ${outside ? "outside" : ""} ${dateString === today ? "today" : ""} ${isBlocked ? "blocked" : ""}">
         <div class="day-number">${date.getDate()}</div>
+        ${isBlocked ? `<div class="blocked-label">Blocked</div>` : ""}
         ${visible.map(item => `
           <button class="calendar-event ${escapeHtml(item.type)}" type="button" onclick="openCalendarBooking(${Number(item.bookingId)}, '${escapeHtml(item.date)}', '${escapeHtml(item.time)}')">
             <span class="event-time">${escapeHtml(item.time)}</span>
@@ -1600,6 +1634,12 @@ async function loadBlockedDates(){
     }
 
     const dates = await res.json();
+    blockedCalendarDates = new Set(
+      Array.isArray(dates)
+        ? dates.map(item => String(item.block_date || "")).filter(Boolean)
+        : []
+    );
+    renderCalendar();
 
     if (!dates.length) {
       list.innerHTML = `<span class="action-note">No blocked dates.</span>`;
@@ -1658,6 +1698,8 @@ async function loadBlockedDates(){
     }).join("");
 
   } catch (err) {
+    blockedCalendarDates = new Set();
+    renderCalendar();
     list.textContent = "Could not load blocked dates.";
   }
 }
