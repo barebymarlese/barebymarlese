@@ -346,7 +346,7 @@ footer{
     <div class="card">
       <div class="hero">
         <span class="kicker">Step 2 of 3</span>
-        <h1 id="hero-heading">Secure Your Consultation</h1>
+        <h1 id="hero-heading">Secure Your Consultation & Patch Test</h1>
         <p class="sub" id="hero-subtext">To continue with booking, please pay your consultation deposit below.</p>
       </div>
 
@@ -399,7 +399,7 @@ footer{
             <p class="price-note">Secure checkout via Stripe.</p>
 
             <div class="flow">
-              <span id="flow-step-1">Step 1: Consultation</span>
+              <span id="flow-step-1">Step 1: Consultation & Patch Test</span>
               <span id="flow-step-2">Step 2: Pay deposit</span>
               <span id="flow-step-3">Step 3: Book</span>
             </div>
@@ -600,13 +600,13 @@ function renderTreatmentOptions() {
 }
 
 if (selectedTreatment === "Tattoo Removal") {
-  if (heroHeading) heroHeading.textContent = "Secure Your Consultation";
+  if (heroHeading) heroHeading.textContent = "Secure Your Consultation & Patch Test";
   if (heroSubtext) heroSubtext.textContent = "Pay your £30 consultation deposit, then book your 30-minute consultation and patch test.";
   if (depositTitle) depositTitle.textContent = "Tattoo Removal Consultation Deposit";
   if (consultationIncludesTitle) consultationIncludesTitle.textContent = "Laser tattoo removal consultation & patch test";
   if (consultationIncludesCopy) consultationIncludesCopy.textContent = "A personalised assessment of your tattoo, skin type and suitability before treatment begins.";
   if (depositDeductionCopy) depositDeductionCopy.textContent = "Your £30 deposit is deducted from your later tattoo treatment or bundle cost.";
-  if (flowStep1) flowStep1.textContent = "Step 1: Consultation form";
+  if (flowStep1) flowStep1.textContent = "Step 1: Consultation & Patch Test form";
   if (flowStep2) flowStep2.textContent = "Step 2: Pay deposit";
   if (flowStep3) flowStep3.textContent = "Step 3: Book consultation";
 } else {
