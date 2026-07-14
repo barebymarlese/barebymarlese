@@ -916,7 +916,7 @@ header .brand *{
                 <label class="con-opt">
                   <input type="radio" name="current_antifungal_medication" value="Yes">
                   <span class="con-mark"></span>
-                  <span>Yes — e.g. Terbinafine, Amorolfine/Loceryl or Canesten</span>
+                  <span>Yes - e.g. Terbinafine, Amorolfine/Loceryl or Canesten</span>
                 </label>
               </div>
 
@@ -1141,19 +1141,19 @@ header .brand *{
                 <label class="con-opt">
                   <input type="radio" name="smoke_vape" value="Cigarettes">
                   <span class="con-mark"></span>
-                  <span>Yes — cigarettes</span>
+                  <span>Yes - cigarettes</span>
                 </label>
 
                 <label class="con-opt">
                   <input type="radio" name="smoke_vape" value="Vape">
                   <span class="con-mark"></span>
-                  <span>Yes — vape</span>
+                  <span>Yes - vape</span>
                 </label>
 
                 <label class="con-opt">
                   <input type="radio" name="smoke_vape" value="Both">
                   <span class="con-mark"></span>
-                  <span>Yes — both</span>
+                  <span>Yes - both</span>
                 </label>
               </div>
 
@@ -1522,12 +1522,12 @@ if(treatmentSelect){
 
     
     const fitzLabelMap = {
-      "I": "Type I — Very fair skin, always burns, never tans",
-      "II": "Type II — Fair skin, burns easily, tans minimally",
-      "III": "Type III — Medium skin, sometimes burns, gradually tans",
-      "IV": "Type IV — Olive skin, rarely burns, tans easily",
-      "V": "Type V — Brown skin, very rarely burns",
-      "VI": "Type VI — Dark brown/black skin, never burns"
+      "I": "Type I - Very fair skin, always burns, never tans",
+      "II": "Type II - Fair skin, burns easily, tans minimally",
+      "III": "Type III - Medium skin, sometimes burns, gradually tans",
+      "IV": "Type IV - Olive skin, rarely burns, tans easily",
+      "V": "Type V - Brown skin, very rarely burns",
+      "VI": "Type VI - Dark brown/black skin, never burns"
     };
     const fitzDisplayEl = document.getElementById("fitzpatrick_code");
     const fitzDescEl = document.getElementById("fitzpatrick_label");
@@ -1725,8 +1725,8 @@ window.addEventListener("message", (event) => {
   if(!data || typeof data !== "object") return;
 
   // Accept either of these payloads:
-  // 1) { kind:"bare_fitz_result", fit:"II", label:"Type II — ..." }
-  // 2) { fitzpatrick:"II", label:"Type II — ..." }
+  // 1) { kind:"bare_fitz_result", fit:"II", label:"Type II - ..." }
+  // 2) { fitzpatrick:"II", label:"Type II - ..." }
   if(data.kind === "bare_fitz_result" || data.fitzpatrick || data.fitz || data.type){
     applyFitzResult(data);
   }
@@ -1920,7 +1920,7 @@ const form = document.getElementById("consultation-form");
       }
 
       scoreField.value = String(total);
-      labelField.value = `${assessment} colour profile — ${names.join(", ")}`;
+      labelField.value = `${assessment} colour profile - ${names.join(", ")}`;
     }
 
     setupNoneLogic();
@@ -2097,7 +2097,7 @@ location.href =
   encodeURIComponent(selectedTreatment);
   }else{
     const errorText = await res.text();
-    setStatus(errorText || "Oops — there was a problem submitting your form. Please try again.", "error");
+    setStatus(errorText || "Oops - there was a problem submitting your form. Please try again.", "error");
     statusEl.style.display = "block";
     isSubmitting = false;
     if(submitBtn){
@@ -2107,7 +2107,7 @@ location.href =
   }
 
 }catch(err){
-        setStatus(err.message || "Oops — connection error. Please try again.", "error");
+        setStatus(err.message || "Oops - connection error. Please try again.", "error");
         statusEl.style.display = "block";
         isSubmitting = false;
         if(submitBtn){
