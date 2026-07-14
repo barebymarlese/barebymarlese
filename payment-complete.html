@@ -3,135 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Payment Complete | BARE by Marlese</title>
-
   <link rel="icon" type="image/png" href="/favicon.png">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
-
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#cacdc6;
-      --ink:#24221a;
-      --olive:#5e6959;
-      --olive-dark:#4f5a4b;
-      --stone:#878274;
-      --card:#f8f8f6;
-      --line:rgba(36,34,26,.12);
-    }
-
-    *{
-      box-sizing:border-box;
-    }
-
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding:24px;
-      font-family:"Montserrat", Arial, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,.45), transparent 30%),
-        linear-gradient(180deg, #d8dbd4 0%, var(--bg) 100%);
-      color:var(--ink);
-    }
-
-    .card{
-      width:100%;
-      max-width:620px;
-      padding:34px 28px;
-      border:1px solid var(--line);
-      border-radius:24px;
-      background:rgba(248,248,246,.94);
-      text-align:center;
-      box-shadow:0 18px 60px rgba(36,34,26,.12);
-    }
-
-    .brand{
-      margin-bottom:24px;
-      color:var(--olive);
-      font-size:20px;
-      font-weight:600;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .brand span{
-      color:var(--stone);
-      font-size:15px;
-      font-weight:500;
-      letter-spacing:.04em;
-      text-transform:none;
-    }
-
-    h1{
-      margin:0 0 14px;
-      font-size:28px;
-      font-weight:600;
-    }
-
-    p{
-      margin:10px 0;
-      font-size:14px;
-      line-height:1.7;
-    }
-
-    .notice{
-      margin:22px 0;
-      padding:16px;
-      border-radius:14px;
-      background:rgba(94,105,89,.10);
-      border:1px solid rgba(94,105,89,.15);
-    }
-
-    .button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      margin-top:12px;
-      padding:13px 18px;
-      border-radius:12px;
-      background:var(--olive);
-      color:white;
-      text-decoration:none;
-      font-size:13px;
-      font-weight:700;
-    }
-
-    .button:hover{
-      background:var(--olive-dark);
-    }
+    :root{--bg:#cacdc6;--ink:#24221a;--olive:#5e6959;--olive-dark:#4f5a4b;--stone:#878274;--card:#f8f8f6;--line:rgba(36,34,26,.12)}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;font-family:"Montserrat",Arial,sans-serif;background:radial-gradient(circle at top,rgba(255,255,255,.45),transparent 30%),linear-gradient(180deg,#d8dbd4 0%,var(--bg) 100%);color:var(--ink)}
+    .card{width:100%;max-width:620px;padding:34px 28px;border:1px solid var(--line);border-radius:24px;background:rgba(248,248,246,.94);text-align:center;box-shadow:0 18px 60px rgba(36,34,26,.12)}
+    .brand{margin-bottom:24px;color:var(--olive);font-size:20px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+    .brand span{color:var(--stone);font-size:15px;font-weight:500;letter-spacing:.04em;text-transform:none}
+    h1{margin:0 0 14px;font-size:28px;font-weight:600}
+    p{margin:10px 0;font-size:14px;line-height:1.7}
+    .notice,.summary{margin:22px 0;padding:16px;border-radius:14px;background:rgba(94,105,89,.10);border:1px solid rgba(94,105,89,.15)}
+    .summary{text-align:left}.summary p{margin:6px 0}
+    .success{color:#2f7d32;font-weight:700}.pending{color:var(--olive-dark);font-weight:700}.error{color:#8a3b3b;font-weight:700}
+    .button{display:inline-flex;align-items:center;justify-content:center;margin-top:12px;padding:13px 18px;border-radius:12px;background:var(--olive);color:white;text-decoration:none;font-size:13px;font-weight:700}
+    .button:hover{background:var(--olive-dark)}
   </style>
 </head>
-
 <body>
   <main class="card">
-    <div class="brand">
-      BARE | <span>by Marlese</span>
-    </div>
-
+    <div class="brand">BARE | <span>by Marlese</span></div>
     <h1>Payment Complete</h1>
-
-    <p>Thank you. Your balance payment has been received.</p>
-
-    <div class="notice">
-      <p>
-        Your existing appointment remains confirmed.
-        You do not need to book another appointment.
-      </p>
-    </div>
-
-    <p>
-      Please show your payment confirmation to your practitioner.
-    </p>
-
-    <a class="button" href="/">
-      Return to BARE by Marlese
-    </a>
+    <div id="payment-result"><p class="pending">Confirming your payment…</p></div>
+    <a class="button" href="/">Return to BARE by Marlese</a>
   </main>
+  <script>
+    function escapeHtml(value=""){return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;")}
+    function money(value){return `£${Number(value||0).toFixed(2)}`}
+    async function confirmBalancePayment(){
+      const target=document.getElementById("payment-result");
+      const sessionId=new URLSearchParams(location.search).get("session_id")||"";
+      if(!sessionId.startsWith("cs_")){
+        target.innerHTML='<p class="error">The payment reference is missing.</p><p>Please show your Stripe confirmation to your practitioner.</p>';
+        return;
+      }
+      try{
+        const response=await fetch(`/api?payment=balance-status&session_id=${encodeURIComponent(sessionId)}`);
+        const data=await response.json();
+        if(!response.ok||!data.success){
+          target.innerHTML='<p class="pending">Your payment was received and is still being confirmed.</p><p>Please show your Stripe confirmation to your practitioner.</p>';
+          return;
+        }
+        target.innerHTML=`
+          <p class="success">Thank you — your balance payment has been confirmed.</p>
+          <div class="summary">
+            <p><strong>Treatment:</strong> ${escapeHtml(data.treatment_name||"Treatment")}</p>
+            <p><strong>Total cash recorded:</strong> ${money(data.amount_paid)}</p>
+            ${Number(data.discount_amount||0)>0?`<p><strong>Total discount:</strong> ${money(data.discount_amount)}</p>`:""}
+            ${data.coupon_code?`<p><strong>Coupon:</strong> ${escapeHtml(data.coupon_code)}</p>`:""}
+            <p><strong>Remaining balance:</strong> ${money(data.remaining_balance)}</p>
+          </div>
+          <div class="notice"><p>Your existing appointment remains confirmed. You do not need to book another appointment.</p></div>
+        `;
+      }catch(error){
+        target.innerHTML='<p class="pending">Your payment was received and is being confirmed.</p><p>Please show your Stripe confirmation to your practitioner.</p>';
+      }
+    }
+    confirmBalancePayment();
+  </script>
 </body>
 </html>
