@@ -927,58 +927,85 @@ header .brand *{
 
 
 <!-- Medications -->
-            <div class="con-section">
-              <div class="con-h3">Medications & Supplements <span class="required-star">*</span></div>
+<div class="con-section">
+  <div class="con-h3">Medications & Supplements <span class="required-star">*</span></div>
 
-              <label class="con-label">Have you taken Accutane (Isotretinoin) in the last 6 months? <span class="required-star">*</span></label>
-              <select class="con-select" name="accutane" required>
-                <option value="No">No</option>
-                <option value="Yes">Yes</option>
-              </select>
+  <label class="con-label">
+    Have you taken Accutane (Isotretinoin) in the last 6 months?
+    <span class="required-star">*</span>
+  </label>
 
-              <div class="con-options" style="margin-top:12px;" data-none-group="medications" data-required-group="medications">
-                <label class="con-opt">
-                  <input type="checkbox" name="blood_thinners" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Blood thinners (anticoagulants)</span>
-                </label>
+  <select class="con-select" name="accutane" required>
+    <option value="No">No</option>
+    <option value="Yes">Yes</option>
+  </select>
 
-                <label class="con-opt">
-                  <input type="checkbox" name="iron_supplements" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Iron supplements</span>
-                </label>
+  <div class="con-small" style="margin-top:8px;">
+    If yes, treatment may need to be postponed until your practitioner has confirmed it is safe to proceed.
+  </div>
 
-                <label class="con-opt">
-                  <input type="checkbox" name="gold_therapy" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Gold therapy (for rheumatoid arthritis)</span>
-                </label>
+  <div class="con-options" style="margin-top:12px;" data-none-group="medications" data-required-group="medications">
 
-                <label class="con-opt">
-                  <input type="checkbox" name="antibiotics_last_2_weeks" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Antibiotics taken in the last 2 weeks</span>
-                </label>
+    <label class="con-opt">
+      <input type="checkbox" name="blood_thinners" value="Yes">
+      <span class="con-mark"></span>
+      <span>Blood thinners (e.g. Warfarin, Apixaban, Rivaroxaban)</span>
+    </label>
 
-                <label class="con-opt">
-                  <input type="checkbox" name="retinol_retina_area" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Retinol / Retin-A used in treatment area</span>
-                </label>
+    <label class="con-opt">
+      <input type="checkbox" name="immunosuppressant_medication" value="Yes">
+      <span class="con-mark"></span>
+      <span>Immunosuppressant medication (e.g. Methotrexate, Azathioprine, Biologic injections)</span>
+    </label>
 
-                <label class="con-opt">
-                  <input type="checkbox" name="photosensitising_supplements" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Omega 3 supplements</span>
-                </label>
+    <label class="con-opt">
+      <input type="checkbox" name="gold_therapy" value="Yes">
+      <span class="con-mark"></span>
+      <span>Gold therapy (for rheumatoid arthritis)</span>
+    </label>
 
-                <label class="con-opt">
-                  <input type="checkbox" name="medications_none" value="None" data-none-option>
-                  <span class="con-mark"></span>
-                  <span>None of the above</span>
-                </label>
-              </div>
+    <label class="con-opt">
+      <input type="checkbox" name="antibiotics_last_2_weeks" value="Yes">
+      <span class="con-mark"></span>
+      <span>Antibiotics in the last 2 weeks (e.g. Doxycycline, Lymecycline, Minocycline)</span>
+    </label>
+
+    <label class="con-opt">
+      <input type="checkbox" name="steroid_medication" value="Yes">
+      <span class="con-mark"></span>
+      <span>Steroid medication (e.g. Prednisolone)</span>
+    </label>
+
+    <label class="con-opt">
+      <input type="checkbox" name="retinol_retina_area" value="Yes">
+      <span class="con-mark"></span>
+      <span>Prescription skin creams (e.g. Retin-A, Tretinoin, Adapalene, Hydroquinone)</span>
+    </label>
+
+    <label class="con-opt">
+      <input type="checkbox" name="bleeding_supplements" value="Yes">
+      <span class="con-mark"></span>
+      <span>Supplements that may increase bleeding (e.g. Fish Oil/Omega-3, Vitamin E, Ginkgo Biloba)</span>
+    </label>
+
+    <label class="con-opt">
+      <input type="checkbox" name="medications_none" value="None" data-none-option>
+      <span class="con-mark"></span>
+      <span>None of the above</span>
+    </label>
+
+  </div>
+
+  <label class="con-label">
+    List all current prescription medications, over-the-counter medicines, herbs, vitamins and supplements
+  </label>
+
+  <textarea class="con-textarea"
+            name="current_medications"
+            rows="3"
+            placeholder="e.g. Aspirin, Metformin, Doxycycline, Prednisolone, Fish Oil, Vitamin D, St John's Wort"></textarea>
+
+</div>
 
               <label class="con-label">List all current medications (including herbs, vitamins, supplements)</label>
               <textarea class="con-textarea" name="current_medications" rows="3" placeholder="Aspirin, St. John's Wort, fish oil, etc."></textarea>
