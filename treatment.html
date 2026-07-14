@@ -42,10 +42,11 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
   </div>
 
   <div class="content">
+    <div class="notice"><strong>Consultation & Patch Test Required:</strong> Every laser treatment requires a completed consultation and an approved patch test before treatment can be booked or performed.</div>
     <p class="section-title">Tattoo removal pricing</p>
     <div class="packages" id="packages"></div>
 
-    <p class="section-title">Carbon laser facial</p>
+    <p class="section-title">Consultation & Patch Test Required · Carbon laser facial</p>
     <div class="treatment-section">
       <div class="treatment-header">
         <h2>Carbon Laser Facial</h2>
@@ -57,7 +58,7 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
       </div>
     </div>
 
-    <p class="section-title">Toe nail treatment</p>
+    <p class="section-title">Consultation & Patch Test Required · Fungal nail laser treatment</p>
     <div class="treatment-section">
       <div class="treatment-header">
         <h2>Laser Fungal Nail Treatment</h2>
@@ -72,8 +73,8 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
       </div>
     </div>
 
-    <div class="notice"><strong>Important:</strong> Carbon Facial and Fungal Nail prices shown on this page are the remaining balances payable after the £30 booking deposit has already been paid. Only continue with the treatment or package agreed during your consultation or assessment.</div>
-    <div class="actions"><a class="consult-btn" href="/booking.html">Book a Consultation</a></div>
+    <div class="notice"><strong>Important:</strong> Carbon Facial and Fungal Nail prices shown on this page are the remaining balances payable after the £30 booking deposit has already been paid. Only continue with the treatment or package approved after your consultation and completed patch test.</div>
+    <div class="actions"><a class="consult-btn" href="/booking.html">Book Consultation & Patch Test</a></div>
   </div>
 </div>
 
@@ -141,7 +142,7 @@ if (!packages.length) {
     <div class="package">
       <h2>${pkg.name}</h2>
       <div class="price-grid">
-        <button class="btn" onclick="goToPayment('${pkg.key}','bundle_deducted')"><span>Consultation completed</span><strong>${pkg.bundlePrice}</strong></button>
+        <button class="btn" onclick="goToPayment('${pkg.key}','bundle_deducted')"><span>Consultation & patch test completed</span><strong>${pkg.bundlePrice}</strong></button>
         <button class="btn" onclick="goToPayment('${pkg.key}','bundle_full')"><span>No consultation</span><strong>${pkg.fullPrice}</strong></button>
         <button class="btn" onclick="goToPayment('${pkg.key}','single')"><span>Single session</span><strong>${pkg.singlePrice}</strong></button>
       </div>
