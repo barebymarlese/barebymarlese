@@ -76,7 +76,37 @@ export async function onRequest(context) {
       })
     });
   }
+  async function getStripeCheckout(sessionId, env) {
+    if (!sessionId || !env.STRIPE_SECRET_KEY) {
+      return null;
+    }
 
+    const stripeUrl = new URL(
+      `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`
+    );
+
+    stripeUrl.searchParams.append(
+      "expand[]",
+      "total_details.breakdown.discounts.discount.promotion_code"
+    );
+
+    const response = await fetch(stripeUrl.toString(), {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+
+      throw new Error(
+        `Stripe Checkout lookup failed (${response.status}): ${errorText}`
+      );
+    }
+
+    return await response.json();
+  }
   if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
 
   const bookings = await env.DB.prepare(`
@@ -102,6 +132,9 @@ export async function onRequest(context) {
       treatment_name,
       full_price,
       remaining_balance,
+      coupon_code,
+      discount_amount,
+      price_before_discount,
       reschedule_token,
       aftercare_sent
     FROM appointments
@@ -1402,11 +1435,89 @@ if (bookingType === "treatment") {
     const tattooSize = body.tattoo_size || null;
     const treatmentCategory = body.treatment_category || null;
     const treatmentName = body.treatment_name || null;
-    const amountPaid = Number(body.amount_paid || 0);
-    const paymentReference = body.payment_reference || null;
 
-    const depositOnly = body.deposit_only === true;
-    const fullPrice = Number(body.full_price || 0);
+let amountPaid = Number(body.amount_paid || 0);
+const paymentReference = body.payment_reference || null;
+
+const depositOnly = body.deposit_only === true;
+const fullPrice = Number(body.full_price || 0);
+
+let couponCode = null;
+let discountAmount = 0;
+let priceBeforeDiscount = amountPaid;
+
+if (paymentReference?.startsWith("cs_")) {
+  try {
+    const existingPayment = await env.DB.prepare(`
+      SELECT id
+      FROM appointments
+      WHERE payment_reference = ?
+      LIMIT 1
+    `).bind(paymentReference).first();
+
+    if (existingPayment) {
+      return new Response(
+        "This payment has already been used for a booking.",
+        { status: 409 }
+      );
+    }
+
+    const stripe = await getStripeCheckout(paymentReference, env);
+
+    if (!stripe) {
+      return new Response("Stripe payment could not be verified.", {
+        status: 400
+      });
+    }
+
+    if (
+      stripe.payment_status !== "paid" ||
+      stripe.status !== "complete"
+    ) {
+      return new Response("Stripe payment is not complete.", {
+        status: 400
+      });
+    }
+
+    if (stripe.currency && stripe.currency !== "gbp") {
+      return new Response("Unexpected payment currency.", {
+        status: 400
+      });
+    }
+
+    amountPaid = Number(stripe.amount_total || 0) / 100;
+
+    priceBeforeDiscount =
+      Number(
+        stripe.amount_subtotal ||
+        stripe.amount_total ||
+        0
+      ) / 100;
+
+    discountAmount =
+      Number(stripe.total_details?.amount_discount || 0) / 100;
+
+    couponCode =
+      stripe.total_details
+        ?.breakdown
+        ?.discounts?.[0]
+        ?.discount
+        ?.promotion_code
+        ?.code || null;
+
+  } catch (stripeError) {
+    await sendErrorAlert(
+      env,
+      "Stripe payment verification error",
+      stripeError.stack || stripeError.message || stripeError
+    );
+
+    return new Response(
+      "Payment could not be verified. Please contact BARE by Marlese.",
+      { status: 400 }
+    );
+  }
+}
 
 const remainingBalance = Number(
   body.remaining_balance !== undefined
@@ -1475,9 +1586,7 @@ if (bookingType === "treatment") {
   ? packageType.replaceAll("_", " ").replace(/\b\w/g, char => char.toUpperCase())
   : null;
 
-const displayAmount = amountPaid > 1000
-  ? (amountPaid / 100).toFixed(2)
-  : Number(amountPaid).toFixed(2);
+const displayAmount = Number(amountPaid).toFixed(2);
 
 const priceDisplay = amountPaid
   ? `£${displayAmount}`
@@ -1549,14 +1658,17 @@ if (blockedDate) {
     treatment_category,
     treatment_name,
     full_price,
-    remaining_balance
+    remaining_balance,
+    coupon_code,
+    discount_amount,
+    price_before_discount
   )
   VALUES (
-  ?, ?, ?, ?, ?,
-  'confirmed',
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-  ?, ?, ?, ?
-)`
+    ?, ?, ?, ?, ?,
+    'confirmed',
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?, ?
+  )`
 )
 .bind(
   clientName,
@@ -1578,7 +1690,10 @@ if (blockedDate) {
   treatmentCategory,
   treatmentName,
   fullPrice,
-  remainingBalance
+  remainingBalance,
+  couponCode,
+  discountAmount,
+  priceBeforeDiscount
 )
 .run();
 
@@ -1843,7 +1958,11 @@ ${bookingType === "treatment"
         sessions_used: sessionsUsed,
         deposit_only: depositOnly,
         full_price: fullPrice,
-        remaining_balance: remainingBalance
+        remaining_balance: remainingBalance,
+        amount_paid: amountPaid,
+        coupon_code: couponCode,
+        discount_amount: discountAmount,
+        price_before_discount: priceBeforeDiscount
       }), {
         status: 200,
         headers: jsonHeaders
