@@ -626,6 +626,7 @@ footer{
           <div class="view-tabs">
             <button class="btn btn-secondary view-tab active" id="calendar-tab" type="button" onclick="showAdminView('calendar')">Calendar</button>
             <button class="btn btn-secondary view-tab" id="bookings-tab" type="button" onclick="showAdminView('bookings')">Manage Bookings</button>
+            <button class="btn btn-secondary view-tab" id="blocked-tab" type="button" onclick="showAdminView('blocked')">Block Dates</button>
           </div>
           <button class="btn btn-secondary" type="button" onclick="refreshAdmin()">Refresh</button>
           <a class="btn btn-primary" href="/booking.html">Open Booking Page</a>
@@ -674,29 +675,40 @@ footer{
                 <div id="upcoming-list" class="upcoming-list"><div class="empty-state">Loading appointments...</div></div>
               </div>
               <div class="upcoming-section">
-                <button class="btn btn-primary" type="button" style="width:100%;" onclick="showAdminView('bookings')">Open Manage Bookings</button>
+                <button class="btn btn-primary" type="button" style="width:100%;margin-bottom:8px;" onclick="showAdminView('bookings')">Open Manage Bookings</button>
+                <button class="btn btn-secondary" type="button" style="width:100%;" onclick="showAdminView('blocked')">Block Dates</button>
               </div>
             </aside>
           </div>
         </section>
 
+        <section id="blocked-view" class="admin-view">
+          <div style="background:white;border:1px solid var(--line);border-radius:22px;padding:18px;">
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
+              <div>
+                <h2 style="margin:0 0 6px;font-size:20px;color:var(--olive);">Block Dates</h2>
+                <p style="margin:0;font-size:13px;line-height:1.6;color:rgba(36,34,26,.68);">
+                  Prevent consultations and treatments from being booked during holidays, leave, or unavailable clinic days.
+                </p>
+              </div>
+              <button class="btn btn-secondary" type="button" onclick="loadBlockedDates()">Refresh Blocked Dates</button>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <input type="date" id="block-start-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
+              <input type="date" id="block-end-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
+              <input type="text" id="block-range-reason" placeholder="Reason optional" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;min-width:220px;">
+              <button class="btn btn-primary" type="button" onclick="blockDateRange()">Block Date Range</button>
+            </div>
+
+            <div id="blocked-dates-list" style="margin-top:18px;font-size:13px;color:rgba(36,34,26,.78);">
+              Loading blocked dates...
+            </div>
+          </div>
+        </section>
+
         <section id="bookings-view" class="admin-view">
 
-  <div style="background:white;border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:18px;">
-    <h2 style="margin:0 0 12px;font-size:16px;color:var(--olive);">Block Dates</h2>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-      <input type="date" id="block-start-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
-      <input type="date" id="block-end-date" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;">
-      <input type="text" id="block-range-reason" placeholder="Reason optional" style="padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;min-width:220px;">
-      <button class="btn btn-primary" type="button" onclick="blockDateRange()">Block Date Range</button>
-      <button class="btn btn-secondary" type="button" onclick="loadBlockedDates()">Refresh Blocked Dates</button>
-    </div>
-
-    <div id="blocked-dates-list" style="margin-top:14px;font-size:13px;color:rgba(36,34,26,.78);">
-      Loading blocked dates...
-    </div>
-  </div>
 
   <div class="table-wrap">
           <div id="message" class="message">Loading bookings...</div>
@@ -1033,16 +1045,26 @@ function buildSessionInfo(booking){
 function showAdminView(view){
   const calendarView = document.getElementById("calendar-view");
   const bookingsView = document.getElementById("bookings-view");
+  const blockedView = document.getElementById("blocked-view");
   const calendarTab = document.getElementById("calendar-tab");
   const bookingsTab = document.getElementById("bookings-tab");
+  const blockedTab = document.getElementById("blocked-tab");
 
   const showCalendar = view === "calendar";
+  const showBookings = view === "bookings";
+  const showBlocked = view === "blocked";
+
   calendarView.classList.toggle("active", showCalendar);
-  bookingsView.classList.toggle("active", !showCalendar);
+  bookingsView.classList.toggle("active", showBookings);
+  blockedView.classList.toggle("active", showBlocked);
+
   calendarTab.classList.toggle("active", showCalendar);
-  bookingsTab.classList.toggle("active", !showCalendar);
+  bookingsTab.classList.toggle("active", showBookings);
+  blockedTab.classList.toggle("active", showBlocked);
 
   if (showCalendar) renderCalendar();
+  if (showBlocked) loadBlockedDates();
+
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
