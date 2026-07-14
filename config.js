@@ -143,50 +143,50 @@ carbonPackages: [
   },
 
   {
-    key: "fungal_single_nail",
-    deductedKey: "fungal_single_nail_deducted",
-    name: "Single Nail",
-    price: "£45",
-    amount: 4500,
-    deductedPrice: "£15",
-    deductedAmount: 1500
-  },
-  {
-    key: "fungal_one_foot",
-    deductedKey: "fungal_one_foot_deducted",
-    name: "One Foot (Up to 5 Nails)",
-    price: "£85",
-    amount: 8500,
-    deductedPrice: "£55",
-    deductedAmount: 5500
-  },
-  {
-    key: "fungal_both_feet",
-    deductedKey: "fungal_both_feet_deducted",
-    name: "Both Feet",
-    price: "£120",
-    amount: 12000,
-    deductedPrice: "£90",
-    deductedAmount: 9000
-  },
-  {
-    key: "fungal_course4_one_foot",
-    deductedKey: "fungal_course4_one_foot_deducted",
-    name: "Course of 4 Sessions (One Foot)",
-    price: "£300",
-    amount: 30000,
-    deductedPrice: "£270",
-    deductedAmount: 27000
-  },
-  {
-    key: "fungal_course4_both_feet",
-    deductedKey: "fungal_course4_both_feet_deducted",
-    name: "Course of 4 Sessions (Both Feet)",
-    price: "£420",
-    amount: 42000,
-    deductedPrice: "£390",
-    deductedAmount: 39000
-  }
+  key: "fungal_single_nail",
+  deductedKey: "fungal_single_nail",
+  name: "Single Nail",
+  price: "£45",
+  amount: 4500,
+  deductedPrice: "£15",
+  deductedAmount: 1500
+},
+{
+  key: "fungal_one_foot",
+  deductedKey: "fungal_one_foot",
+  name: "One Foot (Up to 5 Nails)",
+  price: "£85",
+  amount: 8500,
+  deductedPrice: "£55",
+  deductedAmount: 5500
+},
+{
+  key: "fungal_both_feet",
+  deductedKey: "fungal_both_feet",
+  name: "Both Feet",
+  price: "£120",
+  amount: 12000,
+  deductedPrice: "£90",
+  deductedAmount: 9000
+},
+{
+  key: "fungal_course4_one_foot",
+  deductedKey: "fungal_course4_one_foot",
+  name: "Course of 4 Sessions (One Foot)",
+  price: "£300",
+  amount: 30000,
+  deductedPrice: "£270",
+  deductedAmount: 27000
+},
+{
+  key: "fungal_course4_both_feet",
+  deductedKey: "fungal_course4_both_feet",
+  name: "Course of 4 Sessions (Both Feet)",
+  price: "£420",
+  amount: 42000,
+  deductedPrice: "£390",
+  deductedAmount: 39000
+}
 ],
   
   booking: {
