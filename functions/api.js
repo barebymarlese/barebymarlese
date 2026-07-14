@@ -155,19 +155,43 @@ async function createStripeBalanceCheckout(booking, env) {
     form.set("customer_email", booking.email);
   }
 
-  form.set("line_items[0][quantity]", "1");
-  form.set(
-    "line_items[0][price_data][currency]",
-    "gbp"
+  const category = String(
+  booking.treatment_category || ""
+).toLowerCase();
+
+const packageType = String(
+  booking.package_type || ""
+).toLowerCase();
+
+let stripePriceId = "";
+
+if (
+  category === "carbon" &&
+  packageType === "single_session"
+) {
+  stripePriceId =
+    env.STRIPE_PRICE_CARBON_SINGLE_BALANCE;
+}
+
+if (
+  category === "carbon" &&
+  (
+    packageType === "three_sessions" ||
+    packageType === "3_sessions"
+  )
+) {
+  stripePriceId =
+    env.STRIPE_PRICE_CARBON_COURSE3_BALANCE;
+}
+
+if (!stripePriceId?.startsWith("price_")) {
+  throw new Error(
+    `Stripe Price ID is not configured for ${category} ${packageType}.`
   );
-  form.set(
-    "line_items[0][price_data][unit_amount]",
-    String(balancePence)
-  );
-  form.set(
-    "line_items[0][price_data][product_data][name]",
-    `${booking.treatment_name || "Treatment"} – Remaining Balance`
-  );
+}
+
+form.set("line_items[0][quantity]", "1");
+form.set("line_items[0][price]", stripePriceId);
 
   const response = await fetch(
     "https://api.stripe.com/v1/checkout/sessions",
@@ -426,6 +450,7 @@ if (
         email,
         status,
         booking_type,
+        package_type,
         treatment_category,
         treatment_name,
         payment_status,
