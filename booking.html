@@ -340,13 +340,40 @@ const bookingType = isTattoo ? "consultation" : "treatment";
 const treatmentCategory = isCarbon ? "carbon" : isFungal ? "fungal" : null;
 
 const optionDetails = {
-  carbon_single: { packageType: "single_session", sessions: 1 },
-  carbon_course3: { packageType: "3_sessions", sessions: 3 },
-  fungal_single_nail: { packageType: "single_session", sessions: 1 },
-  fungal_one_foot: { packageType: "single_session", sessions: 1 },
-  fungal_both_feet: { packageType: "single_session", sessions: 1 },
-  fungal_course4_one_foot: { packageType: "4_sessions", sessions: 4 },
-  fungal_course4_both_feet: { packageType: "4_sessions", sessions: 4 }
+  carbon_single: {
+    packageType: "single_session",
+    sessions: 1
+  },
+
+  carbon_course3: {
+    packageType: "3_sessions",
+    sessions: 3
+  },
+
+  fungal_single_nail: {
+    packageType: "single_nail",
+    sessions: 1
+  },
+
+  fungal_one_foot: {
+    packageType: "one_foot",
+    sessions: 1
+  },
+
+  fungal_both_feet: {
+    packageType: "both_feet",
+    sessions: 1
+  },
+
+  fungal_course4_one_foot: {
+    packageType: "course4_one_foot",
+    sessions: 4
+  },
+
+  fungal_course4_both_feet: {
+    packageType: "course4_both_feet",
+    sessions: 4
+  }
 };
 
 const selectedOptionDetails = optionDetails[treatmentOption] || {
