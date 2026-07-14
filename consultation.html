@@ -1316,11 +1316,10 @@ header .brand *{
 <div id="turnstile-container" style="margin-top:16px;"></div>
 
 <script>
-let turnstileWidgetId = null;
 let turnstileToken = "";
 
 function onTurnstileSuccess(token) {
-  turnstileToken = token || "";
+  turnstileToken = String(token || "");
 }
 
 function onTurnstileExpired() {
@@ -1332,17 +1331,8 @@ function onTurnstileError() {
 }
 
 if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
-  const container = document.getElementById("turnstile-container");
-
-  container.innerHTML = `
-    <div
-      class="cf-turnstile"
-      data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8"
-      data-callback="onTurnstileSuccess"
-      data-expired-callback="onTurnstileExpired"
-      data-error-callback="onTurnstileError">
-    </div>
-  `;
+  document.getElementById("turnstile-container").innerHTML =
+    '<div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError" data-response-field="true" data-response-field-name="cf-turnstile-response"></div>';
 }
 </script>
 
@@ -2054,7 +2044,7 @@ statusEl.style.display = "block";
 if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   if (!turnstileToken && window.turnstile) {
     try {
-      turnstileToken = window.turnstile.getResponse() || "";
+      turnstileToken = String(window.turnstile.getResponse() || "");
     } catch (error) {
       turnstileToken = "";
     }
@@ -2062,10 +2052,9 @@ if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
 
   if (!turnstileToken) {
     setStatus(
-      "Security check missing. Please wait for the security check to complete and try again.",
+      "Security check has not finished. Please wait for the green Success message and submit again.",
       "error"
     );
-
     statusEl.style.display = "block";
     isSubmitting = false;
 
@@ -2083,11 +2072,7 @@ statusEl.style.display = "block";
 
 const data = new FormData(form);
 
-if (
-  typeof isLiveDomain !== "undefined" &&
-  isLiveDomain &&
-  turnstileToken
-) {
+if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   data.set("cf-turnstile-response", turnstileToken);
 }
 
