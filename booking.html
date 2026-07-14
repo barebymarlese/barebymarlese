@@ -335,8 +335,8 @@ const remainingBalance = Number(localStorage.getItem("bareRemainingBalance") || 
 const isTattoo = treatmentType === "Tattoo Removal";
 const isCarbon = treatmentType === "Carbon Facial";
 const isFungal = treatmentType === "Fungal Nail Treatment";
-const slotType = isTattoo ? "consultation" : "treatment";
-const bookingType = isTattoo ? "consultation" : "treatment";
+const slotType = "consultation";
+const bookingType = "consultation";
 const treatmentCategory = isCarbon ? "carbon" : isFungal ? "fungal" : null;
 
 const optionDetails = {
@@ -440,7 +440,7 @@ async function loadAvailableSlots(date) {
   selectedTime = "";
   status.textContent = "";
   status.className = "";
-  container.innerHTML = `<div class="slot-message">Loading ${isTattoo ? "consultation" : "1-hour treatment"} times...</div>`;
+  container.innerHTML = `<div class="slot-message">Loading consultation and patch test times...</div>`;
 
   try {
     const res = await fetch(`${API_BASE}/api?type=${encodeURIComponent(slotType)}&date=${encodeURIComponent(date)}`);
@@ -449,7 +449,7 @@ async function loadAvailableSlots(date) {
     const nextAvailable = data.nextAvailable || null;
 
     if (!Array.isArray(slots) || slots.length === 0) {
-      container.innerHTML = `<div class="slot-message">No ${isTattoo ? "consultation" : "treatment"} availability for this date.</div>`;
+      container.innerHTML = `<div class="slot-message">No consultation and patch test availability for this date.</div>`;
       return;
     }
 
@@ -519,10 +519,11 @@ async function bookSlot(date, time) {
     payment_reference: localStorage.getItem("bare_payment_reference") || null
   };
 
+  payload.treatment_category = treatmentCategory;
+  payload.treatment_name = treatmentName || treatmentType;
+
   if (!isTattoo) {
     payload.package_type = selectedOptionDetails.packageType;
-    payload.treatment_category = treatmentCategory;
-    payload.treatment_name = treatmentName;
     payload.full_price = fullPrice;
     payload.remaining_balance = remainingBalance;
     payload.deposit_only = true;
@@ -546,9 +547,7 @@ async function bookSlot(date, time) {
 
       status.innerHTML = `
         <div style="background:#f4f5f3;border-radius:12px;padding:18px;margin-top:18px;">
-          <p class="success">${isTattoo
-            ? "Thank you — your consultation and patch test has been booked."
-            : `Thank you — your ${treatmentType.toLowerCase()} appointment has been booked.`}</p>
+          <p class="success">Thank you — your consultation and patch test has been booked.</p>
           ${treatmentLine}
           <p><strong>Date:</strong> ${date}</p>
           <p><strong>Time:</strong> ${time}</p>
