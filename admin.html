@@ -289,6 +289,11 @@ tbody tr:last-child td{border-bottom:0}
   color:var(--olive-dark);
 }
 
+
+.patch-status{display:inline-flex;align-items:center;justify-content:center;min-width:105px;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:700;text-align:center;}
+.patch-status.complete{background:rgba(47,125,50,.12);color:#2f7d32;}
+.patch-status.pending{background:#fff7e8;color:#7a5318;}
+
 .badge.unpaid{
   background:#f1e6e3;
   color:#8a3b3b;
@@ -914,6 +919,7 @@ footer{
                 <th>Package</th>
                 <th>Sessions</th>
                 <th>Status</th>
+                <th>Patch Test</th>
                 <th>Aftercare</th>
                 <th>Action</th>
               </tr>
@@ -1106,6 +1112,26 @@ function formatTattooSize(size){
   if (!size) return "";
   if (size === "xl") return "XL Tattoo";
   return `${String(size).charAt(0).toUpperCase() + String(size).slice(1)} Tattoo`;
+}
+
+function buildPatchTestStatus(booking){
+  if (booking.booking_type !== "consultation") {
+    return `<span class="action-note">Approved via consultation</span>`;
+  }
+
+  const complete = Number(booking.patch_test_complete || 0) === 1 &&
+    Number(booking.consultation_complete || 0) === 1;
+
+  return `
+    <div class="action-stack">
+      <span class="patch-status ${complete ? "complete" : "pending"}">
+        ${complete ? "Complete" : "Pending"}
+      </span>
+      <button class="btn btn-secondary" type="button" onclick="setPatchTestComplete(${Number(booking.id)}, ${complete ? "false" : "true"})">
+        ${complete ? "Undo" : "Mark Complete"}
+      </button>
+    </div>
+  `;
 }
 
 function buildPackageInfo(booking){
@@ -1541,6 +1567,7 @@ async function loadBookings(){
         <td>${buildPackageInfo(booking)}</td>
         <td>${buildSessionInfo(booking)}</td>
         <td><span class="status ${isCancelled ? "cancelled" : ""}">${escapeHtml(booking.status || "confirmed")}</span></td>
+        <td>${buildPatchTestStatus(booking)}</td>
         <td>${buildAftercareStatus(booking)}</td>
         <td>
   <div class="action-stack">
@@ -1597,6 +1624,24 @@ async function cancelBooking(id){
   }else{
     alert("Could not cancel booking.");
   }
+}
+
+async function setPatchTestComplete(id, complete){
+  const action = complete ? "mark this consultation and patch test complete" : "return this patch test to pending";
+  if (!confirm(`Are you sure you want to ${action}?`)) return;
+
+  const res = await fetch(`${API_BASE}/api?admin=patch-test-complete`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, complete })
+  });
+
+  if (!res.ok) {
+    alert((await res.text()) || "Could not update patch-test status.");
+    return;
+  }
+
+  await loadBookings();
 }
 
 async function completeSession(sessionId){
