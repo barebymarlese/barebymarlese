@@ -773,12 +773,6 @@ header .brand *{
                 </label>
 
                 <label class="con-opt">
-                  <input type="checkbox" name="recent_chemical_peel_area" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Recent chemical peel in treatment area</span>
-                </label>
-
-                <label class="con-opt">
                   <input type="checkbox" name="recent_tattoo_6weeks" value="Yes">
                   <span class="con-mark"></span>
                   <span>Tattoo done within the last 6–8 weeks</span>
@@ -796,6 +790,141 @@ header .brand *{
                   <span>None of the above</span>
                 </label>
               </div>
+            </div>
+
+
+            <!-- Laser skin preparation: Tattoo Removal + Carbon Facial only -->
+            <div class="con-section treatment-specific-section"
+                 id="laser-skin-preparation-section"
+                 data-treatments="Tattoo Removal|Carbon Facial">
+              <div class="con-h3">Recent Skin Preparation <span class="required-star">*</span></div>
+
+              <label class="con-label">
+                Have you used fake tan on the treatment area within the last 2 weeks?
+                <span class="required-star">*</span>
+              </label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="fake_tan_last_2_weeks" value="No" required>
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="fake_tan_last_2_weeks" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Carbon Facial only -->
+            <div class="con-section treatment-specific-section"
+                 id="carbon-specific-section"
+                 data-treatments="Carbon Facial">
+              <div class="con-h3">Carbon Facial Screening <span class="required-star">*</span></div>
+
+              <label class="con-label">
+                Have you had Botox or dermal filler in the treatment area within the last 2 weeks?
+                <span class="required-star">*</span>
+              </label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="recent_botox_filler" value="No" required>
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="recent_botox_filler" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+
+              <label class="con-label">
+                Are you currently using exfoliating acids, benzoyl peroxide or prescription acne medication on your face?
+                <span class="required-star">*</span>
+              </label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="active_skincare_products" value="No" required>
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="active_skincare_products" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes — e.g. AHA/BHA acids, benzoyl peroxide, retinoids or prescription acne products</span>
+                </label>
+              </div>
+
+              <label class="con-label">
+                Have you had microneedling, laser treatment, a chemical peel or dermabrasion on your face within the last 4 weeks?
+                <span class="required-star">*</span>
+              </label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="recent_cosmetic_procedure" value="No" required>
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="recent_cosmetic_procedure" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Fungal Nail Treatment only -->
+            <div class="con-section treatment-specific-section"
+                 id="fungal-specific-section"
+                 data-treatments="Fungal Nail Treatment">
+              <div class="con-h3">Fungal Nail Screening <span class="required-star">*</span></div>
+
+              <label class="con-label">
+                Has the nail condition been diagnosed as a fungal infection by a GP, podiatrist or other qualified healthcare professional?
+                <span class="required-star">*</span>
+              </label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="fungal_diagnosis" value="Yes" required>
+                  <span class="con-mark"></span>
+                  <span>Yes</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="fungal_diagnosis" value="No">
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="fungal_diagnosis" value="Unsure">
+                  <span class="con-mark"></span>
+                  <span>Unsure</span>
+                </label>
+              </div>
+
+              <label class="con-label">
+                Are you currently using or taking antifungal medication?
+                <span class="required-star">*</span>
+              </label>
+              <div class="con-options">
+                <label class="con-opt">
+                  <input type="radio" name="current_antifungal_medication" value="No" required>
+                  <span class="con-mark"></span>
+                  <span>No</span>
+                </label>
+                <label class="con-opt">
+                  <input type="radio" name="current_antifungal_medication" value="Yes">
+                  <span class="con-mark"></span>
+                  <span>Yes — e.g. Terbinafine, Amorolfine/Loceryl or Canesten</span>
+                </label>
+              </div>
+
+              <label class="con-label">If yes, please list the antifungal medication</label>
+              <input class="con-input"
+                     type="text"
+                     name="antifungal_medication_details"
+                     placeholder="Medication name and how long you have used it">
             </div>
 
 
@@ -1315,6 +1444,18 @@ function applyTreatmentType(selectedTreatment){
   document.querySelectorAll(".tattoo-only-section").forEach((section) => {
     section.classList.toggle("treatment-hidden", !isTattoo);
     setRequiredInSection(section, isTattoo);
+  });
+
+  document.querySelectorAll("[data-treatments]").forEach((section) => {
+    const allowedTreatments = (section.dataset.treatments || "")
+      .split("|")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    const isVisible = allowedTreatments.includes(treatment);
+
+    section.classList.toggle("treatment-hidden", !isVisible);
+    setRequiredInSection(section, isVisible);
   });
 
   document.querySelectorAll('[data-none-group="tattoo-colours"]').forEach((group) => {
