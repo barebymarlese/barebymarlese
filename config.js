@@ -103,15 +103,21 @@ Object.assign(window.SITE_CONFIG, {
   },
 
 stripeLinksCarbon: {
+  // Full treatment prices
   carbon_single: "https://buy.stripe.com/fZu9AVgmC3yP0wp0LI8g00v",
   carbon_course3: "https://buy.stripe.com/bJe7sN0nE5GX3IB9ie8g00w",
+
+  // Balance after £30 consultation deposit
+  carbon_single_deducted: "https://buy.stripe.com/aFa14pgmCfhx3IB2TQ8g00F",
+  carbon_course3_deducted: "https://buy.stripe.com/4gMfZj8Uab1h1AtfGC8g00E",
+
+  // Full fungal treatment prices
   fungal_single_nail: "https://buy.stripe.com/3cIdRbfiy0mD7YR3XU8g00x",
   fungal_one_foot: "https://buy.stripe.com/5kQdRb0nE5GX4MF0LI8g00y",
   fungal_both_feet: "https://buy.stripe.com/7sY00lfiy2uL2Exbqm8g00z",
   fungal_course4_one_foot: "https://buy.stripe.com/4gM9AVgmC1qH6UN0LI8g00A",
   fungal_course4_both_feet: "https://buy.stripe.com/dRmbJ39Ye7P54MF51Y8g00B"
 },
-
   packages: [
   { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
   { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3465", fullPrice:"\u00A3495", singlePrice:"\u00A395", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
@@ -121,14 +127,70 @@ stripeLinksCarbon: {
 ],
 
 carbonPackages: [
-  { key:"carbon_single", name:"Single Carbon Facial", price:"\u00A385", amount:8500 },
-  { key:"carbon_course3", name:"Course of 3 Treatments", price:"\u00A3225", amount:22500 },
+  {
+    key: "carbon_single",
+    deductedKey: "carbon_single_deducted",
+    name: "Single Carbon Facial",
+    price: "£85",
+    amount: 8500,
+    deductedPrice: "£55",
+    deductedAmount: 5500
+  },
+  {
+    key: "carbon_course3",
+    deductedKey: "carbon_course3_deducted",
+    name: "Course of 3 Treatments",
+    price: "£225",
+    amount: 22500,
+    deductedPrice: "£195",
+    deductedAmount: 19500
+  },
 
-  { key:"fungal_single_nail", name:"Single Nail", price:"\u00A345", amount:4500 },
-  { key:"fungal_one_foot", name:"One Foot (Up to 5 Nails)", price:"\u00A385", amount:8500 },
-  { key:"fungal_both_feet", name:"Both Feet", price:"\u00A3120", amount:12000 },
-  { key:"fungal_course4_one_foot", name:"Course of 4 Sessions (One Foot)", price:"\u00A3300", amount:30000 },
-  { key:"fungal_course4_both_feet", name:"Course of 4 Sessions (Both Feet)", price:"\u00A3420", amount:42000 }
+  {
+    key: "fungal_single_nail",
+    deductedKey: "fungal_single_nail_deducted",
+    name: "Single Nail",
+    price: "£45",
+    amount: 4500,
+    deductedPrice: "£15",
+    deductedAmount: 1500
+  },
+  {
+    key: "fungal_one_foot",
+    deductedKey: "fungal_one_foot_deducted",
+    name: "One Foot (Up to 5 Nails)",
+    price: "£85",
+    amount: 8500,
+    deductedPrice: "£55",
+    deductedAmount: 5500
+  },
+  {
+    key: "fungal_both_feet",
+    deductedKey: "fungal_both_feet_deducted",
+    name: "Both Feet",
+    price: "£120",
+    amount: 12000,
+    deductedPrice: "£90",
+    deductedAmount: 9000
+  },
+  {
+    key: "fungal_course4_one_foot",
+    deductedKey: "fungal_course4_one_foot_deducted",
+    name: "Course of 4 Sessions (One Foot)",
+    price: "£300",
+    amount: 30000,
+    deductedPrice: "£270",
+    deductedAmount: 27000
+  },
+  {
+    key: "fungal_course4_both_feet",
+    deductedKey: "fungal_course4_both_feet_deducted",
+    name: "Course of 4 Sessions (Both Feet)",
+    price: "£420",
+    amount: 42000,
+    deductedPrice: "£390",
+    deductedAmount: 39000
+  }
 ],
   
   booking: {
