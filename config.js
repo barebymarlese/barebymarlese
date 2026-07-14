@@ -103,11 +103,7 @@ Object.assign(window.SITE_CONFIG, {
   },
 
 stripeLinksCarbon: {
-  // Full treatment prices
-  carbon_single: "https://buy.stripe.com/fZu9AVgmC3yP0wp0LI8g00v",
-  carbon_course3: "https://buy.stripe.com/bJe7sN0nE5GX3IB9ie8g00w",
-
-  // Balance after £30 consultation deposit
+   // Balance after £30 consultation deposit
   carbon_single_deducted: "https://buy.stripe.com/aFa14pgmCfhx3IB2TQ8g00F",
   carbon_course3_deducted: "https://buy.stripe.com/4gMfZj8Uab1h1AtfGC8g00E",
 
@@ -128,23 +124,17 @@ stripeLinksCarbon: {
 
 carbonPackages: [
   {
-    key: "carbon_single",
-    deductedKey: "carbon_single_deducted",
-    name: "Single Carbon Facial",
-    price: "£85",
-    amount: 8500,
-    deductedPrice: "£55",
-    deductedAmount: 5500
-  },
-  {
-    key: "carbon_course3",
-    deductedKey: "carbon_course3_deducted",
-    name: "Course of 3 Treatments",
-    price: "£225",
-    amount: 22500,
-    deductedPrice: "£195",
-    deductedAmount: 19500
-  },
+  key: "carbon_single_deducted",
+  name: "Single Carbon Facial",
+  deductedPrice: "£55",
+  deductedAmount: 5500
+},
+{
+  key: "carbon_course3_deducted",
+  name: "Course of 3 Treatments",
+  deductedPrice: "£195",
+  deductedAmount: 19500
+},
 
   {
     key: "fungal_single_nail",
