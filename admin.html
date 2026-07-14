@@ -280,7 +280,10 @@ tbody tr:last-child td{border-bottom:0}
   background:rgba(47,125,50,.12);
   color:#2f7d32;
 }
-
+.badge.refunded{
+  background: rgba(63,101,140,.14);
+  color: #3f658c;
+}
 .badge.deposit{
   background:rgba(94,105,89,.14);
   color:var(--olive-dark);
@@ -565,11 +568,13 @@ function buildPaymentBadge(booking){
 
   let badge = `<span class="badge unpaid">Unpaid</span>`;
 
-  if (status === "paid") {
-    badge = `<span class="badge paid">Paid</span>`;
-  } else if (status === "deposit_paid") {
-    badge = `<span class="badge deposit">Deposit paid</span>`;
-  }
+if (status === "paid") {
+  badge = `<span class="badge paid">Paid</span>`;
+} else if (status === "deposit_paid") {
+  badge = `<span class="badge deposit">Deposit paid</span>`;
+} else if (status === "refunded") {
+  badge = `<span class="badge refunded">Refunded</span>`;
+}
 
   const hasCoupon =
     couponCode ||
