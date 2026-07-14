@@ -425,7 +425,7 @@ header .brand *{
   <main>
     <section id="consultation">
       <div class="doc-shell">
-        <h2 class="section-title">Consultation Form</h2>
+        <h2 class="section-title">Consultation & Patch Test Form</h2>
         <p class="subnote">
           Please complete this form accurately. All information is kept confidential and used only to assess treatment suitability and safety.
         </p>
@@ -1235,7 +1235,7 @@ header .brand *{
                 <input type="checkbox" name="patch_test_acknowledgement" value="Yes" required>
                 <span class="con-mark"></span>
                 <span>
-                  <span id="patch-test-copy">I understand that a patch test may be required before treatment and that treatment suitability will be confirmed during consultation.</span>
+                  <span id="patch-test-copy">I understand that a patch test is required before treatment. Treatment can only proceed after my consultation and patch test have been completed and approved.</span>
                 </span>
               </label>
 
@@ -1337,7 +1337,7 @@ if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   By proceeding, you agree to our booking terms. A minimum of 24 hours’ notice is required for cancellations or rescheduling. Deposits may be non-transferable for late changes.
 </p>
             <div class="con-actions">
-              <button type="submit" class="con-btn" id="submit-btn">SUBMIT CONSULTATION</button>
+              <button type="submit" class="con-btn" id="submit-btn">SUBMIT CONSULTATION & PATCH TEST</button>
               <button type="button" class="con-btn con-btn-ghost" id="reset-btn">RESET</button>
             </div>
 
@@ -1440,7 +1440,7 @@ function applyTreatmentType(selectedTreatment){
   if(treatmentSelect && treatmentSelect.value !== treatment) treatmentSelect.value = treatment;
   try{ localStorage.setItem("bareTreatmentType", treatment); }catch(e){}
 
-  if(formHeading) formHeading.textContent = `${treatment} Consultation Form`;
+  if(formHeading) formHeading.textContent = `${treatment} Consultation & Patch Test Form`;
 
   document.querySelectorAll(".tattoo-only-section").forEach((section) => {
     section.classList.toggle("treatment-hidden", !isTattoo);
@@ -1479,7 +1479,7 @@ function applyTreatmentType(selectedTreatment){
     if(photoLabel) photoLabel.textContent = "Upload tattoo photos (optional)";
     if(goal) goal.placeholder = "Full removal, fading for cover-up, lightening, etc.";
     setText("aftercare-understood-copy", "I understand that laser tattoo removal requires proper aftercare, including avoiding sun exposure, not picking blisters or scabs, and allowing appropriate healing time between sessions.");
-    setText("patch-test-copy", "I understand that a patch test may be required before treatment and that treatment suitability will be confirmed during consultation.");
+    setText("patch-test-copy", "I understand that a patch test is required before treatment. Treatment can only proceed after my consultation and patch test have been completed and approved.");
     setText("risk-copy", "I understand that laser tattoo removal carries risks including but not limited to blistering, scabbing, swelling, infection, changes in skin pigmentation (hypopigmentation or hyperpigmentation), incomplete removal, and potential scarring.");
     setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that results vary depending on individual factors including skin type, ink composition, depth, and aftercare compliance.");
     setText("client-responsibility-copy", "I understand that failure to follow aftercare instructions may increase the risk of adverse effects and may affect treatment results, and I accept responsibility for following all aftercare guidance provided.");
@@ -1487,7 +1487,7 @@ function applyTreatmentType(selectedTreatment){
     if(photoLabel) photoLabel.textContent = "Upload facial skin photos (optional)";
     if(goal) goal.placeholder = "Brighter skin, smoother texture, clearer pores, oil control, glow, etc.";
     setText("aftercare-understood-copy", "I understand that carbon laser facial aftercare may include avoiding sun exposure, heat treatments, exfoliating acids, retinol/Retin-A, harsh skincare and makeup for the advised period after treatment.");
-    setText("patch-test-copy", "I understand that my treatment suitability will be assessed during the consultation immediately before treatment begins.");
+    setText("patch-test-copy", "I understand that a patch test is required before treatment. Treatment can only proceed after my consultation and patch test have been completed and approved.");
     setText("risk-copy", "I understand that carbon laser facial treatment may carry risks including temporary redness, warmth, dryness, sensitivity, breakouts, pigmentation changes, irritation or an unsuitable reaction depending on skin type, products and aftercare.");
     setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that results vary depending on skin type, skin condition, skincare products, lifestyle and aftercare compliance.");
     setText("client-responsibility-copy", "I accept responsibility for following all aftercare guidance provided, including sun protection and avoiding unsuitable skincare or active products as advised.");
@@ -1495,7 +1495,7 @@ function applyTreatmentType(selectedTreatment){
     if(photoLabel) photoLabel.textContent = "Upload nail photos (optional)";
     if(goal) goal.placeholder = "Clearer nail appearance, reduction in fungal-looking changes, healthier nail growth, etc.";
     setText("aftercare-understood-copy", "I understand that fungal nail laser aftercare may include keeping feet clean and dry, following hygiene guidance, avoiding re-contamination, and allowing time for healthy nail growth.");
-    setText("patch-test-copy", "I understand that my treatment suitability will be assessed during the consultation immediately before treatment begins.");
+    setText("patch-test-copy", "I understand that a patch test is required before treatment. Treatment can only proceed after my consultation and patch test have been completed and approved.");
     setText("risk-copy", "I understand that fungal nail laser treatment may carry risks including temporary warmth, sensitivity, discomfort, nail or skin irritation, and that results may vary depending on severity, nail growth and aftercare.");
     setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that visible improvement depends on individual factors including nail growth, severity, hygiene and aftercare compliance.");
     setText("client-responsibility-copy", "I accept responsibility for following all aftercare and hygiene guidance provided to reduce the risk of re-contamination and support treatment results.");
@@ -1789,7 +1789,7 @@ const form = document.getElementById("consultation-form");
     const resetBtn = document.getElementById("reset-btn");
     const submittedAt = document.getElementById("submitted_at");
     const submitBtn = document.getElementById("submit-btn");
-    const defaultSubmitLabel = submitBtn ? submitBtn.textContent : "SUBMIT CONSULTATION";
+    const defaultSubmitLabel = submitBtn ? submitBtn.textContent : "SUBMIT CONSULTATION & PATCH TEST";
     let isSubmitting = false;
 
     function setStatus(msg, type){
