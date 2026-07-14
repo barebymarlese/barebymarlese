@@ -107,7 +107,7 @@ stripeLinksCarbon: {
   carbon_single_deducted: "https://buy.stripe.com/aFa14pgmCfhx3IB2TQ8g00F",
   carbon_course3_deducted: "https://buy.stripe.com/4gMfZj8Uab1h1AtfGC8g00E",
 
-  // Full fungal treatment prices
+  // Fungal treatment balance payment links
   fungal_single_nail: "https://buy.stripe.com/3cIdRbfiy0mD7YR3XU8g00x",
   fungal_one_foot: "https://buy.stripe.com/5kQdRb0nE5GX4MF0LI8g00y",
   fungal_both_feet: "https://buy.stripe.com/7sY00lfiy2uL2Exbqm8g00z",
