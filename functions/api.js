@@ -2034,29 +2034,29 @@ if (bookingType === "treatment") {
     ? "treatment_deposit"
     : "treatment_payment";
 
-  if (packageType === "single_session") {
-    sessionsTotal = 1;
-    packageStatus = "active";
-  }
+  const sessionTotalsByPackage = {
+    single_session: 1,
 
-  if (
-    packageType === "three_sessions" ||
-    packageType === "3_sessions"
-  ) {
-    sessionsTotal = 3;
-    packageStatus = "active";
-  }
+    three_sessions: 3,
+    "3_sessions": 3,
 
-  if (packageType === "4_sessions") {
-    sessionsTotal = 4;
-    packageStatus = "active";
-  }
+    "4_sessions": 4,
 
-  if (
-    packageType === "six_sessions" ||
-    packageType === "6_sessions"
-  ) {
-    sessionsTotal = 6;
+    six_sessions: 6,
+    "6_sessions": 6,
+
+    single_nail: 1,
+    one_foot: 1,
+    both_feet: 1,
+
+    course4_one_foot: 4,
+    course4_both_feet: 4
+  };
+
+  sessionsTotal =
+    sessionTotalsByPackage[packageType] || 0;
+
+  if (sessionsTotal > 0) {
     packageStatus = "active";
   }
 
