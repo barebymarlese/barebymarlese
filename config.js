@@ -124,17 +124,23 @@ stripeLinksCarbon: {
 
 carbonPackages: [
   {
-  key: "carbon_single_deducted",
-  name: "Single Carbon Facial",
-  deductedPrice: "£55",
-  deductedAmount: 5500
-},
-{
-  key: "carbon_course3_deducted",
-  name: "Course of 3 Treatments",
-  deductedPrice: "£195",
-  deductedAmount: 19500
-},
+    key: "carbon_single",
+    deductedKey: "carbon_single_deducted",
+    name: "Single Carbon Facial",
+    price: "£85",
+    amount: 8500,
+    deductedPrice: "£55",
+    deductedAmount: 5500
+  },
+  {
+    key: "carbon_course3",
+    deductedKey: "carbon_course3_deducted",
+    name: "Course of 3 Treatments",
+    price: "£225",
+    amount: 22500,
+    deductedPrice: "£195",
+    deductedAmount: 19500
+  },
 
   {
     key: "fungal_single_nail",
