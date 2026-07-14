@@ -314,6 +314,31 @@ tbody tr:last-child td{border-bottom:0}
   font-weight:700;
 }
 
+.coupon-details{
+  margin-top:8px;
+  padding:9px 10px;
+  min-width:145px;
+  border-radius:10px;
+  background:#fff7e8;
+  border:1px solid rgba(143,94,20,.18);
+  font-size:11px;
+  line-height:1.55;
+  color:rgba(36,34,26,.76);
+}
+.coupon-details strong{
+  color:#7a5318;
+}
+.coupon-code{
+  display:inline-block;
+  margin-top:4px;
+  padding:4px 7px;
+  border-radius:7px;
+  background:rgba(143,94,20,.10);
+  color:#7a5318;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+
 .package-text{
   font-size:13px;
   line-height:1.45;
@@ -530,6 +555,9 @@ function buildPaymentBadge(booking){
   const amountPaid = Number(booking.amount_paid || 0);
   const fullPrice = Number(booking.full_price || 0);
   const remainingBalance = Number(booking.remaining_balance || 0);
+  const priceBeforeDiscount = Number(booking.price_before_discount || 0);
+  const discountAmount = Number(booking.discount_amount || 0);
+  const couponCode = String(booking.coupon_code || "").trim();
 
   const stripeText = booking.payment_reference
     ? `<br><span class="action-note">Stripe linked</span>`
@@ -543,6 +571,30 @@ function buildPaymentBadge(booking){
     badge = `<span class="badge deposit">Deposit paid</span>`;
   }
 
+  const hasCoupon =
+    couponCode ||
+    discountAmount > 0 ||
+    priceBeforeDiscount > amountPaid;
+
+  const couponHtml = hasCoupon
+    ? `
+      <div class="coupon-details">
+        ${priceBeforeDiscount > 0
+          ? `<div>Before discount: <strong>${formatMoney(priceBeforeDiscount)}</strong></div>`
+          : ""
+        }
+        ${discountAmount > 0
+          ? `<div>Discount: <strong>-${formatMoney(discountAmount)}</strong></div>`
+          : ""
+        }
+        ${couponCode
+          ? `<div>Coupon:<br><span class="coupon-code">${escapeHtml(couponCode)}</span></div>`
+          : `<div><strong>Discount applied</strong></div>`
+        }
+      </div>
+    `
+    : "";
+
   const hasTreatmentPrice =
     booking.booking_type === "treatment" &&
     (fullPrice > 0 || remainingBalance > 0);
@@ -552,7 +604,7 @@ function buildPaymentBadge(booking){
       ? `<br><span class="action-note payment-amount">${formatMoney(amountPaid)}</span>`
       : "";
 
-    return `${badge}${amountText}${stripeText}`;
+    return `${badge}${amountText}${stripeText}${couponHtml}`;
   }
 
   const outstandingClass = remainingBalance > 0 ? "outstanding" : "settled";
@@ -568,6 +620,7 @@ function buildPaymentBadge(booking){
       <div>Paid: <strong>${formatMoney(amountPaid)}</strong></div>
       <div class="${outstandingClass}">Outstanding: ${outstandingText}</div>
     </div>
+    ${couponHtml}
   `;
 }
 
