@@ -755,6 +755,39 @@ footer{
   .upcoming-meta{font-size:10px}
 }
 
+
+
+.balance-payment-card{
+  text-align:center;
+}
+.balance-payment-summary{
+  margin:14px 0;
+  padding:14px;
+  border-radius:14px;
+  background:#f4f5f3;
+  border:1px solid rgba(36,34,26,.10);
+  font-size:13px;
+  line-height:1.65;
+  text-align:left;
+}
+.balance-qr{
+  min-height:230px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:16px 0;
+}
+.balance-qr img,
+.balance-qr canvas{
+  max-width:100%;
+  height:auto;
+}
+.balance-payment-link{
+  word-break:break-all;
+  font-size:11px;
+  color:rgba(36,34,26,.58);
+}
+
 </style>
 </head>
 
@@ -920,12 +953,30 @@ footer{
     </div>
   </div>
 
+
+
+  <div class="admin-modal" id="balance-payment-modal" aria-hidden="true">
+    <div class="admin-modal-card balance-payment-card">
+      <h2>Take Balance Payment</h2>
+      <p id="balance-payment-intro">Creating a secure Stripe checkout for this appointment…</p>
+      <div id="balance-payment-details" class="balance-payment-summary" style="display:none;"></div>
+      <div id="balance-payment-qr" class="balance-qr"></div>
+      <p id="balance-payment-link" class="balance-payment-link"></p>
+      <p id="balance-payment-status" class="action-note"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" onclick="closeBalancePaymentModal()">Close</button>
+        <a class="btn btn-primary" id="open-balance-checkout" href="#" target="_blank" rel="noopener" style="display:none;">Open Stripe Checkout</a>
+      </div>
+    </div>
+  </div>
+
     <footer>© <span id="footer-brand"></span> | Booking administration</footer>
   </div>
 </div>
 
 <script src="/config.js"></script>
 <script src="/branding.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const CONFIG = window.SITE_CONFIG || {};
 const API_BASE = CONFIG.apiBase || window.location.origin;
@@ -1497,11 +1548,15 @@ async function loadBookings(){
   ? `<span class="action-note">Package completed</span>`
   : ""}  
   
-    ${booking.payment_status !== "paid" && !isCancelled
-  ? `<button class="btn btn-secondary" onclick="markPaid(${Number(booking.id)}, ${Number(booking.remaining_balance || 0)}, ${Number(booking.full_price || 0)}, ${Number(booking.amount_paid || 0)})">
-      ${Number(booking.remaining_balance || 0) > 0 ? "Mark Balance Paid" : "Mark Paid"}
+    ${canTakeStripeBalancePayment(booking) && !isCancelled
+  ? `<button class="btn btn-primary" onclick="openBalancePaymentModal(${Number(booking.id)})">
+      Take Balance Payment
     </button>`
-  : ""}
+  : booking.payment_status !== "paid" && !isCancelled
+    ? `<button class="btn btn-secondary" onclick="markPaid(${Number(booking.id)}, ${Number(booking.remaining_balance || 0)}, ${Number(booking.full_price || 0)}, ${Number(booking.amount_paid || 0)})">
+        ${Number(booking.remaining_balance || 0) > 0 ? "Mark Balance Paid" : "Mark Paid"}
+      </button>`
+    : ""}
 
 ${isCancelled
   ? "—"
@@ -1562,6 +1617,87 @@ async function completeSession(sessionId){
     alert(text || "Could not mark session completed.");
   }
 }
+
+function canTakeStripeBalancePayment(booking){
+  const category = String(booking.treatment_category || "").toLowerCase();
+  return (
+    booking.booking_type === "treatment" &&
+    ["carbon", "fungal"].includes(category) &&
+    booking.status !== "cancelled" &&
+    booking.payment_status !== "paid" &&
+    Number(booking.remaining_balance || 0) > 0 &&
+    !booking.balance_payment_reference
+  );
+}
+
+async function openBalancePaymentModal(bookingId){
+  const modal = document.getElementById("balance-payment-modal");
+  const intro = document.getElementById("balance-payment-intro");
+  const details = document.getElementById("balance-payment-details");
+  const qr = document.getElementById("balance-payment-qr");
+  const checkoutButton = document.getElementById("open-balance-checkout");
+  const linkText = document.getElementById("balance-payment-link");
+  const status = document.getElementById("balance-payment-status");
+
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  intro.textContent = "Creating a secure Stripe checkout for this appointment…";
+  details.style.display = "none";
+  details.innerHTML = "";
+  qr.innerHTML = "";
+  checkoutButton.style.display = "none";
+  checkoutButton.href = "#";
+  linkText.textContent = "";
+  status.textContent = "";
+
+  try {
+    const response = await fetch(`${API_BASE}/api?payment=create-balance-checkout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: bookingId })
+    });
+
+    const text = await response.text();
+    if (!response.ok) throw new Error(text || "The payment checkout could not be created.");
+
+    const data = JSON.parse(text);
+    intro.textContent = "Ask the client to scan this appointment-specific QR code.";
+    details.style.display = "block";
+    details.innerHTML = `
+      <div><strong>Client:</strong> ${escapeHtml(data.client_name || "Client")}</div>
+      <div><strong>Treatment:</strong> ${escapeHtml(data.treatment_name || "Treatment")}</div>
+      <div><strong>Balance due:</strong> ${formatMoney(data.balance_due || 0)}</div>
+    `;
+
+    checkoutButton.href = data.checkout_url;
+    checkoutButton.style.display = "inline-flex";
+    linkText.textContent = data.checkout_url;
+
+    if (typeof QRCode !== "undefined") {
+      new QRCode(qr, {
+        text: data.checkout_url,
+        width: 220,
+        height: 220,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } else {
+      qr.innerHTML = `<p class="action-note">QR library did not load. Use Open Stripe Checkout instead.</p>`;
+    }
+
+    status.textContent = "Coupons can be entered securely in Stripe Checkout.";
+  } catch (error) {
+    intro.textContent = "The secure checkout could not be created.";
+    status.textContent = error.message || "Please try again.";
+  }
+}
+
+function closeBalancePaymentModal(){
+  const modal = document.getElementById("balance-payment-modal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  loadBookings();
+}
+
 async function markPaid(id, remainingBalance = 0, fullPrice = 0, amountAlreadyPaid = 0){
   const suggestedAmount = remainingBalance > 0
     ? remainingBalance
