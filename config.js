@@ -114,6 +114,21 @@ stripeLinksCarbon: {
   fungal_course4_one_foot: "https://buy.stripe.com/bJebJ3daqd9p2Ex2TQ8g00H",
   fungal_course4_both_feet: "https://buy.stripe.com/dRmcN7eeu9Xdenf1PM8g00G"
 },
+  
+  stripePriceIds: {
+  carbon: {
+    single_balance: "price_1Tstu8PGF3tarrf6RubWzHUe",
+    course3_balance: "price_1Tstv3PGF3tarrf6uXvNz8YC"
+  },
+
+  fungal: {
+    single_nail: "",
+    one_foot: "",
+    both_feet: "",
+    course4_one_foot: "",
+    course4_both_feet: ""
+  }
+},
   packages: [
   { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
   { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3465", fullPrice:"\u00A3495", singlePrice:"\u00A395", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
