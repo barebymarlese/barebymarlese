@@ -116,11 +116,18 @@ let selectedPackage;
 
 if (treatmentCategory === "carbon" || treatmentCategory === "fungal") {
   const foundPackage = carbonPackages.find(pkg => pkg.key === packageKey);
+
   if (foundPackage) {
+    const isDeducted = priceType === "deducted";
+
     selectedPackage = {
       label: foundPackage.name,
-      price: foundPackage.price,
-      amount: foundPackage.amount
+      price: isDeducted
+        ? foundPackage.deductedPrice
+        : foundPackage.price,
+      amount: isDeducted
+        ? foundPackage.deductedAmount
+        : foundPackage.amount
     };
   }
 } else if (type === "single") {
