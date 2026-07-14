@@ -122,12 +122,12 @@ stripeLinksCarbon: {
   },
 
   fungal: {
-    single_nail: "",
-    one_foot: "",
-    both_feet: "",
-    course4_one_foot: "",
-    course4_both_feet: ""
-  }
+  single_nail: "price_1TsuZHPGF3tarrf6qNcQntmF",
+  one_foot: "price_1TsuZuPGF3tarrf65fTnJL2y",
+  both_feet: "price_1Tsub0PGF3tarrf6HnhJQEu0",
+  course4_one_foot: "price_1TsubaPGF3tarrf6aQt4fbDD",
+  course4_both_feet: "price_1TsucFPGF3tarrf6N53ZcNXT"
+}
 },
   packages: [
   { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
