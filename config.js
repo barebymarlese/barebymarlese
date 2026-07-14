@@ -53,7 +53,7 @@ Object.assign(window.SITE_CONFIG, {
     adminTitle: "Bookings Admin",
     cancelTitle: "Cancel Appointment",
     depositTitle: "Consultation Deposit",
-    consultationTitle: "Consultation Form",
+    consultationTitle: "Consultation & Patch Test Form",
     treatmentTitle: "Treatment Packages",
     treatmentBookingTitle: "Treatment Booking",
     rescheduleTitle: "Reschedule Appointment"
@@ -67,7 +67,7 @@ Object.assign(window.SITE_CONFIG, {
 
   deposit: {
   label: "Consultation Deposit",
-  heading: "Secure Your Consultation",
+  heading: "Secure Your Consultation & Patch Test",
   amount: "£30",
   amountPence: 3000,
 
@@ -137,7 +137,7 @@ stripeLinksCarbon: {
   { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A31020", fullPrice:"\u00A31050", singlePrice:"\u00A3200", bundleAmount:102000, fullAmount:105000, singleAmount:20000 }
 ],
 
-carbonPackages: [
+laserTreatmentPackages: [
   {
     key: "carbon_single",
     deductedKey: "carbon_single_deducted",
@@ -216,3 +216,7 @@ carbonPackages: [
   }
 
 });
+
+
+// Shared package configuration used by both Carbon and Fungal treatment flows.
+window.SITE_CONFIG.carbonPackages = window.SITE_CONFIG.laserTreatmentPackages;
