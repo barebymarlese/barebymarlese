@@ -1317,19 +1317,32 @@ header .brand *{
 
 <script>
 let turnstileWidgetId = null;
-let turnstileTokenReady = false;
+let turnstileToken = "";
 
 function onTurnstileSuccess(token) {
-  turnstileTokenReady = true;
+  turnstileToken = token || "";
 }
 
 function onTurnstileExpired() {
-  turnstileTokenReady = false;
+  turnstileToken = "";
+}
+
+function onTurnstileError() {
+  turnstileToken = "";
 }
 
 if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
-  document.getElementById("turnstile-container").innerHTML =
-    '<div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileExpired"></div>';
+  const container = document.getElementById("turnstile-container");
+
+  container.innerHTML = `
+    <div
+      class="cf-turnstile"
+      data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8"
+      data-callback="onTurnstileSuccess"
+      data-expired-callback="onTurnstileExpired"
+      data-error-callback="onTurnstileError">
+    </div>
+  `;
 }
 </script>
 
@@ -2038,26 +2051,30 @@ const form = document.getElementById("consultation-form");
       setStatus("Checking security…", "success");
 statusEl.style.display = "block";
 
-if (typeof isLiveDomain !== "undefined" && isLiveDomain && window.turnstile) {
-  if (!turnstileTokenReady) {
-    turnstileTokenReady = false;
-    turnstile.reset();
+if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
+  if (!turnstileToken && window.turnstile) {
+    try {
+      turnstileToken = window.turnstile.getResponse() || "";
+    } catch (error) {
+      turnstileToken = "";
+    }
+  }
 
-    await new Promise((resolve, reject) => {
-      const started = Date.now();
+  if (!turnstileToken) {
+    setStatus(
+      "Security check missing. Please wait for the security check to complete and try again.",
+      "error"
+    );
 
-      const checkToken = setInterval(() => {
-        if (turnstileTokenReady) {
-          clearInterval(checkToken);
-          resolve();
-        }
+    statusEl.style.display = "block";
+    isSubmitting = false;
 
-        if (Date.now() - started > 10000) {
-          clearInterval(checkToken);
-          reject(new Error("Security check could not be completed."));
-        }
-      }, 250);
-    });
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = defaultSubmitLabel;
+    }
+
+    return;
   }
 }
 
@@ -2065,6 +2082,14 @@ setStatus("Sending…", "success");
 statusEl.style.display = "block";
 
 const data = new FormData(form);
+
+if (
+  typeof isLiveDomain !== "undefined" &&
+  isLiveDomain &&
+  turnstileToken
+) {
+  data.set("cf-turnstile-response", turnstileToken);
+}
 
 try{
   const res = await fetch(form.action, {
