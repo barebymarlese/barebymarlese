@@ -627,7 +627,9 @@ if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
       discount_amount,
       price_before_discount,
       reschedule_token,
-      aftercare_sent
+      aftercare_sent,
+      consultation_complete,
+      patch_test_complete
     FROM appointments
     ORDER BY appointment_date ASC, appointment_time ASC
   `).all();
@@ -663,6 +665,38 @@ FROM treatment_sessions
     headers: jsonHeaders
   });
 
+}
+
+if (request.method === "POST" && url.searchParams.get("admin") === "patch-test-complete") {
+  const body = await request.json();
+  const id = Number(body.id);
+  const complete = body.complete !== false ? 1 : 0;
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return new Response("Invalid booking ID", { status: 400 });
+  }
+
+  const booking = await env.DB.prepare(`
+    SELECT id, booking_type
+    FROM appointments
+    WHERE id = ?
+  `).bind(id).first();
+
+  if (!booking || booking.booking_type !== "consultation") {
+    return new Response("Only consultation bookings can be updated", { status: 409 });
+  }
+
+  await env.DB.prepare(`
+    UPDATE appointments
+    SET consultation_complete = ?, patch_test_complete = ?
+    WHERE id = ?
+  `).bind(complete, complete, id).run();
+
+  return new Response(JSON.stringify({
+    success: true,
+    consultation_complete: complete,
+    patch_test_complete: complete
+  }), { headers: jsonHeaders });
 }
 
   if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
@@ -2099,6 +2133,38 @@ const isDepositTreatment =
     treatmentCategory === "fungal"
   );
 
+    if (bookingType === "treatment") {
+      const normalisedEmail = String(email || "").trim().toLowerCase();
+      const normalisedCategory = String(treatmentCategory || "tattoo").trim().toLowerCase();
+
+      if (!normalisedEmail) {
+        return new Response("An email address is required to verify your consultation and patch test.", { status: 400 });
+      }
+
+      const approvedConsultation = await env.DB.prepare(`
+        SELECT id
+        FROM appointments
+        WHERE booking_type = 'consultation'
+          AND LOWER(TRIM(email)) = ?
+          AND status = 'confirmed'
+          AND COALESCE(consultation_complete, 0) = 1
+          AND COALESCE(patch_test_complete, 0) = 1
+          AND (
+            LOWER(COALESCE(treatment_category, 'tattoo')) = ?
+            OR treatment_category IS NULL
+          )
+        ORDER BY appointment_date DESC, appointment_time DESC
+        LIMIT 1
+      `).bind(normalisedEmail, normalisedCategory).first();
+
+      if (!approvedConsultation) {
+        return new Response(
+          "Treatment booking is locked until your consultation and patch test have been completed and approved. Please use the same email address used for your consultation.",
+          { status: 403 }
+        );
+      }
+    }
+
     if (!appointmentDate || !appointmentTime) {
       return new Response("Missing appointment date or time", { status: 400 });
     }
@@ -2152,13 +2218,15 @@ if (blockedDate) {
     remaining_balance,
     coupon_code,
     discount_amount,
-    price_before_discount
+    price_before_discount,
+    consultation_complete,
+    patch_test_complete
   )
   VALUES (
     ?, ?, ?, ?, ?,
     'confirmed',
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?
+    ?, ?, ?, ?, ?, ?, ?, 0, 0
   )`
 )
 .bind(
