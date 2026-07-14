@@ -199,6 +199,381 @@ async function createStripeBalanceCheckout(booking, env) {
   return data;
 }
 
+
+function hexToBytes(hex = "") {
+  if (!hex || hex.length % 2 !== 0) return new Uint8Array();
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = Number.parseInt(hex.slice(i, i + 2), 16);
+  }
+  return bytes;
+}
+
+function safeEqualBytes(a, b) {
+  if (a.length !== b.length) return false;
+  let difference = 0;
+  for (let i = 0; i < a.length; i++) difference |= a[i] ^ b[i];
+  return difference === 0;
+}
+
+async function verifyStripeWebhookSignature(rawBody, signatureHeader, webhookSecret) {
+  if (!rawBody || !signatureHeader || !webhookSecret) return false;
+
+  const parts = signatureHeader.split(",");
+  let timestamp = "";
+  const signatures = [];
+
+  for (const part of parts) {
+    const separator = part.indexOf("=");
+    if (separator === -1) continue;
+    const key = part.slice(0, separator);
+    const value = part.slice(separator + 1);
+    if (key === "t") timestamp = value;
+    if (key === "v1") signatures.push(value);
+  }
+
+  const timestampNumber = Number(timestamp);
+  if (!timestamp || !Number.isFinite(timestampNumber) || signatures.length === 0) {
+    return false;
+  }
+
+  // Reject replayed webhook requests older than five minutes.
+  if (Math.abs(Date.now() / 1000 - timestampNumber) > 300) return false;
+
+  const signedPayload = `${timestamp}.${rawBody}`;
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(webhookSecret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  const calculated = new Uint8Array(
+    await crypto.subtle.sign(
+      "HMAC",
+      key,
+      new TextEncoder().encode(signedPayload)
+    )
+  );
+
+  return signatures.some(signature =>
+    safeEqualBytes(calculated, hexToBytes(signature))
+  );
+}
+
+async function applyStripeBalancePayment(sessionId, env) {
+  if (!sessionId || !sessionId.startsWith("cs_")) {
+    throw new Error("Invalid Stripe Checkout Session.");
+  }
+
+  const stripe = await getStripeCheckout(sessionId, env);
+
+  if (!stripe || stripe.payment_status !== "paid" || stripe.status !== "complete") {
+    throw new Error("Stripe balance payment is not complete.");
+  }
+
+  if (stripe.currency && stripe.currency !== "gbp") {
+    throw new Error("Unexpected Stripe payment currency.");
+  }
+
+  if (stripe.metadata?.payment_purpose !== "treatment_balance") {
+    throw new Error("This Checkout Session is not a treatment balance payment.");
+  }
+
+  const bookingId = Number(
+    stripe.metadata?.appointment_id || stripe.client_reference_id
+  );
+
+  if (!Number.isInteger(bookingId) || bookingId <= 0) {
+    throw new Error("Stripe payment is missing its appointment reference.");
+  }
+
+  const booking = await env.DB.prepare(`
+    SELECT
+      id,
+      client_name,
+      treatment_name,
+      booking_type,
+      treatment_category,
+      payment_status,
+      full_price,
+      amount_paid,
+      remaining_balance,
+      coupon_code,
+      discount_amount,
+      price_before_discount,
+      balance_payment_reference
+    FROM appointments
+    WHERE id = ?
+  `).bind(bookingId).first();
+
+  if (!booking) throw new Error("The linked appointment was not found.");
+
+  const category = String(booking.treatment_category || "").toLowerCase();
+  if (booking.booking_type !== "treatment" || !["carbon", "fungal"].includes(category)) {
+    throw new Error("The linked appointment is not eligible for a balance payment.");
+  }
+
+  if (booking.balance_payment_reference === stripe.id) {
+    return {
+      success: true,
+      already_applied: true,
+      booking_id: booking.id,
+      client_name: booking.client_name,
+      treatment_name: booking.treatment_name,
+      payment_status: booking.payment_status,
+      amount_paid: Number(booking.amount_paid || 0),
+      remaining_balance: Number(booking.remaining_balance || 0),
+      coupon_code: booking.coupon_code || null,
+      discount_amount: Number(booking.discount_amount || 0),
+      price_before_discount: Number(booking.price_before_discount || booking.full_price || 0)
+    };
+  }
+
+  if (booking.balance_payment_reference) {
+    throw new Error("A different balance payment has already been applied.");
+  }
+
+  const balanceCashPaid = Number(stripe.amount_total || 0) / 100;
+  const balanceDiscount = Number(stripe.total_details?.amount_discount || 0) / 100;
+  const balanceCoupon =
+    stripe.total_details?.breakdown?.discounts?.[0]?.discount?.promotion_code?.code || null;
+
+  const fullPrice = Number(booking.full_price || 0);
+  const existingPaid = Number(booking.amount_paid || 0);
+  const existingDiscount = Number(booking.discount_amount || 0);
+  const newAmountPaid = existingPaid + balanceCashPaid;
+  const newDiscountAmount = existingDiscount + balanceDiscount;
+  const newRemainingBalance = Math.max(
+    0,
+    fullPrice - newAmountPaid - newDiscountAmount
+  );
+  const newPaymentStatus = newRemainingBalance <= 0.005 ? "paid" : "deposit_paid";
+
+  const update = await env.DB.prepare(`
+    UPDATE appointments
+    SET
+      amount_paid = ?,
+      payment_status = ?,
+      remaining_balance = ?,
+      coupon_code = COALESCE(?, coupon_code),
+      discount_amount = ?,
+      price_before_discount = CASE
+        WHEN full_price > 0 THEN full_price
+        ELSE COALESCE(price_before_discount, 0)
+      END,
+      balance_payment_reference = ?
+    WHERE id = ?
+      AND balance_payment_reference IS NULL
+  `).bind(
+    newAmountPaid,
+    newPaymentStatus,
+    newRemainingBalance,
+    balanceCoupon,
+    newDiscountAmount,
+    stripe.id,
+    booking.id
+  ).run();
+
+  if (!update.meta?.changes) {
+    const latest = await env.DB.prepare(`
+      SELECT balance_payment_reference
+      FROM appointments
+      WHERE id = ?
+    `).bind(booking.id).first();
+
+    if (latest?.balance_payment_reference === stripe.id) {
+      return applyStripeBalancePayment(stripe.id, env);
+    }
+    throw new Error("The balance payment could not be applied.");
+  }
+
+  return {
+    success: true,
+    already_applied: false,
+    booking_id: booking.id,
+    client_name: booking.client_name,
+    treatment_name: booking.treatment_name,
+    checkout_session_id: stripe.id,
+    balance_cash_paid: balanceCashPaid,
+    balance_discount: balanceDiscount,
+    amount_paid: newAmountPaid,
+    remaining_balance: newRemainingBalance,
+    payment_status: newPaymentStatus,
+    coupon_code: balanceCoupon || booking.coupon_code || null,
+    discount_amount: newDiscountAmount,
+    price_before_discount: fullPrice
+  };
+}
+
+if (
+  request.method === "POST" &&
+  url.searchParams.get("payment") === "create-balance-checkout"
+) {
+  try {
+    const body = await request.json();
+    const bookingId = Number(body.id);
+
+    if (!Number.isInteger(bookingId) || bookingId <= 0) {
+      return new Response("Invalid booking ID", { status: 400 });
+    }
+
+    const booking = await env.DB.prepare(`
+      SELECT
+        id,
+        client_name,
+        email,
+        status,
+        booking_type,
+        treatment_category,
+        treatment_name,
+        payment_status,
+        full_price,
+        amount_paid,
+        remaining_balance,
+        balance_payment_reference
+      FROM appointments
+      WHERE id = ?
+    `).bind(bookingId).first();
+
+    if (!booking) return new Response("Booking not found", { status: 404 });
+
+    const category = String(booking.treatment_category || "").toLowerCase();
+    if (booking.booking_type !== "treatment" || !["carbon", "fungal"].includes(category)) {
+      return new Response(
+        "Balance checkout is only available for Carbon and Fungal treatments.",
+        { status: 400 }
+      );
+    }
+
+    if (booking.status === "cancelled") {
+      return new Response(
+        "A balance payment cannot be taken for a cancelled booking.",
+        { status: 409 }
+      );
+    }
+
+    if (
+      booking.payment_status === "paid" ||
+      Number(booking.remaining_balance || 0) <= 0
+    ) {
+      return new Response("This appointment has already been paid in full.", {
+        status: 409
+      });
+    }
+
+    if (booking.balance_payment_reference) {
+      return new Response(
+        "A balance payment has already been recorded for this appointment.",
+        { status: 409 }
+      );
+    }
+
+    const checkout = await createStripeBalanceCheckout(booking, env);
+
+    return new Response(JSON.stringify({
+      success: true,
+      booking_id: booking.id,
+      client_name: booking.client_name,
+      treatment_name: booking.treatment_name,
+      balance_due: Number(booking.remaining_balance || 0),
+      checkout_session_id: checkout.id,
+      checkout_url: checkout.url
+    }), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Create balance Checkout error",
+      error.stack || error.message || error
+    );
+    return new Response(
+      error.message || "The balance payment link could not be created.",
+      { status: 500 }
+    );
+  }
+}
+
+if (
+  request.method === "POST" &&
+  url.searchParams.get("stripe") === "webhook"
+) {
+  if (!env.STRIPE_WEBHOOK_SECRET) {
+    return new Response("Stripe webhook secret is not configured", { status: 500 });
+  }
+
+  const rawBody = await request.text();
+  const signature = request.headers.get("Stripe-Signature") || "";
+  const validSignature = await verifyStripeWebhookSignature(
+    rawBody,
+    signature,
+    env.STRIPE_WEBHOOK_SECRET
+  );
+
+  if (!validSignature) {
+    return new Response("Invalid Stripe webhook signature", { status: 400 });
+  }
+
+  let event;
+  try {
+    event = JSON.parse(rawBody);
+  } catch {
+    return new Response("Invalid webhook payload", { status: 400 });
+  }
+
+  try {
+    if (event.type === "checkout.session.completed") {
+      const session = event.data?.object;
+      if (session?.metadata?.payment_purpose === "treatment_balance") {
+        await applyStripeBalancePayment(session.id, env);
+      }
+    }
+
+    return new Response(JSON.stringify({ received: true }), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Stripe balance webhook error",
+      error.stack || error.message || error
+    );
+    return new Response("Webhook processing failed", { status: 500 });
+  }
+}
+
+if (
+  request.method === "GET" &&
+  url.searchParams.get("payment") === "balance-status"
+) {
+  const sessionId = url.searchParams.get("session_id") || "";
+
+  if (!sessionId.startsWith("cs_")) {
+    return new Response(JSON.stringify({
+      success: false,
+      message: "Invalid payment reference."
+    }), { status: 400, headers: jsonHeaders });
+  }
+
+  try {
+    const result = await applyStripeBalancePayment(sessionId, env);
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({
+      success: false,
+      processing: true,
+      message: "Your payment is still being confirmed."
+    }), { status: 202, headers: jsonHeaders });
+  }
+}
+
 if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
 
   const bookings = await env.DB.prepare(`
