@@ -108,11 +108,11 @@ stripeLinksCarbon: {
   carbon_course3_deducted: "https://buy.stripe.com/4gMfZj8Uab1h1AtfGC8g00E",
 
   // Fungal treatment balance payment links
-  fungal_single_nail: "https://buy.stripe.com/3cIdRbfiy0mD7YR3XU8g00x",
-  fungal_one_foot: "https://buy.stripe.com/5kQdRb0nE5GX4MF0LI8g00y",
-  fungal_both_feet: "https://buy.stripe.com/7sY00lfiy2uL2Exbqm8g00z",
-  fungal_course4_one_foot: "https://buy.stripe.com/4gM9AVgmC1qH6UN0LI8g00A",
-  fungal_course4_both_feet: "https://buy.stripe.com/dRmbJ39Ye7P54MF51Y8g00B"
+  fungal_single_nail: "https://buy.stripe.com/14A7sNc6m0mDfrjbqm8g00K",
+  fungal_one_foot: "https://buy.stripe.com/cNi7sN0nEb1h7YRcuq8g00J",
+  fungal_both_feet: "https://buy.stripe.com/cNi7sN4DU3yP2Ex8ea8g00I",
+  fungal_course4_one_foot: "https://buy.stripe.com/bJebJ3daqd9p2Ex2TQ8g00H",
+  fungal_course4_both_feet: "https://buy.stripe.com/dRmcN7eeu9Xdenf1PM8g00G"
 },
   packages: [
   { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
