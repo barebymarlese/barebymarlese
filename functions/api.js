@@ -107,7 +107,99 @@ export async function onRequest(context) {
 
     return await response.json();
   }
-  if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
+
+async function createStripeBalanceCheckout(booking, env) {
+  if (!env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not configured.");
+  }
+
+  const remainingBalance = Number(booking.remaining_balance || 0);
+  const balancePence = Math.round(remainingBalance * 100);
+
+  if (!Number.isInteger(balancePence) || balancePence <= 0) {
+    throw new Error("This booking has no valid remaining balance.");
+  }
+
+  const form = new URLSearchParams();
+
+  form.set("mode", "payment");
+
+  form.set(
+    "success_url",
+    "https://barebymarlese.com/payment-complete.html" +
+    "?session_id={CHECKOUT_SESSION_ID}"
+  );
+
+  form.set(
+    "cancel_url",
+    "https://barebymarlese.com/payment-cancelled.html"
+  );
+
+  form.set("client_reference_id", String(booking.id));
+  form.set("metadata[appointment_id]", String(booking.id));
+  form.set("metadata[payment_purpose]", "treatment_balance");
+
+  form.set(
+    "payment_intent_data[metadata][appointment_id]",
+    String(booking.id)
+  );
+
+  form.set(
+    "payment_intent_data[metadata][payment_purpose]",
+    "treatment_balance"
+  );
+
+  form.set("allow_promotion_codes", "true");
+
+  if (booking.email) {
+    form.set("customer_email", booking.email);
+  }
+
+  form.set("line_items[0][quantity]", "1");
+  form.set(
+    "line_items[0][price_data][currency]",
+    "gbp"
+  );
+  form.set(
+    "line_items[0][price_data][unit_amount]",
+    String(balancePence)
+  );
+  form.set(
+    "line_items[0][price_data][product_data][name]",
+    `${booking.treatment_name || "Treatment"} – Remaining Balance`
+  );
+
+  const response = await fetch(
+    "https://api.stripe.com/v1/checkout/sessions",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: form.toString()
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data?.error?.message ||
+      "Stripe Checkout Session could not be created."
+    );
+  }
+
+  if (!data.id || !data.url) {
+    throw new Error(
+      "Stripe did not return a Checkout URL."
+    );
+  }
+
+  return data;
+}
+
+if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
 
   const bookings = await env.DB.prepare(`
     SELECT
