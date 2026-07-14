@@ -163,26 +163,24 @@ const packageType = String(
   booking.package_type || ""
 ).toLowerCase();
 
-let stripePriceId = "";
+const stripePriceLookup = {
+  carbon: {
+    single_session: env.STRIPE_PRICE_CARBON_SINGLE_BALANCE,
+    three_sessions: env.STRIPE_PRICE_CARBON_COURSE3_BALANCE,
+    "3_sessions": env.STRIPE_PRICE_CARBON_COURSE3_BALANCE
+  },
 
-if (
-  category === "carbon" &&
-  packageType === "single_session"
-) {
-  stripePriceId =
-    env.STRIPE_PRICE_CARBON_SINGLE_BALANCE;
-}
+  fungal: {
+    single_nail: env.STRIPE_PRICE_FUNGAL_SINGLE_NAIL_BALANCE,
+    one_foot: env.STRIPE_PRICE_FUNGAL_ONE_FOOT_BALANCE,
+    both_feet: env.STRIPE_PRICE_FUNGAL_BOTH_FEET_BALANCE,
+    course4_one_foot: env.STRIPE_PRICE_FUNGAL_COURSE4_ONE_FOOT_BALANCE,
+    course4_both_feet: env.STRIPE_PRICE_FUNGAL_COURSE4_BOTH_FEET_BALANCE
+  }
+};
 
-if (
-  category === "carbon" &&
-  (
-    packageType === "three_sessions" ||
-    packageType === "3_sessions"
-  )
-) {
-  stripePriceId =
-    env.STRIPE_PRICE_CARBON_COURSE3_BALANCE;
-}
+const stripePriceId =
+  stripePriceLookup[category]?.[packageType] || "";
 
 if (!stripePriceId?.startsWith("price_")) {
   throw new Error(
