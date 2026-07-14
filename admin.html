@@ -417,6 +417,189 @@ footer{
 .modal-slot.selected{outline:3px solid rgba(94,105,89,.22);background:var(--olive-dark)}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:16px}
 
+/* CALENDAR DASHBOARD */
+.view-tabs{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.view-tab.active{
+  background:var(--olive);
+  color:#fff;
+}
+.admin-view{display:none}
+.admin-view.active{display:block}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.65fr) minmax(280px,.75fr);
+  gap:18px;
+  align-items:start;
+}
+.calendar-card,
+.upcoming-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+}
+.calendar-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.calendar-title{
+  margin:0;
+  color:var(--olive);
+  font-size:20px;
+}
+.calendar-nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.calendar-weekdays,
+.calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+}
+.calendar-weekdays{
+  border-bottom:1px solid var(--line);
+}
+.calendar-weekday{
+  padding:10px 6px;
+  text-align:center;
+  color:var(--olive);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.calendar-day{
+  min-height:118px;
+  padding:8px;
+  border-right:1px solid rgba(36,34,26,.08);
+  border-bottom:1px solid rgba(36,34,26,.08);
+  background:#fff;
+  overflow:hidden;
+}
+.calendar-day:nth-child(7n){border-right:0}
+.calendar-day.outside{background:#f6f7f4;color:rgba(36,34,26,.35)}
+.calendar-day.today{
+  box-shadow:inset 0 0 0 2px rgba(94,105,89,.55);
+  background:rgba(94,105,89,.04);
+}
+.day-number{
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+.calendar-event{
+  display:block;
+  width:100%;
+  border:0;
+  text-align:left;
+  margin:4px 0 0;
+  padding:6px 7px;
+  border-radius:8px;
+  font-family:inherit;
+  font-size:10px;
+  line-height:1.35;
+  font-weight:600;
+  cursor:pointer;
+  color:var(--ink);
+  background:#eef0eb;
+}
+.calendar-event.consultation{background:rgba(94,105,89,.14)}
+.calendar-event.tattoo{background:rgba(91,103,117,.14)}
+.calendar-event.carbon{background:rgba(143,94,20,.12)}
+.calendar-event.fungal{background:rgba(47,125,50,.12)}
+.calendar-event:hover{filter:brightness(.98)}
+.event-time{font-weight:700}
+.event-more{
+  margin-top:5px;
+  font-size:10px;
+  color:rgba(36,34,26,.58);
+}
+.upcoming-card h2{
+  margin:0 0 12px;
+  color:var(--olive);
+  font-size:17px;
+}
+.upcoming-section + .upcoming-section{margin-top:20px}
+.upcoming-list{display:flex;flex-direction:column;gap:8px}
+.upcoming-item{
+  border:1px solid rgba(36,34,26,.10);
+  border-radius:12px;
+  padding:10px;
+  background:#f8f8f6;
+}
+.upcoming-item strong{display:block;color:var(--ink);font-size:13px}
+.upcoming-meta{margin-top:4px;font-size:11px;line-height:1.5;color:rgba(36,34,26,.68)}
+.empty-state{
+  font-size:12px;
+  line-height:1.6;
+  color:rgba(36,34,26,.58);
+}
+.calendar-legend{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+  font-size:11px;
+  color:rgba(36,34,26,.68);
+}
+.legend-item{display:inline-flex;align-items:center;gap:5px}
+.legend-dot{width:10px;height:10px;border-radius:999px;background:#eef0eb}
+.legend-dot.consultation{background:rgba(94,105,89,.55)}
+.legend-dot.tattoo{background:rgba(91,103,117,.55)}
+.legend-dot.carbon{background:rgba(143,94,20,.55)}
+.legend-dot.fungal{background:rgba(47,125,50,.55)}
+.booking-popover{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(36,34,26,.42);
+}
+.booking-popover.open{display:flex}
+.booking-popover-card{
+  width:100%;
+  max-width:480px;
+  background:#f8f8f6;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 18px 60px rgba(36,34,26,.24);
+}
+.booking-popover-card h2{margin:0 0 8px;color:var(--olive);font-size:20px}
+.booking-detail-grid{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:8px 12px;
+  margin:16px 0;
+  font-size:13px;
+  line-height:1.5;
+}
+.booking-detail-grid dt{font-weight:700;color:var(--olive)}
+.booking-detail-grid dd{margin:0;color:rgba(36,34,26,.78)}
+@media(max-width:980px){
+  .dashboard-grid{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .calendar-card{padding:10px}
+  .calendar-day{min-height:82px;padding:5px}
+  .calendar-event{font-size:9px;padding:5px}
+  .calendar-weekday{font-size:9px;padding:8px 2px}
+  .event-client{display:none}
+}
+
 </style>
 </head>
 
@@ -440,13 +623,64 @@ footer{
       <div class="toolbar">
         <div class="summary-pill" id="summary-pill">Loading bookings...</div>
         <div class="actions">
-          <button class="btn btn-secondary" type="button" onclick="loadBookings()">Refresh</button>
+          <div class="view-tabs">
+            <button class="btn btn-secondary view-tab active" id="calendar-tab" type="button" onclick="showAdminView('calendar')">Calendar</button>
+            <button class="btn btn-secondary view-tab" id="bookings-tab" type="button" onclick="showAdminView('bookings')">Manage Bookings</button>
+          </div>
+          <button class="btn btn-secondary" type="button" onclick="refreshAdmin()">Refresh</button>
           <a class="btn btn-primary" href="/booking.html">Open Booking Page</a>
           <a class="btn btn-primary" href="/admin_pricing.html">Pricing & QR Codes</a>
         </div>
       </div>
 
       <div class="content">
+
+        <section id="calendar-view" class="admin-view active">
+          <div class="dashboard-grid">
+            <div class="calendar-card">
+              <div class="calendar-header">
+                <h2 class="calendar-title" id="calendar-title">Calendar</h2>
+                <div class="calendar-nav">
+                  <button class="btn btn-secondary" type="button" onclick="changeCalendarMonth(-1)">Previous</button>
+                  <button class="btn btn-secondary" type="button" onclick="goToToday()">Today</button>
+                  <button class="btn btn-secondary" type="button" onclick="changeCalendarMonth(1)">Next</button>
+                </div>
+              </div>
+              <div class="calendar-weekdays">
+                <div class="calendar-weekday">Mon</div>
+                <div class="calendar-weekday">Tue</div>
+                <div class="calendar-weekday">Wed</div>
+                <div class="calendar-weekday">Thu</div>
+                <div class="calendar-weekday">Fri</div>
+                <div class="calendar-weekday">Sat</div>
+                <div class="calendar-weekday">Sun</div>
+              </div>
+              <div class="calendar-grid" id="calendar-grid"></div>
+              <div class="calendar-legend">
+                <span class="legend-item"><span class="legend-dot consultation"></span>Consultation</span>
+                <span class="legend-item"><span class="legend-dot tattoo"></span>Tattoo</span>
+                <span class="legend-item"><span class="legend-dot carbon"></span>Carbon</span>
+                <span class="legend-item"><span class="legend-dot fungal"></span>Fungal nail</span>
+              </div>
+            </div>
+
+            <aside class="upcoming-card">
+              <div class="upcoming-section">
+                <h2>Today</h2>
+                <div id="today-list" class="upcoming-list"><div class="empty-state">Loading appointments...</div></div>
+              </div>
+              <div class="upcoming-section">
+                <h2>Upcoming</h2>
+                <div id="upcoming-list" class="upcoming-list"><div class="empty-state">Loading appointments...</div></div>
+              </div>
+              <div class="upcoming-section">
+                <button class="btn btn-primary" type="button" style="width:100%;" onclick="showAdminView('bookings')">Open Manage Bookings</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="bookings-view" class="admin-view">
 
   <div style="background:white;border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:18px;">
     <h2 style="margin:0 0 12px;font-size:16px;color:var(--olive);">Block Dates</h2>
@@ -486,10 +720,20 @@ footer{
             <tbody id="bookings-body"></tbody>
           </table>
         </div>
+        </section>
       </div>
     </div>
 
-
+  <div class="booking-popover" id="booking-popover" aria-hidden="true">
+    <div class="booking-popover-card">
+      <h2 id="booking-popover-title">Booking details</h2>
+      <div id="booking-popover-content"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" onclick="closeBookingPopover()">Close</button>
+        <button class="btn btn-primary" type="button" onclick="openSelectedBookingInTable()">Open in Manage Bookings</button>
+      </div>
+    </div>
+  </div>
 
   <div class="admin-modal" id="session-modal" aria-hidden="true">
     <div class="admin-modal-card">
@@ -520,6 +764,10 @@ const API_BASE = CONFIG.apiBase || window.location.origin;
 
 let activeAdminSession = null;
 let expandedPackageSessions = new Set();
+let adminBookings = [];
+let calendarCursor = new Date();
+calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
+let selectedCalendarBookingId = null;
 
 const pageTitle = document.getElementById("page-title");
 
@@ -781,6 +1029,222 @@ function buildSessionInfo(booking){
   `;
 }
   
+
+function showAdminView(view){
+  const calendarView = document.getElementById("calendar-view");
+  const bookingsView = document.getElementById("bookings-view");
+  const calendarTab = document.getElementById("calendar-tab");
+  const bookingsTab = document.getElementById("bookings-tab");
+
+  const showCalendar = view === "calendar";
+  calendarView.classList.toggle("active", showCalendar);
+  bookingsView.classList.toggle("active", !showCalendar);
+  calendarTab.classList.toggle("active", showCalendar);
+  bookingsTab.classList.toggle("active", !showCalendar);
+
+  if (showCalendar) renderCalendar();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function refreshAdmin(){
+  loadBookings();
+  loadBlockedDates();
+}
+
+function toLocalDateString(date){
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getTreatmentClass(booking){
+  const text = `${booking.treatment_name || ""} ${booking.package_type || ""} ${booking.treatment_category || ""}`.toLowerCase();
+  if (booking.booking_type !== "treatment") return "consultation";
+  if (text.includes("carbon")) return "carbon";
+  if (text.includes("fungal") || text.includes("toenail") || text.includes("nail")) return "fungal";
+  return "tattoo";
+}
+
+function getCalendarAppointments(){
+  const appointments = [];
+
+  adminBookings.forEach(booking => {
+    if (String(booking.status || "").toLowerCase() === "cancelled") return;
+
+    if (booking.booking_type === "treatment" && Array.isArray(booking.sessions) && booking.sessions.length) {
+      booking.sessions.forEach(session => {
+        if (
+          String(session.status || "").toLowerCase() === "booked" &&
+          session.appointment_date &&
+          session.appointment_time
+        ) {
+          appointments.push({
+            bookingId: booking.id,
+            date: session.appointment_date,
+            time: session.appointment_time,
+            client: booking.client_name || "Client",
+            type: getTreatmentClass(booking),
+            label: `${booking.treatment_name || formatPackageType(booking.package_type)} · Session ${session.session_number}`,
+            booking,
+            session
+          });
+        }
+      });
+      return;
+    }
+
+    if (booking.appointment_date && booking.appointment_time) {
+      appointments.push({
+        bookingId: booking.id,
+        date: booking.appointment_date,
+        time: booking.appointment_time,
+        client: booking.client_name || "Client",
+        type: getTreatmentClass(booking),
+        label: booking.booking_type === "treatment"
+          ? (booking.treatment_name || formatPackageType(booking.package_type))
+          : "Consultation",
+        booking,
+        session: null
+      });
+    }
+  });
+
+  return appointments.sort((a,b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+}
+
+function renderCalendar(){
+  const grid = document.getElementById("calendar-grid");
+  const title = document.getElementById("calendar-title");
+  if (!grid || !title) return;
+
+  title.textContent = calendarCursor.toLocaleDateString("en-GB", {
+    month:"long",
+    year:"numeric"
+  });
+
+  const year = calendarCursor.getFullYear();
+  const month = calendarCursor.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const mondayIndex = (firstDay.getDay() + 6) % 7;
+  const gridStart = new Date(year, month, 1 - mondayIndex);
+  const today = toLocalDateString(new Date());
+  const appointments = getCalendarAppointments();
+
+  let html = "";
+
+  for (let i = 0; i < 42; i++) {
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + i);
+    const dateString = toLocalDateString(date);
+    const outside = date.getMonth() !== month;
+    const dayAppointments = appointments.filter(item => item.date === dateString);
+    const visible = dayAppointments.slice(0, 3);
+
+    html += `
+      <div class="calendar-day ${outside ? "outside" : ""} ${dateString === today ? "today" : ""}">
+        <div class="day-number">${date.getDate()}</div>
+        ${visible.map(item => `
+          <button class="calendar-event ${escapeHtml(item.type)}" type="button" onclick="openCalendarBooking(${Number(item.bookingId)}, '${escapeHtml(item.date)}', '${escapeHtml(item.time)}')">
+            <span class="event-time">${escapeHtml(item.time)}</span>
+            <span class="event-client"> · ${escapeHtml(item.client)}</span><br>
+            ${escapeHtml(item.label)}
+          </button>
+        `).join("")}
+        ${dayAppointments.length > 3 ? `<div class="event-more">+${dayAppointments.length - 3} more</div>` : ""}
+      </div>
+    `;
+  }
+
+  grid.innerHTML = html;
+  renderUpcomingLists();
+}
+
+function renderUpcomingLists(){
+  const todayList = document.getElementById("today-list");
+  const upcomingList = document.getElementById("upcoming-list");
+  if (!todayList || !upcomingList) return;
+
+  const today = toLocalDateString(new Date());
+  const appointments = getCalendarAppointments();
+  const todayAppointments = appointments.filter(item => item.date === today);
+  const upcoming = appointments.filter(item => item.date > today).slice(0, 8);
+
+  const itemHtml = item => `
+    <div class="upcoming-item" onclick="openCalendarBooking(${Number(item.bookingId)}, '${escapeHtml(item.date)}', '${escapeHtml(item.time)}')" style="cursor:pointer;">
+      <strong>${escapeHtml(item.time)} · ${escapeHtml(item.client)}</strong>
+      <div class="upcoming-meta">${escapeHtml(item.label)}<br>${escapeHtml(item.date)}</div>
+    </div>
+  `;
+
+  todayList.innerHTML = todayAppointments.length
+    ? todayAppointments.map(itemHtml).join("")
+    : `<div class="empty-state">No active appointments today.</div>`;
+
+  upcomingList.innerHTML = upcoming.length
+    ? upcoming.map(itemHtml).join("")
+    : `<div class="empty-state">No upcoming active appointments found.</div>`;
+}
+
+function changeCalendarMonth(amount){
+  calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth() + amount, 1);
+  renderCalendar();
+}
+
+function goToToday(){
+  const now = new Date();
+  calendarCursor = new Date(now.getFullYear(), now.getMonth(), 1);
+  renderCalendar();
+}
+
+function openCalendarBooking(bookingId, date, time){
+  const booking = adminBookings.find(item => Number(item.id) === Number(bookingId));
+  if (!booking) return;
+
+  selectedCalendarBookingId = bookingId;
+  const popover = document.getElementById("booking-popover");
+  const title = document.getElementById("booking-popover-title");
+  const content = document.getElementById("booking-popover-content");
+
+  title.textContent = booking.client_name || "Booking details";
+  content.innerHTML = `
+    <dl class="booking-detail-grid">
+      <dt>Date</dt><dd>${escapeHtml(date)}</dd>
+      <dt>Time</dt><dd>${escapeHtml(time)}</dd>
+      <dt>Type</dt><dd>${escapeHtml(booking.booking_type || "consultation")}</dd>
+      <dt>Treatment</dt><dd>${escapeHtml(booking.treatment_name || formatPackageType(booking.package_type) || "Consultation")}</dd>
+      <dt>Payment</dt><dd>${escapeHtml(booking.payment_status || "unpaid")} ${Number(booking.amount_paid || 0) > 0 ? `· ${formatMoney(booking.amount_paid)}` : ""}</dd>
+      <dt>Status</dt><dd>${escapeHtml(booking.status || "confirmed")}</dd>
+      <dt>Phone</dt><dd>${escapeHtml(booking.phone || "Not provided")}</dd>
+      <dt>Email</dt><dd>${escapeHtml(booking.email || "Not provided")}</dd>
+    </dl>
+  `;
+
+  popover.classList.add("open");
+  popover.setAttribute("aria-hidden", "false");
+}
+
+function closeBookingPopover(){
+  const popover = document.getElementById("booking-popover");
+  popover.classList.remove("open");
+  popover.setAttribute("aria-hidden", "true");
+}
+
+function openSelectedBookingInTable(){
+  closeBookingPopover();
+  showAdminView("bookings");
+
+  setTimeout(() => {
+    const row = document.querySelector(`tr[data-booking-id="${selectedCalendarBookingId}"]`);
+    if (row) {
+      row.scrollIntoView({behavior:"smooth", block:"center"});
+      row.style.background = "rgba(94,105,89,.12)";
+      setTimeout(() => row.style.background = "", 1800);
+    }
+  }, 100);
+}
+
+
 async function loadBookings(){
   const message = document.getElementById("message");
   const table = document.getElementById("bookings-table");
@@ -801,10 +1265,14 @@ async function loadBookings(){
     }
 
     const bookings = await res.json();
+    adminBookings = Array.isArray(bookings) ? bookings : [];
+    renderCalendar();
 
     if(!bookings.length){
       message.textContent = "No bookings found.";
       summary.textContent = "0 bookings";
+      adminBookings = [];
+      renderCalendar();
       return;
     }
 
@@ -815,6 +1283,7 @@ async function loadBookings(){
     bookings.forEach(booking => {
       const isCancelled = booking.status === "cancelled";
       const row = document.createElement("tr");
+      row.dataset.bookingId = String(booking.id);
 
       row.innerHTML = `
         <td><div class="client-name">${escapeHtml(booking.client_name || "Client")}</div></td>
@@ -865,6 +1334,8 @@ ${isCancelled
     message.style.display = "block";
     message.textContent = "Could not load bookings.";
     summary.textContent = "Unable to load";
+    adminBookings = [];
+    renderCalendar();
   }
 }
 
@@ -1288,6 +1759,20 @@ async function unblockDate(blockDateValue){
   }
 }
 
+document.getElementById("booking-popover")?.addEventListener("click", function(event){
+  if (event.target === this) closeBookingPopover();
+});
+
+document.addEventListener("keydown", function(event){
+  if (event.key === "Escape") {
+    closeBookingPopover();
+    if (document.getElementById("session-modal")?.classList.contains("open")) {
+      closeSessionModal();
+    }
+  }
+});
+
+showAdminView("calendar");
 loadBookings();
 loadBlockedDates();
 </script>
