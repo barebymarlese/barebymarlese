@@ -487,19 +487,17 @@ footer{
   overflow:hidden;
 }
 .calendar-day:nth-child(7n){border-right:0}
-.calendar-day.outside{background:#f6f7f4;color:rgba(36,34,26,.35)}
+.calendar-day.empty{
+  background:#f7f8f5;
+  min-height:118px;
+}
 .calendar-day.today{
   box-shadow:inset 0 0 0 2px rgba(94,105,89,.55);
   background:rgba(94,105,89,.04);
 }
 .calendar-day.blocked{
-  background:var(--olive-dark);
+  background:#7f8b79;
   color:#fff;
-}
-.calendar-day.blocked.outside{
-  background:var(--olive-dark);
-  color:#fff;
-  opacity:.92;
 }
 .calendar-day.blocked .day-number{
   color:#fff;
@@ -587,7 +585,7 @@ footer{
 .legend-dot.tattoo{background:rgba(91,103,117,.55)}
 .legend-dot.carbon{background:rgba(143,94,20,.55)}
 .legend-dot.fungal{background:rgba(47,125,50,.55)}
-.legend-dot.blocked{background:var(--olive-dark)}
+.legend-dot.blocked{background:#7f8b79}
 .booking-popover{
   position:fixed;
   inset:0;
@@ -625,6 +623,7 @@ footer{
 @media(max-width:700px){
   .calendar-card{padding:10px}
   .calendar-day{min-height:82px;padding:5px}
+  .calendar-day.empty{min-height:82px}
   .calendar-event{font-size:9px;padding:5px}
   .calendar-weekday{font-size:9px;padding:8px 2px}
   .event-client{display:none}
@@ -1181,24 +1180,30 @@ function renderCalendar(){
   const month = calendarCursor.getMonth();
   const firstDay = new Date(year, month, 1);
   const mondayIndex = (firstDay.getDay() + 6) % 7;
-  const gridStart = new Date(year, month, 1 - mondayIndex);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const totalCells = Math.ceil((mondayIndex + daysInMonth) / 7) * 7;
   const today = toLocalDateString(new Date());
   const appointments = getCalendarAppointments();
 
   let html = "";
 
-  for (let i = 0; i < 42; i++) {
-    const date = new Date(gridStart);
-    date.setDate(gridStart.getDate() + i);
+  for (let cell = 0; cell < totalCells; cell++) {
+    const dayNumber = cell - mondayIndex + 1;
+
+    if (dayNumber < 1 || dayNumber > daysInMonth) {
+      html += `<div class="calendar-day empty" aria-hidden="true"></div>`;
+      continue;
+    }
+
+    const date = new Date(year, month, dayNumber);
     const dateString = toLocalDateString(date);
-    const outside = date.getMonth() !== month;
     const isBlocked = blockedCalendarDates.has(dateString);
     const dayAppointments = appointments.filter(item => item.date === dateString);
     const visible = dayAppointments.slice(0, 3);
 
     html += `
-      <div class="calendar-day ${outside ? "outside" : ""} ${dateString === today ? "today" : ""} ${isBlocked ? "blocked" : ""}">
-        <div class="day-number">${date.getDate()}</div>
+      <div class="calendar-day ${dateString === today ? "today" : ""} ${isBlocked ? "blocked" : ""}">
+        <div class="day-number">${dayNumber}</div>
         ${isBlocked ? `<div class="blocked-label">Blocked</div>` : ""}
         ${visible.map(item => `
           <button class="calendar-event ${escapeHtml(item.type)}" type="button" onclick="openCalendarBooking(${Number(item.bookingId)}, '${escapeHtml(item.date)}', '${escapeHtml(item.time)}')">
