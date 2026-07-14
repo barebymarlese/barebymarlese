@@ -192,7 +192,22 @@ async function confirmBooking(){
   try{
     const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
   booking_type:"treatment",
-  package_type: treatmentSessions > 1 ? `${treatmentSessions}_sessions` : (type === "single" ? "single_session" : "six_sessions"),
+  package_type:
+  treatmentCategory === "fungal"
+    ? packageKey.replace(/^fungal_/, "")
+    : treatmentCategory === "carbon"
+      ? (
+          packageKey === "carbon_course3"
+            ? "3_sessions"
+            : "single_session"
+        )
+      : (
+          treatmentSessions > 1
+            ? `${treatmentSessions}_sessions`
+            : type === "single"
+              ? "single_session"
+              : "six_sessions"
+        ),
   tattoo_size: treatmentCategory === "tattoo" ? packageKey : null,
   treatment_category: treatmentCategory,
   treatment_name: selectedPackage.label,
