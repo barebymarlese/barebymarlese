@@ -465,7 +465,7 @@ header .brand *{
             <div class="con-section tattoo-only-section" id="tattoo-info-section">
               <div class="con-h3">Tattoo Information</div>
 
-             <label class="con-label">Approximate age of tattoo <span class="required-star">*</span></label>
+             <label class="con-label">Approximate age of the tattoo (years) <span class="required-star">*</span></label>
 <input class="con-input" type="number" name="tattoo_age" placeholder="e.g. 5 years" required>
 
 <label class="con-label">
@@ -473,14 +473,14 @@ header .brand *{
 </label>
 <input class="con-input" type="text" name="tattoo_location" required>
 
-              <label class="con-label">Have you attempted removal before? (Laser, saline, creams)</label>
+              <label class="con-label">Have you attempted removal before? (Laser, saline, excision or other)</label>
               <select class="con-select" name="previous_removal" required>
                 <option value="No" selected>No</option>
                 <option value="Yes">Yes</option>
               </select>
 
               <label class="con-label">If yes, please describe</label>
-              <textarea class="con-textarea" name="previous_removal_details" rows="2" placeholder="Laser, saline, creams etc."></textarea>
+              <textarea class="con-textarea" name="previous_removal_details" rows="2" placeholder="Laser, saline, excision or other"></textarea>
             </div>
 
             
@@ -681,7 +681,7 @@ header .brand *{
 <p class="con-small" style="margin:0 0 10px;">Medical screening helps ensure laser treatment is safe and appropriate for your skin and medical history.</p>
 
             <div class="con-section">
-              <div class="con-h3">Medical History &amp; Safety</div>
+              <div class="con-h3">Medical History</div>
 
               <label class="con-label">Do you have or have you ever been diagnosed with any of the following conditions? <span class="required-star">*</span></label>
               <div class="con-options" data-none-group="medical-history" data-required-group="medical-history">
@@ -714,13 +714,7 @@ header .brand *{
                   <span class="con-mark"></span>
                   <span>Keloid scarring</span>
                 </label>
-
-                <label class="con-opt">
-                  <input type="checkbox" name="diabetes_condition" value="Yes">
-                  <span class="con-mark"></span>
-                  <span>Diabetes</span>
-                </label>
-
+                
                 <label class="con-opt">
                   <input type="checkbox" name="autoimmune_disorder" value="Yes">
                   <span class="con-mark"></span>
@@ -763,7 +757,7 @@ header .brand *{
                 <label class="con-opt">
                   <input type="checkbox" name="photosensitising_meds" value="Yes">
                   <span class="con-mark"></span>
-                  <span>Using any medication or skincare products that increase sensitivity to light (e.g. Roaccutane/Isotretinoin, Doxycycline, Tretinoin/Retinol, Hydroquinone or St John's Wort)</span>
+                  <span>Skin becomes unusually sensitive to sunlight or UV light</span>
                 </label>
 
                 <label class="con-opt">
@@ -953,12 +947,6 @@ header .brand *{
     </label>
 
     <label class="con-opt">
-      <input type="checkbox" name="immunosuppressant_medication" value="Yes">
-      <span class="con-mark"></span>
-      <span>Immunosuppressant medication (e.g. Methotrexate, Azathioprine, Biologic injections)</span>
-    </label>
-
-    <label class="con-opt">
       <input type="checkbox" name="gold_therapy" value="Yes">
       <span class="con-mark"></span>
       <span>Gold therapy (for rheumatoid arthritis)</span>
@@ -979,7 +967,7 @@ header .brand *{
     <label class="con-opt">
       <input type="checkbox" name="retinol_retina_area" value="Yes">
       <span class="con-mark"></span>
-      <span>Prescription skin creams (e.g. Retin-A, Tretinoin, Adapalene, Hydroquinone)</span>
+      <span>Prescription skin creams used on the treatment area (e.g. Retin-A, Tretinoin, Adapalene, Hydroquinone)</span>
     </label>
 
     <label class="con-opt">
@@ -1007,15 +995,13 @@ header .brand *{
 
 </div>
 
-              <label class="con-label">List all current medications (including herbs, vitamins, supplements)</label>
-              <textarea class="con-textarea" name="current_medications" rows="3" placeholder="Aspirin, St. John's Wort, fish oil, etc."></textarea>
-            </div>
+              </div>
 
 <!-- Lifestyle Factors -->
             <div class="con-section">
               <div class="con-h3">Lifestyle Factors</div>
 
-              <label class="con-label">Do you smoke or vape? <span class="required-star">*</span></label>
+              <label class="con-label">Do you currently smoke or vape? <span class="required-star">*</span></label>
               <div class="con-options">
                 <label class="con-opt">
                   <input type="radio" name="smoke_vape" value="No" required>
@@ -1067,7 +1053,7 @@ header .brand *{
               <div class="con-h3">Photos</div>
               <p class="con-small" style="margin:0 0 12px;">
                  Clear photos help us assess treatment suitability before your consultation. 
-                Please avoid filters. Include one close-up and one photo showing the surrounding area.
+                Please upload clear, unedited photos taken in good lighting. Avoid filters or beauty enhancements. Include one close-up and one photo showing the surrounding area.
               </p>
 
 <label class="con-label" for="tattoo_photos" id="photo-upload-label">Upload treatment photos (optional)</label>
