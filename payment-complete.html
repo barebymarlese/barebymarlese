@@ -47,16 +47,19 @@
           return;
         }
         target.innerHTML=`
-          <p class="success">Thank you — your balance payment has been confirmed.</p>
-          <div class="summary">
-            <p><strong>Treatment:</strong> ${escapeHtml(data.treatment_name||"Treatment")}</p>
-            <p><strong>Total cash recorded:</strong> ${money(data.amount_paid)}</p>
-            ${Number(data.discount_amount||0)>0?`<p><strong>Total discount:</strong> ${money(data.discount_amount)}</p>`:""}
-            ${data.coupon_code?`<p><strong>Coupon:</strong> ${escapeHtml(data.coupon_code)}</p>`:""}
-            <p><strong>Remaining balance:</strong> ${money(data.remaining_balance)}</p>
-          </div>
-          <div class="notice"><p>Your existing appointment remains confirmed. You do not need to book another appointment.</p></div>
-        `;
+  <p class="success">Thank you — your balance payment has been confirmed.</p>
+  <div class="summary">
+    <p><strong>Treatment:</strong> ${escapeHtml(data.treatment_name || "Treatment")}</p>
+    <p><strong>Payment status:</strong> Paid in Full</p>
+    <p><strong>Total cash recorded:</strong> ${money(data.amount_paid)}</p>
+    ${Number(data.discount_amount || 0) > 0 ? `<p><strong>Total discount:</strong> ${money(data.discount_amount)}</p>` : ""}
+    ${data.coupon_code ? `<p><strong>Coupon:</strong> ${escapeHtml(data.coupon_code)}</p>` : ""}
+    <p><strong>Remaining balance:</strong> ${money(data.remaining_balance)}</p>
+  </div>
+  <div class="notice">
+    <p>Your existing appointment remains confirmed. You do not need to book another appointment.</p>
+  </div>
+`;
       }catch(error){
         target.innerHTML='<p class="pending">Your payment was received and is being confirmed.</p><p>Please show your Stripe confirmation to your practitioner.</p>';
       }
