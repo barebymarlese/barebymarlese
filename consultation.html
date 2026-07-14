@@ -1407,10 +1407,12 @@ if(treatmentSelect){
       if(signedAtInputNode) signedAtInputNode.value = "";
       if(signedAtDisplayNode) signedAtDisplayNode.textContent = "Waiting for signature...";
 
-      try{
+            try{
         applyTreatmentType(treatmentSelect?.value || localStorage.getItem("bareTreatmentType") || "Tattoo Removal");
         updateColourScoring();
       }catch(e){}
+
+      updateFitzButtons();
     }
 
     function resetPageIfRequested(){
@@ -1426,49 +1428,111 @@ if(treatmentSelect){
       }catch(e){}
     }
 
+function updateFitzButtons(){
+  const hasResult = !!(fitzValueEl && fitzValueEl.value);
+
+  if(openFitzBtn){
+    openFitzBtn.style.display = hasResult ? "none" : "";
+  }
+
+  if(clearFitzBtn){
+    clearFitzBtn.style.display = hasResult ? "none" : "";
+  }
+}
+
 function applyFitzResult(payload){
-      if(!payload) return;
-      const type = (payload.fitz || payload.fitzpatrick || payload.type || "").toString().trim();
-      if(!type) return;
+  if(!payload) return;
 
-      // Normalise to "I".."VI" if "Type III" is sent
-      let norm = type;
-      const m = type.match(/(I{1,3}|IV|V|VI)\b/i);
-      if(m) norm = m[1].toUpperCase();
+  const type = (
+    payload.fitz ||
+    payload.fitzpatrick ||
+    payload.type ||
+    ""
+  ).toString().trim();
 
-      fitzValueEl.value = norm;
-      
-      if(fitzDisplayEl){ fitzDisplayEl.value = norm; }
-      if(fitzDescEl){
-        const lbl = (payload.label || "").toString().trim();
-        fitzDescEl.value = lbl || fitzLabelMap[norm] || ("Type " + norm);
-      }
-if(payload.score !== undefined && payload.score !== null) fitzScoreEl.value = String(payload.score);
+  if(!type) return;
 
-      // Persist so refresh doesn't lose it
-      try{
-        localStorage.setItem("bare_fitz_type", norm);
-        const lbl = (payload.label || "").toString().trim();
-        if(lbl) localStorage.setItem("bare_fitz_label", lbl);
-        if(fitzScoreEl.value) localStorage.setItem("bare_fitz_score", fitzScoreEl.value);
-      }catch(e){}
+  // Normalise to "I".."VI" if "Type III" is sent
+  let norm = type;
+  const m = type.match(/(I{1,3}|IV|V|VI)\b/i);
+
+  if(m){
+    norm = m[1].toUpperCase();
+  }
+
+  fitzValueEl.value = norm;
+
+  if(fitzDisplayEl){
+    fitzDisplayEl.value = norm;
+  }
+
+  if(fitzDescEl){
+    const lbl = (payload.label || "").toString().trim();
+    fitzDescEl.value =
+      lbl ||
+      fitzLabelMap[norm] ||
+      ("Type " + norm);
+  }
+
+  if(payload.score !== undefined && payload.score !== null){
+    fitzScoreEl.value = String(payload.score);
+  }
+
+  // Persist so refresh doesn't lose it
+  try{
+    localStorage.setItem("bare_fitz_type", norm);
+
+    const lbl = (payload.label || "").toString().trim();
+
+    if(lbl){
+      localStorage.setItem("bare_fitz_label", lbl);
     }
+
+    if(fitzScoreEl.value){
+      localStorage.setItem(
+        "bare_fitz_score",
+        fitzScoreEl.value
+      );
+    }
+  }catch(e){}
+
+  updateFitzButtons();
+}
 
         resetPageIfRequested();
 
-    // Load saved result (if they did the test earlier)
+        // Load saved result if the test was completed earlier
     try{
-      const savedType = localStorage.getItem("bare_fitz_type");
-      const savedScore = localStorage.getItem("bare_fitz_score");
-      const savedLabel = localStorage.getItem("bare_fitz_label");
+      const savedType =
+        localStorage.getItem("bare_fitz_type");
+
+      const savedScore =
+        localStorage.getItem("bare_fitz_score");
+
+      const savedLabel =
+        localStorage.getItem("bare_fitz_label");
+
       if(savedType){
         fitzValueEl.value = savedType;
-        
-        if(fitzDisplayEl){ fitzDisplayEl.value = savedType; }
-        if(fitzDescEl){ fitzDescEl.value = savedLabel || fitzLabelMap[savedType] || ("Type " + savedType); }
-if(savedScore) fitzScoreEl.value = savedScore;
+
+        if(fitzDisplayEl){
+          fitzDisplayEl.value = savedType;
+        }
+
+        if(fitzDescEl){
+          fitzDescEl.value =
+            savedLabel ||
+            fitzLabelMap[savedType] ||
+            ("Type " + savedType);
+        }
+
+        if(savedScore){
+          fitzScoreEl.value = savedScore;
+        }
       }
     }catch(e){}
+
+    updateFitzButtons();
 
     // Open the Fitzpatrick test in a new tab and allow it to message back
     if(openFitzBtn){
@@ -1478,15 +1542,25 @@ if(savedScore) fitzScoreEl.value = savedScore;
       });
     }
 
-    if(clearFitzBtn){
+        if(clearFitzBtn){
       clearFitzBtn.addEventListener("click", () => {
         fitzValueEl.value = "";
-        if(fitzDisplayEl){ fitzDisplayEl.value = ""; }
-        if(fitzDescEl){ fitzDescEl.value = "Not completed yet"; }
+
+        if(fitzDisplayEl){
+          fitzDisplayEl.value = "";
+        }
+
+        if(fitzDescEl){
+          fitzDescEl.value = "Not completed yet";
+        }
+
         fitzScoreEl.value = "";
+
         try{
           clearBareStoredFitz();
         }catch(e){}
+
+        updateFitzButtons();
       });
     }
 
