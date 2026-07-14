@@ -128,6 +128,7 @@ export async function onRequest(context) {
       sessions_used,
       package_status,
       payment_reference,
+      balance_payment_reference,
       treatment_category,
       treatment_name,
       full_price,
