@@ -834,8 +834,15 @@ footer{
 /* COMPACT MANAGE BOOKINGS DESKTOP TABLE */
 @media(min-width:821px){
 
+  #bookings-view{
+    min-height:calc(100vh - 310px);
+  }
+
   #bookings-view .table-wrap{
+    min-height:calc(100vh - 310px);
     overflow-x:hidden;
+    display:flex;
+    flex-direction:column;
   }
 
   #bookings-table{
@@ -858,64 +865,40 @@ footer{
   }
 
   #bookings-table th:nth-child(1),
-  #bookings-table td:nth-child(1){
-    width:8%;
-  }
+  #bookings-table td:nth-child(1){width:8%}
 
   #bookings-table th:nth-child(2),
-  #bookings-table td:nth-child(2){
-    width:11%;
-  }
+  #bookings-table td:nth-child(2){width:11%}
 
   #bookings-table th:nth-child(3),
-  #bookings-table td:nth-child(3){
-    width:6%;
-  }
+  #bookings-table td:nth-child(3){width:6%}
 
   #bookings-table th:nth-child(4),
-  #bookings-table td:nth-child(4){
-    width:5%;
-  }
+  #bookings-table td:nth-child(4){width:5%}
 
   #bookings-table th:nth-child(5),
-  #bookings-table td:nth-child(5){
-    width:6%;
-  }
+  #bookings-table td:nth-child(5){width:6%}
 
   #bookings-table th:nth-child(6),
-  #bookings-table td:nth-child(6){
-    width:11%;
-  }
+  #bookings-table td:nth-child(6){width:11%}
 
   #bookings-table th:nth-child(7),
-  #bookings-table td:nth-child(7){
-    width:10%;
-  }
+  #bookings-table td:nth-child(7){width:10%}
 
   #bookings-table th:nth-child(8),
-  #bookings-table td:nth-child(8){
-    width:14%;
-  }
+  #bookings-table td:nth-child(8){width:14%}
 
   #bookings-table th:nth-child(9),
-  #bookings-table td:nth-child(9){
-    width:8%;
-  }
+  #bookings-table td:nth-child(9){width:8%}
 
   #bookings-table th:nth-child(10),
-  #bookings-table td:nth-child(10){
-    width:8%;
-  }
+  #bookings-table td:nth-child(10){width:8%}
 
   #bookings-table th:nth-child(11),
-  #bookings-table td:nth-child(11){
-    width:6%;
-  }
+  #bookings-table td:nth-child(11){width:6%}
 
   #bookings-table th:nth-child(12),
-  #bookings-table td:nth-child(12){
-    width:7%;
-  }
+  #bookings-table td:nth-child(12){width:7%}
 
   .client-name,
   .contact,
@@ -1000,15 +983,27 @@ footer{
     padding:20px 22px;
   }
 
+  #calendar-view{
+    min-height:calc(100vh - 310px);
+  }
+
   .dashboard-grid{
-  grid-template-columns:2.3fr 360px;
-  gap:20px;
-}
+    grid-template-columns:minmax(0,1fr) 320px;
+    gap:18px;
+    align-items:stretch;
+    min-height:calc(100vh - 310px);
+  }
 
   .calendar-card,
   .upcoming-card{
     padding:14px;
     border-radius:18px;
+    height:100%;
+  }
+
+  .calendar-card{
+    display:flex;
+    flex-direction:column;
   }
 
   .calendar-header{
@@ -1035,11 +1030,16 @@ footer{
     font-size:9px;
   }
 
+  .calendar-grid{
+    flex:1;
+    grid-auto-rows:minmax(82px,1fr);
+  }
+
   .calendar-day,
-.calendar-day.empty{
-  min-height:92px;
-  padding:8px;
-}
+  .calendar-day.empty{
+    min-height:82px;
+    padding:8px;
+  }
 
   .day-number{
     margin-bottom:4px;
@@ -1047,12 +1047,12 @@ footer{
   }
 
   .calendar-event{
-  margin-top:4px;
-  padding:6px 8px;
-  font-size:9px;
-  line-height:1.3;
-  border-radius:8px;
-}
+    margin-top:4px;
+    padding:6px 8px;
+    font-size:9px;
+    line-height:1.3;
+    border-radius:8px;
+  }
 
   .blocked-label{
     margin-top:3px;
@@ -1070,6 +1070,10 @@ footer{
   .legend-dot{
     width:8px;
     height:8px;
+  }
+
+  .upcoming-card{
+    align-self:stretch;
   }
 
   .upcoming-card h2{
