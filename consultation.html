@@ -1480,7 +1480,13 @@ function showNewClientConsultation(){
       behavior: "smooth",
       block: "start"
     });
-  }, 50);
+
+    // The signature canvas is initially inside a hidden wrapper, so it
+    // must be resized after the New Client form becomes visible.
+    try{
+      resizeCanvas(true);
+    }catch(e){}
+  }, 100);
 }
 
 function goToExistingClientTreatments(){
@@ -2108,6 +2114,8 @@ const form = document.getElementById("consultation-form");
       }
     }
 
+    // Initial setup. If the form is hidden, showNewClientConsultation()
+    // will run resizeCanvas() again once it becomes visible.
     resizeCanvas(false);
     window.addEventListener("resize", () => resizeCanvas(true));
 
