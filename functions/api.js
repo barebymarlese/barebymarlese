@@ -427,7 +427,7 @@ async function createReturningTreatmentCheckout(booking, env) {
     "returning_treatment_payment"
   );
   form.set("allow_promotion_codes", "true");
-  form.set("expires_at", String(Math.floor(Date.now() / 1000) + (30 * 60)));
+  form.set("expires_at", String(Math.floor(Date.now() / 1000) + (10 * 60)));
 
   if (booking.email) {
     form.set("customer_email", booking.email);
@@ -908,7 +908,7 @@ await env.DB.prepare(`
   DELETE FROM appointments
   WHERE status = 'pending_payment'
     AND payment_status = 'unpaid'
-    AND datetime(created_at) <= datetime('now', '-35 minutes')
+    AND datetime(created_at) <= datetime('now', '-10 minutes')
 `).run();
 
 try {
@@ -990,7 +990,7 @@ try {
           status = 'confirmed'
           OR (
             status = 'pending_payment'
-            AND datetime(created_at) > datetime('now', '-35 minutes')
+            AND datetime(created_at) > datetime('now', '-10 minutes')
           )
         )
       LIMIT 1
@@ -2617,7 +2617,7 @@ if (bookingType === "treatment") {
     a.status = 'confirmed'
     OR (
       a.status = 'pending_payment'
-      AND datetime(a.created_at) > datetime('now', '-35 minutes')
+      AND datetime(a.created_at) > datetime('now', '-10 minutes')
     )
   )
   AND NOT EXISTS (
