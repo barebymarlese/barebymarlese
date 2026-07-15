@@ -582,7 +582,7 @@ function renderTreatmentOptions() {
     radio.required = true;
 
     const copy = document.createElement("span");
-    copy.innerHTML = `<strong>${option.name}</strong><small>£30 deposit today, ${money(Math.max(0, option.fullPrice - depositAmountNumber))} remaining on the day</small>`;
+    copy.innerHTML = `<strong>${option.name}</strong><small>£30 deposit today, ${money(Math.max(0, option.fullPrice - depositAmountNumber))} remaining before the first treatment</small>`;
 
     const price = document.createElement("span");
     price.className = "option-price";
