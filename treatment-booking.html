@@ -18,13 +18,13 @@
   <span id="brand-main"></span>
   <span class="brand-divider">|</span>
   <span class="brand-sub" id="brand-sub"></span>
-</div><div class="card"><div class="hero"><span class="kicker">Treatment Calendar</span><h1>Book Your Treatment</h1><p class="sub">Choose your first treatment appointment after completing your package payment.</p></div><div class="content" id="content"></div></div><footer>
+</div><div class="card"><div class="hero"><span class="kicker">Tattoo Treatment Calendar</span><h1>Book Your Tattoo Treatment</h1><p class="sub">Choose your first tattoo removal appointment after completing payment.</p></div><div class="content" id="content"></div></div><footer>
   <div style="line-height:1.7;">
     <strong id="legal-name"></strong><br>
     <span id="registered-in"></span><br>
     Company No. <span id="company-number"></span>
   </div>
-  <div style="margin-top:10px;">Treatment booking</div>
+  <div style="margin-top:10px;">Tattoo treatment booking</div>
 </footer></div></div>
 
 <script src="/config.js"></script>
@@ -47,7 +47,6 @@ if (pageTitle) {
 }
 
 const packages = CONFIG.packages || [];
-const laserTreatmentPackages = CONFIG.laserTreatmentPackages || CONFIG.carbonPackages || [];
 
 const pricing = {
   bundle: {
@@ -81,67 +80,59 @@ const pricing = {
 const params = new URLSearchParams(window.location.search);
 const paid = params.get("paid");
 const sessionId = params.get("session_id");
-
-if (sessionId) {
-  localStorage.setItem("bare_payment_reference", sessionId);
-}
-const packageKeyFromUrl = (params.get("package") || params.get("size") || "").toLowerCase();
-const typeFromUrl = (params.get("type") || "bundle").toLowerCase();
+const sizeFromUrl = (params.get("size") || "").toLowerCase();
+const typeFromUrl = (params.get("type") || "").toLowerCase();
 const priceTypeFromUrl = (params.get("price") || "deducted").toLowerCase();
-const treatmentCategoryFromUrl = (params.get("treatment") || "tattoo").toLowerCase();
 const sessionsFromUrl = Number(params.get("sessions") || 0);
 
-const safeType = typeFromUrl === "single" ? "single" : "bundle";
-const safePriceType = priceTypeFromUrl === "full" ? "full" : "deducted";
+const validSizes = new Set(packages.map(pkg => String(pkg.key || "").toLowerCase()));
+const validType = typeFromUrl === "single" || typeFromUrl === "bundle";
+const validPriceType = priceTypeFromUrl === "full" || priceTypeFromUrl === "deducted";
+const validSessionCount =
+  typeFromUrl === "single"
+    ? sessionsFromUrl === 0 || sessionsFromUrl === 1
+    : sessionsFromUrl === 6;
 
-if (paid === "true") {
+const validStripeReturn =
+  paid === "true" &&
+  Boolean(sessionId && sessionId.startsWith("cs_")) &&
+  validSizes.has(sizeFromUrl) &&
+  validType &&
+  validPriceType &&
+  validSessionCount;
+
+if (validStripeReturn) {
+  localStorage.setItem("bare_payment_reference", sessionId);
   localStorage.setItem("bareTreatmentPaid", "true");
-  localStorage.setItem("bareTreatmentPackage", packageKeyFromUrl);
-  localStorage.setItem("bareTreatmentType", safeType);
-  localStorage.setItem("bareTreatmentPriceType", safePriceType);
-  localStorage.setItem("bareTreatmentCategory", treatmentCategoryFromUrl);
-  localStorage.setItem("bareTreatmentSessions", String(sessionsFromUrl));
+  localStorage.setItem("bareTreatmentPackage", sizeFromUrl);
+  localStorage.setItem("bareTreatmentType", typeFromUrl);
+  localStorage.setItem("bareTreatmentPriceType", priceTypeFromUrl);
+  localStorage.setItem(
+    "bareTreatmentSessions",
+    String(typeFromUrl === "single" ? 1 : 6)
+  );
+} else if (paid === "true") {
+  localStorage.removeItem("bareTreatmentPaid");
+  localStorage.removeItem("bareTreatmentPackage");
+  localStorage.removeItem("bareTreatmentType");
+  localStorage.removeItem("bareTreatmentPriceType");
+  localStorage.removeItem("bareTreatmentSessions");
+  localStorage.removeItem("bare_payment_reference");
 }
 
 const hasPaid = localStorage.getItem("bareTreatmentPaid") === "true";
-const packageKey = localStorage.getItem("bareTreatmentPackage");
-const type = localStorage.getItem("bareTreatmentType") || "bundle";
+const packageKey = (localStorage.getItem("bareTreatmentPackage") || "").toLowerCase();
+const type = localStorage.getItem("bareTreatmentType") || "";
 const priceType = localStorage.getItem("bareTreatmentPriceType") || "deducted";
-const treatmentCategory = localStorage.getItem("bareTreatmentCategory") || "tattoo";
 const treatmentSessions = Number(localStorage.getItem("bareTreatmentSessions") || 0);
 
 const content = document.getElementById("content");
 
 let selectedPackage;
 
-if (treatmentCategory === "carbon" || treatmentCategory === "fungal") {
-  const foundPackage = laserTreatmentPackages.find(pkg => pkg.key === packageKey);
-
-  if (foundPackage) {
-    const isDeducted = priceType === "deducted";
-
-    selectedPackage = {
-      label: foundPackage.name,
-      packageType: ({
-        carbon_single: "single_session",
-        carbon_course3: "3_sessions",
-        fungal_single_nail: "single_nail",
-        fungal_one_foot: "one_foot",
-        fungal_both_feet: "both_feet",
-        fungal_course4_one_foot: "course4_one_foot",
-        fungal_course4_both_feet: "course4_both_feet"
-      })[foundPackage.key],
-      price: isDeducted
-        ? foundPackage.deductedPrice
-        : foundPackage.price,
-      amount: isDeducted
-        ? foundPackage.deductedAmount
-        : foundPackage.amount
-    };
-  }
-} else if (type === "single") {
+if (type === "single") {
   selectedPackage = pricing.single[packageKey];
-} else {
+} else if (type === "bundle") {
   selectedPackage = pricing.bundle[priceType]?.[packageKey];
 }
 
@@ -158,7 +149,7 @@ function escapeHtml(value){return String(value||"").replaceAll("&","&amp;").repl
 function setMinDate(){const dateInput=document.getElementById("booking-date");if(!dateInput)return;const today=new Date();const yyyy=today.getFullYear();const mm=String(today.getMonth()+1).padStart(2,"0");const dd=String(today.getDate()).padStart(2,"0");dateInput.min=`${yyyy}-${mm}-${dd}`;}
 
 function renderLocked(){
-  content.innerHTML = `<div class="locked"><h2>Treatment booking is locked</h2><p>This page unlocks after payment. Your treatment booking will only be accepted after your consultation and patch test have been marked complete.</p><a class="btn btn-primary" href="/treatment.html">Choose Package</a></div>`;
+  content.innerHTML = `<div class="locked"><h2>Tattoo treatment booking is locked</h2><p>This page opens only after a verified tattoo treatment payment. Consultation and patch testing must be completed before treatment.</p><a class="btn btn-primary" href="/treatment.html">Return to Treatments</a></div>`;
 }
 
 function renderBooking(){
@@ -188,7 +179,7 @@ async function loadAvailableSlots(date){
   try{
     const res=await fetch(`/api?type=treatment&date=${encodeURIComponent(date)}`);const data=await res.json();const slots=data.slots||[];const nextAvailable=data.nextAvailable||null;
     if(!Array.isArray(slots)||slots.length===0){container.innerHTML='<div class="slot-message">No treatment availability for this date.</div>';return;}
-    container.innerHTML=slots.map(slot=>`<button class="btn slot-btn ${slot===nextAvailable?"next-slot":""}" type="button" onclick="selectSlot('${date}','${slot}',this)">${slot===nextAvailable?"Next available: ":""}${slot}</button>`).join("")+`<div style="width:100%;margin-top:18px;text-align:center;"><button id="confirm-booking-btn" class="btn btn-primary" type="button" style="display:none;" onclick="confirmBooking()">Confirm Treatment Booking</button></div>`;
+    container.innerHTML=slots.map(slot=>`<button class="btn slot-btn ${slot===nextAvailable?"next-slot":""}" type="button" onclick="selectSlot('${date}','${slot}',this)">${slot===nextAvailable?"Next available: ":""}${slot}</button>`).join("")+`<div style="width:100%;margin-top:18px;text-align:center;"><button id="confirm-booking-btn" class="btn btn-primary" type="button" style="display:none;" onclick="confirmBooking()">Confirm Tattoo Treatment</button></div>`;
   }catch(err){container.innerHTML='<div class="slot-message">Could not load treatment times. Please try again.</div>';}
 }
 
@@ -198,22 +189,16 @@ async function confirmBooking(){
   const status=document.getElementById("status");const name=document.getElementById("client-name").value.trim();const email=document.getElementById("client-email").value.trim();const phone=document.getElementById("client-phone").value.trim();
   if(!name||!email||!phone){status.textContent="Please enter your name, email and phone number.";status.className="error";return;}
   if(!selectedDate||!selectedTime){status.textContent="Please choose a treatment time.";status.className="error";return;}
-  status.textContent="Saving your treatment booking...";status.className="";
+  status.textContent="Saving your tattoo treatment booking...";status.className="";
   try{
     const res=await fetch("/api",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
   booking_type:"treatment",
   package_type:
-    treatmentCategory === "tattoo"
-      ? (
-          treatmentSessions > 1
-            ? `${treatmentSessions}_sessions`
-            : type === "single"
-              ? "single_session"
-              : "six_sessions"
-        )
-      : selectedPackage.packageType,
-  tattoo_size: treatmentCategory === "tattoo" ? packageKey : null,
-  treatment_category: treatmentCategory,
+    type === "single"
+      ? "single_session"
+      : "six_sessions",
+  tattoo_size: packageKey,
+  treatment_category: "tattoo",
   treatment_name: selectedPackage.label,
   amount_paid:selectedPackage.amount / 100,
   client_name:name,
@@ -229,12 +214,12 @@ if(res.ok){
   localStorage.removeItem("bareTreatmentPackage");
   localStorage.removeItem("bareTreatmentType");
   localStorage.removeItem("bareTreatmentPriceType");
-  localStorage.removeItem("bareTreatmentCategory");
   localStorage.removeItem("bareTreatmentSessions");
+  localStorage.removeItem("bare_payment_reference");
 
   content.innerHTML = `
     <div class="success-card">
-      <p class="success">Thank you — your treatment appointment has been confirmed.</p>
+      <p class="success">Thank you — your tattoo treatment appointment has been confirmed.</p>
       <p><strong>Treatment:</strong> ${escapeHtml(selectedPackage.label)}</p>
       <p><strong>Date:</strong> ${escapeHtml(selectedDate)}</p>
       <p><strong>Time:</strong> ${escapeHtml(selectedTime)}</p>
@@ -251,12 +236,12 @@ if(res.ok){
 
 } else {
   const text = await res.text();
-  status.textContent = text || "Could not book this treatment time. Please try another slot.";
+  status.textContent = text || "Could not book this tattoo treatment time. Please try another slot.";
   status.className = "error";
 }
 
   } catch(err) {
-    status.textContent = "There was a problem saving your treatment booking. Please try again.";
+    status.textContent = "There was a problem saving your tattoo treatment booking. Please try again.";
     status.className = "error";
   }
 }
