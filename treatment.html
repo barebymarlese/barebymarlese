@@ -22,7 +22,16 @@ h1{margin:18px 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight
 .packages{background:white;border:1px solid var(--line);border-radius:22px;padding:18px 20px;margin-bottom:22px}.package{display:grid;grid-template-columns:180px 1fr;gap:22px;align-items:center;padding:22px 0;border-bottom:1px solid rgba(36,34,26,.10)}.package:last-child{border-bottom:0}.package h2{margin:0;font-size:19px;font-weight:500;letter-spacing:.08em}.price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .btn{appearance:none;border:1px solid rgba(94,105,89,.18);cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:64px;padding:12px 14px;border-radius:16px;text-decoration:none;font-family:inherit;font-weight:700;font-size:12px;line-height:1.25;background:linear-gradient(180deg,var(--olive),var(--olive-dark));color:#fff;text-align:left}.btn strong{font-size:15px;margin-top:4px}.btn:hover{transform:translateY(-1px);opacity:.95}
 .price-list{display:grid;gap:12px}.price-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:16px 18px;border:1px solid rgba(36,34,26,.10);border-radius:16px;background:#f8f8f6}.price-row h3{margin:0;font-size:15px;font-weight:600;letter-spacing:.04em;color:var(--ink)}.price-row p{margin:4px 0 0;font-size:12px;line-height:1.5;color:rgba(36,34,26,.65)}
-.price-button{font-size:18px;font-weight:700;color:#fff;background:linear-gradient(180deg,var(--olive),var(--olive-dark));padding:11px 16px;border-radius:14px;white-space:nowrap;border:none;cursor:pointer;font-family:inherit}.price-button:hover{opacity:.95;transform:translateY(-1px)}
+.price-button{font-size:18px;font-weight:700;color:#fff;background:linear-gradient(180deg,var(--olive),var(--olive-dark));padding:11px 16px;border-radius:14px;white-space:nowrap;border:none;cursor:pointer;font-family:inherit}.price-button[disabled]{
+  cursor:not-allowed;
+  opacity:.72;
+  transform:none;
+}
+
+.price-button[disabled]:hover{
+  opacity:.72;
+  transform:none;
+}
 .notice{margin-top:22px;padding:14px 16px;background:rgba(135,130,116,.10);border:1px solid rgba(135,130,116,.18);border-radius:14px;font-size:13px;line-height:1.65;color:rgba(36,34,26,.76)}.actions{margin-top:22px;text-align:center}.consult-btn{appearance:none;border:1px solid rgba(94,105,89,.18);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 16px;border-radius:14px;text-decoration:none;font-family:inherit;font-weight:700;font-size:13px;background:linear-gradient(180deg,var(--olive),var(--olive-dark));color:#fff}.consult-btn:hover{transform:translateY(-1px);opacity:.95}
 footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:12px}
 @media(max-width:900px){.page{padding:14px 8px}.content{padding:18px 8px}.packages{overflow-x:auto;padding:16px}.package{grid-template-columns:160px 520px;min-width:700px}.price-grid{grid-template-columns:repeat(2,1fr)}.btn{min-width:230px}}
@@ -53,8 +62,45 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <p>A laser facial treatment designed to refresh the appearance of the skin and support a clearer-looking complexion.</p>
       </div>
       <div class="price-list" id="carbon-price-list">
-        <div class="price-row"><div><h3>Single Carbon Facial</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('carbon_single_deducted')">£55</button></div>
-        <div class="price-row"><div><h3>Course of 3 Treatments</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('carbon_course3_deducted')">£195</button></div>
+        <div class="price-row">
+  <div>
+    <h3>Single Carbon Facial</h3>
+    <p>
+      Remaining balance after your £30 consultation deposit.
+      Payment is provided after your consultation and approved patch test.
+    </p>
+  </div>
+
+  <button
+    class="price-button"
+    type="button"
+    disabled
+    aria-disabled="true"
+    title="Available after consultation and approved patch test"
+  >
+    £55
+  </button>
+</div>
+
+<div class="price-row">
+  <div>
+    <h3>Course of 3 Treatments</h3>
+    <p>
+      Remaining balance after your £30 consultation deposit.
+      Payment is provided after your consultation and approved patch test.
+    </p>
+  </div>
+
+  <button
+    class="price-button"
+    type="button"
+    disabled
+    aria-disabled="true"
+    title="Available after consultation and approved patch test"
+  >
+    £195
+  </button>
+</div>
       </div>
     </div>
 
@@ -65,16 +111,120 @@ footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:1
         <p>Pricing depends on how many nails are affected and whether treatment is needed on one foot or both feet.</p>
       </div>
       <div class="price-list" id="fungal-price-list">
-        <div class="price-row"><div><h3>Single Nail</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_single_nail')">£15</button></div>
-        <div class="price-row"><div><h3>One Foot (Up to 5 Nails)</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_one_foot')">£55</button></div>
-        <div class="price-row"><div><h3>Both Feet</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_both_feet')">£90</button></div>
-        <div class="price-row"><div><h3>Course of 4 Sessions (One Foot)</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_course4_one_foot')">£270</button></div>
-        <div class="price-row"><div><h3>Course of 4 Sessions (Both Feet)</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_course4_both_feet')">£390</button></div>
+        <div class="price-row">
+  <div>
+    <h3>Single Nail</h3>
+    <p>
+      Remaining balance after your £30 consultation deposit.
+      Payment is provided after your consultation and approved patch test.
+    </p>
+  </div>
+
+  <button
+    class="price-button"
+    type="button"
+    disabled
+    aria-disabled="true"
+    title="Available after consultation and approved patch test"
+  >
+    £15
+  </button>
+</div>
+
+<div class="price-row">
+  <div>
+    <h3>One Foot (Up to 5 Nails)</h3>
+    <p>
+      Remaining balance after your £30 consultation deposit.
+      Payment is provided after your consultation and approved patch test.
+    </p>
+  </div>
+
+  <button
+    class="price-button"
+    type="button"
+    disabled
+    aria-disabled="true"
+    title="Available after consultation and approved patch test"
+  >
+    £55
+  </button>
+</div>
+
+<div class="price-row">
+  <div>
+    <h3>Both Feet</h3>
+    <p>
+      Remaining balance after your £30 consultation deposit.
+      Payment is provided after your consultation and approved patch test.
+    </p>
+  </div>
+
+  <button
+    class="price-button"
+    type="button"
+    disabled
+    aria-disabled="true"
+    title="Available after consultation and approved patch test"
+  >
+    £90
+  </button>
+</div>
+
+<div class="price-row">
+  <div>
+    <h3>Course of 4 Sessions (One Foot)</h3>
+    <p>
+      Remaining balance after your £30 consultation deposit.
+      Payment is provided after your consultation and approved patch test.
+    </p>
+  </div>
+
+  <button
+    class="price-button"
+    type="button"
+    disabled
+    aria-disabled="true"
+    title="Available after consultation and approved patch test"
+  >
+    £270
+  </button>
+</div>
+
+<div class="price-row">
+  <div>
+    <h3>Course of 4 Sessions (Both Feet)</h3>
+    <p>
+      Remaining balance after your £30 consultation deposit.
+      Payment is provided after your consultation and approved patch test.
+    </p>
+  </div>
+
+  <button
+    class="price-button"
+    type="button"
+    disabled
+    aria-disabled="true"
+    title="Available after consultation and approved patch test"
+  >
+    £390
+  </button>
+</div>
       </div>
     </div>
 
-    <div class="notice" id="payment-notice"><strong>Important:</strong> Carbon Facial and Fungal Nail prices shown on this page are the remaining balances payable after the £30 booking deposit has already been paid. Only continue with the treatment or package approved after your consultation and completed patch test.</div>
-    <div class="actions" id="consultation-action"><a class="consult-btn" href="/booking.html">Book Consultation & Patch Test</a></div>
+    <div class="notice" id="payment-notice">
+  <strong>Important:</strong>
+  Carbon Facial and Fungal Nail prices shown here are the remaining balances
+  after the £30 consultation deposit. After your consultation and approved
+  patch test, BARE by Marlese will provide the appointment-specific payment
+  option. These balance prices cannot be paid publicly from this page.
+</div>
+    <div class="actions" id="consultation-action">
+  <a class="consult-btn" href="/consultation.html?client=new">
+    Start Consultation & Patch Test
+  </a>
+</div>
   </div>
 </div>
 
