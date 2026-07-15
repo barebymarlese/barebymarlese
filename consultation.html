@@ -529,7 +529,19 @@ header .brand *{
                 
                 <!-- Honeypot anti-spam -->
                 <input type="text" name="website" style="display:none;">
-                <input type="hidden" name="treatment_type" id="treatment_type" value="Tattoo Removal">
+                <input type="hidden" name="treatment_type" id="treatment_type" value="">
+            <!-- Treatment selection -->
+            <div class="con-section">
+              <div class="con-h3">Choose Your Treatment</div>
+              <label class="con-label" for="treatment_select">Treatment Type <span class="required-star">*</span></label>
+              <select class="con-select" id="treatment_select" required>
+                <option value="" selected disabled>Select Treatment...</option>
+                <option value="Tattoo Removal">Tattoo Removal</option>
+                <option value="Carbon Facial">Carbon Facial</option>
+                <option value="Fungal Nail Treatment">Fungal Nail Treatment</option>
+              </select>
+            </div>
+
             <!-- Client details -->
             <div class="con-section">
               <div class="con-h3">Client Details</div>
@@ -540,14 +552,6 @@ header .brand *{
                 <div class="con-field">
                   <label class="con-label" for="dob">Date of Birth *</label>
                   <input class="con-input" type="date" id="dob" name="dob" required>
-                </div>
-                <div class="con-field">
-                  <label class="con-label" for="treatment_select">Treatment Type *</label>
-                  <select class="con-select" id="treatment_select" required>
-                    <option value="Tattoo Removal" selected>Tattoo Removal</option>
-                    <option value="Carbon Facial">Carbon Facial</option>
-                    <option value="Fungal Nail Treatment">Fungal Nail Treatment</option>
-                  </select>
                 </div>
               </div>
 
@@ -1565,7 +1569,8 @@ function getTreatmentFromUrl(){
 function treatmentLabel(value){
   if(value === "Carbon Facial") return "carbon laser facial";
   if(value === "Fungal Nail Treatment") return "fungal nail treatment";
-  return "laser tattoo removal";
+  if(value === "Tattoo Removal") return "laser tattoo removal";
+  return "the selected laser";
 }
 
 function setRequiredInSection(section, isRequired){
@@ -1588,14 +1593,25 @@ function setText(id, value){
 }
 
 function applyTreatmentType(selectedTreatment){
-  const treatment = selectedTreatment || "Tattoo Removal";
+  const treatment = selectedTreatment || "";
+  const hasTreatment = Boolean(treatment);
   const isTattoo = treatment === "Tattoo Removal";
 
   if(treatmentTypeInput) treatmentTypeInput.value = treatment;
   if(treatmentSelect && treatmentSelect.value !== treatment) treatmentSelect.value = treatment;
-  try{ localStorage.setItem("bareTreatmentType", treatment); }catch(e){}
+  try{
+    if(treatment){
+      localStorage.setItem("bareTreatmentType", treatment);
+    }else{
+      localStorage.removeItem("bareTreatmentType");
+    }
+  }catch(e){}
 
-  if(formHeading) formHeading.textContent = `${treatment} Consultation & Patch Test Form`;
+  if(formHeading){
+    formHeading.textContent = hasTreatment
+      ? `${treatment} Consultation & Patch Test Form`
+      : "Consultation & Patch Test Form";
+  }
 
   document.querySelectorAll(".tattoo-only-section").forEach((section) => {
     section.classList.toggle("treatment-hidden", !isTattoo);
@@ -1630,7 +1646,15 @@ function applyTreatmentType(selectedTreatment){
   const photoLabel = document.getElementById("photo-upload-label");
   const goal = document.getElementById("treatment_goal");
 
-  if(isTattoo){
+  if(!hasTreatment){
+    if(photoLabel) photoLabel.textContent = "Upload treatment photos (optional)";
+    if(goal) goal.placeholder = "Please select a treatment first.";
+    setText("aftercare-understood-copy", "I understand that I must follow the aftercare instructions provided for my selected treatment.");
+    setText("patch-test-copy", "I understand that a patch test is required before treatment. Treatment can only proceed after my consultation and patch test have been completed and approved.");
+    setText("risk-copy", "I understand that laser treatments carry potential risks and that these will be explained for my selected treatment.");
+    setText("no-guarantee-copy", "I understand that no guarantee has been made regarding the outcome of treatment and that results vary between individuals.");
+    setText("client-responsibility-copy", "I accept responsibility for following all aftercare guidance provided for my selected treatment.");
+  }else if(isTattoo){
     if(photoLabel) photoLabel.textContent = "Upload tattoo photos (optional)";
     if(goal) goal.placeholder = "Full removal, fading for cover-up, lightening, etc.";
     setText("aftercare-understood-copy", "I understand that laser tattoo removal requires proper aftercare, including avoiding sun exposure, not picking blisters or scabs, and allowing appropriate healing time between sessions.");
@@ -1659,7 +1683,7 @@ function applyTreatmentType(selectedTreatment){
   try{ updateColourScoring(); }catch(e){}
 }
 
-const initialTreatment = getTreatmentFromUrl() || localStorage.getItem("bareTreatmentType") || "Tattoo Removal";
+const initialTreatment = getTreatmentFromUrl() || "";
 applyTreatmentType(initialTreatment);
 
 if(treatmentSelect){
@@ -1718,7 +1742,7 @@ if(treatmentSelect){
       if(signedAtDisplayNode) signedAtDisplayNode.textContent = "Waiting for signature...";
 
             try{
-        applyTreatmentType(treatmentSelect?.value || localStorage.getItem("bareTreatmentType") || "Tattoo Removal");
+        applyTreatmentType(treatmentSelect?.value || "");
         updateColourScoring();
       }catch(e){}
 
