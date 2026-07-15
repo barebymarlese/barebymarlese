@@ -14,9 +14,40 @@
 <body>
   <main>
     <h1>Payment Not Completed</h1>
-    <p>No balance payment was taken, and your existing appointment has not been changed.</p>
-    <p>Please return to your practitioner when you are ready to try again.</p>
-    <a href="/">Return to BARE by Marlese</a>
+    <div id="cancel-message">
+      <p>No payment was taken.</p>
+      <p>Please return to BARE by Marlese when you are ready to try again.</p>
+    </div>
+    <a id="return-link" href="/">Return to BARE by Marlese</a>
   </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const isReturningClient =
+      (params.get("client") || "").toLowerCase() === "existing" ||
+      (params.get("returning") || "").toLowerCase() === "true";
+
+    const message = document.getElementById("cancel-message");
+    const returnLink = document.getElementById("return-link");
+
+    if (isReturningClient) {
+      message.innerHTML = `
+        <p>No payment was taken, so your treatment appointment has not been confirmed.</p>
+        <p>Your temporary appointment reservation will be released automatically if it has not already been released.</p>
+        <p>You can return to the returning-client treatment page and choose another appointment when you are ready.</p>
+      `;
+
+      returnLink.href = "/treatment.html?client=existing";
+      returnLink.textContent = "Return to Returning Client Treatments";
+    } else {
+      message.innerHTML = `
+        <p>No balance payment was taken, and your existing appointment has not been changed.</p>
+        <p>Please return to your practitioner when you are ready to try again.</p>
+      `;
+
+      returnLink.href = "/";
+      returnLink.textContent = "Return to BARE by Marlese";
+    }
+  </script>
 </body>
 </html>
