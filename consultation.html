@@ -408,6 +408,79 @@ header .brand *{
   display:none !important;
 }
 
+
+.client-choice{
+  margin:0 0 18px;
+  padding:18px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.42);
+  background:linear-gradient(145deg,rgba(255,255,255,0.30),rgba(255,255,255,0.12));
+}
+.client-choice-title{
+  margin:0 0 8px;
+  text-align:center;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  color:var(--brand);
+}
+.client-choice-copy{
+  margin:0 auto 14px;
+  max-width:720px;
+  text-align:center;
+  font-size:12px;
+  line-height:1.6;
+  color:var(--text);
+  opacity:.88;
+}
+.client-choice-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.client-choice-btn{
+  width:100%;
+  min-height:76px;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(94,105,89,.18);
+  background:rgba(255,255,255,.62);
+  color:var(--text);
+  font-family:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+.client-choice-btn strong{
+  display:block;
+  margin-bottom:5px;
+  color:var(--brand);
+  font-size:14px;
+}
+.client-choice-btn span{
+  display:block;
+  font-size:11px;
+  line-height:1.5;
+}
+.client-choice-btn:hover{
+  border-color:rgba(94,105,89,.45);
+}
+.client-choice-btn.primary{
+  background:var(--brand);
+  color:#fff;
+}
+.client-choice-btn.primary strong{
+  color:#fff;
+}
+#consultation-form-wrap[hidden]{
+  display:none !important;
+}
+@media (max-width:700px){
+  .client-choice-grid{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 
@@ -431,6 +504,26 @@ header .brand *{
         </p>
         <p class="con-small">Fields marked with <span class="required-star">*</span> are required.</p>
 
+        <div class="client-choice" id="client-choice">
+          <p class="client-choice-title">Are you a new or existing client?</p>
+          <p class="client-choice-copy">
+            New clients must complete the consultation and patch test form. Existing clients who have previously completed an approved consultation and patch test can continue to full-price treatment options.
+          </p>
+
+          <div class="client-choice-grid">
+            <button type="button" class="client-choice-btn primary" id="new-client-btn">
+              <strong>New Client</strong>
+              <span>Complete the consultation and patch test form, pay the £30 deposit, then book your consultation appointment.</span>
+            </button>
+
+            <button type="button" class="client-choice-btn" id="existing-client-btn">
+              <strong>Existing Client</strong>
+              <span>I have previously completed an approved consultation and patch test with BARE by Marlese.</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="consultation-form-wrap" hidden>
         <div class="con-card">
           <form id="consultation-form" autocomplete="off" method="POST" enctype="multipart/form-data">
                 
@@ -1347,6 +1440,7 @@ if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
             <p id="status"></p>
           </form>
         </div>
+        </div>
       </div>
     </section>
   </main>
@@ -1362,6 +1456,58 @@ if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
 
 <script>
 const CONFIG = window.SITE_CONFIG || {};
+
+const clientChoice = document.getElementById("client-choice");
+const consultationFormWrap = document.getElementById("consultation-form-wrap");
+const newClientBtn = document.getElementById("new-client-btn");
+const existingClientBtn = document.getElementById("existing-client-btn");
+
+function showNewClientConsultation(){
+  if(consultationFormWrap){
+    consultationFormWrap.hidden = false;
+  }
+
+  if(clientChoice){
+    clientChoice.style.display = "none";
+  }
+
+  try{
+    localStorage.setItem("bareClientType", "new");
+  }catch(e){}
+
+  window.setTimeout(() => {
+    consultationFormWrap?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 50);
+}
+
+function goToExistingClientTreatments(){
+  try{
+    localStorage.setItem("bareClientType", "existing");
+  }catch(e){}
+
+  window.location.href = "/treatment.html?client=existing";
+}
+
+if(newClientBtn){
+  newClientBtn.addEventListener("click", showNewClientConsultation);
+}
+
+if(existingClientBtn){
+  existingClientBtn.addEventListener("click", goToExistingClientTreatments);
+}
+
+try{
+  const clientParams = new URLSearchParams(window.location.search);
+  const clientMode = (clientParams.get("client") || "").toLowerCase();
+
+  if(clientMode === "new"){
+    showNewClientConsultation();
+  }
+}catch(e){}
+
 const consultationForm = document.getElementById("consultation-form");
 if (consultationForm) {
   consultationForm.action = CONFIG.consultationWorkerUrl || "";
