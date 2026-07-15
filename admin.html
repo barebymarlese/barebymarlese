@@ -293,6 +293,7 @@ tbody tr:last-child td{border-bottom:0}
 .patch-status{display:inline-flex;align-items:center;justify-content:center;min-width:105px;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:700;text-align:center;}
 .patch-status.complete{background:rgba(47,125,50,.12);color:#2f7d32;}
 .patch-status.pending{background:#fff7e8;color:#7a5318;}
+.patch-status.cancelled{background:#f1e6e3;color:#8a3b3b;}
 
 .badge.unpaid{
   background:#f1e6e3;
@@ -1119,16 +1120,45 @@ function buildPatchTestStatus(booking){
     return `<span class="action-note">Approved via consultation</span>`;
   }
 
-  const complete = Number(booking.patch_test_complete || 0) === 1 &&
+  const complete =
+    Number(booking.patch_test_complete || 0) === 1 &&
     Number(booking.consultation_complete || 0) === 1;
+
+  const status = String(booking.status || "").toLowerCase();
+  const paymentStatus = String(booking.payment_status || "").toLowerCase();
+
+  if (complete) {
+    return `
+      <span class="patch-status complete">
+        Complete
+      </span>
+    `;
+  }
+
+  if (paymentStatus === "refunded") {
+    return `
+      <span class="patch-status cancelled">
+        Cancelled
+      </span>
+    `;
+  }
+
+  if (status === "cancelled") {
+    return `
+      <span class="patch-status pending">
+        Pending
+      </span>
+    `;
+  }
 
   return `
     <div class="action-stack">
-      <span class="patch-status ${complete ? "complete" : "pending"}">
-        ${complete ? "Complete" : "Pending"}
+      <span class="patch-status pending">
+        Pending
       </span>
-      <button class="btn btn-secondary" type="button" onclick="setPatchTestComplete(${Number(booking.id)}, ${complete ? "false" : "true"})">
-        ${complete ? "Undo" : "Mark Complete"}
+      <button class="btn btn-secondary" type="button"
+        onclick="setPatchTestComplete(${Number(booking.id)}, true)">
+        Mark Complete
       </button>
     </div>
   `;
