@@ -798,6 +798,40 @@ footer{
   color:rgba(36,34,26,.58);
 }
 
+
+.returning-client-flag{
+  display:inline-block;
+  margin-top:7px;
+  padding:6px 9px;
+  border-radius:9px;
+  background:#fff7e8;
+  border:1px solid rgba(143,94,20,.20);
+  color:#7a5318;
+  font-size:10px;
+  line-height:1.35;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.reservation-flag{
+  display:inline-block;
+  margin-top:7px;
+  padding:6px 9px;
+  border-radius:9px;
+  background:#f1e6e3;
+  border:1px solid rgba(138,59,59,.18);
+  color:#8a3b3b;
+  font-size:10px;
+  line-height:1.35;
+  font-weight:700;
+}
+.status.pending_payment,
+.status.payment_pending,
+.status.reserved{
+  background:#fff7e8;
+  color:#7a5318;
+}
+
 </style>
 </head>
 
@@ -1015,6 +1049,45 @@ function escapeHtml(value){
     .replaceAll("'", "&#39;");
 }
 
+
+function isReturningClientBooking(booking){
+  return String(booking.payment_type || "").toLowerCase() ===
+    "returning_treatment_payment";
+}
+
+function isTemporaryReservation(booking){
+  const status = String(booking.status || "").toLowerCase();
+  const paymentStatus = String(booking.payment_status || "").toLowerCase();
+
+  return (
+    booking.booking_type === "treatment" &&
+    ["pending_payment","payment_pending","reserved"].includes(status) &&
+    paymentStatus !== "paid"
+  );
+}
+
+function buildClientFlags(booking){
+  const flags = [];
+
+  if(isReturningClientBooking(booking)){
+    flags.push(`
+      <span class="returning-client-flag">
+        Existing client<br>Verify previous consultation & patch test
+      </span>
+    `);
+  }
+
+  if(isTemporaryReservation(booking)){
+    flags.push(`
+      <span class="reservation-flag">
+        Temporary unpaid reservation
+      </span>
+    `);
+  }
+
+  return flags.join("");
+}
+
 function buildAftercareStatus(booking){
   if (booking.booking_type !== "treatment") {
     return `<span class="action-note">—</span>`;
@@ -1121,6 +1194,14 @@ function formatTattooSize(size){
 
 function buildPatchTestStatus(booking){
   if (booking.booking_type !== "consultation") {
+    if(isReturningClientBooking(booking)){
+      return `
+        <span class="patch-status pending">
+          Verify previous record
+        </span>
+      `;
+    }
+
     return `<span class="action-note">Patch test completed</span>`;
   }
 
@@ -1361,6 +1442,7 @@ function getCalendarAppointments(){
 
   adminBookings.forEach(booking => {
     if (String(booking.status || "").toLowerCase() === "cancelled") return;
+    if (isTemporaryReservation(booking)) return;
 
     if (booking.booking_type === "treatment" && Array.isArray(booking.sessions) && booking.sessions.length) {
       booking.sessions.forEach(session => {
@@ -1574,9 +1656,21 @@ async function loadBookings(){
       return;
     }
 
-    const activeCount = bookings.filter(booking => booking.status !== "cancelled").length;
-    const cancelledCount = bookings.filter(booking => booking.status === "cancelled").length;
-    summary.textContent = `${activeCount} active booking${activeCount === 1 ? "" : "s"} • ${cancelledCount} cancelled`;
+    const reservationCount = bookings.filter(isTemporaryReservation).length;
+    const activeCount = bookings.filter(booking =>
+      booking.status !== "cancelled" &&
+      !isTemporaryReservation(booking)
+    ).length;
+    const cancelledCount = bookings.filter(booking =>
+      booking.status === "cancelled"
+    ).length;
+
+    summary.textContent =
+      `${activeCount} active booking${activeCount === 1 ? "" : "s"} • ` +
+      `${cancelledCount} cancelled` +
+      (reservationCount
+        ? ` • ${reservationCount} temporary reservation${reservationCount === 1 ? "" : "s"}`
+        : "");
 
     bookings.forEach(booking => {
       const isCancelled = booking.status === "cancelled";
@@ -1584,7 +1678,10 @@ async function loadBookings(){
       row.dataset.bookingId = String(booking.id);
 
       row.innerHTML = `
-        <td><div class="client-name">${escapeHtml(booking.client_name || "Client")}</div></td>
+        <td>
+          <div class="client-name">${escapeHtml(booking.client_name || "Client")}</div>
+          ${buildClientFlags(booking)}
+        </td>
         <td class="contact">
           ${escapeHtml(booking.email || "No email")}<br>
           ${escapeHtml(booking.phone || "No phone")}
@@ -1609,7 +1706,9 @@ async function loadBookings(){
   ? `<span class="action-note">Package completed</span>`
   : ""}  
   
-    ${canTakeStripeBalancePayment(booking) && !isCancelled
+    ${isTemporaryReservation(booking)
+  ? `<span class="action-note">Awaiting Stripe payment or automatic release</span>`
+  : canTakeStripeBalancePayment(booking) && !isCancelled
   ? `<button class="btn btn-primary" onclick="openBalancePaymentModal(${Number(booking.id)})">
       Collect Balance (${formatMoney(Number(booking.remaining_balance || 0))})
     </button>`
@@ -1619,7 +1718,7 @@ async function loadBookings(){
       </button>`
     : ""}
 
-${isCancelled
+${isCancelled || isTemporaryReservation(booking)
   ? "—"
   : `<button class="btn btn-cancel" onclick="cancelBooking(${Number(booking.id)})">Cancel</button>`}
   </div>
