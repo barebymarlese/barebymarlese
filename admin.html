@@ -1181,6 +1181,9 @@ function buildPackageInfo(booking){
       ${booking.tattoo_size ? `<br>${escapeHtml(formatTattooSize(booking.tattoo_size))}` : ""}
       <br>
       <span class="action-note">${escapeHtml(booking.package_status || "none")}</span>
+      ${booking.payment_type === "returning_treatment_payment"
+        ? `<br><span class="patch-status pending">Existing client — verify previous consultation</span>`
+        : ""}
     </div>
   `;
 }
