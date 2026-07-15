@@ -32,39 +32,84 @@
   <script>
     function escapeHtml(value=""){return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;")}
     function money(value){return `£${Number(value||0).toFixed(2)}`}
-    async function confirmBalancePayment(){
+    function formatDate(value){
+      if(!value) return "";
+      const parts=String(value).split("-");
+      if(parts.length!==3) return value;
+      const [year,month,day]=parts.map(Number);
+      const date=new Date(year,month-1,day);
+      return date.toLocaleDateString("en-GB",{
+        weekday:"long",
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      });
+    }
+
+    async function confirmPayment(){
       const target=document.getElementById("payment-result");
       const sessionId=new URLSearchParams(location.search).get("session_id")||"";
+
       if(!sessionId.startsWith("cs_")){
         target.innerHTML='<p class="error">The payment reference is missing.</p><p>Please show your Stripe confirmation to your practitioner.</p>';
         return;
       }
+
       try{
         const response=await fetch(`/api?payment=balance-status&session_id=${encodeURIComponent(sessionId)}`);
         const data=await response.json();
+
         if(!response.ok||!data.success){
-          target.innerHTML='<p class="pending">Your payment was received and is still being confirmed.</p><p>Please show your Stripe confirmation to your practitioner.</p>';
+          target.innerHTML='<p class="pending">Your payment was received and is still being confirmed.</p><p>Please keep your Stripe confirmation. This page can be refreshed shortly.</p>';
           return;
         }
+
+        const isReturningBooking=Boolean(data.appointment_date&&data.appointment_time);
+
+        if(isReturningBooking){
+          target.innerHTML=`
+            <p class="success">Thank you — your payment and treatment appointment have been confirmed.</p>
+
+            <div class="summary">
+              <p><strong>Treatment:</strong> ${escapeHtml(data.treatment_name||"Treatment")}</p>
+              <p><strong>Date:</strong> ${escapeHtml(formatDate(data.appointment_date))}</p>
+              <p><strong>Time:</strong> ${escapeHtml(data.appointment_time)}</p>
+              <p><strong>Payment status:</strong> Paid in Full</p>
+              <p><strong>Total cash recorded:</strong> ${money(data.amount_paid)}</p>
+              ${Number(data.discount_amount||0)>0?`<p><strong>Total discount:</strong> ${money(data.discount_amount)}</p>`:""}
+              ${data.coupon_code?`<p><strong>Coupon:</strong> ${escapeHtml(data.coupon_code)}</p>`:""}
+              <p><strong>Remaining balance:</strong> ${money(data.remaining_balance)}</p>
+            </div>
+
+            <div class="notice">
+              <p>Your selected appointment is now secured. Please check your inbox for the confirmation email and appointment-management links.</p>
+            </div>
+          `;
+          return;
+        }
+
         target.innerHTML=`
-  <p class="success">Thank you — your balance payment has been confirmed.</p>
-  <div class="summary">
-    <p><strong>Treatment:</strong> ${escapeHtml(data.treatment_name || "Treatment")}</p>
-    <p><strong>Payment status:</strong> Paid in Full</p>
-    <p><strong>Total cash recorded:</strong> ${money(data.amount_paid)}</p>
-    ${Number(data.discount_amount || 0) > 0 ? `<p><strong>Total discount:</strong> ${money(data.discount_amount)}</p>` : ""}
-    ${data.coupon_code ? `<p><strong>Coupon:</strong> ${escapeHtml(data.coupon_code)}</p>` : ""}
-    <p><strong>Remaining balance:</strong> ${money(data.remaining_balance)}</p>
-  </div>
-  <div class="notice">
-    <p>Your existing appointment remains confirmed. You do not need to book another appointment.</p>
-  </div>
-`;
+          <p class="success">Thank you — your balance payment has been confirmed.</p>
+
+          <div class="summary">
+            <p><strong>Treatment:</strong> ${escapeHtml(data.treatment_name||"Treatment")}</p>
+            <p><strong>Payment status:</strong> Paid in Full</p>
+            <p><strong>Total cash recorded:</strong> ${money(data.amount_paid)}</p>
+            ${Number(data.discount_amount||0)>0?`<p><strong>Total discount:</strong> ${money(data.discount_amount)}</p>`:""}
+            ${data.coupon_code?`<p><strong>Coupon:</strong> ${escapeHtml(data.coupon_code)}</p>`:""}
+            <p><strong>Remaining balance:</strong> ${money(data.remaining_balance)}</p>
+          </div>
+
+          <div class="notice">
+            <p>Your existing appointment remains confirmed. You do not need to book another appointment.</p>
+          </div>
+        `;
       }catch(error){
-        target.innerHTML='<p class="pending">Your payment was received and is being confirmed.</p><p>Please show your Stripe confirmation to your practitioner.</p>';
+        target.innerHTML='<p class="pending">Your payment was received and is being confirmed.</p><p>Please keep your Stripe confirmation and refresh this page shortly.</p>';
       }
     }
-    confirmBalancePayment();
+
+    confirmPayment();
   </script>
 </body>
 </html>
