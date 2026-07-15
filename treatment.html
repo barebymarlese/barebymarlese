@@ -347,17 +347,17 @@ function renderTattooPackages(){
             </button>
 
             <button
-              class="btn"
-              onclick="goToReturningBooking(
-                'tattoo',
-                '${pkg.key}',
-                '${pkg.key}',
-                'single'
-              )"
-            >
-              <span>Single session</span>
-              <strong>${pkg.singlePrice}</strong>
-            </button>
+  class="btn"
+  onclick="goToReturningBooking(
+    'tattoo',
+    '${pkg.key}',
+    '${pkg.key}',
+    'single'
+  )"
+>
+  <span>Single session</span>
+  <strong>${pkg.fullSinglePrice}</strong>
+</button>
           </div>
         </div>
       `;
