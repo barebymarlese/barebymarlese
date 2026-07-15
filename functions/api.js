@@ -86,9 +86,9 @@ export async function onRequest(context) {
     );
 
     stripeUrl.searchParams.append(
-      "expand[]",
-      "total_details.breakdown.discounts.discount.promotion_code"
-    );
+  "expand[]",
+  "discounts"
+);
 
     const response = await fetch(stripeUrl.toString(), {
       method: "GET",
@@ -531,7 +531,9 @@ async function applyReturningTreatmentPayment(sessionId, env) {
   const amountPaid = Number(stripe.amount_total || 0) / 100;
   const discountAmount = Number(stripe.total_details?.amount_discount || 0) / 100;
   const couponCode =
-    stripe.total_details?.breakdown?.discounts?.[0]?.discount?.promotion_code?.code || null;
+  stripe.discounts?.[0]?.promotion_code?.code ||
+  stripe.discounts?.[0]?.source?.promotion_code?.code ||
+  null;
   const fullPrice = Number(booking.full_price || 0);
   const remainingBalance = Math.max(0, fullPrice - amountPaid - discountAmount);
 
