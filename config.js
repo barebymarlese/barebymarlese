@@ -114,6 +114,17 @@ stripeLinksCarbon: {
   fungal_course4_one_foot: "https://buy.stripe.com/bJebJ3daqd9p2Ex2TQ8g00H",
   fungal_course4_both_feet: "https://buy.stripe.com/dRmcN7eeu9Xdenf1PM8g00G"
 },
+
+stripeLinksReturning: {
+  carbon_single: "ADD_FULL_PRICE_STRIPE_LINK_HERE",
+  carbon_course3: "ADD_FULL_PRICE_STRIPE_LINK_HERE",
+
+  fungal_single_nail: "ADD_FULL_PRICE_STRIPE_LINK_HERE",
+  fungal_one_foot: "ADD_FULL_PRICE_STRIPE_LINK_HERE",
+  fungal_both_feet: "ADD_FULL_PRICE_STRIPE_LINK_HERE",
+  fungal_course4_one_foot: "ADD_FULL_PRICE_STRIPE_LINK_HERE",
+  fungal_course4_both_feet: "ADD_FULL_PRICE_STRIPE_LINK_HERE"
+},
   
   stripePriceIds: {
   carbon: {
