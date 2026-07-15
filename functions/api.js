@@ -305,6 +305,77 @@ form.set("line_items[0][price]", stripePriceId);
 }
 
 
+
+async function createReturningTreatmentCheckout(selection, env) {
+  if (!env.STRIPE_SECRET_KEY) throw new Error("STRIPE_SECRET_KEY is not configured.");
+
+  const category = String(selection.category || "").toLowerCase();
+  const packageType = String(selection.package_type || "").toLowerCase();
+  const tattooSize = String(selection.tattoo_size || "").toLowerCase();
+
+  const catalogue = {
+    tattoo: {
+      single_session: { tiny:7000, small:9500, medium:12000, large:16000, xl:20000 },
+      six_sessions: { tiny:36000, small:49500, medium:62000, large:82000, xl:105000 }
+    },
+    carbon: {
+      single_session: 8500,
+      three_sessions: 22500
+    },
+    fungal: {
+      single_nail: 4500,
+      one_foot: 8500,
+      both_feet: 12000,
+      course4_one_foot: 30000,
+      course4_both_feet: 42000
+    }
+  };
+
+  const amountPence = category === "tattoo"
+    ? Number(catalogue.tattoo?.[packageType]?.[tattooSize] || 0)
+    : Number(catalogue[category]?.[packageType] || 0);
+
+  if (!amountPence) throw new Error("This returning-client treatment option is not configured.");
+
+  const treatmentName = String(selection.treatment_name || "Treatment").slice(0, 120);
+  const sessions = Number(selection.sessions || 1);
+  const form = new URLSearchParams();
+  form.set("mode", "payment");
+  form.set("allow_promotion_codes", "true");
+  form.set("line_items[0][quantity]", "1");
+  form.set("line_items[0][price_data][currency]", "gbp");
+  form.set("line_items[0][price_data][unit_amount]", String(amountPence));
+  form.set("line_items[0][price_data][product_data][name]", treatmentName);
+  form.set("metadata[payment_purpose]", "returning_treatment_payment");
+  form.set("metadata[treatment_category]", category);
+  form.set("metadata[package_type]", packageType);
+  form.set("metadata[tattoo_size]", tattooSize);
+  form.set("payment_intent_data[metadata][payment_purpose]", "returning_treatment_payment");
+
+  const q = new URLSearchParams({
+    paid: "true",
+    category,
+    package_type: packageType,
+    treatment_name: treatmentName,
+    tattoo_size: tattooSize,
+    sessions: String(sessions),
+    amount: String(amountPence / 100),
+    returning_client: "true",
+    session_id: "{CHECKOUT_SESSION_ID}"
+  });
+  form.set("success_url", `https://barebymarlese.com/treatment-booking.html?${q.toString()}`);
+  form.set("cancel_url", "https://barebymarlese.com/treatment.html?client=existing");
+
+  const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+    method:"POST",
+    headers:{Authorization:`Bearer ${env.STRIPE_SECRET_KEY}`,"Content-Type":"application/x-www-form-urlencoded"},
+    body:form.toString()
+  });
+  const data = await response.json();
+  if (!response.ok || !data.url) throw new Error(data?.error?.message || "Stripe Checkout could not be created.");
+  return data;
+}
+
 function hexToBytes(hex = "") {
   if (!hex || hex.length % 2 !== 0) return new Uint8Array();
   const bytes = new Uint8Array(hex.length / 2);
@@ -558,6 +629,21 @@ if (
   }
 }
   
+if (
+  request.method === "POST" &&
+  url.searchParams.get("payment") === "create-returning-treatment-checkout"
+) {
+  try {
+    const body = await request.json();
+    if (body.returning_client !== true) return new Response("Existing-client selection required.", {status:400});
+    const checkout = await createReturningTreatmentCheckout(body, env);
+    return new Response(JSON.stringify({success:true, checkout_url:checkout.url, checkout_session_id:checkout.id}), {status:200, headers:jsonHeaders});
+  } catch (error) {
+    await sendErrorAlert(env, "Returning treatment Checkout error", error.stack || error.message || error);
+    return new Response(error.message || "Treatment checkout could not be created.", {status:500});
+  }
+}
+
 if (
   request.method === "POST" &&
   url.searchParams.get("payment") === "create-balance-checkout"
@@ -2089,6 +2175,7 @@ if (bookingType === "treatment") {
     const tattooSize = body.tattoo_size || null;
     const treatmentCategory = body.treatment_category || null;
     const treatmentName = body.treatment_name || null;
+    const returningClient = body.returning_client === true;
 
 let amountPaid = Number(body.amount_paid || 0);
 const paymentReference = body.payment_reference || null;
@@ -2134,9 +2221,11 @@ if (paymentReference?.startsWith("cs_")) {
     }
 
     if (stripe.currency && stripe.currency !== "gbp") {
-      return new Response("Unexpected payment currency.", {
-        status: 400
-      });
+      return new Response("Unexpected payment currency.", { status: 400 });
+    }
+
+    if (returningClient && stripe.metadata?.payment_purpose !== "returning_treatment_payment") {
+      return new Response("This payment is not a returning-client treatment payment.", { status: 400 });
     }
 
     amountPaid = Number(stripe.amount_total || 0) / 100;
@@ -2193,9 +2282,11 @@ const remainingBalance = Number(
     }
 
 if (bookingType === "treatment") {
-  paymentType = depositOnly
-    ? "treatment_deposit"
-    : "treatment_payment";
+  paymentType = returningClient
+    ? "returning_treatment_payment"
+    : depositOnly
+      ? "treatment_deposit"
+      : "treatment_payment";
 
   const sessionTotalsByPackage = {
     single_session: 1,
@@ -2262,7 +2353,7 @@ const isDepositTreatment =
     treatmentCategory === "fungal"
   );
 
-    if (bookingType === "treatment") {
+    if (bookingType === "treatment" && !returningClient) {
       const normalisedEmail = String(email || "").trim().toLowerCase();
       const normalisedCategory = String(treatmentCategory || "tattoo").trim().toLowerCase();
 
