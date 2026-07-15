@@ -130,11 +130,66 @@ stripeLinksCarbon: {
 }
 },
   packages: [
-  { key:"tiny", name:"Tiny Tattoo", bundlePrice:"\u00A3330", fullPrice:"\u00A3360", singlePrice:"\u00A370", bundleAmount:33000, fullAmount:36000, singleAmount:7000 },
-  { key:"small", name:"Small Tattoo", bundlePrice:"\u00A3465", fullPrice:"\u00A3495", singlePrice:"\u00A395", bundleAmount:46500, fullAmount:49500, singleAmount:9500 },
-  { key:"medium", name:"Medium Tattoo", bundlePrice:"\u00A3590", fullPrice:"\u00A3620", singlePrice:"\u00A3120", bundleAmount:59000, fullAmount:62000, singleAmount:12000 },
-  { key:"large", name:"Large Tattoo", bundlePrice:"\u00A3790", fullPrice:"\u00A3820", singlePrice:"\u00A3160", bundleAmount:79000, fullAmount:82000, singleAmount:16000 },
-  { key:"xl", name:"XL Tattoo", bundlePrice:"\u00A31020", fullPrice:"\u00A31050", singlePrice:"\u00A3200", bundleAmount:102000, fullAmount:105000, singleAmount:20000 }
+  {
+    key: "tiny",
+    name: "Tiny Tattoo",
+    bundlePrice: "£330",
+    fullPrice: "£360",
+    singlePrice: "£40",
+    fullSinglePrice: "£70",
+    bundleAmount: 33000,
+    fullAmount: 36000,
+    singleAmount: 4000,
+    fullSingleAmount: 7000
+  },
+  {
+    key: "small",
+    name: "Small Tattoo",
+    bundlePrice: "£465",
+    fullPrice: "£495",
+    singlePrice: "£65",
+    fullSinglePrice: "£95",
+    bundleAmount: 46500,
+    fullAmount: 49500,
+    singleAmount: 6500,
+    fullSingleAmount: 9500
+  },
+  {
+    key: "medium",
+    name: "Medium Tattoo",
+    bundlePrice: "£590",
+    fullPrice: "£620",
+    singlePrice: "£90",
+    fullSinglePrice: "£120",
+    bundleAmount: 59000,
+    fullAmount: 62000,
+    singleAmount: 9000,
+    fullSingleAmount: 12000
+  },
+  {
+    key: "large",
+    name: "Large Tattoo",
+    bundlePrice: "£790",
+    fullPrice: "£820",
+    singlePrice: "£130",
+    fullSinglePrice: "£160",
+    bundleAmount: 79000,
+    fullAmount: 82000,
+    singleAmount: 13000,
+    fullSingleAmount: 16000
+  },
+  {
+    key: "xl",
+    name: "XL Tattoo",
+    bundlePrice: "£1020",
+    fullPrice: "£1050",
+    singlePrice: "£170",
+    fullSinglePrice: "£200",
+    bundleAmount: 102000,
+    fullAmount: 105000,
+    singleAmount: 17000,
+    fullSingleAmount: 20000
+  }
 ],
 
 laserTreatmentPackages: [
