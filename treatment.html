@@ -114,7 +114,6 @@ const kicker = document.getElementById("page-kicker");
 if (kicker) kicker.textContent = "Treatments & Pricing";
 
 const stripeLinks = CONFIG.stripeLinks || {};
-const returningLinks = CONFIG.stripeLinksReturning || {};
 const packages = Array.isArray(CONFIG.packages) ? CONFIG.packages : [];
 const laserPackages = Array.isArray(CONFIG.laserTreatmentPackages)
   ? CONFIG.laserTreatmentPackages
@@ -142,13 +141,28 @@ function goToCarbonPayment(key){
   window.location.href = link;
 }
 
-function goToReturningPayment(key){
-  const link = returningLinks?.[key];
-  if (!link) {
-    alert("The full-price returning-client payment link still needs to be added in config.js.");
-    return;
+function goToReturningBooking(category, packageKey, size = "", type = ""){
+  const bookingUrl = new URL(
+    "/treatment-booking.html",
+    window.location.origin
+  );
+
+  bookingUrl.searchParams.set("client", "existing");
+  bookingUrl.searchParams.set("category", category);
+
+  if (packageKey) {
+    bookingUrl.searchParams.set("package", packageKey);
   }
-  window.location.href = link;
+
+  if (size) {
+    bookingUrl.searchParams.set("size", size);
+  }
+
+  if (type) {
+    bookingUrl.searchParams.set("type", type);
+  }
+
+  window.location.href = bookingUrl.toString();
 }
 
 function getLaserPackage(key){
@@ -157,26 +171,65 @@ function getLaserPackage(key){
 
 function renderTattooPackages(){
   if (!packages.length) {
-    packagesContainer.innerHTML = `<p style="text-align:center;padding:20px;">No tattoo packages configured.</p>`;
+    packagesContainer.innerHTML =
+      `<p style="text-align:center;padding:20px;">No tattoo packages configured.</p>`;
     return;
   }
 
   packagesContainer.innerHTML = packages.map(pkg => {
-    const bundleType = isExistingClient ? "bundle_full" : "bundle_deducted";
-    const bundlePrice = isExistingClient ? pkg.fullPrice : pkg.bundlePrice;
-    const bundleCopy = isExistingClient
-      ? "6-session bundle · Returning client full price"
-      : "6-session bundle · Consultation deposit deducted";
+    if (isExistingClient) {
+      return `
+        <div class="package">
+          <h2>${pkg.name}</h2>
+
+          <div class="price-grid">
+            <button
+              class="btn"
+              onclick="goToReturningBooking(
+                'tattoo',
+                '${pkg.key}',
+                '${pkg.key}',
+                'bundle'
+              )"
+            >
+              <span>6-session bundle · Returning client full price</span>
+              <strong>${pkg.fullPrice}</strong>
+            </button>
+
+            <button
+              class="btn"
+              onclick="goToReturningBooking(
+                'tattoo',
+                '${pkg.key}',
+                '${pkg.key}',
+                'single'
+              )"
+            >
+              <span>Single session</span>
+              <strong>${pkg.singlePrice}</strong>
+            </button>
+          </div>
+        </div>
+      `;
+    }
 
     return `
       <div class="package">
         <h2>${pkg.name}</h2>
+
         <div class="price-grid">
-          <button class="btn" onclick="goToPayment('${pkg.key}','${bundleType}')">
-            <span>${bundleCopy}</span>
-            <strong>${bundlePrice}</strong>
+          <button
+            class="btn"
+            onclick="goToPayment('${pkg.key}','bundle_deducted')"
+          >
+            <span>6-session bundle · Consultation deposit deducted</span>
+            <strong>${pkg.bundlePrice}</strong>
           </button>
-          <button class="btn" onclick="goToPayment('${pkg.key}','single')">
+
+          <button
+            class="btn"
+            onclick="goToPayment('${pkg.key}','single')"
+          >
             <span>Single session</span>
             <strong>${pkg.singlePrice}</strong>
           </button>
@@ -196,7 +249,7 @@ function renderExistingClientLaserPrices(){
         <h3>${carbonSingle.name || "Single Carbon Facial"}</h3>
         <p>Returning-client full treatment price. No new £30 consultation deposit is deducted.</p>
       </div>
-      <button class="price-button" onclick="goToReturningPayment('carbon_single')">
+      <button class="price-button" onclick="goToReturningBooking('carbon','carbon_single')">
         ${carbonSingle.price || "£85"}
       </button>
     </div>
@@ -205,7 +258,7 @@ function renderExistingClientLaserPrices(){
         <h3>${carbonCourse.name || "Course of 3 Treatments"}</h3>
         <p>Returning-client full course price. No new £30 consultation deposit is deducted.</p>
       </div>
-      <button class="price-button" onclick="goToReturningPayment('carbon_course3')">
+      <button class="price-button" onclick="goToReturningBooking('carbon','carbon_course3')">
         ${carbonCourse.price || "£225"}
       </button>
     </div>
@@ -227,7 +280,10 @@ function renderExistingClientLaserPrices(){
           <h3>${item.name || key}</h3>
           <p>Returning-client full treatment price. No new £30 consultation deposit is deducted.</p>
         </div>
-        <button class="price-button" onclick="goToReturningPayment('${key}')">
+        <button
+  class="price-button"
+  onclick="goToReturningBooking('fungal','${key}')"
+>
           ${item.price || ""}
         </button>
       </div>
@@ -252,284 +308,9 @@ function applyClientMode(){
   const carbonTitle = document.getElementById("carbon-section-title");
   const fungalTitle = document.getElementById("fungal-section-title");
 
-  if(heroTitle) heroTitle.textContent = "Returning Client Treatment Payment";
+  if(heroTitle) heroTitle.textContent = "Returning Client Treatment Booking";
   if(heroSubtext) heroSubtext.textContent =
-    "Choose your treatment or package at the full price, complete payment, then book your treatment appointment.";
-
-  if(eligibilityNotice) eligibilityNotice.innerHTML =
-    "<strong>Existing Client:</strong> Continue only if you have previously completed an approved consultation and patch test with BARE by Marlese for this treatment.";
-
-  if(paymentNotice) paymentNotice.innerHTML =
-    "<strong>Important:</strong> These are full treatment prices because no new £30 consultation deposit is being paid or deducted. Your previous consultation and patch-test history will be checked before treatment.";
-
-  if(consultationAction) consultationAction.style.display = "none";
-  if(carbonTitle) carbonTitle.textContent = "Returning client · Carbon laser facial full prices";
-  if(fungalTitle) fungalTitle.textContent = "Returning client · Fungal nail laser treatment full prices";
-
-  renderExistingClientLaserPrices();
-}
-
-applyClientMode();
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title id="page-title">Treatments & Pricing | BARE by Marlese</title>
-<link id="favicon-link" rel="icon" type="image/png" href="/favicon.png">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-:root{--bg:#cacdc6;--ink:#24221a;--olive:#5e6959;--olive-dark:#4f5a4b;--stone:#878274;--card:#f8f8f6;--line:rgba(36,34,26,.12)}
-*{box-sizing:border-box}html,body{margin:0;padding:0}
-body{font-family:'Montserrat',Arial,sans-serif;background:radial-gradient(circle at top,rgba(255,255,255,.45),transparent 30%),linear-gradient(180deg,#d8dbd4 0%,var(--bg) 100%);color:var(--ink);min-height:100vh}
-.page{min-height:100vh;padding:28px 16px}.shell{width:100%;max-width:1100px;margin:0 auto}
-.brand{text-align:center;margin:0 0 18px}#brand-main{color:#5e6959;font-size:24px;font-weight:600;letter-spacing:.26em;text-transform:uppercase}.brand-divider{color:#5e6959;opacity:.8;margin:0 12px;font-size:22px}#brand-sub{color:#878274;font-size:15px;font-weight:500;letter-spacing:.05em;text-transform:none}
-.card{background:rgba(248,248,246,.9);border:1px solid var(--line);border-radius:28px;box-shadow:0 18px 60px rgba(36,34,26,.10);overflow:hidden;backdrop-filter:blur(6px)}
-.hero{padding:40px 28px 24px;text-align:center;background:linear-gradient(180deg,rgba(94,105,89,.08),rgba(94,105,89,0) 100%);border-bottom:1px solid var(--line)}
-.kicker{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(94,105,89,.10);color:var(--olive);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-h1{margin:18px 0 10px;font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight:600}.sub{max-width:720px;margin:0 auto;font-size:15px;line-height:1.7;color:rgba(36,34,26,.78)}
-.content{padding:26px}.section-title{text-align:center;margin:0 auto 22px;max-width:720px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--olive-dark);font-weight:700;line-height:1.7}
-.treatment-section{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;margin-bottom:22px}.treatment-header{text-align:center;margin-bottom:20px}.treatment-header h2{margin:0 0 8px;font-size:24px;font-weight:600;color:var(--ink)}.treatment-header p{margin:0 auto;max-width:680px;font-size:14px;line-height:1.7;color:rgba(36,34,26,.72)}
-.packages{background:white;border:1px solid var(--line);border-radius:22px;padding:18px 20px;margin-bottom:22px}.package{display:grid;grid-template-columns:180px 1fr;gap:22px;align-items:center;padding:22px 0;border-bottom:1px solid rgba(36,34,26,.10)}.package:last-child{border-bottom:0}.package h2{margin:0;font-size:19px;font-weight:500;letter-spacing:.08em}.price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.btn{appearance:none;border:1px solid rgba(94,105,89,.18);cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:64px;padding:12px 14px;border-radius:16px;text-decoration:none;font-family:inherit;font-weight:700;font-size:12px;line-height:1.25;background:linear-gradient(180deg,var(--olive),var(--olive-dark));color:#fff;text-align:left}.btn strong{font-size:15px;margin-top:4px}.btn:hover{transform:translateY(-1px);opacity:.95}
-.price-list{display:grid;gap:12px}.price-row{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:16px 18px;border:1px solid rgba(36,34,26,.10);border-radius:16px;background:#f8f8f6}.price-row h3{margin:0;font-size:15px;font-weight:600;letter-spacing:.04em;color:var(--ink)}.price-row p{margin:4px 0 0;font-size:12px;line-height:1.5;color:rgba(36,34,26,.65)}
-.price-button{font-size:18px;font-weight:700;color:#fff;background:linear-gradient(180deg,var(--olive),var(--olive-dark));padding:11px 16px;border-radius:14px;white-space:nowrap;border:none;cursor:pointer;font-family:inherit}.price-button:hover{opacity:.95;transform:translateY(-1px)}
-.notice{margin-top:22px;padding:14px 16px;background:rgba(135,130,116,.10);border:1px solid rgba(135,130,116,.18);border-radius:14px;font-size:13px;line-height:1.65;color:rgba(36,34,26,.76)}.actions{margin-top:22px;text-align:center}.consult-btn{appearance:none;border:1px solid rgba(94,105,89,.18);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 16px;border-radius:14px;text-decoration:none;font-family:inherit;font-weight:700;font-size:13px;background:linear-gradient(180deg,var(--olive),var(--olive-dark));color:#fff}.consult-btn:hover{transform:translateY(-1px);opacity:.95}
-footer{text-align:center;padding:18px 10px 0;color:rgba(36,34,26,.6);font-size:12px}
-@media(max-width:900px){.page{padding:14px 8px}.content{padding:18px 8px}.packages{overflow-x:auto;padding:16px}.package{grid-template-columns:160px 520px;min-width:700px}.price-grid{grid-template-columns:repeat(2,1fr)}.btn{min-width:230px}}
-@media(max-width:700px){.hero{padding:34px 20px 22px}.treatment-section{padding:16px}.price-row{grid-template-columns:1fr;gap:10px;text-align:left}.price-button{display:inline-flex;justify-content:center;width:fit-content}.consult-btn{width:100%}}
-</style>
-</head>
-
-<body>
-<div class="page"><div class="shell">
-<div class="brand"><span id="brand-main"></span><span class="brand-divider">|</span><span class="brand-sub" id="brand-sub"></span></div>
-
-<div class="card">
-  <div class="hero">
-    <span class="kicker" id="page-kicker">Treatments & Pricing</span>
-    <h1 id="hero-title">Choose Your Treatment Payment</h1>
-    <p class="sub" id="hero-subtext">Select your treatment option, complete checkout, then book your appointment.</p>
-  </div>
-
-  <div class="content">
-    <div class="notice" id="eligibility-notice"><strong>Consultation & Patch Test Required:</strong> Every laser treatment requires a completed consultation and an approved patch test before treatment can be booked or performed.</div>
-    <p class="section-title">Tattoo removal pricing</p>
-    <div class="packages" id="packages"></div>
-
-    <p class="section-title" id="carbon-section-title">Consultation & Patch Test Required · Carbon laser facial</p>
-    <div class="treatment-section">
-      <div class="treatment-header">
-        <h2>Carbon Laser Facial</h2>
-        <p>A laser facial treatment designed to refresh the appearance of the skin and support a clearer-looking complexion.</p>
-      </div>
-      <div class="price-list" id="carbon-price-list">
-        <div class="price-row"><div><h3>Single Carbon Facial</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('carbon_single_deducted')">£55</button></div>
-        <div class="price-row"><div><h3>Course of 3 Treatments</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('carbon_course3_deducted')">£195</button></div>
-      </div>
-    </div>
-
-    <p class="section-title" id="fungal-section-title">Consultation & Patch Test Required · Fungal nail laser treatment</p>
-    <div class="treatment-section">
-      <div class="treatment-header">
-        <h2>Laser Fungal Nail Treatment</h2>
-        <p>Pricing depends on how many nails are affected and whether treatment is needed on one foot or both feet.</p>
-      </div>
-      <div class="price-list" id="fungal-price-list">
-        <div class="price-row"><div><h3>Single Nail</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_single_nail')">£15</button></div>
-        <div class="price-row"><div><h3>One Foot (Up to 5 Nails)</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_one_foot')">£55</button></div>
-        <div class="price-row"><div><h3>Both Feet</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_both_feet')">£90</button></div>
-        <div class="price-row"><div><h3>Course of 4 Sessions (One Foot)</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_course4_one_foot')">£270</button></div>
-        <div class="price-row"><div><h3>Course of 4 Sessions (Both Feet)</h3><p>Remaining balance after your £30 booking deposit.</p></div><button class="price-button" onclick="goToCarbonPayment('fungal_course4_both_feet')">£390</button></div>
-      </div>
-    </div>
-
-    <div class="notice" id="payment-notice"><strong>Important:</strong> Carbon Facial and Fungal Nail prices shown on this page are the remaining balances payable after the £30 booking deposit has already been paid. Only continue with the treatment or package approved after your consultation and completed patch test.</div>
-    <div class="actions" id="consultation-action"><a class="consult-btn" href="/booking.html">Book Consultation & Patch Test</a></div>
-  </div>
-</div>
-
-<footer>
-  <div style="line-height:1.7;">
-    <strong id="legal-name"></strong><br>
-    <span id="registered-in"></span><br>
-    Company No. <span id="company-number"></span>
-  </div>
-</footer>
-</div></div>
-
-<script src="/config.js"></script>
-<script src="/branding.js"></script>
-<script>
-const CONFIG = window.SITE_CONFIG || {};
-
-const legalName = document.getElementById("legal-name");
-const registeredIn = document.getElementById("registered-in");
-const companyNumber = document.getElementById("company-number");
-
-if (legalName) {
-  legalName.textContent = CONFIG.legalName || "";
-}
-
-if (registeredIn) {
-  registeredIn.textContent = CONFIG.registeredIn || "";
-}
-
-if (companyNumber) {
-  companyNumber.textContent = CONFIG.companyNumber || "";
-}
-const pageTitle = document.getElementById("page-title");
-if (pageTitle) pageTitle.textContent = `Treatments & Pricing | ${CONFIG.businessName || "BARE by Marlese"}`;
-
-const kicker = document.getElementById("page-kicker");
-if (kicker) kicker.textContent = "Treatments & Pricing";
-
-const stripeLinks = CONFIG.stripeLinks || {};
-const returningLinks = CONFIG.stripeLinksReturning || {};
-const packages = Array.isArray(CONFIG.packages) ? CONFIG.packages : [];
-const laserPackages = Array.isArray(CONFIG.laserTreatmentPackages)
-  ? CONFIG.laserTreatmentPackages
-  : [];
-const packagesContainer = document.getElementById("packages");
-
-const params = new URLSearchParams(window.location.search);
-const isExistingClient = (params.get("client") || "").toLowerCase() === "existing";
-
-function goToPayment(packageKey, type){
-  const link = stripeLinks?.[type]?.[packageKey];
-  if (!link) {
-    alert("Payment link is not set up for this option.");
-    return;
-  }
-  window.location.href = link;
-}
-
-function goToCarbonPayment(key){
-  const link = CONFIG.stripeLinksCarbon?.[key];
-  if (!link) {
-    alert("Payment link not configured.");
-    return;
-  }
-  window.location.href = link;
-}
-
-function goToReturningPayment(key){
-  const link = returningLinks?.[key];
-  if (!link) {
-    alert("The full-price returning-client payment link still needs to be added in config.js.");
-    return;
-  }
-  window.location.href = link;
-}
-
-function getLaserPackage(key){
-  return laserPackages.find(item => item.key === key) || {};
-}
-
-function renderTattooPackages(){
-  if (!packages.length) {
-    packagesContainer.innerHTML = `<p style="text-align:center;padding:20px;">No tattoo packages configured.</p>`;
-    return;
-  }
-
-  packagesContainer.innerHTML = packages.map(pkg => {
-    const bundleType = isExistingClient ? "bundle_full" : "bundle_deducted";
-    const bundlePrice = isExistingClient ? pkg.fullPrice : pkg.bundlePrice;
-    const bundleCopy = isExistingClient
-      ? "6-session bundle · Returning client full price"
-      : "6-session bundle · Consultation deposit deducted";
-
-    return `
-      <div class="package">
-        <h2>${pkg.name}</h2>
-        <div class="price-grid">
-          <button class="btn" onclick="goToPayment('${pkg.key}','${bundleType}')">
-            <span>${bundleCopy}</span>
-            <strong>${bundlePrice}</strong>
-          </button>
-          <button class="btn" onclick="goToPayment('${pkg.key}','single')">
-            <span>Single session</span>
-            <strong>${pkg.singlePrice}</strong>
-          </button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderExistingClientLaserPrices(){
-  const carbonSingle = getLaserPackage("carbon_single");
-  const carbonCourse = getLaserPackage("carbon_course3");
-
-  document.getElementById("carbon-price-list").innerHTML = `
-    <div class="price-row">
-      <div>
-        <h3>${carbonSingle.name || "Single Carbon Facial"}</h3>
-        <p>Returning-client full treatment price. No new £30 consultation deposit is deducted.</p>
-      </div>
-      <button class="price-button" onclick="goToReturningPayment('carbon_single')">
-        ${carbonSingle.price || "£85"}
-      </button>
-    </div>
-    <div class="price-row">
-      <div>
-        <h3>${carbonCourse.name || "Course of 3 Treatments"}</h3>
-        <p>Returning-client full course price. No new £30 consultation deposit is deducted.</p>
-      </div>
-      <button class="price-button" onclick="goToReturningPayment('carbon_course3')">
-        ${carbonCourse.price || "£225"}
-      </button>
-    </div>
-  `;
-
-  const fungalKeys = [
-    "fungal_single_nail",
-    "fungal_one_foot",
-    "fungal_both_feet",
-    "fungal_course4_one_foot",
-    "fungal_course4_both_feet"
-  ];
-
-  document.getElementById("fungal-price-list").innerHTML = fungalKeys.map(key => {
-    const item = getLaserPackage(key);
-    return `
-      <div class="price-row">
-        <div>
-          <h3>${item.name || key}</h3>
-          <p>Returning-client full treatment price. No new £30 consultation deposit is deducted.</p>
-        </div>
-        <button class="price-button" onclick="goToReturningPayment('${key}')">
-          ${item.price || ""}
-        </button>
-      </div>
-    `;
-  }).join("");
-}
-
-function applyClientMode(){
-  renderTattooPackages();
-
-  if(!isExistingClient) return;
-
-  try{
-    localStorage.setItem("bareClientType", "existing");
-  }catch(e){}
-
-  const heroTitle = document.getElementById("hero-title");
-  const heroSubtext = document.getElementById("hero-subtext");
-  const eligibilityNotice = document.getElementById("eligibility-notice");
-  const paymentNotice = document.getElementById("payment-notice");
-  const consultationAction = document.getElementById("consultation-action");
-  const carbonTitle = document.getElementById("carbon-section-title");
-  const fungalTitle = document.getElementById("fungal-section-title");
-
-  if(heroTitle) heroTitle.textContent = "Returning Client Treatment Payment";
-  if(heroSubtext) heroSubtext.textContent =
-    "Choose your treatment or package at the full price, complete payment, then book your treatment appointment.";
+  "Choose your treatment or package, then select your appointment date and time before completing payment.";
 
   if(eligibilityNotice) eligibilityNotice.innerHTML =
     "<strong>Existing Client:</strong> Continue only if you have previously completed an approved consultation and patch test with BARE by Marlese for this treatment.";
