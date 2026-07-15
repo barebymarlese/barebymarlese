@@ -108,6 +108,89 @@ export async function onRequest(context) {
     return await response.json();
   }
 
+async function createStripeConsultationCheckout(category, env) {
+  if (!env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not configured.");
+  }
+
+  const normalisedCategory = String(category || "").toLowerCase();
+
+  const consultationPriceLookup = {
+    carbon: env.STRIPE_PRICE_CONSULTATION_CARBON,
+    fungal: env.STRIPE_PRICE_CONSULTATION_FUNGAL
+  };
+
+  const stripePriceId =
+    consultationPriceLookup[normalisedCategory] || "";
+
+  if (!stripePriceId.startsWith("price_")) {
+    throw new Error(
+      `Stripe consultation Price ID is not configured for ${normalisedCategory}.`
+    );
+  }
+
+  const form = new URLSearchParams();
+
+  form.set("mode", "payment");
+
+  form.set(
+    "success_url",
+    "https://barebymarlese.com/booking.html?paid=true&session_id={CHECKOUT_SESSION_ID}"
+  );
+
+  form.set(
+    "cancel_url",
+    `https://barebymarlese.com/deposit.html?treatment=${encodeURIComponent(normalisedCategory)}`
+  );
+
+  form.set("allow_promotion_codes", "true");
+
+  form.set("line_items[0][quantity]", "1");
+  form.set("line_items[0][price]", stripePriceId);
+
+  form.set("metadata[payment_purpose]", "consultation_deposit");
+  form.set("metadata[treatment_category]", normalisedCategory);
+
+  form.set(
+    "payment_intent_data[metadata][payment_purpose]",
+    "consultation_deposit"
+  );
+
+  form.set(
+    "payment_intent_data[metadata][treatment_category]",
+    normalisedCategory
+  );
+
+  const response = await fetch(
+    "https://api.stripe.com/v1/checkout/sessions",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: form.toString()
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data?.error?.message ||
+      "Stripe consultation Checkout Session could not be created."
+    );
+  }
+
+  if (!data.id || !data.url) {
+    throw new Error(
+      "Stripe did not return a consultation Checkout URL."
+    );
+  }
+
+  return data;
+}
+  
 async function createStripeBalanceCheckout(booking, env) {
   if (!env.STRIPE_SECRET_KEY) {
     throw new Error("STRIPE_SECRET_KEY is not configured.");
@@ -429,6 +512,52 @@ async function applyStripeBalancePayment(sessionId, env) {
   };
 }
 
+if (
+  request.method === "POST" &&
+  url.searchParams.get("payment") === "create-consultation-checkout"
+) {
+  try {
+    const body = await request.json();
+    const category = String(body.category || "").toLowerCase();
+
+    if (!["carbon", "fungal"].includes(category)) {
+      return new Response(
+        "Consultation Checkout is only available for Carbon and Fungal.",
+        { status: 400 }
+      );
+    }
+
+    const checkout =
+      await createStripeConsultationCheckout(category, env);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        category,
+        checkout_session_id: checkout.id,
+        checkout_url: checkout.url
+      }),
+      {
+        status: 200,
+        headers: jsonHeaders
+      }
+    );
+
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Create consultation Checkout error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      error.message ||
+      "The consultation payment link could not be created.",
+      { status: 500 }
+    );
+  }
+}
+  
 if (
   request.method === "POST" &&
   url.searchParams.get("payment") === "create-balance-checkout"
