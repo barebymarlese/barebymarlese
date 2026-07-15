@@ -1412,12 +1412,44 @@ text-transform:uppercase;
   }
 }
 
+
+/* Floating WhatsApp Chat */
+.whatsapp-float{
+position:fixed;
+top:120px;
+right:20px;
+z-index:10000;
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px 18px;
+background:#5e6959;
+color:#fff;
+border-radius:999px;
+text-decoration:none;
+font-weight:700;
+box-shadow:0 10px 24px rgba(0,0,0,.22);
+transition:.2s;
+}
+.whatsapp-float:hover{transform:translateY(-2px);background:#4f5a4b;}
+.whatsapp-float svg{width:20px;height:20px;fill:currentColor;}
+@media(max-width:980px){
+.whatsapp-float{top:90px;right:12px;padding:10px 14px;font-size:14px;}
+}
+
 </style>
 <script src="/config.js"></script>
 <script src="/analytics.js"></script>
 </head>
 
 <body>
+
+<a href="https://wa.me/447404127830?text=Hi%20Marlese%2C%20I'd%20like%20to%20ask%20about%20your%20treatments."
+class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+<svg viewBox="0 0 32 32"><path d="M16 3C8.8 3 3 8.6 3 15.5c0 2.5.8 4.9 2.2 6.9L3.7 29l6.9-1.8c1.7.9 3.6 1.4 5.4 1.4 7.2 0 13-5.6 13-12.5S23.2 3 16 3zm5.8 15.6c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.7.1-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.9-1.6.1-.2.1-.4 0-.6-.1-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.3 1.4 3.5c.2.2 2.4 3.7 5.9 5.1.8.4 1.5.6 2 .7.8.3 1.6.2 2.2.1.7-.1 1.9-.8 2.2-1.5.3-.7.3-1.3.2-1.5-.1-.2-.4-.3-.7-.5z"/></svg>
+<span>Let's Chat!</span>
+</a>
+
   <header class="nav">
     <div class="wrap nav-inner">
      <div class="logo" aria-label="Laser Tattoo Removal and Carbon Facial Specialist">
