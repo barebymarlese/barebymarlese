@@ -436,6 +436,7 @@ footer{
 const CONFIG = window.SITE_CONFIG || {};
 const style = CONFIG.brandStyle || {};
 const siteDomain = CONFIG.domain || window.location.origin;
+const API_BASE = CONFIG.apiBase || window.location.origin;
 const businessName = CONFIG.businessName || "BARE by Marlese";
 const deposit = CONFIG.deposit || {};
 
@@ -610,15 +611,15 @@ if (selectedTreatment === "Tattoo Removal") {
   if (flowStep2) flowStep2.textContent = "Step 2: Pay deposit";
   if (flowStep3) flowStep3.textContent = "Step 3: Book consultation";
 } else {
-  if (heroHeading) heroHeading.textContent = `Secure Your ${selectedTreatment} Appointment`;
-  if (heroSubtext) heroSubtext.textContent = "Choose your treatment option, pay the £30 deposit, then book your 1-hour consultation and treatment appointment.";
-  if (depositTitle) depositTitle.textContent = `${selectedTreatment} Deposit`;
-  if (consultationIncludesTitle) consultationIncludesTitle.textContent = `${selectedTreatment} consultation & treatment appointment`;
-  if (consultationIncludesCopy) consultationIncludesCopy.textContent = "Your suitability will be assessed at the start of your appointment. If suitable, treatment will follow during the same 1-hour booking.";
-  if (depositDeductionCopy) depositDeductionCopy.textContent = "Your £30 deposit is deducted from the selected single treatment or package. The remaining balance is payable on the day.";
-  if (flowStep1) flowStep1.textContent = "Step 1: Choose option";
+  if (heroHeading) heroHeading.textContent = `Secure Your ${selectedTreatment} Consultation`;
+  if (heroSubtext) heroSubtext.textContent = "Choose your treatment option, pay the £30 deposit, then book your consultation and patch test.";
+  if (depositTitle) depositTitle.textContent = `${selectedTreatment} Consultation Deposit`;
+  if (consultationIncludesTitle) consultationIncludesTitle.textContent = `${selectedTreatment} consultation & patch test`;
+  if (consultationIncludesCopy) consultationIncludesCopy.textContent = "Your suitability will be assessed and a patch test completed before your treatment appointment is arranged.";
+  if (depositDeductionCopy) depositDeductionCopy.textContent = "Your £30 deposit is deducted from the selected treatment or package. The remaining balance is payable before your first treatment.";
+  if (flowStep1) flowStep1.textContent = "Step 1: Choose treatment option";
   if (flowStep2) flowStep2.textContent = "Step 2: Pay £30 deposit";
-  if (flowStep3) flowStep3.textContent = "Step 3: Book 1-hour slot";
+  if (flowStep3) flowStep3.textContent = "Step 3: Book consultation";
   renderTreatmentOptions();
 }
 
@@ -632,40 +633,100 @@ if (depositDeductedAmount) {
 
 if (depositButton) {
   const consultationStripeLinks = deposit.stripeLinks || {};
+  const tattooStripeLink = consultationStripeLinks.tattoo || "#";
 
-  let selectedStripeLink = consultationStripeLinks.tattoo || "#";
+  depositButton.href =
+    selectedTreatment === "Tattoo Removal"
+      ? tattooStripeLink
+      : "#";
 
-  if (selectedTreatment === "Carbon Facial") {
-    selectedStripeLink = consultationStripeLinks.carbon || "#";
-  } else if (selectedTreatment === "Fungal Nail Treatment") {
-    selectedStripeLink = consultationStripeLinks.fungal || "#";
-  }
-
-  depositButton.href = selectedStripeLink;
   depositButton.textContent = `Pay ${deposit.amount || "£30"} Deposit`;
 
-  depositButton.addEventListener("click", (event) => {
-    if (!selectedStripeLink || selectedStripeLink === "#") {
-      event.preventDefault();
-      alert("The payment link is not available. Please contact BARE by Marlese.");
-      return;
-    }
-
+  depositButton.addEventListener("click", async (event) => {
     if (selectedTreatment !== "Tattoo Removal") {
+      event.preventDefault();
+
       const selectedOption = document.querySelector(
         'input[name="treatment_option"]:checked'
       );
 
       if (!selectedOption) {
-        event.preventDefault();
-
         treatmentChoice?.scrollIntoView({
           behavior: "smooth",
           block: "center"
         });
-
         return;
       }
+
+      const category =
+        selectedTreatment === "Carbon Facial"
+          ? "carbon"
+          : selectedTreatment === "Fungal Nail Treatment"
+            ? "fungal"
+            : "";
+
+      if (!category) {
+        alert("The selected treatment is not available for consultation payment.");
+        return;
+      }
+
+      const originalText = depositButton.textContent;
+
+      depositButton.textContent = "Opening secure checkout...";
+      depositButton.style.pointerEvents = "none";
+      depositButton.setAttribute("aria-disabled", "true");
+
+      try {
+        localStorage.setItem("bareTreatmentType", selectedTreatment);
+        localStorage.setItem("bareDepositPaid", String(depositAmountNumber));
+
+        const response = await fetch(
+          `${API_BASE}/api?payment=create-consultation-checkout`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              category
+            })
+          }
+        );
+
+        const text = await response.text();
+
+        if (!response.ok) {
+          throw new Error(
+            text || "The consultation checkout could not be created."
+          );
+        }
+
+        const data = JSON.parse(text);
+
+        if (!data.checkout_url) {
+          throw new Error("Stripe did not return a checkout link.");
+        }
+
+        window.location.href = data.checkout_url;
+
+      } catch (error) {
+        alert(
+          error.message ||
+          "The payment link is not available. Please contact BARE by Marlese."
+        );
+
+        depositButton.textContent = originalText;
+        depositButton.style.pointerEvents = "";
+        depositButton.removeAttribute("aria-disabled");
+      }
+
+      return;
+    }
+
+    if (!tattooStripeLink || tattooStripeLink === "#") {
+      event.preventDefault();
+      alert("The payment link is not available. Please contact BARE by Marlese.");
+      return;
     }
 
     try {
