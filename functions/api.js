@@ -413,9 +413,9 @@ async function createReturningTreatmentCheckout(booking, env) {
     "https://barebymarlese.com/payment-complete.html?session_id={CHECKOUT_SESSION_ID}"
   );
   form.set(
-    "cancel_url",
-    `https://barebymarlese.com/treatment.html?client=existing`
-  );
+  "cancel_url",
+  "https://barebymarlese.com/payment-cancelled.html?client=existing"
+);
   form.set("client_reference_id", String(booking.id));
   form.set("metadata[appointment_id]", String(booking.id));
   form.set("metadata[payment_purpose]", "returning_treatment_payment");
@@ -904,7 +904,14 @@ if (
 ) {
   let reservedBookingId = null;
 
-  try {
+await env.DB.prepare(`
+  DELETE FROM appointments
+  WHERE status = 'pending_payment'
+    AND payment_status = 'unpaid'
+    AND datetime(created_at) <= datetime('now', '-35 minutes')
+`).run();
+
+try {
     const body = await request.json();
 
     if (
