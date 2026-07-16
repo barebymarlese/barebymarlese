@@ -410,8 +410,8 @@ function renderTattooPackages(){
             class="btn"
             onclick="goToPayment('${pkg.key}','single')"
           >
-            <span>Single session</span>
-            <strong>${RETURNING_TATTOO_SINGLE_PRICES[String(pkg.key || "").toLowerCase()]?.price || pkg.fullSinglePrice || pkg.singlePrice}</strong>
+            <span>Single session · £30 consultation deposit deducted</span>
+            <strong>${pkg.singlePrice}</strong>
           </button>
         </div>
       </div>
