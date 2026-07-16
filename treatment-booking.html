@@ -73,6 +73,14 @@ const footerBookingLabel = document.getElementById("footer-booking-label");
 let selectedDate = "";
 let selectedTime = "";
 
+const RETURNING_TATTOO_SINGLE_PRICES = {
+  tiny:   { price: "£70", amount: 7000 },
+  small:  { price: "£95", amount: 9500 },
+  medium: { price: "£120", amount: 12000 },
+  large:  { price: "£160", amount: 16000 },
+  xl:     { price: "£200", amount: 20000 }
+};
+
 function escapeHtml(value){
   return String(value || "")
     .replaceAll("&","&amp;")
@@ -125,6 +133,7 @@ function getReturningSelection(){
     );
 
     if(!pkg) return null;
+    if(!RETURNING_TATTOO_SINGLE_PRICES[sizeFromUrl]) return null;
 
     const isSingle = typeFromUrl === "single";
     const isBundle = typeFromUrl === "bundle";
@@ -139,8 +148,12 @@ function getReturningSelection(){
       name: isSingle
         ? `${pkg.name} - Single Session`
         : `${pkg.name} - 6 Session Bundle`,
-      price: isSingle ? pkg.singlePrice : pkg.fullPrice,
-      amount: isSingle ? pkg.singleAmount : pkg.fullAmount
+      price: isSingle
+        ? RETURNING_TATTOO_SINGLE_PRICES[sizeFromUrl].price
+        : pkg.fullPrice,
+      amount: isSingle
+        ? RETURNING_TATTOO_SINGLE_PRICES[sizeFromUrl].amount
+        : pkg.fullAmount
     };
   }
 
@@ -200,8 +213,14 @@ const pricing = {
     pkg.key,
     {
       label: `${pkg.name} - Single Session`,
-      price: pkg.singlePrice,
-      amount: pkg.singleAmount
+      price:
+        RETURNING_TATTOO_SINGLE_PRICES[String(pkg.key || "").toLowerCase()]?.price ||
+        pkg.fullSinglePrice ||
+        pkg.singlePrice,
+      amount:
+        RETURNING_TATTOO_SINGLE_PRICES[String(pkg.key || "").toLowerCase()]?.amount ||
+        pkg.fullSingleAmount ||
+        pkg.singleAmount
     }
   ]))
 };
