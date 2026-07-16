@@ -649,22 +649,18 @@
       practitioner: $("practitioner").value.trim(),
       treatmentDate: $("treatmentDate").value,
       clientName: $("clientName").value.trim(),
-      dateOfBirth: $("dateOfBirth").value,
+
       treatmentType: treatmentType.value,
       packageName: packageName.value,
       sessionNumber: sessionNumber.value,
-      appointmentId: $("appointmentId").value.trim(),
+
       treatmentArea: $("treatmentArea").value.trim(),
       machine: $("machine").value.trim(),
       wavelength: $("wavelength").value,
-      spotSize: $("spotSize").value.trim(),
+
       fluence: $("fluence").value.trim(),
-      frequency: $("frequency").value.trim(),
-      pulseWidth: $("pulseWidth").value.trim(),
-      passes: $("passes").value,
-      totalPulses: $("totalPulses").value,
-      treatmentTime: $("treatmentTime").value,
-      cooling: valuesFrom('input[name="cooling"]').length ? valuesFrom('input[name="cooling"]') : [],
+
+      cooling: [...document.querySelectorAll('input[name="cooling"]:checked')].map(x => x.value),
       tattooColours: valuesFrom("#tattooColours"),
       tattooResponse: valuesFrom("#tattooResponse"),
       carbonLayer: $("carbonLayer").value,
@@ -673,11 +669,9 @@
       affectedFoot: valuesFrom("#affectedFoot"),
       nailsTreated: valuesFrom("#nailsTreated"),
       nailAppearance: valuesFrom("#nailAppearance"),
-      safetyChecks: valuesFrom("#safetyChecks"),
+
       tolerance: $("tolerance").value,
-      photos: valuesFrom("#photos"),
-      aftercare: valuesFrom("#aftercare"),
-      observations: $("observations").value.trim(),
+
       nextPlan: $("nextPlan").value.trim(),
       nextDate: $("nextDate").value,
       recommendedInterval: $("recommendedInterval").value
@@ -691,22 +685,17 @@
     $("practitioner").value = r.practitioner || "Marlese Rosch Haden";
     $("treatmentDate").value = r.treatmentDate || todayISO();
     $("clientName").value = r.clientName || "";
-    $("dateOfBirth").value = r.dateOfBirth || "";
+
     treatmentType.value = r.treatmentType || "";
     updateTreatmentVisibility();
     populatePackages(r.packageName || "");
     populateSessions(r.sessionNumber || "");
-    $("appointmentId").value = r.appointmentId || "";
+
     $("treatmentArea").value = r.treatmentArea || "";
     $("machine").value = r.machine || "HL6 Pro Q-Switch Nd:YAG";
     $("wavelength").value = r.wavelength || "";
-    $("spotSize").value = r.spotSize || "";
+
     $("fluence").value = r.fluence || "";
-    $("frequency").value = r.frequency || "";
-    $("pulseWidth").value = r.pulseWidth || "";
-    $("passes").value = r.passes || "";
-    $("totalPulses").value = r.totalPulses || "";
-    $("treatmentTime").value = r.treatmentTime || "";
 
     document.querySelectorAll('input[name="cooling"]').forEach(x => {
       x.checked = (r.cooling || []).includes(x.value);
@@ -720,11 +709,9 @@
     setChecked("#affectedFoot", r.affectedFoot);
     setChecked("#nailsTreated", r.nailsTreated);
     setChecked("#nailAppearance", r.nailAppearance);
-    setChecked("#safetyChecks", r.safetyChecks);
+
     $("tolerance").value = r.tolerance || "";
-    setChecked("#photos", r.photos);
-    setChecked("#aftercare", r.aftercare);
-    $("observations").value = r.observations || "";
+
     $("nextPlan").value = r.nextPlan || "";
     $("nextDate").value = r.nextDate || "";
     $("recommendedInterval").value = r.recommendedInterval || "";
@@ -907,18 +894,22 @@
 
   $("nextSessionBtn").addEventListener("click", () => {
     const id = savedRecordSelect.value || $("recordId").value;
-    if(!id){
-      setStatus("Please select or open the client's previous session first.", "error");
+
+    if(id){
+      const record = getRecords().find(r => r.id === id);
+      if(record){
+        duplicateRecord(record);
+        return;
+      }
+    }
+
+    const previous = findPreviousForCurrent();
+    if(previous){
+      duplicateRecord(previous);
       return;
     }
 
-    const record = getRecords().find(r => r.id === id);
-    if(!record){
-      setStatus("That saved record could not be found.", "error");
-      return;
-    }
-
-    duplicateRecord(record);
+    setStatus("Save Session 1 first, then select or open that saved record before creating Session 2.", "error");
   });
 
   resetForm(false);
