@@ -91,10 +91,7 @@
     }
 
     .layout{
-      display:grid;
-      grid-template-columns:1.45fr .75fr;
-      gap:18px;
-      align-items:start;
+      display:block;
     }
 
     .section{
@@ -207,57 +204,6 @@
     .status.error{color:var(--danger);border:1px solid rgba(138,59,59,.2)}
     .status.ok{color:var(--brand-dark);border:1px solid rgba(94,105,89,.22)}
 
-    .record-panel{
-      position:sticky;
-      top:18px;
-    }
-
-    .search-row{display:flex;gap:8px}
-    .search-row input{flex:1}
-    .search-row button{white-space:nowrap}
-
-    .record-list{
-      display:flex;
-      flex-direction:column;
-      gap:9px;
-      max-height:570px;
-      overflow:auto;
-      padding-right:3px;
-      margin-top:12px;
-    }
-
-    .record-card{
-      border:1px solid rgba(36,34,26,.13);
-      border-radius:14px;
-      background:rgba(255,255,255,.42);
-      padding:12px;
-    }
-
-    .record-card strong{display:block;font-size:12px;margin-bottom:4px}
-    .record-meta{font-size:9.5px;line-height:1.55;color:#5f5c53}
-    .record-actions{display:flex;gap:7px;margin-top:9px}
-    .record-actions button{
-      flex:1;
-      min-height:34px;
-      border-radius:9px;
-      border:1px solid rgba(36,34,26,.14);
-      background:#eceee9;
-      color:var(--ink);
-      font-size:9px;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .empty{
-      padding:18px 12px;
-      border:1px dashed rgba(36,34,26,.18);
-      border-radius:12px;
-      text-align:center;
-      font-size:10px;
-      line-height:1.6;
-      color:#6b685f;
-    }
-
     .note{
       padding:12px 14px;
       border-left:4px solid var(--brand);
@@ -272,7 +218,6 @@
       body{padding:8px}
       .page{padding:18px 14px;border-radius:18px}
       .layout{grid-template-columns:1fr}
-      .record-panel{position:static}
       .grid,.grid.three{grid-template-columns:1fr}
       .full{grid-column:auto}
       input,select{height:46px;font-size:16px}
@@ -282,7 +227,7 @@
     @media print{
       body{padding:0}
       .page{box-shadow:none;border:none;width:100%;max-width:none}
-      .topbar,.actions,.record-panel,.status{display:none!important}
+      .topbar,.actions,.saved-loader,.status{display:none!important}
       .layout{display:block}
       .section{break-inside:avoid}
     }
@@ -307,6 +252,22 @@
 
     <div class="layout">
       <div>
+        <section class="section saved-loader">
+          <h2>Open Saved Client Record</h2>
+          <div class="grid">
+            <div class="full">
+              <label for="savedRecordSelect">Saved Record</label>
+              <select id="savedRecordSelect">
+                <option value="">Select a saved client record</option>
+              </select>
+            </div>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn secondary" type="button" id="openSavedBtn">Open Selected Record</button>
+            <button class="btn secondary" type="button" id="nextSessionBtn">Create Next Session</button>
+          </div>
+        </section>
+
         <form id="treatmentForm" autocomplete="off">
           <input type="hidden" id="recordId">
 
@@ -526,8 +487,8 @@
 </section>
 
           <div class="note">
-            Saving creates or updates a record in this browser. Use “Duplicate Previous Session” to copy the last
-            settings into a new session, then change only what is different.
+            Saving stores the record on this device. Next time the client attends, choose their saved record above,
+            open it, then use “Create Next Session” to copy the settings into a new session record.
           </div>
 
           <div class="actions">
@@ -540,17 +501,6 @@
           <div id="status" class="status" role="status"></div>
         </form>
       </div>
-
-      <aside class="record-panel">
-        <section class="section">
-          <h2>Saved Treatment History</h2>
-          <div class="search-row">
-            <input id="recordSearch" placeholder="Search client or treatment">
-            <button type="button" class="small-btn" id="clearSearch">Clear</button>
-          </div>
-          <div id="recordList" class="record-list"></div>
-        </section>
-      </aside>
     </div>
   </main>
 
@@ -587,10 +537,9 @@
   const treatmentType = $("treatmentType");
   const packageName = $("packageName");
   const sessionNumber = $("sessionNumber");
-  const recordList = $("recordList");
-  const search = $("recordSearch");
   const status = $("status");
   const deleteBtn = $("deleteBtn");
+  const savedRecordSelect = $("savedRecordSelect");
 
   function todayISO(){
     const d = new Date();
@@ -801,53 +750,21 @@
   }
 
   function renderRecords(){
-    const query = search.value.trim().toLowerCase();
-    const records = getRecords()
-      .filter(r => {
-        if(!query) return true;
-        return [
-          r.clientName,
-          r.treatmentType,
-          r.packageName,
-          r.treatmentDate,
-          "session " + r.sessionNumber
-        ].join(" ").toLowerCase().includes(query);
-      })
-      .sort((a,b) => {
-        const dateCompare = String(b.treatmentDate || "").localeCompare(String(a.treatmentDate || ""));
-        return dateCompare || String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""));
-      });
+    const records = getRecords().sort((a,b) => {
+      const nameCompare = String(a.clientName || "").localeCompare(String(b.clientName || ""));
+      if(nameCompare) return nameCompare;
+      const dateCompare = String(b.treatmentDate || "").localeCompare(String(a.treatmentDate || ""));
+      return dateCompare || Number(b.sessionNumber || 0) - Number(a.sessionNumber || 0);
+    });
 
-    if(!records.length){
-      recordList.innerHTML = '<div class="empty">No saved treatment records found.</div>';
-      return;
-    }
+    savedRecordSelect.innerHTML = '<option value="">Select a saved client record</option>';
 
-    recordList.innerHTML = "";
     records.forEach(r => {
-      const card = document.createElement("div");
-      card.className = "record-card";
-
-      const safeName = escapeHtml(r.clientName || "Unnamed client");
-      const safeTreatment = escapeHtml(r.packageName || r.treatmentType || "Treatment");
-      const safeDate = escapeHtml(formatDate(r.treatmentDate));
-      const safeSession = escapeHtml(r.sessionNumber ? "Session " + r.sessionNumber : "Session not set");
-
-      card.innerHTML = `
-        <strong>${safeName}</strong>
-        <div class="record-meta">
-          ${safeTreatment}<br>
-          ${safeSession} · ${safeDate}
-        </div>
-        <div class="record-actions">
-          <button type="button" data-action="open">Open / Edit</button>
-          <button type="button" data-action="duplicate">Duplicate</button>
-        </div>
-      `;
-
-      card.querySelector('[data-action="open"]').addEventListener("click", () => fillRecord(r));
-      card.querySelector('[data-action="duplicate"]').addEventListener("click", () => duplicateRecord(r));
-      recordList.appendChild(card);
+      const option = document.createElement("option");
+      option.value = r.id;
+      const session = r.sessionNumber ? `Session ${r.sessionNumber}` : "Session not set";
+      option.textContent = `${r.clientName || "Unnamed client"} — ${r.packageName || r.treatmentType || "Treatment"} — ${session} — ${formatDate(r.treatmentDate)}`;
+      savedRecordSelect.appendChild(option);
     });
   }
 
@@ -971,10 +888,37 @@
     setStatus("Treatment record deleted.");
   });
 
-  search.addEventListener("input", renderRecords);
-  $("clearSearch").addEventListener("click", () => {
-    search.value = "";
-    renderRecords();
+  $("openSavedBtn").addEventListener("click", () => {
+    const id = savedRecordSelect.value;
+    if(!id){
+      setStatus("Please select a saved client record first.", "error");
+      return;
+    }
+
+    const record = getRecords().find(r => r.id === id);
+    if(!record){
+      setStatus("That saved record could not be found.", "error");
+      renderRecords();
+      return;
+    }
+
+    fillRecord(record);
+  });
+
+  $("nextSessionBtn").addEventListener("click", () => {
+    const id = savedRecordSelect.value || $("recordId").value;
+    if(!id){
+      setStatus("Please select or open the client's previous session first.", "error");
+      return;
+    }
+
+    const record = getRecords().find(r => r.id === id);
+    if(!record){
+      setStatus("That saved record could not be found.", "error");
+      return;
+    }
+
+    duplicateRecord(record);
   });
 
   resetForm(false);
