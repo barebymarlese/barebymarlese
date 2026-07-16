@@ -853,6 +853,615 @@ async function applyStripeBalancePayment(sessionId, env) {
   };
 }
 
+
+/* =========================================================
+   TREATMENT RECORDS — Cloudflare D1
+   Routes:
+   GET    ?treatment-records=1
+   POST   ?treatment-records=1
+   PUT    ?treatment-records=1
+   DELETE ?treatment-records=1&id=123
+   ========================================================= */
+
+function treatmentRecordJson(value) {
+  return JSON.stringify(Array.isArray(value) ? value : (value || []));
+}
+
+function parseTreatmentRecordJson(value) {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function normaliseTreatmentRecord(row) {
+  if (!row) return null;
+
+  return {
+    ...row,
+    cooling: parseTreatmentRecordJson(row.cooling),
+    tattoo_colours: parseTreatmentRecordJson(row.tattoo_colours),
+    tattoo_response: parseTreatmentRecordJson(row.tattoo_response),
+    carbon_response: parseTreatmentRecordJson(row.carbon_response),
+    affected_foot: parseTreatmentRecordJson(row.affected_foot),
+    nails_treated: parseTreatmentRecordJson(row.nails_treated),
+    nail_appearance: parseTreatmentRecordJson(row.nail_appearance)
+  };
+}
+
+function cleanOptionalInteger(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0 ? number : null;
+}
+
+function cleanRequiredSessionNumber(value) {
+  const number = Number(value);
+  return Number.isInteger(number) && number > 0 ? number : null;
+}
+
+function treatmentRecordPayload(body = {}) {
+  return {
+    appointment_id: cleanOptionalInteger(body.appointment_id),
+    treatment_session_id: cleanOptionalInteger(body.treatment_session_id),
+    client_name: String(body.client_name || "").trim(),
+    treatment_type: String(body.treatment_type || "").trim(),
+    package_name: String(body.package_name || "").trim(),
+    session_number: cleanRequiredSessionNumber(body.session_number),
+    treatment_date: String(body.treatment_date || "").trim(),
+    practitioner: String(body.practitioner || "Marlese Rosch Haden").trim(),
+    treatment_area: String(body.treatment_area || "").trim(),
+    machine: String(body.machine || "").trim(),
+    wavelength: String(body.wavelength || "").trim(),
+    fluence: String(body.fluence || "").trim(),
+    cooling: treatmentRecordJson(body.cooling),
+    tattoo_colours: treatmentRecordJson(body.tattoo_colours),
+    tattoo_response: treatmentRecordJson(body.tattoo_response),
+    carbon_layer: String(body.carbon_layer || "").trim(),
+    carbon_response: treatmentRecordJson(body.carbon_response),
+    affected_foot: treatmentRecordJson(body.affected_foot),
+    nails_treated: treatmentRecordJson(body.nails_treated),
+    nail_appearance: treatmentRecordJson(body.nail_appearance),
+    client_tolerance: String(body.client_tolerance || "").trim(),
+    next_session_plan: String(body.next_session_plan || "").trim(),
+    next_treatment_date: String(body.next_treatment_date || "").trim(),
+    recommended_interval: String(body.recommended_interval || "").trim()
+  };
+}
+
+function validateTreatmentRecordPayload(record) {
+  if (!record.client_name) return "Client name is required.";
+  if (!record.treatment_type) return "Treatment type is required.";
+  if (!record.package_name) return "Treatment option is required.";
+  if (!record.session_number) return "A valid session number is required.";
+  if (!record.treatment_date) return "Treatment date is required.";
+  return "";
+}
+
+if (
+  url.searchParams.get("treatment-records") === "1" &&
+  request.method === "GET"
+) {
+  try {
+    const id = cleanOptionalInteger(url.searchParams.get("id"));
+    const appointmentId = cleanOptionalInteger(
+      url.searchParams.get("appointment_id")
+    );
+    const treatmentSessionId = cleanOptionalInteger(
+      url.searchParams.get("treatment_session_id")
+    );
+    const clientName = String(
+      url.searchParams.get("client_name") || ""
+    ).trim();
+
+    if (id) {
+      const record = await env.DB.prepare(`
+        SELECT *
+        FROM treatment_records
+        WHERE id = ?
+      `).bind(id).first();
+
+      if (!record) {
+        return new Response(
+          JSON.stringify({ success: false, message: "Treatment record not found." }),
+          { status: 404, headers: jsonHeaders }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({ success: true, record: normaliseTreatmentRecord(record) }),
+        { status: 200, headers: jsonHeaders }
+      );
+    }
+
+    let query = `
+      SELECT *
+      FROM treatment_records
+    `;
+    const bindings = [];
+
+    if (appointmentId) {
+      query += ` WHERE appointment_id = ?`;
+      bindings.push(appointmentId);
+    } else if (treatmentSessionId) {
+      query += ` WHERE treatment_session_id = ?`;
+      bindings.push(treatmentSessionId);
+    } else if (clientName) {
+      query += ` WHERE LOWER(client_name) = LOWER(?)`;
+      bindings.push(clientName);
+    }
+
+    query += `
+      ORDER BY treatment_date DESC, session_number DESC, id DESC
+    `;
+
+    const result = bindings.length
+      ? await env.DB.prepare(query).bind(...bindings).all()
+      : await env.DB.prepare(query).all();
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        records: (result.results || []).map(normaliseTreatmentRecord)
+      }),
+      { status: 200, headers: jsonHeaders }
+    );
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Load treatment records error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error.message || "Treatment records could not be loaded."
+      }),
+      { status: 500, headers: jsonHeaders }
+    );
+  }
+}
+
+if (
+  url.searchParams.get("treatment-records") === "1" &&
+  request.method === "POST"
+) {
+  try {
+    const body = await request.json();
+    const record = treatmentRecordPayload(body);
+    const validationError = validateTreatmentRecordPayload(record);
+
+    if (validationError) {
+      return new Response(
+        JSON.stringify({ success: false, message: validationError }),
+        { status: 400, headers: jsonHeaders }
+      );
+    }
+
+    if (record.appointment_id) {
+      const appointment = await env.DB.prepare(`
+        SELECT id
+        FROM appointments
+        WHERE id = ?
+      `).bind(record.appointment_id).first();
+
+      if (!appointment) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "The linked appointment was not found."
+          }),
+          { status: 404, headers: jsonHeaders }
+        );
+      }
+    }
+
+    if (record.treatment_session_id) {
+      const session = await env.DB.prepare(`
+        SELECT id, appointment_id, session_number
+        FROM treatment_sessions
+        WHERE id = ?
+      `).bind(record.treatment_session_id).first();
+
+      if (!session) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "The linked treatment session was not found."
+          }),
+          { status: 404, headers: jsonHeaders }
+        );
+      }
+
+      if (
+        record.appointment_id &&
+        Number(session.appointment_id) !== record.appointment_id
+      ) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "The treatment session does not belong to this appointment."
+          }),
+          { status: 409, headers: jsonHeaders }
+        );
+      }
+    }
+
+    let existing = null;
+
+    if (record.appointment_id) {
+      existing = await env.DB.prepare(`
+        SELECT id
+        FROM treatment_records
+        WHERE appointment_id = ?
+          AND session_number = ?
+      `).bind(
+        record.appointment_id,
+        record.session_number
+      ).first();
+    }
+
+    if (!existing && record.treatment_session_id) {
+      existing = await env.DB.prepare(`
+        SELECT id
+        FROM treatment_records
+        WHERE treatment_session_id = ?
+      `).bind(record.treatment_session_id).first();
+    }
+
+    if (existing) {
+      const updated = await env.DB.prepare(`
+        UPDATE treatment_records
+        SET
+          appointment_id = ?,
+          treatment_session_id = ?,
+          client_name = ?,
+          treatment_type = ?,
+          package_name = ?,
+          session_number = ?,
+          treatment_date = ?,
+          practitioner = ?,
+          treatment_area = ?,
+          machine = ?,
+          wavelength = ?,
+          fluence = ?,
+          cooling = ?,
+          tattoo_colours = ?,
+          tattoo_response = ?,
+          carbon_layer = ?,
+          carbon_response = ?,
+          affected_foot = ?,
+          nails_treated = ?,
+          nail_appearance = ?,
+          client_tolerance = ?,
+          next_session_plan = ?,
+          next_treatment_date = ?,
+          recommended_interval = ?,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).bind(
+        record.appointment_id,
+        record.treatment_session_id,
+        record.client_name,
+        record.treatment_type,
+        record.package_name,
+        record.session_number,
+        record.treatment_date,
+        record.practitioner,
+        record.treatment_area,
+        record.machine,
+        record.wavelength,
+        record.fluence,
+        record.cooling,
+        record.tattoo_colours,
+        record.tattoo_response,
+        record.carbon_layer,
+        record.carbon_response,
+        record.affected_foot,
+        record.nails_treated,
+        record.nail_appearance,
+        record.client_tolerance,
+        record.next_session_plan,
+        record.next_treatment_date || null,
+        record.recommended_interval,
+        existing.id
+      ).run();
+
+      const saved = await env.DB.prepare(`
+        SELECT *
+        FROM treatment_records
+        WHERE id = ?
+      `).bind(existing.id).first();
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          created: false,
+          updated: Boolean(updated.meta?.changes),
+          record: normaliseTreatmentRecord(saved)
+        }),
+        { status: 200, headers: jsonHeaders }
+      );
+    }
+
+    const inserted = await env.DB.prepare(`
+      INSERT INTO treatment_records
+      (
+        appointment_id,
+        treatment_session_id,
+        client_name,
+        treatment_type,
+        package_name,
+        session_number,
+        treatment_date,
+        practitioner,
+        treatment_area,
+        machine,
+        wavelength,
+        fluence,
+        cooling,
+        tattoo_colours,
+        tattoo_response,
+        carbon_layer,
+        carbon_response,
+        affected_foot,
+        nails_treated,
+        nail_appearance,
+        client_tolerance,
+        next_session_plan,
+        next_treatment_date,
+        recommended_interval
+      )
+      VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      )
+    `).bind(
+      record.appointment_id,
+      record.treatment_session_id,
+      record.client_name,
+      record.treatment_type,
+      record.package_name,
+      record.session_number,
+      record.treatment_date,
+      record.practitioner,
+      record.treatment_area,
+      record.machine,
+      record.wavelength,
+      record.fluence,
+      record.cooling,
+      record.tattoo_colours,
+      record.tattoo_response,
+      record.carbon_layer,
+      record.carbon_response,
+      record.affected_foot,
+      record.nails_treated,
+      record.nail_appearance,
+      record.client_tolerance,
+      record.next_session_plan,
+      record.next_treatment_date || null,
+      record.recommended_interval
+    ).run();
+
+    const newId = Number(inserted.meta?.last_row_id);
+
+    const saved = await env.DB.prepare(`
+      SELECT *
+      FROM treatment_records
+      WHERE id = ?
+    `).bind(newId).first();
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        created: true,
+        record: normaliseTreatmentRecord(saved)
+      }),
+      { status: 201, headers: jsonHeaders }
+    );
+  } catch (error) {
+    const isConflict =
+      String(error.message || "").includes("UNIQUE constraint failed");
+
+    await sendErrorAlert(
+      env,
+      "Save treatment record error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: isConflict
+          ? "A treatment record already exists for this appointment and session."
+          : (error.message || "The treatment record could not be saved.")
+      }),
+      { status: isConflict ? 409 : 500, headers: jsonHeaders }
+    );
+  }
+}
+
+if (
+  url.searchParams.get("treatment-records") === "1" &&
+  request.method === "PUT"
+) {
+  try {
+    const body = await request.json();
+    const id = cleanOptionalInteger(body.id);
+    const record = treatmentRecordPayload(body);
+    const validationError = validateTreatmentRecordPayload(record);
+
+    if (!id) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Treatment record ID is required." }),
+        { status: 400, headers: jsonHeaders }
+      );
+    }
+
+    if (validationError) {
+      return new Response(
+        JSON.stringify({ success: false, message: validationError }),
+        { status: 400, headers: jsonHeaders }
+      );
+    }
+
+    const exists = await env.DB.prepare(`
+      SELECT id
+      FROM treatment_records
+      WHERE id = ?
+    `).bind(id).first();
+
+    if (!exists) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Treatment record not found." }),
+        { status: 404, headers: jsonHeaders }
+      );
+    }
+
+    await env.DB.prepare(`
+      UPDATE treatment_records
+      SET
+        appointment_id = ?,
+        treatment_session_id = ?,
+        client_name = ?,
+        treatment_type = ?,
+        package_name = ?,
+        session_number = ?,
+        treatment_date = ?,
+        practitioner = ?,
+        treatment_area = ?,
+        machine = ?,
+        wavelength = ?,
+        fluence = ?,
+        cooling = ?,
+        tattoo_colours = ?,
+        tattoo_response = ?,
+        carbon_layer = ?,
+        carbon_response = ?,
+        affected_foot = ?,
+        nails_treated = ?,
+        nail_appearance = ?,
+        client_tolerance = ?,
+        next_session_plan = ?,
+        next_treatment_date = ?,
+        recommended_interval = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(
+      record.appointment_id,
+      record.treatment_session_id,
+      record.client_name,
+      record.treatment_type,
+      record.package_name,
+      record.session_number,
+      record.treatment_date,
+      record.practitioner,
+      record.treatment_area,
+      record.machine,
+      record.wavelength,
+      record.fluence,
+      record.cooling,
+      record.tattoo_colours,
+      record.tattoo_response,
+      record.carbon_layer,
+      record.carbon_response,
+      record.affected_foot,
+      record.nails_treated,
+      record.nail_appearance,
+      record.client_tolerance,
+      record.next_session_plan,
+      record.next_treatment_date || null,
+      record.recommended_interval,
+      id
+    ).run();
+
+    const saved = await env.DB.prepare(`
+      SELECT *
+      FROM treatment_records
+      WHERE id = ?
+    `).bind(id).first();
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        updated: true,
+        record: normaliseTreatmentRecord(saved)
+      }),
+      { status: 200, headers: jsonHeaders }
+    );
+  } catch (error) {
+    const isConflict =
+      String(error.message || "").includes("UNIQUE constraint failed");
+
+    await sendErrorAlert(
+      env,
+      "Update treatment record error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: isConflict
+          ? "Another treatment record already uses this appointment and session."
+          : (error.message || "The treatment record could not be updated.")
+      }),
+      { status: isConflict ? 409 : 500, headers: jsonHeaders }
+    );
+  }
+}
+
+if (
+  url.searchParams.get("treatment-records") === "1" &&
+  request.method === "DELETE"
+) {
+  try {
+    const id = cleanOptionalInteger(url.searchParams.get("id"));
+
+    if (!id) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Treatment record ID is required." }),
+        { status: 400, headers: jsonHeaders }
+      );
+    }
+
+    const deleted = await env.DB.prepare(`
+      DELETE FROM treatment_records
+      WHERE id = ?
+    `).bind(id).run();
+
+    if (!deleted.meta?.changes) {
+      return new Response(
+        JSON.stringify({ success: false, message: "Treatment record not found." }),
+        { status: 404, headers: jsonHeaders }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, deleted: true, id }),
+      { status: 200, headers: jsonHeaders }
+    );
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Delete treatment record error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error.message || "The treatment record could not be deleted."
+      }),
+      { status: 500, headers: jsonHeaders }
+    );
+  }
+}
+
 if (
   request.method === "POST" &&
   url.searchParams.get("payment") === "create-consultation-checkout"
