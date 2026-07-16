@@ -277,7 +277,7 @@ This appointment must be completed before booking treatment sessions.
   <p><strong>Treatment:</strong> <span id="summary-treatment">—</span></p>
   <p><strong>Full price:</strong> <span id="summary-full-price">—</span></p>
   <p><strong>Deposit paid:</strong> <span id="summary-deposit">£30</span></p>
-  <p><strong>Remaining on the day:</strong> <span id="summary-remaining">—</span></p>
+  <p><strong>Remaining treatment balance:</strong> <span id="summary-remaining">—</span></p>
 </div>
 
 <div class="hours-strip">
@@ -410,11 +410,11 @@ function setPageCopy() {
     return;
   }
 
-  if (pageTitle) pageTitle.textContent = `Book ${treatmentType} | ${CONFIG.businessName || "BARE by Marlese"}`;
-  if (heading) heading.textContent = `Book Your ${treatmentType}`;
-  if (activeStep) activeStep.textContent = "Step 3: Book 1-Hour Appointment";
-  if (intro) intro.textContent = "Please select a 1-hour consultation and treatment appointment.";
-  if (subtext) subtext.textContent = "Your suitability will be assessed at the start of the appointment. If treatment is suitable, it will follow during the same booking. No patch test appointment is required.";
+  if (pageTitle) pageTitle.textContent = `Book Consultation & Patch Test | ${CONFIG.businessName || "BARE by Marlese"}`;
+  if (heading) heading.textContent = "Book Consultation & Patch Test";
+  if (activeStep) activeStep.textContent = "Step 3: Book Consultation & Patch Test";
+  if (intro) intro.textContent = `Please select your 30-minute consultation and patch test appointment for ${treatmentType}.`;
+  if (subtext) subtext.textContent = "Your consultation includes a treatment assessment and patch test. This appointment must be completed and approved before your treatment session can be booked.";
 
   document.getElementById("summary-treatment").textContent = treatmentName;
   document.getElementById("summary-full-price").textContent = money(fullPrice);
@@ -545,7 +545,7 @@ async function bookSlot(date, time) {
       const treatmentLine = !isTattoo
         ? `<p><strong>Treatment:</strong> ${treatmentName}</p>
            <p><strong>Deposit paid:</strong> ${money(depositPaid)}</p>
-           <p><strong>Remaining on the day:</strong> ${money(remainingBalance)}</p>`
+           <p><strong>Remaining treatment balance:</strong> ${money(remainingBalance)}</p>`
         : "";
 
       status.innerHTML = `
