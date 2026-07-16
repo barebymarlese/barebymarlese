@@ -325,10 +325,7 @@
                 <label for="clientName">Client Name</label>
                 <input id="clientName" placeholder="Full name" required>
               </div>
-              <div>
-                <label for="dateOfBirth">Date of Birth</label>
-                <input type="date" id="dateOfBirth">
-              </div>
+              
               <div>
                 <label for="treatmentType">Treatment</label>
                 <select id="treatmentType" required>
@@ -350,10 +347,7 @@
                   <option value="">Select treatment option first</option>
                 </select>
               </div>
-              <div>
-                <label for="appointmentId">Appointment ID (optional)</label>
-                <input id="appointmentId" inputmode="numeric" placeholder="e.g. 125">
-              </div>
+              
               <div class="full">
                 <label for="treatmentArea">Treatment Area</label>
                 <input id="treatmentArea" placeholder="e.g. left forearm, full face, right big toenail">
@@ -377,34 +371,16 @@
                   <option>1064nm + 532nm</option>
                 </select>
               </div>
-              <div>
-                <label for="spotSize">Spot Size (mm)</label>
-                <input id="spotSize" inputmode="decimal" placeholder="e.g. 4">
-              </div>
+              
               <div>
                 <label for="fluence">Fluence / Energy (J/cm²)</label>
                 <input id="fluence" inputmode="decimal" placeholder="e.g. 1.2">
               </div>
-              <div>
-                <label for="frequency">Frequency (Hz)</label>
-                <input id="frequency" inputmode="decimal" placeholder="e.g. 5">
-              </div>
-              <div>
-                <label for="pulseWidth">Pulse Width (if shown)</label>
-                <input id="pulseWidth" placeholder="e.g. ns">
-              </div>
-              <div>
-                <label for="passes">Number of Passes</label>
-                <input type="number" id="passes" min="0" step="1" placeholder="e.g. 1">
-              </div>
-              <div>
-                <label for="totalPulses">Total Pulses / Shots</label>
-                <input type="number" id="totalPulses" min="0" step="1" placeholder="e.g. 450">
-              </div>
-              <div>
-                <label for="treatmentTime">Treatment Time (minutes)</label>
-                <input type="number" id="treatmentTime" min="0" step="1" placeholder="e.g. 20">
-              </div>
+              
+              
+              
+              
+              
             </div>
 
             <div style="margin-top:14px">
@@ -514,69 +490,40 @@
           </section>
 
           <section class="section">
-            <h2>Safety, Outcome & Aftercare</h2>
-            <div class="grid">
-              <div>
-                <label>Safety Checks</label>
-                <div class="choice-wrap" id="safetyChecks">
-                  <label class="choice"><input type="checkbox" value="Eye protection worn"><span>Eye Protection Worn</span></label>
-                  <label class="choice"><input type="checkbox" value="Medical changes checked"><span>Medical Changes Checked</span></label>
-                  <label class="choice"><input type="checkbox" value="Medication changes checked"><span>Medication Changes Checked</span></label>
-                  <label class="choice"><input type="checkbox" value="Skin/nail area checked"><span>Area Checked</span></label>
-                </div>
-              </div>
-              <div>
-                <label for="tolerance">Client Tolerance</label>
-                <select id="tolerance">
-                  <option value="">Select</option>
-                  <option>Excellent</option>
-                  <option>Good</option>
-                  <option>Fair</option>
-                  <option>Poor</option>
-                </select>
-              </div>
-              <div>
-                <label>Clinical Photos</label>
-                <div class="choice-wrap" id="photos">
-                  <label class="choice"><input type="checkbox" value="Before photos taken"><span>Before Photos</span></label>
-                  <label class="choice"><input type="checkbox" value="After photos taken"><span>After Photos</span></label>
-                </div>
-              </div>
-              <div>
-                <label>Aftercare Given</label>
-                <div class="choice-wrap" id="aftercare">
-                  <label class="choice"><input type="checkbox" value="Written aftercare"><span>Written</span></label>
-                  <label class="choice"><input type="checkbox" value="Verbal aftercare"><span>Verbal</span></label>
-                  <label class="choice"><input type="checkbox" value="SPF advised"><span>SPF Advised</span></label>
-                  <label class="choice fungal-aftercare hidden"><input type="checkbox" value="Foot hygiene discussed"><span>Foot Hygiene</span></label>
-                </div>
-              </div>
-              <div class="full">
-                <label for="observations">Clinical Observations & Treatment Notes</label>
-                <textarea id="observations" placeholder="Skin or nail response, client feedback, any concerns, parameter adjustments and advice given."></textarea>
-              </div>
-              <div class="full">
-                <label for="nextPlan">Plan for Next Session</label>
-                <textarea id="nextPlan" placeholder="Settings to repeat or adjust, areas to focus on, response to monitor and recommendations."></textarea>
-              </div>
-              <div>
-                <label for="nextDate">Recommended Next Treatment Date</label>
-                <input type="date" id="nextDate">
-              </div>
-              <div>
-                <label for="recommendedInterval">Recommended Interval</label>
-                <select id="recommendedInterval">
-                  <option value="">Select</option>
-                  <option>4 weeks</option>
-                  <option>6 weeks</option>
-                  <option>8 weeks</option>
-                  <option>10 weeks</option>
-                  <option>12 weeks</option>
-                  <option>Other</option>
-                </select>
-              </div>
-            </div>
-          </section>
+<h2>Treatment Outcome</h2>
+<div class="grid">
+<div>
+<label for="tolerance">Client Tolerance</label>
+<select id="tolerance">
+<option value="">Select</option>
+<option>Excellent</option>
+<option>Good</option>
+<option>Fair</option>
+<option>Poor</option>
+</select>
+</div>
+<div class="full">
+<label for="nextPlan">Plan for Next Session</label>
+<textarea id="nextPlan" placeholder="Settings to repeat or adjust, areas to focus on and recommendations."></textarea>
+</div>
+<div>
+<label for="nextDate">Recommended Next Treatment Date</label>
+<input type="date" id="nextDate">
+</div>
+<div>
+<label for="recommendedInterval">Recommended Interval</label>
+<select id="recommendedInterval">
+<option value="">Select</option>
+<option>4 weeks</option>
+<option>6 weeks</option>
+<option>8 weeks</option>
+<option>10 weeks</option>
+<option>12 weeks</option>
+<option>Other</option>
+</select>
+</div>
+</div>
+</section>
 
           <div class="note">
             Saving creates or updates a record in this browser. Use “Duplicate Previous Session” to copy the last
