@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Treatment Record | BARE by Marlese</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#cacdc6;
+      --card:#d4d7d1;
+      --ink:#24221a;
+      --muted:#878274;
+      --brand:#5e6959;
+      --brand-dark:#4f5a4b;
+      --white:#f8f8f6;
+      --danger:#8a3b3b;
+      --shadow:0 12px 30px rgba(0,0,0,.10);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink)}
+    body{font-family:"Montserrat",sans-serif;min-height:100vh;padding:18px}
+
+    .page{
+      width:min(1050px,100%);
+      margin:0 auto;
+      background:rgba(212,215,209,.94);
+      border:1px solid rgba(255,255,255,.35);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:28px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+
+    .back-link,.small-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:10px 16px;
+      border-radius:12px;
+      border:1px solid rgba(36,34,26,.14);
+      background:#eceee9;
+      color:var(--ink);
+      text-decoration:none;
+      font:600 12px "Montserrat",sans-serif;
+      cursor:pointer;
+    }
+
+    .logo{
+      display:flex;
+      align-items:baseline;
+      justify-content:center;
+      gap:12px;
+      letter-spacing:.26em;
+      font-weight:600;
+      text-transform:uppercase;
+      margin-top:4px;
+    }
+    .logo .bare{color:var(--brand);font-size:25px}
+    .logo .by{letter-spacing:.05em;text-transform:none;color:var(--muted);font-size:15px}
+
+    h1{
+      text-align:center;
+      margin:8px 0 6px;
+      font-size:18px;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+    }
+
+    .subtitle{
+      text-align:center;
+      margin:0 auto 22px;
+      max-width:760px;
+      font-size:11px;
+      line-height:1.6;
+      color:#5f5c53;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.45fr .75fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .section{
+      padding:22px;
+      margin-bottom:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.45);
+      background:linear-gradient(145deg,rgba(255,255,255,.30),rgba(255,255,255,.10));
+    }
+
+    .section h2{
+      margin:0 0 15px;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--brand-dark);
+    }
+
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+    .grid.three{grid-template-columns:repeat(3,1fr)}
+    .full{grid-column:1/-1}
+
+    label{
+      display:block;
+      margin:0 0 5px;
+      font-size:9px;
+      line-height:1.35;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--brand);
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid rgba(36,34,26,.14);
+      border-radius:10px;
+      background:rgba(255,255,255,.76);
+      color:var(--ink);
+      font:500 13px "Montserrat",sans-serif;
+      outline:none;
+    }
+
+    input,select{height:42px;padding:0 12px}
+    textarea{min-height:105px;padding:12px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:var(--brand);background:#fff}
+
+    .choice-wrap{display:flex;gap:7px;flex-wrap:wrap}
+    .choice{
+      position:relative;
+      display:inline-flex;
+    }
+    .choice input{position:absolute;opacity:0;pointer-events:none}
+    .choice span{
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:7px 11px;
+      border:1px solid rgba(36,34,26,.13);
+      border-radius:18px;
+      background:rgba(255,255,255,.42);
+      font-size:10px;
+      font-weight:600;
+      cursor:pointer;
+      user-select:none;
+    }
+    .choice input:checked + span{background:var(--brand);color:white;border-color:var(--brand)}
+
+    .hidden{display:none!important}
+
+    .actions{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+
+    button{
+      font-family:"Montserrat",sans-serif;
+    }
+
+    .btn{
+      border:0;
+      border-radius:12px;
+      min-height:46px;
+      padding:12px 14px;
+      background:var(--brand);
+      color:#fff;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      cursor:pointer;
+    }
+    .btn:hover{background:var(--brand-dark)}
+    .btn.secondary{background:transparent;color:var(--ink);border:1px solid rgba(36,34,26,.18)}
+    .btn.danger{background:transparent;color:var(--danger);border:1px solid rgba(138,59,59,.28)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+
+    .status{
+      display:none;
+      margin-top:12px;
+      padding:11px 13px;
+      border-radius:10px;
+      background:rgba(255,255,255,.45);
+      font-size:11px;
+      line-height:1.5;
+    }
+    .status.show{display:block}
+    .status.error{color:var(--danger);border:1px solid rgba(138,59,59,.2)}
+    .status.ok{color:var(--brand-dark);border:1px solid rgba(94,105,89,.22)}
+
+    .record-panel{
+      position:sticky;
+      top:18px;
+    }
+
+    .search-row{display:flex;gap:8px}
+    .search-row input{flex:1}
+    .search-row button{white-space:nowrap}
+
+    .record-list{
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+      max-height:570px;
+      overflow:auto;
+      padding-right:3px;
+      margin-top:12px;
+    }
+
+    .record-card{
+      border:1px solid rgba(36,34,26,.13);
+      border-radius:14px;
+      background:rgba(255,255,255,.42);
+      padding:12px;
+    }
+
+    .record-card strong{display:block;font-size:12px;margin-bottom:4px}
+    .record-meta{font-size:9.5px;line-height:1.55;color:#5f5c53}
+    .record-actions{display:flex;gap:7px;margin-top:9px}
+    .record-actions button{
+      flex:1;
+      min-height:34px;
+      border-radius:9px;
+      border:1px solid rgba(36,34,26,.14);
+      background:#eceee9;
+      color:var(--ink);
+      font-size:9px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .empty{
+      padding:18px 12px;
+      border:1px dashed rgba(36,34,26,.18);
+      border-radius:12px;
+      text-align:center;
+      font-size:10px;
+      line-height:1.6;
+      color:#6b685f;
+    }
+
+    .note{
+      padding:12px 14px;
+      border-left:4px solid var(--brand);
+      border-radius:4px 12px 12px 4px;
+      background:rgba(255,255,255,.28);
+      font-size:10px;
+      line-height:1.6;
+      margin-bottom:14px;
+    }
+
+    @media(max-width:820px){
+      body{padding:8px}
+      .page{padding:18px 14px;border-radius:18px}
+      .layout{grid-template-columns:1fr}
+      .record-panel{position:static}
+      .grid,.grid.three{grid-template-columns:1fr}
+      .full{grid-column:auto}
+      input,select{height:46px;font-size:16px}
+      textarea{font-size:16px}
+    }
+
+    @media print{
+      body{padding:0}
+      .page{box-shadow:none;border:none;width:100%;max-width:none}
+      .topbar,.actions,.record-panel,.status{display:none!important}
+      .layout{display:block}
+      .section{break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topbar">
+      <a class="back-link" href="/admin.html">← Back to Admin</a>
+      <button class="small-btn" type="button" onclick="window.print()">Print Record</button>
+    </div>
+
+    <div class="logo">
+      <span class="bare">BARE |</span>
+      <span class="by">by Marlese</span>
+    </div>
+    <h1>Treatment Record</h1>
+    <p class="subtitle">
+      Save the clinical settings and response for each treatment session. Open an existing record to edit it,
+      or duplicate the previous session to create the next one.
+    </p>
+
+    <div class="layout">
+      <div>
+        <form id="treatmentForm" autocomplete="off">
+          <input type="hidden" id="recordId">
+
+          <section class="section">
+            <h2>Client & Appointment</h2>
+            <div class="grid">
+              <div>
+                <label for="practitioner">Practitioner</label>
+                <input id="practitioner" value="Marlese Rosch Haden">
+              </div>
+              <div>
+                <label for="treatmentDate">Treatment Date</label>
+                <input type="date" id="treatmentDate" required>
+              </div>
+              <div>
+                <label for="clientName">Client Name</label>
+                <input id="clientName" placeholder="Full name" required>
+              </div>
+              <div>
+                <label for="dateOfBirth">Date of Birth</label>
+                <input type="date" id="dateOfBirth">
+              </div>
+              <div>
+                <label for="treatmentType">Treatment</label>
+                <select id="treatmentType" required>
+                  <option value="">Select treatment</option>
+                  <option value="Tattoo Removal">Tattoo Removal</option>
+                  <option value="Carbon Facial">Carbon Facial</option>
+                  <option value="Fungal Nail Laser">Fungal Nail Laser</option>
+                </select>
+              </div>
+              <div>
+                <label for="packageName">Treatment Option</label>
+                <select id="packageName" required disabled>
+                  <option value="">Select treatment first</option>
+                </select>
+              </div>
+              <div>
+                <label for="sessionNumber">Session</label>
+                <select id="sessionNumber" required disabled>
+                  <option value="">Select treatment option first</option>
+                </select>
+              </div>
+              <div>
+                <label for="appointmentId">Appointment ID (optional)</label>
+                <input id="appointmentId" inputmode="numeric" placeholder="e.g. 125">
+              </div>
+              <div class="full">
+                <label for="treatmentArea">Treatment Area</label>
+                <input id="treatmentArea" placeholder="e.g. left forearm, full face, right big toenail">
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h2>Laser Settings</h2>
+            <div class="grid three">
+              <div>
+                <label for="machine">Machine</label>
+                <input id="machine" value="HL6 Pro Q-Switch Nd:YAG">
+              </div>
+              <div>
+                <label for="wavelength">Wavelength</label>
+                <select id="wavelength">
+                  <option value="">Select</option>
+                  <option>1064nm</option>
+                  <option>532nm</option>
+                  <option>1064nm + 532nm</option>
+                </select>
+              </div>
+              <div>
+                <label for="spotSize">Spot Size (mm)</label>
+                <input id="spotSize" inputmode="decimal" placeholder="e.g. 4">
+              </div>
+              <div>
+                <label for="fluence">Fluence / Energy (J/cm²)</label>
+                <input id="fluence" inputmode="decimal" placeholder="e.g. 1.2">
+              </div>
+              <div>
+                <label for="frequency">Frequency (Hz)</label>
+                <input id="frequency" inputmode="decimal" placeholder="e.g. 5">
+              </div>
+              <div>
+                <label for="pulseWidth">Pulse Width (if shown)</label>
+                <input id="pulseWidth" placeholder="e.g. ns">
+              </div>
+              <div>
+                <label for="passes">Number of Passes</label>
+                <input type="number" id="passes" min="0" step="1" placeholder="e.g. 1">
+              </div>
+              <div>
+                <label for="totalPulses">Total Pulses / Shots</label>
+                <input type="number" id="totalPulses" min="0" step="1" placeholder="e.g. 450">
+              </div>
+              <div>
+                <label for="treatmentTime">Treatment Time (minutes)</label>
+                <input type="number" id="treatmentTime" min="0" step="1" placeholder="e.g. 20">
+              </div>
+            </div>
+
+            <div style="margin-top:14px">
+              <label>Cooling Used</label>
+              <div class="choice-wrap">
+                <label class="choice"><input type="checkbox" name="cooling" value="Air Cooling"><span>Air Cooling</span></label>
+                <label class="choice"><input type="checkbox" name="cooling" value="Ice Pack"><span>Ice Pack</span></label>
+                <label class="choice"><input type="checkbox" name="cooling" value="None"><span>None</span></label>
+              </div>
+            </div>
+          </section>
+
+          <section class="section hidden" id="tattooFields">
+            <h2>Tattoo Removal Details</h2>
+            <div class="grid">
+              <div>
+                <label>Ink Colours</label>
+                <div class="choice-wrap" id="tattooColours">
+                  <label class="choice"><input type="checkbox" value="Black"><span>Black</span></label>
+                  <label class="choice"><input type="checkbox" value="Blue"><span>Blue</span></label>
+                  <label class="choice"><input type="checkbox" value="Green"><span>Green</span></label>
+                  <label class="choice"><input type="checkbox" value="Red"><span>Red</span></label>
+                  <label class="choice"><input type="checkbox" value="Yellow"><span>Yellow</span></label>
+                  <label class="choice"><input type="checkbox" value="White"><span>White</span></label>
+                  <label class="choice"><input type="checkbox" value="Mixed"><span>Mixed</span></label>
+                </div>
+              </div>
+              <div>
+                <label>Treatment Response</label>
+                <div class="choice-wrap" id="tattooResponse">
+                  <label class="choice"><input type="checkbox" value="Immediate whitening"><span>Immediate Whitening</span></label>
+                  <label class="choice"><input type="checkbox" value="Mild erythema"><span>Mild Erythema</span></label>
+                  <label class="choice"><input type="checkbox" value="Mild oedema"><span>Mild Oedema</span></label>
+                  <label class="choice"><input type="checkbox" value="Pinpoint bleeding"><span>Pinpoint Bleeding</span></label>
+                  <label class="choice"><input type="checkbox" value="Blistering"><span>Blistering</span></label>
+                  <label class="choice"><input type="checkbox" value="No unusual reaction"><span>No Unusual Reaction</span></label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section hidden" id="carbonFields">
+            <h2>Carbon Facial Details</h2>
+            <div class="grid">
+              <div>
+                <label for="carbonLayer">Carbon Layer</label>
+                <select id="carbonLayer">
+                  <option value="">Select</option>
+                  <option>Thin</option>
+                  <option>Medium</option>
+                  <option>Heavy</option>
+                </select>
+              </div>
+              <div>
+                <label>Passes Completed</label>
+                <div class="choice-wrap" id="carbonPasses">
+                  <label class="choice"><input type="checkbox" value="Carbon pass"><span>Carbon Pass</span></label>
+                  <label class="choice"><input type="checkbox" value="Polish pass"><span>Polish Pass</span></label>
+                </div>
+              </div>
+              <div class="full">
+                <label>Skin Response</label>
+                <div class="choice-wrap" id="carbonResponse">
+                  <label class="choice"><input type="checkbox" value="Mild redness"><span>Mild Redness</span></label>
+                  <label class="choice"><input type="checkbox" value="Warmth"><span>Warmth</span></label>
+                  <label class="choice"><input type="checkbox" value="Tightening"><span>Tightening</span></label>
+                  <label class="choice"><input type="checkbox" value="Good response"><span>Good Response</span></label>
+                  <label class="choice"><input type="checkbox" value="Sensitive"><span>Sensitive</span></label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section hidden" id="fungalFields">
+            <h2>Fungal Nail Details</h2>
+            <div class="grid">
+              <div>
+                <label>Affected Foot</label>
+                <div class="choice-wrap" id="affectedFoot">
+                  <label class="choice"><input type="checkbox" value="Left Foot"><span>Left Foot</span></label>
+                  <label class="choice"><input type="checkbox" value="Right Foot"><span>Right Foot</span></label>
+                  <label class="choice"><input type="checkbox" value="Both Feet"><span>Both Feet</span></label>
+                </div>
+              </div>
+              <div>
+                <label>Nails Treated</label>
+                <div class="choice-wrap" id="nailsTreated">
+                  <label class="choice"><input type="checkbox" value="Big Toe"><span>Big Toe</span></label>
+                  <label class="choice"><input type="checkbox" value="2nd Toe"><span>2nd</span></label>
+                  <label class="choice"><input type="checkbox" value="3rd Toe"><span>3rd</span></label>
+                  <label class="choice"><input type="checkbox" value="4th Toe"><span>4th</span></label>
+                  <label class="choice"><input type="checkbox" value="5th Toe"><span>5th</span></label>
+                </div>
+              </div>
+              <div class="full">
+                <label>Nail Appearance</label>
+                <div class="choice-wrap" id="nailAppearance">
+                  <label class="choice"><input type="checkbox" value="Thickened"><span>Thickened</span></label>
+                  <label class="choice"><input type="checkbox" value="Yellow"><span>Yellow</span></label>
+                  <label class="choice"><input type="checkbox" value="White"><span>White</span></label>
+                  <label class="choice"><input type="checkbox" value="Brittle"><span>Brittle</span></label>
+                  <label class="choice"><input type="checkbox" value="Lifting"><span>Lifting</span></label>
+                  <label class="choice"><input type="checkbox" value="Improving"><span>Improving</span></label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h2>Safety, Outcome & Aftercare</h2>
+            <div class="grid">
+              <div>
+                <label>Safety Checks</label>
+                <div class="choice-wrap" id="safetyChecks">
+                  <label class="choice"><input type="checkbox" value="Eye protection worn"><span>Eye Protection Worn</span></label>
+                  <label class="choice"><input type="checkbox" value="Medical changes checked"><span>Medical Changes Checked</span></label>
+                  <label class="choice"><input type="checkbox" value="Medication changes checked"><span>Medication Changes Checked</span></label>
+                  <label class="choice"><input type="checkbox" value="Skin/nail area checked"><span>Area Checked</span></label>
+                </div>
+              </div>
+              <div>
+                <label for="tolerance">Client Tolerance</label>
+                <select id="tolerance">
+                  <option value="">Select</option>
+                  <option>Excellent</option>
+                  <option>Good</option>
+                  <option>Fair</option>
+                  <option>Poor</option>
+                </select>
+              </div>
+              <div>
+                <label>Clinical Photos</label>
+                <div class="choice-wrap" id="photos">
+                  <label class="choice"><input type="checkbox" value="Before photos taken"><span>Before Photos</span></label>
+                  <label class="choice"><input type="checkbox" value="After photos taken"><span>After Photos</span></label>
+                </div>
+              </div>
+              <div>
+                <label>Aftercare Given</label>
+                <div class="choice-wrap" id="aftercare">
+                  <label class="choice"><input type="checkbox" value="Written aftercare"><span>Written</span></label>
+                  <label class="choice"><input type="checkbox" value="Verbal aftercare"><span>Verbal</span></label>
+                  <label class="choice"><input type="checkbox" value="SPF advised"><span>SPF Advised</span></label>
+                  <label class="choice fungal-aftercare hidden"><input type="checkbox" value="Foot hygiene discussed"><span>Foot Hygiene</span></label>
+                </div>
+              </div>
+              <div class="full">
+                <label for="observations">Clinical Observations & Treatment Notes</label>
+                <textarea id="observations" placeholder="Skin or nail response, client feedback, any concerns, parameter adjustments and advice given."></textarea>
+              </div>
+              <div class="full">
+                <label for="nextPlan">Plan for Next Session</label>
+                <textarea id="nextPlan" placeholder="Settings to repeat or adjust, areas to focus on, response to monitor and recommendations."></textarea>
+              </div>
+              <div>
+                <label for="nextDate">Recommended Next Treatment Date</label>
+                <input type="date" id="nextDate">
+              </div>
+              <div>
+                <label for="recommendedInterval">Recommended Interval</label>
+                <select id="recommendedInterval">
+                  <option value="">Select</option>
+                  <option>4 weeks</option>
+                  <option>6 weeks</option>
+                  <option>8 weeks</option>
+                  <option>10 weeks</option>
+                  <option>12 weeks</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <div class="note">
+            Saving creates or updates a record in this browser. Use “Duplicate Previous Session” to copy the last
+            settings into a new session, then change only what is different.
+          </div>
+
+          <div class="actions">
+            <button class="btn" type="submit">Save Treatment Record</button>
+            <button class="btn secondary" id="duplicateBtn" type="button">Duplicate Previous Session</button>
+            <button class="btn secondary" type="button" id="newBtn">New Blank Record</button>
+            <button class="btn danger" type="button" id="deleteBtn" disabled>Delete This Record</button>
+          </div>
+
+          <div id="status" class="status" role="status"></div>
+        </form>
+      </div>
+
+      <aside class="record-panel">
+        <section class="section">
+          <h2>Saved Treatment History</h2>
+          <div class="search-row">
+            <input id="recordSearch" placeholder="Search client or treatment">
+            <button type="button" class="small-btn" id="clearSearch">Clear</button>
+          </div>
+          <div id="recordList" class="record-list"></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+<script>
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "bareTreatmentRecordsV1";
+
+  const treatmentOptions = {
+    "Tattoo Removal": [
+      { name: "Tiny Tattoo", sessions: 6 },
+      { name: "Small Tattoo", sessions: 6 },
+      { name: "Medium Tattoo", sessions: 6 },
+      { name: "Large Tattoo", sessions: 6 },
+      { name: "XL Tattoo", sessions: 6 }
+    ],
+    "Carbon Facial": [
+      { name: "Single Carbon Facial", sessions: 1 },
+      { name: "Carbon Facial Bundle", sessions: 3 }
+    ],
+    "Fungal Nail Laser": [
+      { name: "Single Nail", sessions: 1 },
+      { name: "One Foot (Up to 5 Nails)", sessions: 1 },
+      { name: "Both Feet", sessions: 1 },
+      { name: "One Foot Course of 4", sessions: 4 },
+      { name: "Both Feet Course of 4", sessions: 4 }
+    ]
+  };
+
+  const $ = id => document.getElementById(id);
+
+  const form = $("treatmentForm");
+  const treatmentType = $("treatmentType");
+  const packageName = $("packageName");
+  const sessionNumber = $("sessionNumber");
+  const recordList = $("recordList");
+  const search = $("recordSearch");
+  const status = $("status");
+  const deleteBtn = $("deleteBtn");
+
+  function todayISO(){
+    const d = new Date();
+    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0,10);
+  }
+
+  function getRecords(){
+    try{
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    }catch{
+      return [];
+    }
+  }
+
+  function saveRecords(records){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  }
+
+  function makeId(){
+    return "tr_" + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+  }
+
+  function setStatus(message, type="ok"){
+    status.textContent = message;
+    status.className = "status show " + type;
+    clearTimeout(setStatus.timer);
+    setStatus.timer = setTimeout(() => {
+      status.className = "status";
+    }, 5000);
+  }
+
+  function valuesFrom(selector){
+    return [...document.querySelectorAll(selector + " input:checked")].map(x => x.value);
+  }
+
+  function setChecked(selector, values){
+    const wanted = new Set(values || []);
+    document.querySelectorAll(selector + " input").forEach(input => {
+      input.checked = wanted.has(input.value);
+    });
+  }
+
+  function updateTreatmentVisibility(){
+    const type = treatmentType.value;
+    $("tattooFields").classList.toggle("hidden", type !== "Tattoo Removal");
+    $("carbonFields").classList.toggle("hidden", type !== "Carbon Facial");
+    $("fungalFields").classList.toggle("hidden", type !== "Fungal Nail Laser");
+    document.querySelectorAll(".fungal-aftercare").forEach(el => {
+      el.classList.toggle("hidden", type !== "Fungal Nail Laser");
+    });
+  }
+
+  function populatePackages(selectedValue=""){
+    const type = treatmentType.value;
+    packageName.innerHTML = '<option value="">Select treatment option</option>';
+    sessionNumber.innerHTML = '<option value="">Select treatment option first</option>';
+    sessionNumber.disabled = true;
+
+    if(!type || !treatmentOptions[type]){
+      packageName.disabled = true;
+      return;
+    }
+
+    treatmentOptions[type].forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.name;
+      option.textContent = item.name;
+      packageName.appendChild(option);
+    });
+
+    packageName.disabled = false;
+    packageName.value = selectedValue;
+    if(selectedValue) populateSessions();
+  }
+
+  function populateSessions(selectedValue=""){
+    const type = treatmentType.value;
+    const selected = (treatmentOptions[type] || []).find(x => x.name === packageName.value);
+
+    sessionNumber.innerHTML = '<option value="">Select session</option>';
+    if(!selected){
+      sessionNumber.disabled = true;
+      return;
+    }
+
+    for(let i=1; i<=selected.sessions; i++){
+      const option = document.createElement("option");
+      option.value = String(i);
+      option.textContent = "Session " + i;
+      sessionNumber.appendChild(option);
+    }
+
+    sessionNumber.disabled = false;
+    sessionNumber.value = selectedValue;
+  }
+
+  function collectRecord(){
+    const existingId = $("recordId").value;
+    const now = new Date().toISOString();
+
+    return {
+      id: existingId || makeId(),
+      createdAt: existingId ? undefined : now,
+      updatedAt: now,
+      practitioner: $("practitioner").value.trim(),
+      treatmentDate: $("treatmentDate").value,
+      clientName: $("clientName").value.trim(),
+      dateOfBirth: $("dateOfBirth").value,
+      treatmentType: treatmentType.value,
+      packageName: packageName.value,
+      sessionNumber: sessionNumber.value,
+      appointmentId: $("appointmentId").value.trim(),
+      treatmentArea: $("treatmentArea").value.trim(),
+      machine: $("machine").value.trim(),
+      wavelength: $("wavelength").value,
+      spotSize: $("spotSize").value.trim(),
+      fluence: $("fluence").value.trim(),
+      frequency: $("frequency").value.trim(),
+      pulseWidth: $("pulseWidth").value.trim(),
+      passes: $("passes").value,
+      totalPulses: $("totalPulses").value,
+      treatmentTime: $("treatmentTime").value,
+      cooling: valuesFrom('input[name="cooling"]').length ? valuesFrom('input[name="cooling"]') : [],
+      tattooColours: valuesFrom("#tattooColours"),
+      tattooResponse: valuesFrom("#tattooResponse"),
+      carbonLayer: $("carbonLayer").value,
+      carbonPasses: valuesFrom("#carbonPasses"),
+      carbonResponse: valuesFrom("#carbonResponse"),
+      affectedFoot: valuesFrom("#affectedFoot"),
+      nailsTreated: valuesFrom("#nailsTreated"),
+      nailAppearance: valuesFrom("#nailAppearance"),
+      safetyChecks: valuesFrom("#safetyChecks"),
+      tolerance: $("tolerance").value,
+      photos: valuesFrom("#photos"),
+      aftercare: valuesFrom("#aftercare"),
+      observations: $("observations").value.trim(),
+      nextPlan: $("nextPlan").value.trim(),
+      nextDate: $("nextDate").value,
+      recommendedInterval: $("recommendedInterval").value
+    };
+  }
+
+  function fillRecord(r){
+    resetForm(false);
+
+    $("recordId").value = r.id || "";
+    $("practitioner").value = r.practitioner || "Marlese Rosch Haden";
+    $("treatmentDate").value = r.treatmentDate || todayISO();
+    $("clientName").value = r.clientName || "";
+    $("dateOfBirth").value = r.dateOfBirth || "";
+    treatmentType.value = r.treatmentType || "";
+    updateTreatmentVisibility();
+    populatePackages(r.packageName || "");
+    populateSessions(r.sessionNumber || "");
+    $("appointmentId").value = r.appointmentId || "";
+    $("treatmentArea").value = r.treatmentArea || "";
+    $("machine").value = r.machine || "HL6 Pro Q-Switch Nd:YAG";
+    $("wavelength").value = r.wavelength || "";
+    $("spotSize").value = r.spotSize || "";
+    $("fluence").value = r.fluence || "";
+    $("frequency").value = r.frequency || "";
+    $("pulseWidth").value = r.pulseWidth || "";
+    $("passes").value = r.passes || "";
+    $("totalPulses").value = r.totalPulses || "";
+    $("treatmentTime").value = r.treatmentTime || "";
+
+    document.querySelectorAll('input[name="cooling"]').forEach(x => {
+      x.checked = (r.cooling || []).includes(x.value);
+    });
+
+    setChecked("#tattooColours", r.tattooColours);
+    setChecked("#tattooResponse", r.tattooResponse);
+    $("carbonLayer").value = r.carbonLayer || "";
+    setChecked("#carbonPasses", r.carbonPasses);
+    setChecked("#carbonResponse", r.carbonResponse);
+    setChecked("#affectedFoot", r.affectedFoot);
+    setChecked("#nailsTreated", r.nailsTreated);
+    setChecked("#nailAppearance", r.nailAppearance);
+    setChecked("#safetyChecks", r.safetyChecks);
+    $("tolerance").value = r.tolerance || "";
+    setChecked("#photos", r.photos);
+    setChecked("#aftercare", r.aftercare);
+    $("observations").value = r.observations || "";
+    $("nextPlan").value = r.nextPlan || "";
+    $("nextDate").value = r.nextDate || "";
+    $("recommendedInterval").value = r.recommendedInterval || "";
+
+    deleteBtn.disabled = false;
+    window.scrollTo({top:0,behavior:"smooth"});
+    setStatus("Treatment record opened. Make changes and press Save Treatment Record.");
+  }
+
+  function resetForm(scroll=true){
+    form.reset();
+    $("recordId").value = "";
+    $("practitioner").value = "Marlese Rosch Haden";
+    $("machine").value = "HL6 Pro Q-Switch Nd:YAG";
+    $("treatmentDate").value = todayISO();
+    packageName.innerHTML = '<option value="">Select treatment first</option>';
+    packageName.disabled = true;
+    sessionNumber.innerHTML = '<option value="">Select treatment option first</option>';
+    sessionNumber.disabled = true;
+    updateTreatmentVisibility();
+    deleteBtn.disabled = true;
+    if(scroll) window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  function renderRecords(){
+    const query = search.value.trim().toLowerCase();
+    const records = getRecords()
+      .filter(r => {
+        if(!query) return true;
+        return [
+          r.clientName,
+          r.treatmentType,
+          r.packageName,
+          r.treatmentDate,
+          "session " + r.sessionNumber
+        ].join(" ").toLowerCase().includes(query);
+      })
+      .sort((a,b) => {
+        const dateCompare = String(b.treatmentDate || "").localeCompare(String(a.treatmentDate || ""));
+        return dateCompare || String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""));
+      });
+
+    if(!records.length){
+      recordList.innerHTML = '<div class="empty">No saved treatment records found.</div>';
+      return;
+    }
+
+    recordList.innerHTML = "";
+    records.forEach(r => {
+      const card = document.createElement("div");
+      card.className = "record-card";
+
+      const safeName = escapeHtml(r.clientName || "Unnamed client");
+      const safeTreatment = escapeHtml(r.packageName || r.treatmentType || "Treatment");
+      const safeDate = escapeHtml(formatDate(r.treatmentDate));
+      const safeSession = escapeHtml(r.sessionNumber ? "Session " + r.sessionNumber : "Session not set");
+
+      card.innerHTML = `
+        <strong>${safeName}</strong>
+        <div class="record-meta">
+          ${safeTreatment}<br>
+          ${safeSession} · ${safeDate}
+        </div>
+        <div class="record-actions">
+          <button type="button" data-action="open">Open / Edit</button>
+          <button type="button" data-action="duplicate">Duplicate</button>
+        </div>
+      `;
+
+      card.querySelector('[data-action="open"]').addEventListener("click", () => fillRecord(r));
+      card.querySelector('[data-action="duplicate"]').addEventListener("click", () => duplicateRecord(r));
+      recordList.appendChild(card);
+    });
+  }
+
+  function duplicateRecord(source){
+    const copy = JSON.parse(JSON.stringify(source));
+    copy.id = "";
+    copy.treatmentDate = todayISO();
+    copy.nextDate = "";
+    copy.updatedAt = "";
+    copy.createdAt = "";
+
+    const maxSessions = getMaxSessions(copy.treatmentType, copy.packageName);
+    const nextSession = Math.min(Number(copy.sessionNumber || 0) + 1, maxSessions || 1);
+    copy.sessionNumber = String(nextSession);
+
+    copy.observations = "";
+    copy.photos = [];
+    copy.tolerance = "";
+    fillRecord(copy);
+    $("recordId").value = "";
+    deleteBtn.disabled = true;
+    setStatus("Previous settings copied into a new record. Check the date and session, then save.");
+  }
+
+  function getMaxSessions(type, packageValue){
+    const found = (treatmentOptions[type] || []).find(x => x.name === packageValue);
+    return found ? found.sessions : 1;
+  }
+
+  function findPreviousForCurrent(){
+    const name = $("clientName").value.trim().toLowerCase();
+    const type = treatmentType.value;
+    const packageValue = packageName.value;
+
+    if(!name || !type){
+      setStatus("Enter the client name and select the treatment first.", "error");
+      return null;
+    }
+
+    return getRecords()
+      .filter(r =>
+        String(r.clientName || "").trim().toLowerCase() === name &&
+        r.treatmentType === type &&
+        (!packageValue || r.packageName === packageValue)
+      )
+      .sort((a,b) => {
+        const sessionCompare = Number(b.sessionNumber || 0) - Number(a.sessionNumber || 0);
+        return sessionCompare || String(b.treatmentDate || "").localeCompare(String(a.treatmentDate || ""));
+      })[0] || null;
+  }
+
+  function escapeHtml(value){
+    return String(value ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function formatDate(value){
+    if(!value) return "No date";
+    const [y,m,d] = value.split("-");
+    return y && m && d ? `${d}/${m}/${y}` : value;
+  }
+
+  treatmentType.addEventListener("change", () => {
+    updateTreatmentVisibility();
+    populatePackages();
+  });
+
+  packageName.addEventListener("change", () => populateSessions());
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    if(!form.reportValidity()) return;
+
+    const record = collectRecord();
+    const records = getRecords();
+    const existingIndex = records.findIndex(r => r.id === record.id);
+
+    if(existingIndex >= 0){
+      record.createdAt = records[existingIndex].createdAt || record.updatedAt;
+      records[existingIndex] = record;
+    }else{
+      record.createdAt = record.createdAt || record.updatedAt;
+      records.push(record);
+    }
+
+    saveRecords(records);
+    $("recordId").value = record.id;
+    deleteBtn.disabled = false;
+    renderRecords();
+    setStatus(existingIndex >= 0 ? "Treatment record updated successfully." : "Treatment record saved successfully.");
+  });
+
+  $("duplicateBtn").addEventListener("click", () => {
+    const previous = findPreviousForCurrent();
+    if(!previous){
+      setStatus("No previous saved session was found for this client and treatment.", "error");
+      return;
+    }
+    duplicateRecord(previous);
+  });
+
+  $("newBtn").addEventListener("click", () => {
+    resetForm();
+    setStatus("New blank treatment record ready.");
+  });
+
+  deleteBtn.addEventListener("click", () => {
+    const id = $("recordId").value;
+    if(!id) return;
+    if(!confirm("Delete this treatment record? This cannot be undone.")) return;
+
+    const records = getRecords().filter(r => r.id !== id);
+    saveRecords(records);
+    resetForm();
+    renderRecords();
+    setStatus("Treatment record deleted.");
+  });
+
+  search.addEventListener("input", renderRecords);
+  $("clearSearch").addEventListener("click", () => {
+    search.value = "";
+    renderRecords();
+  });
+
+  resetForm(false);
+  renderRecords();
+})();
+</script>
+</body>
+</html>
