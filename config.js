@@ -94,12 +94,12 @@ Object.assign(window.SITE_CONFIG, {
       xl: "https://buy.stripe.com/cNi00lgmCedt7YR51Y8g006"
     },
     single: {
-      tiny: "https://buy.stripe.com/cNi6oJ2vM3yP6UN0LI8g00f",
-      small: "https://buy.stripe.com/9B64gBb2i6L16UN3XU8g00e",
-      medium: "https://buy.stripe.com/dRm28t8Uad9pfrj8ea8g00d",
-      large: "https://buy.stripe.com/8x23cx1rI8T9gvn2TQ8g00c",
-      xl: "https://buy.stripe.com/eVq5kFeeuedtgvn8ea8g00b"
-    }
+      tiny: "https://buy.stripe.com/28E5kFeeu2uLdjbcuq8g00P",
+      small: "https://buy.stripe.com/dRm4gBfiy6L1cf77a68g00O",
+      medium: "https://buy.stripe.com/00w5kF2vMb1henf9ie8g00N",
+      large: "https://buy.stripe.com/00wdRb3zQ8T96UNfGC8g00M",
+      xl: "https://buy.stripe.com/6oUfZj3zQ8T9bb37a68g00L"
+}
   },
 
 stripeLinksCarbon: {
