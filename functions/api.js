@@ -1956,21 +1956,23 @@ if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
     if (booking.booking_type === "treatment") {
 
       const sessions = await env.DB.prepare(`
-        SELECT
-  id,
-  session_number,
-  appointment_date,
-  appointment_time,
-  status,
-  reschedule_token,
-  last_cancelled_date,
-  last_cancelled_time,
-  cancelled_at,
-  cancelled_count
-FROM treatment_sessions
-        WHERE appointment_id = ?
-        ORDER BY session_number ASC
-      `).bind(booking.id).all();
+  SELECT
+    id,
+    session_number,
+    appointment_date,
+    appointment_time,
+    status,
+    reschedule_token,
+    reminder_sent,
+    aftercare_sent,
+    last_cancelled_date,
+    last_cancelled_time,
+    cancelled_at,
+    cancelled_count
+  FROM treatment_sessions
+  WHERE appointment_id = ?
+  ORDER BY session_number ASC
+`).bind(booking.id).all();
 
       booking.sessions = sessions.results || [];
 
