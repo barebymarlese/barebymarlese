@@ -1384,11 +1384,60 @@ function buildAftercareStatus(booking){
     return `<span class="action-note">—</span>`;
   }
 
-  if (booking.aftercare_sent === "yes") {
-    return `<span style="color:#2f7d32;font-weight:700;">✓ Sent</span>`;
+  const sessions = Array.isArray(booking.sessions)
+    ? booking.sessions
+    : [];
+
+  const completedSessions = sessions
+    .filter(session =>
+      String(session.status || "").toLowerCase() === "completed"
+    )
+    .sort((a, b) =>
+      Number(a.session_number || 0) -
+      Number(b.session_number || 0)
+    );
+
+  const sentSessions = completedSessions.filter(session =>
+    String(session.aftercare_sent || "").toLowerCase() === "yes"
+  );
+
+  if (sentSessions.length) {
+    const latestSent =
+      sentSessions[sentSessions.length - 1];
+
+    return `
+      <span style="color:#2f7d32;font-weight:700;">
+        ✓ Session ${escapeHtml(latestSent.session_number)} sent
+      </span>
+    `;
   }
 
-  return `<span style="color:#9b2f2f;font-weight:700;">✕ Not sent</span>`;
+  if (
+    String(booking.aftercare_sent || "").toLowerCase() === "yes"
+  ) {
+    return `
+      <span style="color:#2f7d32;font-weight:700;">
+        ✓ Sent
+      </span>
+    `;
+  }
+
+  if (completedSessions.length) {
+    const latestCompleted =
+      completedSessions[completedSessions.length - 1];
+
+    return `
+      <span style="color:#9b2f2f;font-weight:700;">
+        ✕ Session ${escapeHtml(latestCompleted.session_number)} not sent
+      </span>
+    `;
+  }
+
+  return `
+    <span class="action-note">
+      No completed session
+    </span>
+  `;
 }
 
 function formatMoney(value){
