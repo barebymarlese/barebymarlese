@@ -326,24 +326,6 @@ tbody tr:last-child td{border-bottom:0}
   color:#2f7d32;
   font-weight:700;
 }
-.journey-status{
-  margin-top:8px;
-  padding:9px 10px;
-  border-radius:10px;
-  background:#f4f5f3;
-  border:1px solid rgba(36,34,26,.10);
-  font-size:10px;
-  line-height:1.55;
-  color:rgba(36,34,26,.72);
-}
-.journey-status strong{color:var(--olive-dark)}
-.journey-step.complete{color:#2f7d32;font-weight:700}
-.journey-step.pending{color:#7a5318;font-weight:600}
-.treatment-progress{
-  margin-top:5px;
-  color:var(--olive-dark);
-  font-weight:700;
-}
 
 .coupon-details{
   margin-top:8px;
@@ -1529,60 +1511,37 @@ function buildPaymentBadge(booking){
   const priceBeforeDiscount = Number(booking.price_before_discount || 0);
   const discountAmount = Number(booking.discount_amount || 0);
   const couponCode = String(booking.coupon_code || "").trim();
-  const category = String(booking.treatment_category || "").toLowerCase();
-  const isLaserJourney = ["carbon", "fungal"].includes(category) && fullPrice > 0;
 
   const stripeText = booking.payment_reference
     ? `<br><span class="action-note">Stripe linked</span>`
     : "";
 
   let badge = `<span class="badge unpaid">Unpaid</span>`;
-  if (status === "paid") {
-    badge = `<span class="badge paid">Paid</span>`;
-  } else if (status === "deposit_paid") {
-    badge = `<span class="badge deposit">Deposit paid</span>`;
-  } else if (status === "refunded") {
-    badge = `<span class="badge refunded">Refunded</span>`;
-  }
 
-  if (isLaserJourney) {
-    const consultationValue = Math.min(30, fullPrice);
-    const depositDiscount = Math.min(discountAmount, consultationValue);
-    const depositPaid = Math.max(0, consultationValue - depositDiscount);
-    const balanceValue = Math.max(0, fullPrice - consultationValue);
-    const balancePaid = remainingBalance <= 0.005
-      ? balanceValue
-      : Math.max(0, Math.min(balanceValue, amountPaid - depositPaid));
-    const isSettled = remainingBalance <= 0.005 && status === "paid";
+if (status === "paid") {
+  badge = `<span class="badge paid">Paid</span>`;
+} else if (status === "deposit_paid") {
+  badge = `<span class="badge deposit">Deposit paid</span>`;
+} else if (status === "refunded") {
+  badge = `<span class="badge refunded">Refunded</span>`;
+}
 
-    return `
-      ${badge}
-      ${stripeText}
-      <div class="payment-breakdown">
-        <div>Deposit paid: <strong>${formatMoney(depositPaid)}</strong></div>
-        <div>Balance paid: <strong>${formatMoney(balancePaid)}</strong></div>
-        <div>Discount: <strong>${formatMoney(depositDiscount)}</strong></div>
-        <div class="${isSettled ? "settled" : "outstanding"}">
-          Total value: ${formatMoney(fullPrice)}${isSettled ? " ✓" : ""}
-        </div>
-        ${remainingBalance > 0.005
-          ? `<div class="outstanding">Outstanding: ${formatMoney(remainingBalance)}</div>`
-          : ""
-        }
-      </div>
-      ${couponCode
-        ? `<div class="coupon-details"><div>Coupon:<br><span class="coupon-code">${escapeHtml(couponCode)}</span></div></div>`
-        : ""
-      }
-    `;
-  }
+  const hasCoupon =
+    couponCode ||
+    discountAmount > 0 ||
+    priceBeforeDiscount > amountPaid;
 
-  const hasCoupon = couponCode || discountAmount > 0 || priceBeforeDiscount > amountPaid;
   const couponHtml = hasCoupon
     ? `
       <div class="coupon-details">
-        ${priceBeforeDiscount > 0 ? `<div>Before discount: <strong>${formatMoney(priceBeforeDiscount)}</strong></div>` : ""}
-        ${discountAmount > 0 ? `<div>Discount: <strong>-${formatMoney(discountAmount)}</strong></div>` : ""}
+        ${priceBeforeDiscount > 0
+          ? `<div>Before discount: <strong>${formatMoney(priceBeforeDiscount)}</strong></div>`
+          : ""
+        }
+        ${discountAmount > 0
+          ? `<div>Discount: <strong>-${formatMoney(discountAmount)}</strong></div>`
+          : ""
+        }
         ${couponCode
           ? `<div>Coupon:<br><span class="coupon-code">${escapeHtml(couponCode)}</span></div>`
           : `<div><strong>Discount applied</strong></div>`
@@ -1591,16 +1550,25 @@ function buildPaymentBadge(booking){
     `
     : "";
 
-  const hasTreatmentPrice = booking.booking_type === "treatment" && (fullPrice > 0 || remainingBalance > 0);
+  const category = String(booking.treatment_category || "").toLowerCase();
+  const hasTreatmentPrice =
+    (booking.booking_type === "treatment" ||
+      (booking.booking_type === "consultation" && ["carbon", "fungal"].includes(category))) &&
+    (fullPrice > 0 || remainingBalance > 0);
+
   if (!hasTreatmentPrice) {
     const amountText = amountPaid > 0
       ? `<br><span class="action-note payment-amount">${formatMoney(amountPaid)}</span>`
       : "";
+
     return `${badge}${amountText}${stripeText}${couponHtml}`;
   }
 
   const outstandingClass = remainingBalance > 0 ? "outstanding" : "settled";
-  const outstandingText = remainingBalance > 0 ? formatMoney(remainingBalance) : "Paid in full";
+  const outstandingText = remainingBalance > 0
+    ? formatMoney(remainingBalance)
+    : "Paid in full";
+
   return `
     ${badge}
     ${stripeText}
@@ -1619,14 +1587,11 @@ function formatPackageType(packageType){
 }
 
 function getBookingTypeLabel(booking){
-  const category = String(booking.treatment_category || "").toLowerCase();
-
-  if (booking.booking_type === "treatment") {
-    if (category === "carbon") return "Carbon Client Journey";
-    if (category === "fungal") return "Fungal Nail Client Journey";
-    return "treatment";
+  if (booking.booking_type !== "consultation") {
+    return booking.booking_type || "treatment";
   }
 
+  const category = String(booking.treatment_category || "").toLowerCase();
   if (category === "carbon") return "Carbon Consultation";
   if (category === "fungal") return "Fungal Nail Consultation";
   if (category === "tattoo") return "Tattoo Consultation";
@@ -1678,16 +1643,6 @@ function formatTattooSize(size){
 
 function buildPatchTestStatus(booking){
   if (booking.booking_type !== "consultation") {
-    const category = String(booking.treatment_category || "").toLowerCase();
-    const completedJourney =
-      ["carbon", "fungal"].includes(category) &&
-      Number(booking.patch_test_complete || 0) === 1 &&
-      Number(booking.consultation_complete || 0) === 1;
-
-    if (completedJourney) {
-      return `<span class="patch-status complete">Complete</span>`;
-    }
-
     if(isReturningClientBooking(booking)){
       return `
         <span class="patch-status pending">
@@ -1745,17 +1700,10 @@ function buildPatchTestStatus(booking){
 
 function buildPackageInfo(booking){
   const category = String(booking.treatment_category || "").toLowerCase();
-  const isLaserJourney = ["carbon", "fungal"].includes(category);
-  const isLaserConsultation = booking.booking_type === "consultation" && isLaserJourney;
-
+  const isLaserConsultation = booking.booking_type === "consultation" && ["carbon", "fungal"].includes(category);
   if (booking.booking_type !== "treatment" && !isLaserConsultation) {
     return `<span class="action-note">—</span>`;
   }
-
-  const consultationDone = Number(booking.consultation_complete || 0) === 1;
-  const patchDone = Number(booking.patch_test_complete || 0) === 1;
-  const balanceDone = booking.payment_status === "paid" && Number(booking.remaining_balance || 0) <= 0.005;
-  const packageActive = ["active", "completed"].includes(String(booking.package_status || "").toLowerCase());
 
   return `
     <div class="package-text">
@@ -1765,15 +1713,6 @@ function buildPackageInfo(booking){
       ${booking.tattoo_size ? `<br>${escapeHtml(formatTattooSize(booking.tattoo_size))}` : ""}
       <br>
       <span class="action-note">${escapeHtml(booking.package_status || "none")}</span>
-      ${isLaserJourney ? `
-        <div class="journey-status">
-          <strong>Client journey</strong>
-          <div class="journey-step ${consultationDone ? "complete" : "pending"}">${consultationDone ? "✓" : "○"} Consultation</div>
-          <div class="journey-step ${patchDone ? "complete" : "pending"}">${patchDone ? "✓" : "○"} Patch test</div>
-          <div class="journey-step ${balanceDone ? "complete" : "pending"}">${balanceDone ? "✓" : "○"} Balance paid</div>
-          <div class="journey-step ${packageActive ? "complete" : "pending"}">${packageActive ? "✓" : "○"} Treatment package active</div>
-        </div>
-      ` : ""}
     </div>
   `;
 }
@@ -1842,22 +1781,9 @@ function buildSessionInfo(booking){
     ? `Next: Session ${escapeHtml(nextSession.session_number)} - ${escapeHtml(nextSession.appointment_date)} at ${escapeHtml(nextSession.appointment_time)}`
     : "No booked sessions";
 
-  const completedCount = sessions.filter(session => String(session.status || "").toLowerCase() === "completed").length;
-  const firstBooked = bookedSessions[0] || null;
-  let treatmentStatus = "Waiting for Session 1";
-
-  if (total > 0 && completedCount >= total) {
-    treatmentStatus = "Completed";
-  } else if (completedCount > 0) {
-    treatmentStatus = `In progress · ${completedCount}/${total} completed`;
-  } else if (firstBooked) {
-    treatmentStatus = `Session ${firstBooked.session_number} booked`;
-  }
-
   const summaryHtml = `
     <div class="session-summary">
-      <strong>Treatment Status</strong>
-      <div class="treatment-progress">${escapeHtml(treatmentStatus)}</div>
+      <strong>${used}/${total} used</strong>
       <span class="session-date">${nextText}</span>
       ${pendingCount ? `<span class="action-note" style="text-align:left;">${pendingCount} pending session${pendingCount === 1 ? "" : "s"}</span>` : ""}
       <div class="session-toggle">
@@ -1970,6 +1896,34 @@ function getCalendarAppointments(){
     if (isTemporaryReservation(booking)) return;
 
     if (booking.booking_type === "treatment" && Array.isArray(booking.sessions) && booking.sessions.length) {
+      /*
+        Carbon and fungal records begin as consultation bookings, then the
+        worker converts the same appointment row into a treatment booking.
+        The original appointment_date and appointment_time still contain the
+        consultation and patch-test appointment. Keep that historical entry
+        visible before adding the treatment sessions.
+      */
+      const category = String(booking.treatment_category || "").toLowerCase();
+      const wasCompletedConsultation =
+        ["carbon", "fungal"].includes(category) &&
+        Number(booking.consultation_complete || 0) === 1 &&
+        Number(booking.patch_test_complete || 0) === 1 &&
+        booking.appointment_date &&
+        booking.appointment_time;
+
+      if (wasCompletedConsultation) {
+        appointments.push({
+          bookingId: booking.id,
+          date: booking.appointment_date,
+          time: booking.appointment_time,
+          client: booking.client_name || "Client",
+          type: "consultation",
+          label: `${category === "carbon" ? "Carbon" : "Fungal Nail"} Consultation & Patch Test · Completed`,
+          booking,
+          session: null
+        });
+      }
+
       booking.sessions.forEach(session => {
         const sessionStatus = String(session.status || "").toLowerCase();
 
