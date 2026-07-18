@@ -2211,7 +2211,7 @@ if (
       VALUES
       (
         ?, ?, ?,
-        NULL, NULL,
+        '', '',
         'confirmed',
         ?,
         'treatment',
