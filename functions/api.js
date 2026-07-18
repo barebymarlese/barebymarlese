@@ -2196,7 +2196,7 @@ if (
 
     await env.DB.prepare(`
       UPDATE appointments
-      SET booking_type = 'treatment', package_status = 'active'
+      SET package_status = 'active'
       WHERE id = ?
     `).bind(booking.id).run();
 
