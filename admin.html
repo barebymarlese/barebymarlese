@@ -1429,10 +1429,6 @@ function buildClientFlags(booking){
 }
 
 function buildAftercareStatus(booking){
-  if (booking.booking_type !== "treatment") {
-    return `<span class="action-note">—</span>`;
-  }
-
   const sessions = Array.isArray(booking.sessions)
     ? [...booking.sessions].sort(
         (a, b) =>
@@ -1796,7 +1792,14 @@ function togglePackageSessions(bookingId){
 }
 
 function buildSessionInfo(booking){
-  if (booking.booking_type !== "treatment") {
+  const hasTreatmentPackage =
+    booking.booking_type === "treatment" ||
+    (
+      booking.booking_type === "consultation" &&
+      Number(booking.sessions_total || 0) > 0
+    );
+
+  if (!hasTreatmentPackage) {
     return `<span class="action-note">—</span>`;
   }
 
