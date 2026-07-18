@@ -1271,7 +1271,44 @@ footer{
       </div>
     </div>
   </div>
+<div class="admin-modal" id="session-modal" aria-hidden="true">
+  <div class="admin-modal-card">
+    <h2 id="session-modal-title">Book Treatment Session</h2>
 
+    <p id="session-modal-summary">
+      Choose a treatment date and time for this session.
+    </p>
+
+    <label for="session-date">Choose treatment date</label>
+    <input type="date" id="session-date">
+
+    <div id="session-slots" class="modal-slots">
+      <span class="action-note">
+        Choose a date to view available treatment times.
+      </span>
+    </div>
+
+    <p id="session-modal-status" class="action-note"></p>
+
+    <div class="modal-actions">
+      <button
+        class="btn btn-secondary"
+        type="button"
+        onclick="closeSessionModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn btn-primary"
+        type="button"
+        onclick="confirmAdminSessionBooking()"
+      >
+        Save Session
+      </button>
+    </div>
+  </div>
+</div>
   <div class="admin-modal" id="balance-payment-modal" aria-hidden="true">
     <div class="admin-modal-card balance-payment-card">
       <h2>Take Balance Payment</h2>
