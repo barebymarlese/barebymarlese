@@ -1272,6 +1272,26 @@ footer{
     </div>
   </div>
 
+  <div class="admin-modal" id="create-treatment-modal" aria-hidden="true">
+    <div class="admin-modal-card">
+      <h2>Create Treatment Package</h2>
+      <p id="create-treatment-summary">Select the treatment package for this client.</p>
+
+      <label for="create-treatment-package">Treatment package</label>
+      <select
+        id="create-treatment-package"
+        style="width:100%;padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;margin:8px 0 12px;background:#fff;"
+      ></select>
+
+      <p id="create-treatment-status" class="action-note"></p>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" onclick="closeCreateTreatmentModal()">Cancel</button>
+        <button class="btn btn-primary" type="button" onclick="confirmCreateTreatment()">Create Treatment</button>
+      </div>
+    </div>
+  </div>
+
   <div class="admin-modal" id="session-modal" aria-hidden="true">
     <div class="admin-modal-card">
       <h2 id="session-modal-title">Book Treatment Session</h2>
@@ -2091,13 +2111,19 @@ async function loadBookings(){
   ? `<span class="action-note">Package completed</span>`
   : ""}  
   
+    ${canCreateTreatmentFromConsultation(booking) && !isCancelled
+  ? `<button class="btn btn-primary" type="button" onclick="openCreateTreatmentModal(${Number(booking.id)})">
+      Create Treatment
+    </button>`
+  : ""}
+
     ${isTemporaryReservation(booking)
   ? `<span class="action-note">Awaiting Stripe payment or automatic release</span>`
   : canTakeStripeBalancePayment(booking) && !isCancelled
   ? `<button class="btn btn-primary" onclick="openBalancePaymentModal(${Number(booking.id)})">
       Collect Balance (${formatMoney(Number(booking.remaining_balance || 0))})
     </button>`
-  : booking.payment_status !== "paid" && !isCancelled
+  : booking.booking_type === "treatment" && booking.payment_status !== "paid" && !isCancelled
     ? `<button class="btn btn-secondary" onclick="markPaid(${Number(booking.id)}, ${Number(booking.remaining_balance || 0)}, ${Number(booking.full_price || 0)}, ${Number(booking.amount_paid || 0)})">
         ${Number(booking.remaining_balance || 0) > 0 ? "Mark Balance Paid" : "Mark Paid"}
       </button>`
@@ -2141,6 +2167,114 @@ async function cancelBooking(id){
     loadBookings();
   }else{
     alert("Could not cancel booking.");
+  }
+}
+
+let activeTreatmentConsultation = null;
+
+function canCreateTreatmentFromConsultation(booking){
+  const category = String(booking.treatment_category || "").toLowerCase();
+
+  return (
+    booking.booking_type === "consultation" &&
+    String(booking.status || "").toLowerCase() !== "cancelled" &&
+    Number(booking.consultation_complete || 0) === 1 &&
+    Number(booking.patch_test_complete || 0) === 1 &&
+    ["carbon", "fungal"].includes(category)
+  );
+}
+
+function openCreateTreatmentModal(consultationId){
+  const booking = adminBookings.find(
+    item => Number(item.id) === Number(consultationId)
+  );
+
+  if (!booking) {
+    alert("The consultation could not be found.");
+    return;
+  }
+
+  activeTreatmentConsultation = booking;
+
+  const modal = document.getElementById("create-treatment-modal");
+  const summary = document.getElementById("create-treatment-summary");
+  const packageSelect = document.getElementById("create-treatment-package");
+  const status = document.getElementById("create-treatment-status");
+  const category = String(booking.treatment_category || "").toLowerCase();
+
+  summary.textContent = `${booking.client_name || "Client"} — select the treatment package.`;
+
+  if (category === "carbon") {
+    packageSelect.innerHTML = `
+      <option value="single_session">Single Carbon Facial — £85</option>
+      <option value="three_sessions">Course of 3 Carbon Facials — £225</option>
+    `;
+  } else if (category === "fungal") {
+    packageSelect.innerHTML = `
+      <option value="single_nail">Single Nail — £45</option>
+      <option value="one_foot">One Foot (Up to 5 Nails) — £85</option>
+      <option value="both_feet">Both Feet — £120</option>
+      <option value="course4_one_foot">Course of 4 Sessions (One Foot) — £300</option>
+      <option value="course4_both_feet">Course of 4 Sessions (Both Feet) — £420</option>
+    `;
+  } else {
+    activeTreatmentConsultation = null;
+    alert("This consultation is not Carbon or Fungal.");
+    return;
+  }
+
+  status.textContent = "";
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeCreateTreatmentModal(){
+  const modal = document.getElementById("create-treatment-modal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  activeTreatmentConsultation = null;
+}
+
+async function confirmCreateTreatment(){
+  const status = document.getElementById("create-treatment-status");
+  const packageSelect = document.getElementById("create-treatment-package");
+
+  if (!activeTreatmentConsultation) {
+    status.textContent = "No consultation is selected.";
+    return;
+  }
+
+  status.textContent = "Creating treatment package…";
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/api?admin=create-treatment-from-consultation`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          consultation_id: Number(activeTreatmentConsultation.id),
+          package_type: packageSelect.value
+        })
+      }
+    );
+
+    const text = await response.text();
+
+    if (!response.ok) {
+      throw new Error(text || "The treatment package could not be created.");
+    }
+
+    const result = JSON.parse(text);
+    status.textContent = `Created successfully. Remaining balance: ${formatMoney(result.remaining_balance)}.`;
+
+    setTimeout(async () => {
+      closeCreateTreatmentModal();
+      await loadBookings();
+      showAdminView("bookings");
+    }, 800);
+  } catch (error) {
+    status.textContent = error.message || "The treatment package could not be created.";
   }
 }
 
