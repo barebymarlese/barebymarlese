@@ -1921,7 +1921,8 @@ function toLocalDateString(date){
 
 function getTreatmentClass(booking){
   const text = `${booking.treatment_name || ""} ${booking.package_type || ""} ${booking.treatment_category || ""}`.toLowerCase();
-  if (booking.booking_type !== "treatment") return "consultation";
+  const hasTreatmentSessions = Array.isArray(booking.sessions) && booking.sessions.length > 0;
+  if (booking.booking_type !== "treatment" && !hasTreatmentSessions) return "consultation";
   if (text.includes("carbon")) return "carbon";
   if (text.includes("fungal") || text.includes("toenail") || text.includes("nail")) return "fungal";
   return "tattoo";
@@ -1954,7 +1955,7 @@ function getCalendarAppointments(){
       */
       const category = String(booking.treatment_category || "").toLowerCase();
       const wasCompletedConsultation =
-        ["carbon", "fungal"].includes(category) &&
+        ["carbon", "fungal", "tattoo"].includes(category) &&
         Number(booking.consultation_complete || 0) === 1 &&
         Number(booking.patch_test_complete || 0) === 1 &&
         booking.appointment_date &&
@@ -1967,7 +1968,7 @@ function getCalendarAppointments(){
           time: booking.appointment_time,
           client: booking.client_name || "Client",
           type: "consultation",
-          label: `${category === "carbon" ? "Carbon" : "Fungal Nail"} Consultation & Patch Test · Completed`,
+          label: `${category === "carbon" ? "Carbon" : category === "fungal" ? "Fungal Nail" : "Tattoo Removal"} Consultation & Patch Test · Completed`,
           booking,
           session: null
         });
@@ -2375,9 +2376,11 @@ function canTakeStripeBalancePayment(booking){
 function canBookLaserTreatment(booking){
   const category = String(booking.treatment_category || "").toLowerCase();
   const eligibleCategory = ["carbon", "fungal", "tattoo"].includes(category);
+  const hasExistingSessions = Array.isArray(booking.sessions) && booking.sessions.length > 0;
   return (
     booking.booking_type === "consultation" &&
     eligibleCategory &&
+    !hasExistingSessions &&
     Number(booking.consultation_complete || 0) === 1 &&
     Number(booking.patch_test_complete || 0) === 1 &&
     booking.payment_status === "paid" &&
