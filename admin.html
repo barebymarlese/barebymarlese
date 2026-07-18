@@ -1275,14 +1275,8 @@ footer{
   <div class="admin-modal" id="create-treatment-modal" aria-hidden="true">
     <div class="admin-modal-card">
       <h2>Create Treatment Package</h2>
-      <p id="create-treatment-summary">Select the treatment package for this client.</p>
-
-      <label for="create-treatment-package">Treatment package</label>
-      <select
-        id="create-treatment-package"
-        style="width:100%;padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;margin:8px 0 12px;background:#fff;"
-      ></select>
-
+      <p id="create-treatment-summary">Confirm the treatment package already selected by the client.</p>
+      <div id="create-treatment-details" class="balance-payment-summary"></div>
       <p id="create-treatment-status" class="action-note"></p>
 
       <div class="modal-actions">
@@ -1586,6 +1580,55 @@ function formatPackageType(packageType){
   return String(packageType).replaceAll("_", " ").replace(/\b\w/g, c => c.toUpperCase());
 }
 
+function getBookingTypeLabel(booking){
+  if (booking.booking_type !== "consultation") {
+    return booking.booking_type || "treatment";
+  }
+
+  const category = String(booking.treatment_category || "").toLowerCase();
+  if (category === "carbon") return "Carbon Consultation";
+  if (category === "fungal") return "Fungal Nail Consultation";
+  if (category === "tattoo") return "Tattoo Consultation";
+  return "Consultation";
+}
+
+function getStoredConsultationPackage(booking){
+  const category = String(booking.treatment_category || "").toLowerCase();
+  const storedType = String(booking.package_type || "").toLowerCase();
+  const name = String(booking.treatment_name || "").toLowerCase();
+
+  const packages = {
+    carbon: {
+      single_session: { packageType:"single_session", name:"Single Carbon Facial", price:85 },
+      three_sessions: { packageType:"three_sessions", name:"Course of 3 Carbon Facials", price:225 }
+    },
+    fungal: {
+      single_nail: { packageType:"single_nail", name:"Single Nail", price:45 },
+      one_foot: { packageType:"one_foot", name:"One Foot (Up to 5 Nails)", price:85 },
+      both_feet: { packageType:"both_feet", name:"Both Feet", price:120 },
+      course4_one_foot: { packageType:"course4_one_foot", name:"Course of 4 Sessions (One Foot)", price:300 },
+      course4_both_feet: { packageType:"course4_both_feet", name:"Course of 4 Sessions (Both Feet)", price:420 }
+    }
+  };
+
+  if (packages[category]?.[storedType]) return packages[category][storedType];
+
+  if (category === "carbon") {
+    if (name.includes("course") || name.includes("3")) return packages.carbon.three_sessions;
+    if (name.includes("single") || name.includes("carbon")) return packages.carbon.single_session;
+  }
+
+  if (category === "fungal") {
+    if (name.includes("course") && name.includes("both")) return packages.fungal.course4_both_feet;
+    if (name.includes("course") && name.includes("one foot")) return packages.fungal.course4_one_foot;
+    if (name.includes("both")) return packages.fungal.both_feet;
+    if (name.includes("one foot")) return packages.fungal.one_foot;
+    if (name.includes("single nail")) return packages.fungal.single_nail;
+  }
+
+  return null;
+}
+
 function formatTattooSize(size){
   if (!size) return "";
   if (size === "xl") return "XL Tattoo";
@@ -1880,7 +1923,7 @@ function getCalendarAppointments(){
         type: getTreatmentClass(booking),
         label: booking.booking_type === "treatment"
           ? (booking.treatment_name || formatPackageType(booking.package_type))
-          : "Consultation",
+          : `${getBookingTypeLabel(booking)} & Patch Test`,
         booking,
         session: null
       });
@@ -1996,7 +2039,7 @@ function openCalendarBooking(bookingId, date, time){
     <dl class="booking-detail-grid">
       <dt>Date</dt><dd>${escapeHtml(date)}</dd>
       <dt>Time</dt><dd>${escapeHtml(time)}</dd>
-      <dt>Type</dt><dd>${escapeHtml(booking.booking_type || "consultation")}</dd>
+      <dt>Type</dt><dd>${escapeHtml(getBookingTypeLabel(booking))}</dd>
       <dt>Treatment</dt><dd>${escapeHtml(booking.treatment_name || formatPackageType(booking.package_type) || "Consultation")}</dd>
       <dt>Payment</dt><dd>${escapeHtml(booking.payment_status || "unpaid")} ${Number(booking.amount_paid || 0) > 0 ? `· ${formatMoney(booking.amount_paid)}` : ""}</dd>
       <dt>Status</dt><dd>${escapeHtml(booking.status || "confirmed")}</dd>
@@ -2098,7 +2141,7 @@ async function loadBookings(){
             <td class="date-time">${escapeHtml(displayDateTime.time)}</td>
           `;
         })()}
-        <td>${escapeHtml(booking.booking_type || "consultation")}</td>
+        <td>${escapeHtml(getBookingTypeLabel(booking))}</td>
         <td>${buildPaymentBadge(booking)}</td>
         <td>${buildPackageInfo(booking)}</td>
         <td>${buildSessionInfo(booking)}</td>
@@ -2194,34 +2237,35 @@ function openCreateTreatmentModal(consultationId){
     return;
   }
 
-  activeTreatmentConsultation = booking;
+  const selectedPackage = getStoredConsultationPackage(booking);
+  if (!selectedPackage) {
+    alert("The package selected at booking could not be identified. Check this consultation's package_type and treatment_name in D1.");
+    return;
+  }
+
+  activeTreatmentConsultation = {
+    ...booking,
+    selectedPackage
+  };
 
   const modal = document.getElementById("create-treatment-modal");
   const summary = document.getElementById("create-treatment-summary");
-  const packageSelect = document.getElementById("create-treatment-package");
+  const details = document.getElementById("create-treatment-details");
   const status = document.getElementById("create-treatment-status");
-  const category = String(booking.treatment_category || "").toLowerCase();
 
-  summary.textContent = `${booking.client_name || "Client"} — select the treatment package.`;
+  const consultationCredit = Math.min(
+    30,
+    Number(booking.amount_paid || 0) + Number(booking.discount_amount || 0)
+  );
+  const remainingBalance = Math.max(0, selectedPackage.price - consultationCredit);
 
-  if (category === "carbon") {
-    packageSelect.innerHTML = `
-      <option value="single_session">Single Carbon Facial — £85</option>
-      <option value="three_sessions">Course of 3 Carbon Facials — £225</option>
-    `;
-  } else if (category === "fungal") {
-    packageSelect.innerHTML = `
-      <option value="single_nail">Single Nail — £45</option>
-      <option value="one_foot">One Foot (Up to 5 Nails) — £85</option>
-      <option value="both_feet">Both Feet — £120</option>
-      <option value="course4_one_foot">Course of 4 Sessions (One Foot) — £300</option>
-      <option value="course4_both_feet">Course of 4 Sessions (Both Feet) — £420</option>
-    `;
-  } else {
-    activeTreatmentConsultation = null;
-    alert("This consultation is not Carbon or Fungal.");
-    return;
-  }
+  summary.textContent = `${booking.client_name || "Client"} — confirm the package selected when the deposit was paid.`;
+  details.innerHTML = `
+    <div><strong>Treatment:</strong> ${escapeHtml(selectedPackage.name)}</div>
+    <div><strong>Full price:</strong> ${formatMoney(selectedPackage.price)}</div>
+    <div><strong>Consultation credit:</strong> ${formatMoney(consultationCredit)}</div>
+    <div><strong>Remaining balance:</strong> ${formatMoney(remainingBalance)}</div>
+  `;
 
   status.textContent = "";
   modal.classList.add("open");
@@ -2237,10 +2281,9 @@ function closeCreateTreatmentModal(){
 
 async function confirmCreateTreatment(){
   const status = document.getElementById("create-treatment-status");
-  const packageSelect = document.getElementById("create-treatment-package");
 
-  if (!activeTreatmentConsultation) {
-    status.textContent = "No consultation is selected.";
+  if (!activeTreatmentConsultation?.selectedPackage) {
+    status.textContent = "No consultation package is selected.";
     return;
   }
 
@@ -2254,7 +2297,7 @@ async function confirmCreateTreatment(){
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           consultation_id: Number(activeTreatmentConsultation.id),
-          package_type: packageSelect.value
+          package_type: activeTreatmentConsultation.selectedPackage.packageType
         })
       }
     );
