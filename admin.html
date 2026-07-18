@@ -1272,39 +1272,6 @@ footer{
     </div>
   </div>
 
-  <div class="admin-modal" id="create-treatment-modal" aria-hidden="true">
-    <div class="admin-modal-card">
-      <h2>Create Treatment Package</h2>
-      <p id="create-treatment-summary">Confirm the treatment package already selected by the client.</p>
-      <div id="create-treatment-details" class="balance-payment-summary"></div>
-      <p id="create-treatment-status" class="action-note"></p>
-
-      <div class="modal-actions">
-        <button class="btn btn-secondary" type="button" onclick="closeCreateTreatmentModal()">Cancel</button>
-        <button class="btn btn-primary" type="button" onclick="confirmCreateTreatment()">Create Treatment</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="admin-modal" id="session-modal" aria-hidden="true">
-    <div class="admin-modal-card">
-      <h2 id="session-modal-title">Book Treatment Session</h2>
-      <p id="session-modal-summary">Choose a treatment date and time for this package session.</p>
-      <label for="session-date">Choose date</label>
-      <input type="date" id="session-date">
-      <div id="session-slots" class="modal-slots">
-        <span class="action-note">Choose a date to view available treatment times.</span>
-      </div>
-      <p id="session-modal-status" class="action-note"></p>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" type="button" onclick="closeSessionModal()">Cancel</button>
-        <button class="btn btn-primary" type="button" onclick="confirmAdminSessionBooking()">Save Session</button>
-      </div>
-    </div>
-  </div>
-
-
-
   <div class="admin-modal" id="balance-payment-modal" aria-hidden="true">
     <div class="admin-modal-card balance-payment-card">
       <h2>Take Balance Payment</h2>
@@ -1546,8 +1513,10 @@ if (status === "paid") {
     `
     : "";
 
+  const category = String(booking.treatment_category || "").toLowerCase();
   const hasTreatmentPrice =
-    booking.booking_type === "treatment" &&
+    (booking.booking_type === "treatment" ||
+      (booking.booking_type === "consultation" && ["carbon", "fungal"].includes(category))) &&
     (fullPrice > 0 || remainingBalance > 0);
 
   if (!hasTreatmentPrice) {
@@ -1693,7 +1662,9 @@ function buildPatchTestStatus(booking){
 }
 
 function buildPackageInfo(booking){
-  if (booking.booking_type !== "treatment") {
+  const category = String(booking.treatment_category || "").toLowerCase();
+  const isLaserConsultation = booking.booking_type === "consultation" && ["carbon", "fungal"].includes(category);
+  if (booking.booking_type !== "treatment" && !isLaserConsultation) {
     return `<span class="action-note">—</span>`;
   }
 
@@ -2153,12 +2124,6 @@ async function loadBookings(){
     ${booking.booking_type === "treatment" && booking.package_status === "completed"
   ? `<span class="action-note">Package completed</span>`
   : ""}  
-  
-    ${canCreateTreatmentFromConsultation(booking) && !isCancelled
-  ? `<button class="btn btn-primary" type="button" onclick="openCreateTreatmentModal(${Number(booking.id)})">
-      Create Treatment
-    </button>`
-  : ""}
 
     ${isTemporaryReservation(booking)
   ? `<span class="action-note">Awaiting Stripe payment or automatic release</span>`
@@ -2171,6 +2136,10 @@ async function loadBookings(){
         ${Number(booking.remaining_balance || 0) > 0 ? "Mark Balance Paid" : "Mark Paid"}
       </button>`
     : ""}
+
+    ${canBookLaserTreatment(booking) && !isCancelled
+      ? `<button class="btn btn-primary" type="button" onclick="prepareLaserTreatment(${Number(booking.id)})">Book Treatment</button>`
+      : ""}
 
 ${isCancelled || isTemporaryReservation(booking)
   ? "—"
@@ -2210,114 +2179,6 @@ async function cancelBooking(id){
     loadBookings();
   }else{
     alert("Could not cancel booking.");
-  }
-}
-
-let activeTreatmentConsultation = null;
-
-function canCreateTreatmentFromConsultation(booking){
-  const category = String(booking.treatment_category || "").toLowerCase();
-
-  return (
-    booking.booking_type === "consultation" &&
-    String(booking.status || "").toLowerCase() !== "cancelled" &&
-    Number(booking.consultation_complete || 0) === 1 &&
-    Number(booking.patch_test_complete || 0) === 1 &&
-    ["carbon", "fungal"].includes(category)
-  );
-}
-
-function openCreateTreatmentModal(consultationId){
-  const booking = adminBookings.find(
-    item => Number(item.id) === Number(consultationId)
-  );
-
-  if (!booking) {
-    alert("The consultation could not be found.");
-    return;
-  }
-
-  const selectedPackage = getStoredConsultationPackage(booking);
-  if (!selectedPackage) {
-    alert("The package selected at booking could not be identified. Check this consultation's package_type and treatment_name in D1.");
-    return;
-  }
-
-  activeTreatmentConsultation = {
-    ...booking,
-    selectedPackage
-  };
-
-  const modal = document.getElementById("create-treatment-modal");
-  const summary = document.getElementById("create-treatment-summary");
-  const details = document.getElementById("create-treatment-details");
-  const status = document.getElementById("create-treatment-status");
-
-  const consultationCredit = Math.min(
-    30,
-    Number(booking.amount_paid || 0) + Number(booking.discount_amount || 0)
-  );
-  const remainingBalance = Math.max(0, selectedPackage.price - consultationCredit);
-
-  summary.textContent = `${booking.client_name || "Client"} — confirm the package selected when the deposit was paid.`;
-  details.innerHTML = `
-    <div><strong>Treatment:</strong> ${escapeHtml(selectedPackage.name)}</div>
-    <div><strong>Full price:</strong> ${formatMoney(selectedPackage.price)}</div>
-    <div><strong>Consultation credit:</strong> ${formatMoney(consultationCredit)}</div>
-    <div><strong>Remaining balance:</strong> ${formatMoney(remainingBalance)}</div>
-  `;
-
-  status.textContent = "";
-  modal.classList.add("open");
-  modal.setAttribute("aria-hidden", "false");
-}
-
-function closeCreateTreatmentModal(){
-  const modal = document.getElementById("create-treatment-modal");
-  modal.classList.remove("open");
-  modal.setAttribute("aria-hidden", "true");
-  activeTreatmentConsultation = null;
-}
-
-async function confirmCreateTreatment(){
-  const status = document.getElementById("create-treatment-status");
-
-  if (!activeTreatmentConsultation?.selectedPackage) {
-    status.textContent = "No consultation package is selected.";
-    return;
-  }
-
-  status.textContent = "Creating treatment package…";
-
-  try {
-    const response = await fetch(
-      `${API_BASE}/api?admin=create-treatment-from-consultation`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          consultation_id: Number(activeTreatmentConsultation.id),
-          package_type: activeTreatmentConsultation.selectedPackage.packageType
-        })
-      }
-    );
-
-    const text = await response.text();
-
-    if (!response.ok) {
-      throw new Error(text || "The treatment package could not be created.");
-    }
-
-    const result = JSON.parse(text);
-    status.textContent = `Created successfully. Remaining balance: ${formatMoney(result.remaining_balance)}.`;
-
-    setTimeout(async () => {
-      closeCreateTreatmentModal();
-      await loadBookings();
-      showAdminView("bookings");
-    }, 800);
-  } catch (error) {
-    status.textContent = error.message || "The treatment package could not be created.";
   }
 }
 
@@ -2361,13 +2222,52 @@ async function completeSession(sessionId){
 function canTakeStripeBalancePayment(booking){
   const category = String(booking.treatment_category || "").toLowerCase();
   return (
-    booking.booking_type === "treatment" &&
+    booking.booking_type === "consultation" &&
     ["carbon", "fungal"].includes(category) &&
+    Number(booking.consultation_complete || 0) === 1 &&
+    Number(booking.patch_test_complete || 0) === 1 &&
     booking.status !== "cancelled" &&
     booking.payment_status !== "paid" &&
     Number(booking.remaining_balance || 0) > 0 &&
     !booking.balance_payment_reference
   );
+}
+
+function canBookLaserTreatment(booking){
+  const category = String(booking.treatment_category || "").toLowerCase();
+  return (
+    booking.booking_type === "consultation" &&
+    ["carbon", "fungal"].includes(category) &&
+    Number(booking.consultation_complete || 0) === 1 &&
+    Number(booking.patch_test_complete || 0) === 1 &&
+    booking.payment_status === "paid" &&
+    Number(booking.remaining_balance || 0) <= 0.005
+  );
+}
+
+async function prepareLaserTreatment(bookingId){
+  try {
+    const response = await fetch(`${API_BASE}/api?admin=create-treatment-from-consultation`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ consultation_id: Number(bookingId) })
+    });
+    const text = await response.text();
+    if (!response.ok) throw new Error(text || "Treatment booking could not be prepared.");
+    const result = JSON.parse(text);
+    const session = result.session;
+    if (!session) throw new Error("The first treatment session could not be created.");
+    await loadBookings();
+    openSessionModal(
+      Number(result.booking_id),
+      Number(session.id),
+      String(session.reschedule_token || ""),
+      Number(session.session_number || 1),
+      result.client_name || "Client"
+    );
+  } catch (error) {
+    alert(error.message || "Treatment booking could not be prepared.");
+  }
 }
 
 async function openBalancePaymentModal(bookingId){
