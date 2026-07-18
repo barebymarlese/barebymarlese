@@ -2018,6 +2018,293 @@ if (request.method === "POST" && url.searchParams.get("admin") === "patch-test-c
   }), { headers: jsonHeaders });
 }
 
+
+if (
+  request.method === "POST" &&
+  url.searchParams.get("admin") === "create-treatment-from-consultation"
+) {
+  try {
+    const body = await request.json();
+
+    const consultationId = Number(body.consultation_id);
+    const packageType = String(body.package_type || "").trim().toLowerCase();
+
+    if (!Number.isInteger(consultationId) || consultationId <= 0) {
+      return new Response("Invalid consultation ID.", { status: 400 });
+    }
+
+    const consultation = await env.DB.prepare(`
+      SELECT
+        id,
+        client_name,
+        email,
+        phone,
+        status,
+        booking_type,
+        treatment_category,
+        treatment_name,
+        amount_paid,
+        discount_amount,
+        consultation_complete,
+        patch_test_complete
+      FROM appointments
+      WHERE id = ?
+    `).bind(consultationId).first();
+
+    if (!consultation) {
+      return new Response("Consultation not found.", { status: 404 });
+    }
+
+    if (consultation.booking_type !== "consultation") {
+      return new Response(
+        "Only consultation records can create a treatment package.",
+        { status: 409 }
+      );
+    }
+
+    if (consultation.status === "cancelled") {
+      return new Response(
+        "A cancelled consultation cannot create a treatment package.",
+        { status: 409 }
+      );
+    }
+
+    if (
+      Number(consultation.consultation_complete || 0) !== 1 ||
+      Number(consultation.patch_test_complete || 0) !== 1
+    ) {
+      return new Response(
+        "The consultation and patch test must be marked complete first.",
+        { status: 409 }
+      );
+    }
+
+    const category = String(
+      consultation.treatment_category || ""
+    ).trim().toLowerCase();
+
+    const packageDefinitions = {
+      carbon: {
+        single_session: {
+          treatmentName: "Single Carbon Facial",
+          fullPrice: 85,
+          sessionsTotal: 1
+        },
+        three_sessions: {
+          treatmentName: "Course of 3 Carbon Facials",
+          fullPrice: 225,
+          sessionsTotal: 3
+        },
+        "3_sessions": {
+          treatmentName: "Course of 3 Carbon Facials",
+          fullPrice: 225,
+          sessionsTotal: 3
+        }
+      },
+      fungal: {
+        single_nail: {
+          treatmentName: "Single Nail",
+          fullPrice: 45,
+          sessionsTotal: 1
+        },
+        one_foot: {
+          treatmentName: "One Foot (Up to 5 Nails)",
+          fullPrice: 85,
+          sessionsTotal: 1
+        },
+        both_feet: {
+          treatmentName: "Both Feet",
+          fullPrice: 120,
+          sessionsTotal: 1
+        },
+        course4_one_foot: {
+          treatmentName: "Course of 4 Sessions (One Foot)",
+          fullPrice: 300,
+          sessionsTotal: 4
+        },
+        course4_both_feet: {
+          treatmentName: "Course of 4 Sessions (Both Feet)",
+          fullPrice: 420,
+          sessionsTotal: 4
+        }
+      }
+    };
+
+    const definition = packageDefinitions[category]?.[packageType];
+
+    if (!definition) {
+      return new Response(
+        "The selected treatment package is not valid.",
+        { status: 400 }
+      );
+    }
+
+    const existingTreatment = await env.DB.prepare(`
+      SELECT id
+      FROM appointments
+      WHERE booking_type = 'treatment'
+        AND LOWER(TRIM(email)) = LOWER(TRIM(?))
+        AND LOWER(COALESCE(treatment_category, '')) = ?
+        AND status != 'cancelled'
+        AND package_status IN ('active', 'pending', 'pending_payment')
+      ORDER BY id DESC
+      LIMIT 1
+    `).bind(consultation.email, category).first();
+
+    if (existingTreatment) {
+      return new Response(
+        "An active treatment package already exists for this client.",
+        { status: 409 }
+      );
+    }
+
+    const consultationCredit = Math.min(
+      30,
+      Number(consultation.amount_paid || 0) +
+      Number(consultation.discount_amount || 0)
+    );
+
+    const remainingBalance = Math.max(
+      0,
+      Number(definition.fullPrice) - consultationCredit
+    );
+
+    const paymentStatus =
+      remainingBalance <= 0
+        ? "paid"
+        : consultationCredit > 0
+          ? "deposit_paid"
+          : "unpaid";
+
+    const rescheduleToken = crypto.randomUUID();
+
+    const inserted = await env.DB.prepare(`
+      INSERT INTO appointments
+      (
+        client_name,
+        email,
+        phone,
+        appointment_date,
+        appointment_time,
+        status,
+        reschedule_token,
+        booking_type,
+        package_type,
+        tattoo_size,
+        amount_paid,
+        payment_status,
+        payment_type,
+        sessions_total,
+        sessions_used,
+        package_status,
+        payment_reference,
+        treatment_category,
+        treatment_name,
+        full_price,
+        remaining_balance,
+        coupon_code,
+        discount_amount,
+        price_before_discount,
+        consultation_complete,
+        patch_test_complete
+      )
+      VALUES
+      (
+        ?, ?, ?,
+        NULL, NULL,
+        'confirmed',
+        ?,
+        'treatment',
+        ?,
+        NULL,
+        ?,
+        ?,
+        'treatment_deposit',
+        ?,
+        0,
+        'active',
+        NULL,
+        ?,
+        ?,
+        ?,
+        ?,
+        NULL,
+        0,
+        ?,
+        1,
+        1
+      )
+    `).bind(
+      consultation.client_name,
+      consultation.email,
+      consultation.phone,
+      rescheduleToken,
+      packageType,
+      consultationCredit,
+      paymentStatus,
+      definition.sessionsTotal,
+      category,
+      definition.treatmentName,
+      definition.fullPrice,
+      remainingBalance,
+      definition.fullPrice
+    ).run();
+
+    const treatmentAppointmentId = Number(inserted.meta?.last_row_id);
+
+    if (!treatmentAppointmentId) {
+      throw new Error("The treatment appointment could not be created.");
+    }
+
+    for (
+      let sessionNumber = 1;
+      sessionNumber <= definition.sessionsTotal;
+      sessionNumber++
+    ) {
+      await env.DB.prepare(`
+        INSERT INTO treatment_sessions
+        (
+          appointment_id,
+          session_number,
+          appointment_date,
+          appointment_time,
+          status,
+          reschedule_token
+        )
+        VALUES (?, ?, NULL, NULL, 'pending', ?)
+      `).bind(
+        treatmentAppointmentId,
+        sessionNumber,
+        crypto.randomUUID()
+      ).run();
+    }
+
+    return new Response(JSON.stringify({
+      success: true,
+      appointment_id: treatmentAppointmentId,
+      client_name: consultation.client_name,
+      treatment_name: definition.treatmentName,
+      sessions_total: definition.sessionsTotal,
+      consultation_credit: consultationCredit,
+      remaining_balance: remainingBalance
+    }), {
+      status: 201,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Create treatment from consultation error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      error.message || "The treatment package could not be created.",
+      { status: 500 }
+    );
+  }
+}
+
   if (request.method === "POST" && url.searchParams.get("admin") === "cancel") {
   const body = await request.json();
   const id = body.id;
@@ -2157,28 +2444,53 @@ if (request.method === "POST" && url.searchParams.get("admin") === "patch-test-c
 
 if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") {
   const body = await request.json();
-  const id = body.id;
+  const id = Number(body.id);
   const amountPaid = Number(body.amount_paid || 0);
 
-  if (!id) return new Response("Missing booking ID", { status: 400 });
+  if (!Number.isInteger(id) || id <= 0) {
+    return new Response("Missing or invalid booking ID", { status: 400 });
+  }
+
+  const booking = await env.DB.prepare(`
+    SELECT id, booking_type, full_price, amount_paid, remaining_balance
+    FROM appointments
+    WHERE id = ?
+  `).bind(id).first();
+
+  if (!booking) {
+    return new Response("Booking not found", { status: 404 });
+  }
+
+  if (booking.booking_type !== "treatment") {
+    return new Response(
+      "Manual balance payment can only be applied to treatment bookings.",
+      { status: 409 }
+    );
+  }
+
+  const currentPaid = Number(booking.amount_paid || 0);
+  const fullPrice = Number(booking.full_price || 0);
+  const outstanding = Number(booking.remaining_balance || 0);
+  const paymentToAdd = amountPaid > 0 ? amountPaid : outstanding;
+  const newAmountPaid = fullPrice > 0
+    ? Math.min(fullPrice, currentPaid + Math.max(0, paymentToAdd))
+    : currentPaid + Math.max(0, paymentToAdd);
 
   await env.DB.prepare(`
-  UPDATE appointments
-  SET payment_status = 'paid',
-      amount_paid = CASE
-        WHEN full_price > 0 THEN full_price
-        WHEN ? > 0 THEN COALESCE(amount_paid, 0) + ?
-        ELSE amount_paid
-      END,
-      remaining_balance = 0
-  WHERE id = ?
-`).bind(
-  amountPaid,
-  amountPaid,
-  id
-).run();
+    UPDATE appointments
+    SET payment_status = 'paid',
+        amount_paid = ?,
+        remaining_balance = 0
+    WHERE id = ?
+      AND booking_type = 'treatment'
+  `).bind(newAmountPaid, id).run();
 
-  return new Response(JSON.stringify({ success: true }), {
+  return new Response(JSON.stringify({
+    success: true,
+    amount_paid: newAmountPaid,
+    remaining_balance: 0,
+    payment_status: "paid"
+  }), {
     headers: jsonHeaders
   });
 }
@@ -3369,10 +3681,14 @@ if (paymentReference?.startsWith("cs_")) {
   }
 }
 
+const totalPaymentCredit =
+  Number(amountPaid || 0) +
+  Number(discountAmount || 0);
+
 const remainingBalance = Number(
   body.remaining_balance !== undefined
     ? body.remaining_balance
-    : Math.max(0, fullPrice - amountPaid)
+    : Math.max(0, fullPrice - totalPaymentCredit)
 );
 
     let paymentStatus = "unpaid";
@@ -3382,7 +3698,14 @@ const remainingBalance = Number(
     let packageStatus = "none";
 
     if (bookingType === "consultation") {
-      if (amountPaid >= 30) {
+      const consultationCredit =
+        Number(amountPaid || 0) +
+        Number(discountAmount || 0);
+
+      if (consultationCredit >= 30) {
+        paymentStatus = "paid";
+        paymentType = "consultation_deposit";
+      } else if (consultationCredit > 0) {
         paymentStatus = "deposit_paid";
         paymentType = "consultation_deposit";
       }
