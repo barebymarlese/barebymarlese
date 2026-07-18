@@ -1896,6 +1896,34 @@ function getCalendarAppointments(){
     if (isTemporaryReservation(booking)) return;
 
     if (booking.booking_type === "treatment" && Array.isArray(booking.sessions) && booking.sessions.length) {
+      /*
+        Carbon and fungal records begin as consultation bookings, then the
+        worker converts the same appointment row into a treatment booking.
+        The original appointment_date and appointment_time still contain the
+        consultation and patch-test appointment. Keep that historical entry
+        visible before adding the treatment sessions.
+      */
+      const category = String(booking.treatment_category || "").toLowerCase();
+      const wasCompletedConsultation =
+        ["carbon", "fungal"].includes(category) &&
+        Number(booking.consultation_complete || 0) === 1 &&
+        Number(booking.patch_test_complete || 0) === 1 &&
+        booking.appointment_date &&
+        booking.appointment_time;
+
+      if (wasCompletedConsultation) {
+        appointments.push({
+          bookingId: booking.id,
+          date: booking.appointment_date,
+          time: booking.appointment_time,
+          client: booking.client_name || "Client",
+          type: "consultation",
+          label: `${category === "carbon" ? "Carbon" : "Fungal Nail"} Consultation & Patch Test · Completed`,
+          booking,
+          session: null
+        });
+      }
+
       booking.sessions.forEach(session => {
         const sessionStatus = String(session.status || "").toLowerCase();
 
