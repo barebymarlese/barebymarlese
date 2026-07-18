@@ -1826,8 +1826,13 @@ function getCalendarAppointments(){
 
     if (booking.booking_type === "treatment" && Array.isArray(booking.sessions) && booking.sessions.length) {
       booking.sessions.forEach(session => {
+        const sessionStatus = String(session.status || "").toLowerCase();
+
+        // Keep both booked and completed treatment sessions visible on the
+        // calendar. Completed sessions are historical clinic records and must
+        // never disappear from the calendar view.
         if (
-          String(session.status || "").toLowerCase() === "booked" &&
+          ["booked", "completed"].includes(sessionStatus) &&
           session.appointment_date &&
           session.appointment_time
         ) {
@@ -1837,7 +1842,7 @@ function getCalendarAppointments(){
             time: session.appointment_time,
             client: booking.client_name || "Client",
             type: getTreatmentClass(booking),
-            label: `${booking.treatment_name || formatPackageType(booking.package_type)} · Session ${session.session_number}`,
+            label: `${booking.treatment_name || formatPackageType(booking.package_type)} · Session ${session.session_number}${sessionStatus === "completed" ? " · Completed" : ""}`,
             booking,
             session
           });
