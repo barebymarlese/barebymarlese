@@ -1934,7 +1934,17 @@ function getCalendarAppointments(){
     if (String(booking.status || "").toLowerCase() === "cancelled") return;
     if (isTemporaryReservation(booking)) return;
 
-    if (booking.booking_type === "treatment" && Array.isArray(booking.sessions) && booking.sessions.length) {
+    if (
+      (
+        booking.booking_type === "treatment" ||
+        (
+          booking.booking_type === "consultation" &&
+          Number(booking.sessions_total || 0) > 0
+        )
+      ) &&
+      Array.isArray(booking.sessions) &&
+      booking.sessions.length
+    ) {
       /*
         Carbon and fungal records begin as consultation bookings, then the
         worker converts the same appointment row into a treatment booking.
@@ -2225,9 +2235,18 @@ async function loadBookings(){
         <td>${buildAftercareStatus(booking)}</td>
         <td>
   <div class="action-stack">
-    ${booking.booking_type === "treatment" && booking.package_status === "completed"
-  ? `<span class="action-note">Package completed</span>`
-  : ""}  
+    ${
+      (
+        booking.booking_type === "treatment" ||
+        (
+          booking.booking_type === "consultation" &&
+          Number(booking.sessions_total || 0) > 0
+        )
+      ) &&
+      booking.package_status === "completed"
+        ? `<span class="action-note">Package completed</span>`
+        : ""
+    }  
 
     ${canSelectTattooTreatment(booking) && !isCancelled
   ? `<button class="btn btn-primary" type="button" onclick="openTattooTreatmentModal(${Number(booking.id)})">Create Tattoo Treatment Booking</button>`
