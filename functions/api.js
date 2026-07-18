@@ -262,17 +262,26 @@ const stripePriceLookup = {
   }
 };
 
-const stripePriceId =
-  stripePriceLookup[category]?.[packageType] || "";
-
-if (!stripePriceId?.startsWith("price_")) {
-  throw new Error(
-    `Stripe Price ID is not configured for ${category} ${packageType}.`
-  );
-}
-
 form.set("line_items[0][quantity]", "1");
-form.set("line_items[0][price]", stripePriceId);
+
+if (category === "tattoo") {
+  form.set("line_items[0][price_data][currency]", "gbp");
+  form.set("line_items[0][price_data][unit_amount]", String(balancePence));
+  form.set(
+    "line_items[0][price_data][product_data][name]",
+    booking.treatment_name || "Tattoo Removal Treatment Balance"
+  );
+} else {
+  const stripePriceId = stripePriceLookup[category]?.[packageType] || "";
+
+  if (!stripePriceId?.startsWith("price_")) {
+    throw new Error(
+      `Stripe Price ID is not configured for ${category} ${packageType}.`
+    );
+  }
+
+  form.set("line_items[0][price]", stripePriceId);
+}
 
   const response = await fetch(
     "https://api.stripe.com/v1/checkout/sessions",
@@ -757,7 +766,7 @@ async function applyStripeBalancePayment(sessionId, env) {
   if (!booking) throw new Error("The linked appointment was not found.");
 
   const category = String(booking.treatment_category || "").toLowerCase();
-  if (!["consultation", "treatment"].includes(booking.booking_type) || !["carbon", "fungal"].includes(category)) {
+  if (!["consultation", "treatment"].includes(booking.booking_type) || !["tattoo", "carbon", "fungal"].includes(category)) {
     throw new Error("The linked appointment is not eligible for a balance payment.");
   }
 
@@ -1737,6 +1746,7 @@ if (
         status,
         booking_type,
         package_type,
+        tattoo_size,
         treatment_category,
         treatment_name,
         payment_status,
@@ -1753,9 +1763,9 @@ if (
     if (!booking) return new Response("Booking not found", { status: 404 });
 
     const category = String(booking.treatment_category || "").toLowerCase();
-    if (!["consultation", "treatment"].includes(booking.booking_type) || !["carbon", "fungal"].includes(category)) {
+    if (!["consultation", "treatment"].includes(booking.booking_type) || !["tattoo", "carbon", "fungal"].includes(category)) {
       return new Response(
-        "Balance checkout is only available for Carbon and Fungal bookings.",
+        "This booking is not eligible for a balance payment.",
         { status: 400 }
       );
     }
@@ -2033,6 +2043,112 @@ if (request.method === "POST" && url.searchParams.get("admin") === "patch-test-c
 
 if (
   request.method === "POST" &&
+  url.searchParams.get("admin") === "prepare-tattoo-treatment"
+) {
+  try {
+    const body = await request.json();
+    const consultationId = Number(body.consultation_id);
+    const tattooSize = String(body.tattoo_size || "").trim().toLowerCase();
+    const requestedPackageType = String(body.package_type || "").trim().toLowerCase();
+
+    const prices = {
+      tiny:   { single_session:{full:70,balance:40,sessions:1}, six_sessions:{full:360,balance:330,sessions:6} },
+      small:  { single_session:{full:95,balance:65,sessions:1}, six_sessions:{full:495,balance:465,sessions:6} },
+      medium: { single_session:{full:120,balance:90,sessions:1}, six_sessions:{full:620,balance:590,sessions:6} },
+      large:  { single_session:{full:160,balance:130,sessions:1}, six_sessions:{full:820,balance:790,sessions:6} },
+      xl:     { single_session:{full:200,balance:170,sessions:1}, six_sessions:{full:1050,balance:1020,sessions:6} }
+    };
+
+    if (!Number.isInteger(consultationId) || consultationId <= 0) {
+      return new Response("Invalid consultation ID.", { status: 400 });
+    }
+
+    const selected = prices[tattooSize]?.[requestedPackageType];
+    if (!selected) {
+      return new Response("Choose a valid Tattoo size and treatment option.", { status: 400 });
+    }
+
+    const booking = await env.DB.prepare(`
+      SELECT *
+      FROM appointments
+      WHERE id = ?
+    `).bind(consultationId).first();
+
+    if (!booking) return new Response("Consultation not found.", { status: 404 });
+
+    const category = String(booking.treatment_category || "").toLowerCase();
+    const treatmentText = `${booking.treatment_name || ""} ${booking.package_type || ""}`.toLowerCase();
+    const isTattoo = category === "tattoo" || (!category && treatmentText.includes("tattoo"));
+
+    if (booking.booking_type !== "consultation" || !isTattoo) {
+      return new Response("Only Tattoo consultation records can use this option.", { status: 409 });
+    }
+    if (booking.status === "cancelled") {
+      return new Response("A cancelled consultation cannot be prepared for treatment.", { status: 409 });
+    }
+    if (Number(booking.consultation_complete || 0) !== 1 || Number(booking.patch_test_complete || 0) !== 1) {
+      return new Response("The consultation and patch test must be marked complete first.", { status: 409 });
+    }
+    if (booking.balance_payment_reference || booking.payment_status === "paid") {
+      return new Response("This consultation already has a completed treatment payment.", { status: 409 });
+    }
+    if (booking.package_type && Number(booking.remaining_balance || 0) > 0) {
+      return new Response("A Tattoo treatment option has already been selected for this consultation.", { status: 409 });
+    }
+
+    const sizeLabel = tattooSize === "xl"
+      ? "XL"
+      : tattooSize.charAt(0).toUpperCase() + tattooSize.slice(1);
+    const optionLabel = requestedPackageType === "six_sessions"
+      ? "6-Session Package"
+      : "Single Session";
+    const treatmentName = `${sizeLabel} Tattoo - ${optionLabel}`;
+
+    await env.DB.prepare(`
+      UPDATE appointments
+      SET
+        treatment_category = 'tattoo',
+        treatment_name = ?,
+        tattoo_size = ?,
+        package_type = ?,
+        sessions_total = ?,
+        sessions_used = 0,
+        full_price = ?,
+        remaining_balance = ?,
+        price_before_discount = ?,
+        payment_status = 'deposit_paid',
+        package_status = 'pending_payment'
+      WHERE id = ?
+    `).bind(
+      treatmentName,
+      tattooSize,
+      requestedPackageType,
+      selected.sessions,
+      selected.full,
+      selected.balance,
+      selected.full,
+      booking.id
+    ).run();
+
+    return new Response(JSON.stringify({
+      success: true,
+      booking_id: booking.id,
+      treatment_name: treatmentName,
+      tattoo_size: tattooSize,
+      package_type: requestedPackageType,
+      sessions_total: selected.sessions,
+      full_price: selected.full,
+      consultation_deduction: 30,
+      remaining_balance: selected.balance
+    }), { headers: jsonHeaders });
+  } catch (error) {
+    await sendErrorAlert(env, "Prepare Tattoo treatment error", error.stack || error.message || error);
+    return new Response(error.message || "The Tattoo treatment option could not be prepared.", { status: 500 });
+  }
+}
+
+if (
+  request.method === "POST" &&
   url.searchParams.get("admin") === "create-treatment-from-consultation"
 ) {
   try {
@@ -2050,8 +2166,8 @@ if (
     if (!booking) return new Response("Consultation not found.", { status: 404 });
 
     const category = String(booking.treatment_category || "").toLowerCase();
-    if (booking.booking_type !== "consultation" || !["carbon", "fungal"].includes(category)) {
-      return new Response("Only Carbon or Fungal consultation records can be prepared for treatment.", { status: 409 });
+    if (booking.booking_type !== "consultation" || !["tattoo", "carbon", "fungal"].includes(category)) {
+      return new Response("Only Tattoo, Carbon or Fungal consultation records can be prepared for treatment.", { status: 409 });
     }
     if (booking.status === "cancelled") {
       return new Response("A cancelled consultation cannot be booked for treatment.", { status: 409 });
