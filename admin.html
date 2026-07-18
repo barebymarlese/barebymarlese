@@ -1309,6 +1309,36 @@ footer{
     </div>
   </div>
 </div>
+  <div class="admin-modal" id="tattoo-treatment-modal" aria-hidden="true">
+    <div class="admin-modal-card">
+      <h2>Create Tattoo Treatment Booking</h2>
+      <p>Select the treatment size and whether the client is paying for one session or a six-session package. The £30 consultation charge is already deducted from the Stripe balance shown.</p>
+
+      <label for="tattoo-treatment-type">Treatment option</label>
+      <select id="tattoo-treatment-type" onchange="updateTattooTreatmentSummary()" style="width:100%;padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;margin:8px 0 12px;background:white;">
+        <option value="single_session">Single Session</option>
+        <option value="six_sessions">6-Session Package</option>
+      </select>
+
+      <label for="tattoo-treatment-size">Tattoo size</label>
+      <select id="tattoo-treatment-size" onchange="updateTattooTreatmentSummary()" style="width:100%;padding:12px;border:1px solid rgba(36,34,26,.15);border-radius:10px;font-family:inherit;margin:8px 0 12px;background:white;">
+        <option value="tiny">Tiny</option>
+        <option value="small">Small</option>
+        <option value="medium">Medium</option>
+        <option value="large">Large</option>
+        <option value="xl">XL</option>
+      </select>
+
+      <div id="tattoo-treatment-summary" class="balance-payment-summary"></div>
+      <p id="tattoo-treatment-status" class="action-note"></p>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" type="button" onclick="closeTattooTreatmentModal()">Cancel</button>
+        <button class="btn btn-primary" id="create-tattoo-treatment-payment" type="button" onclick="confirmTattooTreatmentSelection()">Create Payment QR / Link</button>
+      </div>
+    </div>
+  </div>
+
   <div class="admin-modal" id="balance-payment-modal" aria-hidden="true">
     <div class="admin-modal-card balance-payment-card">
       <h2>Take Balance Payment</h2>
@@ -1342,6 +1372,7 @@ let calendarCursor = new Date();
 calendarCursor = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
 let selectedCalendarBookingId = null;
 let blockedCalendarDates = new Set();
+let activeTattooConsultationId = null;
 
 const pageTitle = document.getElementById("page-title");
 
@@ -1641,6 +1672,13 @@ function formatTattooSize(size){
   return `${String(size).charAt(0).toUpperCase() + String(size).slice(1)} Tattoo`;
 }
 
+function isTattooConsultation(booking){
+  if (booking.booking_type !== "consultation") return false;
+  const category = String(booking.treatment_category || "").toLowerCase();
+  const treatmentText = `${booking.treatment_name || ""} ${booking.package_type || ""}`.toLowerCase();
+  return category === "tattoo" || (!category && treatmentText.includes("tattoo"));
+}
+
 function buildPatchTestStatus(booking){
   if (booking.booking_type !== "consultation") {
     if(isReturningClientBooking(booking)){
@@ -1701,7 +1739,8 @@ function buildPatchTestStatus(booking){
 function buildPackageInfo(booking){
   const category = String(booking.treatment_category || "").toLowerCase();
   const isLaserConsultation = booking.booking_type === "consultation" && ["carbon", "fungal"].includes(category);
-  if (booking.booking_type !== "treatment" && !isLaserConsultation) {
+  const isPreparedTattooConsultation = isTattooConsultation(booking) && booking.package_type && Number(booking.full_price || 0) > 0;
+  if (booking.booking_type !== "treatment" && !isLaserConsultation && !isPreparedTattooConsultation) {
     return `<span class="action-note">—</span>`;
   }
 
@@ -2190,6 +2229,10 @@ async function loadBookings(){
   ? `<span class="action-note">Package completed</span>`
   : ""}  
 
+    ${canSelectTattooTreatment(booking) && !isCancelled
+  ? `<button class="btn btn-primary" type="button" onclick="openTattooTreatmentModal(${Number(booking.id)})">Create Tattoo Treatment Booking</button>`
+  : ""}
+
     ${isTemporaryReservation(booking)
   ? `<span class="action-note">Awaiting Stripe payment or automatic release</span>`
   : canTakeStripeBalancePayment(booking) && !isCancelled
@@ -2284,11 +2327,23 @@ async function completeSession(sessionId){
   }
 }
 
+function canSelectTattooTreatment(booking){
+  return (
+    isTattooConsultation(booking) &&
+    Number(booking.consultation_complete || 0) === 1 &&
+    Number(booking.patch_test_complete || 0) === 1 &&
+    booking.status !== "cancelled" &&
+    !booking.package_type &&
+    !booking.balance_payment_reference
+  );
+}
+
 function canTakeStripeBalancePayment(booking){
   const category = String(booking.treatment_category || "").toLowerCase();
+  const eligibleCategory = ["carbon", "fungal"].includes(category) || isTattooConsultation(booking);
   return (
     booking.booking_type === "consultation" &&
-    ["carbon", "fungal"].includes(category) &&
+    eligibleCategory &&
     Number(booking.consultation_complete || 0) === 1 &&
     Number(booking.patch_test_complete || 0) === 1 &&
     booking.status !== "cancelled" &&
@@ -2300,14 +2355,91 @@ function canTakeStripeBalancePayment(booking){
 
 function canBookLaserTreatment(booking){
   const category = String(booking.treatment_category || "").toLowerCase();
+  const eligibleCategory = ["carbon", "fungal", "tattoo"].includes(category);
   return (
     booking.booking_type === "consultation" &&
-    ["carbon", "fungal"].includes(category) &&
+    eligibleCategory &&
     Number(booking.consultation_complete || 0) === 1 &&
     Number(booking.patch_test_complete || 0) === 1 &&
     booking.payment_status === "paid" &&
     Number(booking.remaining_balance || 0) <= 0.005
   );
+}
+
+const TATTOO_POST_CONSULTATION_PRICES = {
+  tiny:   { single_session:{full:70,balance:40,sessions:1}, six_sessions:{full:360,balance:330,sessions:6} },
+  small:  { single_session:{full:95,balance:65,sessions:1}, six_sessions:{full:495,balance:465,sessions:6} },
+  medium: { single_session:{full:120,balance:90,sessions:1}, six_sessions:{full:620,balance:590,sessions:6} },
+  large:  { single_session:{full:160,balance:130,sessions:1}, six_sessions:{full:820,balance:790,sessions:6} },
+  xl:     { single_session:{full:200,balance:170,sessions:1}, six_sessions:{full:1050,balance:1020,sessions:6} }
+};
+
+function openTattooTreatmentModal(bookingId){
+  activeTattooConsultationId = Number(bookingId);
+  const modal = document.getElementById("tattoo-treatment-modal");
+  document.getElementById("tattoo-treatment-type").value = "single_session";
+  document.getElementById("tattoo-treatment-size").value = "tiny";
+  document.getElementById("tattoo-treatment-status").textContent = "";
+  document.getElementById("create-tattoo-treatment-payment").disabled = false;
+  updateTattooTreatmentSummary();
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeTattooTreatmentModal(){
+  const modal = document.getElementById("tattoo-treatment-modal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+  activeTattooConsultationId = null;
+}
+
+function updateTattooTreatmentSummary(){
+  const size = document.getElementById("tattoo-treatment-size")?.value || "tiny";
+  const packageType = document.getElementById("tattoo-treatment-type")?.value || "single_session";
+  const selected = TATTOO_POST_CONSULTATION_PRICES[size]?.[packageType];
+  const summary = document.getElementById("tattoo-treatment-summary");
+  if (!selected || !summary) return;
+  const sizeLabel = size === "xl" ? "XL" : size.charAt(0).toUpperCase() + size.slice(1);
+  const optionLabel = packageType === "six_sessions" ? "6-Session Package" : "Single Session";
+  summary.innerHTML = `
+    <div><strong>Treatment:</strong> ${escapeHtml(sizeLabel)} Tattoo – ${escapeHtml(optionLabel)}</div>
+    <div><strong>Consultation deducted:</strong> £30.00</div>
+    <div><strong>Stripe balance:</strong> ${formatMoney(selected.balance)}</div>
+    <div><strong>Total treatment value:</strong> ${formatMoney(selected.full)}</div>
+    <div><strong>Sessions:</strong> ${selected.sessions}</div>
+  `;
+}
+
+async function confirmTattooTreatmentSelection(){
+  if (!activeTattooConsultationId) return;
+  const size = document.getElementById("tattoo-treatment-size").value;
+  const packageType = document.getElementById("tattoo-treatment-type").value;
+  const status = document.getElementById("tattoo-treatment-status");
+  const button = document.getElementById("create-tattoo-treatment-payment");
+  button.disabled = true;
+  status.textContent = "Saving the treatment option…";
+
+  try {
+    const response = await fetch(`${API_BASE}/api?admin=prepare-tattoo-treatment`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        consultation_id: activeTattooConsultationId,
+        tattoo_size: size,
+        package_type: packageType
+      })
+    });
+    const text = await response.text();
+    if (!response.ok) throw new Error(text || "The Tattoo treatment option could not be saved.");
+    const data = JSON.parse(text);
+    const bookingId = Number(data.booking_id);
+    closeTattooTreatmentModal();
+    await loadBookings();
+    await openBalancePaymentModal(bookingId);
+  } catch (error) {
+    status.textContent = error.message || "The Tattoo treatment option could not be saved.";
+    button.disabled = false;
+  }
 }
 
 async function prepareLaserTreatment(bookingId){
@@ -2804,6 +2936,12 @@ document.addEventListener("keydown", function(event){
     closeBookingPopover();
     if (document.getElementById("session-modal")?.classList.contains("open")) {
       closeSessionModal();
+    }
+    if (document.getElementById("tattoo-treatment-modal")?.classList.contains("open")) {
+      closeTattooTreatmentModal();
+    }
+    if (document.getElementById("balance-payment-modal")?.classList.contains("open")) {
+      closeBalancePaymentModal();
     }
   }
 });
