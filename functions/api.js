@@ -757,7 +757,7 @@ async function applyStripeBalancePayment(sessionId, env) {
   if (!booking) throw new Error("The linked appointment was not found.");
 
   const category = String(booking.treatment_category || "").toLowerCase();
-  if (booking.booking_type !== "treatment" || !["carbon", "fungal"].includes(category)) {
+  if (!["consultation", "treatment"].includes(booking.booking_type) || !["carbon", "fungal"].includes(category)) {
     throw new Error("The linked appointment is not eligible for a balance payment.");
   }
 
@@ -1743,7 +1743,9 @@ if (
         full_price,
         amount_paid,
         remaining_balance,
-        balance_payment_reference
+        balance_payment_reference,
+        consultation_complete,
+        patch_test_complete
       FROM appointments
       WHERE id = ?
     `).bind(bookingId).first();
@@ -1751,9 +1753,9 @@ if (
     if (!booking) return new Response("Booking not found", { status: 404 });
 
     const category = String(booking.treatment_category || "").toLowerCase();
-    if (booking.booking_type !== "treatment" || !["carbon", "fungal"].includes(category)) {
+    if (!["consultation", "treatment"].includes(booking.booking_type) || !["carbon", "fungal"].includes(category)) {
       return new Response(
-        "Balance checkout is only available for Carbon and Fungal treatments.",
+        "Balance checkout is only available for Carbon and Fungal bookings.",
         { status: 400 }
       );
     }
@@ -1761,6 +1763,16 @@ if (
     if (booking.status === "cancelled") {
       return new Response(
         "A balance payment cannot be taken for a cancelled booking.",
+        { status: 409 }
+      );
+    }
+
+    if (booking.booking_type === "consultation" && (
+      Number(booking.consultation_complete || 0) !== 1 ||
+      Number(booking.patch_test_complete || 0) !== 1
+    )) {
+      return new Response(
+        "Complete the consultation and patch test before collecting the balance.",
         { status: 409 }
       );
     }
@@ -2025,283 +2037,71 @@ if (
 ) {
   try {
     const body = await request.json();
-
     const consultationId = Number(body.consultation_id);
-    const packageType = String(body.package_type || "").trim().toLowerCase();
 
     if (!Number.isInteger(consultationId) || consultationId <= 0) {
       return new Response("Invalid consultation ID.", { status: 400 });
     }
 
-    const consultation = await env.DB.prepare(`
-      SELECT
-        id,
-        client_name,
-        email,
-        phone,
-        status,
-        booking_type,
-        treatment_category,
-        treatment_name,
-        amount_paid,
-        discount_amount,
-        consultation_complete,
-        patch_test_complete
-      FROM appointments
-      WHERE id = ?
+    const booking = await env.DB.prepare(`
+      SELECT * FROM appointments WHERE id = ?
     `).bind(consultationId).first();
 
-    if (!consultation) {
-      return new Response("Consultation not found.", { status: 404 });
+    if (!booking) return new Response("Consultation not found.", { status: 404 });
+
+    const category = String(booking.treatment_category || "").toLowerCase();
+    if (booking.booking_type !== "consultation" || !["carbon", "fungal"].includes(category)) {
+      return new Response("Only Carbon or Fungal consultation records can be prepared for treatment.", { status: 409 });
+    }
+    if (booking.status === "cancelled") {
+      return new Response("A cancelled consultation cannot be booked for treatment.", { status: 409 });
+    }
+    if (Number(booking.consultation_complete || 0) !== 1 || Number(booking.patch_test_complete || 0) !== 1) {
+      return new Response("The consultation and patch test must be marked complete first.", { status: 409 });
+    }
+    if (booking.payment_status !== "paid" || Number(booking.remaining_balance || 0) > 0.005) {
+      return new Response("The remaining treatment balance must be paid before booking treatment.", { status: 409 });
     }
 
-    if (consultation.booking_type !== "consultation") {
-      return new Response(
-        "Only consultation records can create a treatment package.",
-        { status: 409 }
-      );
-    }
+    const sessionsTotal = Math.max(1, Number(booking.sessions_total || 1));
+    const existing = await env.DB.prepare(`
+      SELECT id FROM treatment_sessions WHERE appointment_id = ? LIMIT 1
+    `).bind(booking.id).first();
 
-    if (consultation.status === "cancelled") {
-      return new Response(
-        "A cancelled consultation cannot create a treatment package.",
-        { status: 409 }
-      );
-    }
-
-    if (
-      Number(consultation.consultation_complete || 0) !== 1 ||
-      Number(consultation.patch_test_complete || 0) !== 1
-    ) {
-      return new Response(
-        "The consultation and patch test must be marked complete first.",
-        { status: 409 }
-      );
-    }
-
-    const category = String(
-      consultation.treatment_category || ""
-    ).trim().toLowerCase();
-
-    const packageDefinitions = {
-      carbon: {
-        single_session: {
-          treatmentName: "Single Carbon Facial",
-          fullPrice: 85,
-          sessionsTotal: 1
-        },
-        three_sessions: {
-          treatmentName: "Course of 3 Carbon Facials",
-          fullPrice: 225,
-          sessionsTotal: 3
-        },
-        "3_sessions": {
-          treatmentName: "Course of 3 Carbon Facials",
-          fullPrice: 225,
-          sessionsTotal: 3
-        }
-      },
-      fungal: {
-        single_nail: {
-          treatmentName: "Single Nail",
-          fullPrice: 45,
-          sessionsTotal: 1
-        },
-        one_foot: {
-          treatmentName: "One Foot (Up to 5 Nails)",
-          fullPrice: 85,
-          sessionsTotal: 1
-        },
-        both_feet: {
-          treatmentName: "Both Feet",
-          fullPrice: 120,
-          sessionsTotal: 1
-        },
-        course4_one_foot: {
-          treatmentName: "Course of 4 Sessions (One Foot)",
-          fullPrice: 300,
-          sessionsTotal: 4
-        },
-        course4_both_feet: {
-          treatmentName: "Course of 4 Sessions (Both Feet)",
-          fullPrice: 420,
-          sessionsTotal: 4
-        }
+    if (!existing) {
+      for (let i = 1; i <= sessionsTotal; i++) {
+        await env.DB.prepare(`
+          INSERT INTO treatment_sessions
+          (appointment_id, session_number, appointment_date, appointment_time, status, reschedule_token)
+          VALUES (?, ?, NULL, NULL, 'pending', ?)
+        `).bind(booking.id, i, crypto.randomUUID()).run();
       }
-    };
-
-    const definition = packageDefinitions[category]?.[packageType];
-
-    if (!definition) {
-      return new Response(
-        "The selected treatment package is not valid.",
-        { status: 400 }
-      );
     }
 
-    const existingTreatment = await env.DB.prepare(`
-      SELECT id
-      FROM appointments
-      WHERE booking_type = 'treatment'
-        AND LOWER(TRIM(email)) = LOWER(TRIM(?))
-        AND LOWER(COALESCE(treatment_category, '')) = ?
-        AND status != 'cancelled'
-        AND package_status IN ('active', 'pending', 'pending_payment')
-      ORDER BY id DESC
+    await env.DB.prepare(`
+      UPDATE appointments
+      SET booking_type = 'treatment', package_status = 'active'
+      WHERE id = ?
+    `).bind(booking.id).run();
+
+    const firstSession = await env.DB.prepare(`
+      SELECT id, appointment_id, session_number, status, reschedule_token
+      FROM treatment_sessions
+      WHERE appointment_id = ?
+      ORDER BY session_number ASC
       LIMIT 1
-    `).bind(consultation.email, category).first();
-
-    if (existingTreatment) {
-      return new Response(
-        "An active treatment package already exists for this client.",
-        { status: 409 }
-      );
-    }
-
-    const consultationCredit = Math.min(
-      30,
-      Number(consultation.amount_paid || 0) +
-      Number(consultation.discount_amount || 0)
-    );
-
-    const remainingBalance = Math.max(
-      0,
-      Number(definition.fullPrice) - consultationCredit
-    );
-
-    const paymentStatus =
-      remainingBalance <= 0
-        ? "paid"
-        : consultationCredit > 0
-          ? "deposit_paid"
-          : "unpaid";
-
-    const rescheduleToken = crypto.randomUUID();
-
-    const inserted = await env.DB.prepare(`
-      INSERT INTO appointments
-      (
-        client_name,
-        email,
-        phone,
-        appointment_date,
-        appointment_time,
-        status,
-        reschedule_token,
-        booking_type,
-        package_type,
-        tattoo_size,
-        amount_paid,
-        payment_status,
-        payment_type,
-        sessions_total,
-        sessions_used,
-        package_status,
-        payment_reference,
-        treatment_category,
-        treatment_name,
-        full_price,
-        remaining_balance,
-        coupon_code,
-        discount_amount,
-        price_before_discount,
-        consultation_complete,
-        patch_test_complete
-      )
-      VALUES
-      (
-        ?, ?, ?,
-        '', '',
-        'confirmed',
-        ?,
-        'treatment',
-        ?,
-        NULL,
-        ?,
-        ?,
-        'treatment_deposit',
-        ?,
-        0,
-        'active',
-        NULL,
-        ?,
-        ?,
-        ?,
-        ?,
-        NULL,
-        0,
-        ?,
-        1,
-        1
-      )
-    `).bind(
-      consultation.client_name,
-      consultation.email,
-      consultation.phone,
-      rescheduleToken,
-      packageType,
-      consultationCredit,
-      paymentStatus,
-      definition.sessionsTotal,
-      category,
-      definition.treatmentName,
-      definition.fullPrice,
-      remainingBalance,
-      definition.fullPrice
-    ).run();
-
-    const treatmentAppointmentId = Number(inserted.meta?.last_row_id);
-
-    if (!treatmentAppointmentId) {
-      throw new Error("The treatment appointment could not be created.");
-    }
-
-    for (
-      let sessionNumber = 1;
-      sessionNumber <= definition.sessionsTotal;
-      sessionNumber++
-    ) {
-      await env.DB.prepare(`
-        INSERT INTO treatment_sessions
-        (
-          appointment_id,
-          session_number,
-          appointment_date,
-          appointment_time,
-          status,
-          reschedule_token
-        )
-        VALUES (?, ?, NULL, NULL, 'pending', ?)
-      `).bind(
-        treatmentAppointmentId,
-        sessionNumber,
-        crypto.randomUUID()
-      ).run();
-    }
+    `).bind(booking.id).first();
 
     return new Response(JSON.stringify({
       success: true,
-      appointment_id: treatmentAppointmentId,
-      client_name: consultation.client_name,
-      treatment_name: definition.treatmentName,
-      sessions_total: definition.sessionsTotal,
-      consultation_credit: consultationCredit,
-      remaining_balance: remainingBalance
-    }), {
-      status: 201,
-      headers: jsonHeaders
-    });
+      booking_id: booking.id,
+      client_name: booking.client_name,
+      treatment_name: booking.treatment_name,
+      session: firstSession
+    }), { headers: jsonHeaders });
   } catch (error) {
-    await sendErrorAlert(
-      env,
-      "Create treatment from consultation error",
-      error.stack || error.message || error
-    );
-
-    return new Response(
-      error.message || "The treatment package could not be created.",
-      { status: 500 }
-    );
+    await sendErrorAlert(env, "Prepare treatment booking error", error.stack || error.message || error);
+    return new Response(error.message || "Treatment booking could not be prepared.", { status: 500 });
   }
 }
 
@@ -3596,13 +3396,37 @@ if (bookingType === "treatment") {
     const packageType = body.package_type || null;
     const tattooSize = body.tattoo_size || null;
     const treatmentCategory = body.treatment_category || null;
-    const treatmentName = body.treatment_name || null;
+    let treatmentName = body.treatment_name || null;
 
 let amountPaid = Number(body.amount_paid || 0);
 const paymentReference = body.payment_reference || null;
 
 const depositOnly = body.deposit_only === true;
-const fullPrice = Number(body.full_price || 0);
+let fullPrice = Number(body.full_price || 0);
+
+const consultationPackages = {
+  carbon: {
+    single_session: { fullPrice: 85, sessionsTotal: 1, treatmentName: "Single Carbon Facial" },
+    three_sessions: { fullPrice: 225, sessionsTotal: 3, treatmentName: "Course of 3 Carbon Facials" },
+    "3_sessions": { fullPrice: 225, sessionsTotal: 3, treatmentName: "Course of 3 Carbon Facials" }
+  },
+  fungal: {
+    single_nail: { fullPrice: 45, sessionsTotal: 1, treatmentName: "Single Nail" },
+    one_foot: { fullPrice: 85, sessionsTotal: 1, treatmentName: "One Foot (Up to 5 Nails)" },
+    both_feet: { fullPrice: 120, sessionsTotal: 1, treatmentName: "Both Feet" },
+    course4_one_foot: { fullPrice: 300, sessionsTotal: 4, treatmentName: "Course of 4 Sessions (One Foot)" },
+    course4_both_feet: { fullPrice: 420, sessionsTotal: 4, treatmentName: "Course of 4 Sessions (Both Feet)" }
+  }
+};
+
+const selectedConsultationPackage = consultationPackages[
+  String(treatmentCategory || "").toLowerCase()
+]?.[String(packageType || "").toLowerCase()];
+
+if (bookingType === "consultation" && selectedConsultationPackage) {
+  fullPrice = selectedConsultationPackage.fullPrice;
+  treatmentName = treatmentName || selectedConsultationPackage.treatmentName;
+}
 
 let couponCode = null;
 let discountAmount = 0;
@@ -3702,12 +3526,15 @@ const remainingBalance = Number(
         Number(amountPaid || 0) +
         Number(discountAmount || 0);
 
-      if (consultationCredit >= 30) {
-        paymentStatus = "paid";
-        paymentType = "consultation_deposit";
-      } else if (consultationCredit > 0) {
+      if (consultationCredit > 0) {
         paymentStatus = "deposit_paid";
         paymentType = "consultation_deposit";
+      }
+
+      if (selectedConsultationPackage) {
+        sessionsTotal = selectedConsultationPackage.sessionsTotal;
+        sessionsUsed = 0;
+        packageStatus = "active";
       }
     }
 
