@@ -1975,7 +1975,13 @@ if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
 
   for (const booking of bookings.results) {
 
-    if (booking.booking_type === "treatment") {
+    if (
+      booking.booking_type === "treatment" ||
+      (
+        booking.booking_type === "consultation" &&
+        Number(booking.sessions_total || 0) > 0
+      )
+    ) {
 
       const sessions = await env.DB.prepare(`
   SELECT
@@ -2420,7 +2426,7 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     }
 
     const booking = await env.DB.prepare(
-      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, treatment_category, treatment_name
+      `SELECT id, client_name, email, phone, appointment_date, appointment_time, status, booking_type, treatment_category, treatment_name, sessions_total
    FROM appointments
    WHERE id = ? AND reschedule_token = ?`
     ).bind(id, token).first();
@@ -2429,7 +2435,13 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
       return new Response("Booking not found", { status: 404 });
     }
 
-    if (booking.booking_type === "treatment") {
+    if (
+      booking.booking_type === "treatment" ||
+      (
+        booking.booking_type === "consultation" &&
+        Number(booking.sessions_total || 0) > 0
+      )
+    ) {
   const sessions = await env.DB.prepare(`
     SELECT
       id,
