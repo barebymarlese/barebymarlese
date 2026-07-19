@@ -3455,7 +3455,7 @@ if (bookingType === "treatment") {
     a.status = 'confirmed'
     OR (
       a.status = 'pending_payment'
-      AND datetime(a.created_at) > datetime('now', '-10 minutes')
+      AND datetime(a.created_at) > datetime('now', '-45 minutes')
     )
   )
   AND NOT EXISTS (
