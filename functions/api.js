@@ -2374,12 +2374,17 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     return new Response("Booking not found", { status: 404 });
   }
 
-  if (booking.booking_type !== "treatment") {
-    return new Response(
-      "Manual balance payment can only be applied to treatment bookings.",
-      { status: 409 }
-    );
-  }
+  const category = String(booking.treatment_category || "").toLowerCase();
+
+if (
+  !["consultation", "treatment"].includes(booking.booking_type) ||
+  !["tattoo", "carbon", "fungal"].includes(category)
+) {
+  return new Response(
+    "Manual balance payment is only available for treatment packages.",
+    { status: 409 }
+  );
+}
 
   const currentPaid = Number(booking.amount_paid || 0);
   const fullPrice = Number(booking.full_price || 0);
