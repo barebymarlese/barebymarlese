@@ -2395,13 +2395,13 @@ if (
     : currentPaid + Math.max(0, paymentToAdd);
 
   await env.DB.prepare(`
-    UPDATE appointments
-    SET payment_status = 'paid',
-        amount_paid = ?,
-        remaining_balance = 0
-    WHERE id = ?
-      AND booking_type = 'treatment'
-  `).bind(newAmountPaid, id).run();
+  UPDATE appointments
+  SET payment_status = 'paid',
+      amount_paid = ?,
+      remaining_balance = 0
+  WHERE id = ?
+    AND booking_type IN ('consultation', 'treatment')
+`).bind(newAmountPaid, id).run();
 
   return new Response(JSON.stringify({
     success: true,
