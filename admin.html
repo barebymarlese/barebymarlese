@@ -896,9 +896,10 @@ footer{
   .client-name,
   .contact,
   .package-text{
-    font-size:11px;
-    line-height:1.4;
-  }
+  font-size:11px;
+  line-height:1.4;
+  text-align:center;
+}
 
   .payment-breakdown,
   .coupon-details{
@@ -933,10 +934,28 @@ footer{
   white-space:nowrap;
   margin:0 auto;
 }
+/* Centre headings and compact columns */
+#bookings-table th:nth-child(3),
+#bookings-table th:nth-child(4),
+#bookings-table th:nth-child(5),
+#bookings-table th:nth-child(6),
+#bookings-table th:nth-child(8),
+#bookings-table th:nth-child(9),
+#bookings-table th:nth-child(10),
+#bookings-table th:nth-child(11),
+#bookings-table th:nth-child(12),
+
+#bookings-table td:nth-child(3),
+#bookings-table td:nth-child(4),
+#bookings-table td:nth-child(5),
 #bookings-table td:nth-child(6),
+#bookings-table td:nth-child(8),
 #bookings-table td:nth-child(9),
-#bookings-table td:nth-child(10){
+#bookings-table td:nth-child(10),
+#bookings-table td:nth-child(11),
+#bookings-table td:nth-child(12){
   text-align:center;
+  vertical-align:top;
 }
   .action-stack{
   display:flex;
