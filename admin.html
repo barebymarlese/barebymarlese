@@ -2430,9 +2430,20 @@ function canBookLaserTreatment(booking){
   const category = String(booking.treatment_category || "").toLowerCase();
   const eligibleCategory = ["carbon", "fungal", "tattoo"].includes(category);
   const hasExistingSessions = Array.isArray(booking.sessions) && booking.sessions.length > 0;
+
+  // Tattoo consultations must first have a size/package selected through
+  // “Create Tattoo Treatment Booking” before “Book Treatment” can appear.
+  const tattooTreatmentPrepared =
+    category !== "tattoo" ||
+    (
+      Boolean(String(booking.package_type || "").trim()) &&
+      Number(booking.sessions_total || 0) > 0
+    );
+
   return (
     booking.booking_type === "consultation" &&
     eligibleCategory &&
+    tattooTreatmentPrepared &&
     !isArchivedCompletedConsultation(booking) &&
     !hasExistingSessions &&
     Number(booking.consultation_complete || 0) === 1 &&
