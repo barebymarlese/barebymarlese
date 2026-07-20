@@ -2083,16 +2083,47 @@ if (
     if (booking.status === "cancelled") {
       return new Response("A cancelled consultation cannot be prepared for treatment.", { status: 409 });
     }
-    if (Number(booking.consultation_complete || 0) !== 1 || Number(booking.patch_test_complete || 0) !== 1) {
-      return new Response("The consultation and patch test must be marked complete first.", { status: 409 });
-    }
-    if (booking.balance_payment_reference || booking.payment_status === "paid") {
-      return new Response("This consultation already has a completed treatment payment.", { status: 409 });
-    }
-    if (booking.package_type && Number(booking.remaining_balance || 0) > 0) {
-      return new Response("A Tattoo treatment option has already been selected for this consultation.", { status: 409 });
-    }
+if (
+  Number(booking.consultation_complete || 0) !== 1 ||
+  Number(booking.patch_test_complete || 0) !== 1
+) {
+  return new Response(
+    "The consultation and patch test must be marked complete first.",
+    { status: 409 }
+  );
+}
 
+const hasSelectedTreatment =
+  Boolean(booking.package_type) &&
+  Number(booking.sessions_total || 0) > 0 &&
+  Number(booking.full_price || 0) > 0;
+
+const hasCompletedTreatmentPayment =
+  hasSelectedTreatment &&
+  (
+    Boolean(booking.balance_payment_reference) ||
+    (
+      booking.payment_status === "paid" &&
+      Number(booking.remaining_balance || 0) <= 0.005
+    )
+  );
+
+if (hasCompletedTreatmentPayment) {
+  return new Response(
+    "This consultation already has a completed treatment payment.",
+    { status: 409 }
+  );
+}
+
+if (
+  booking.package_type &&
+  Number(booking.remaining_balance || 0) > 0
+) {
+  return new Response(
+    "A Tattoo treatment option has already been selected for this consultation.",
+    { status: 409 }
+  );
+}
     const sizeLabel = tattooSize === "xl"
       ? "XL"
       : tattooSize.charAt(0).toUpperCase() + tattooSize.slice(1);
