@@ -204,6 +204,67 @@
             text-transform: uppercase;
         }
 
+
+        .saved-loader {
+            margin-bottom: 16px;
+        }
+
+        .saved-loader h3 {
+            margin: 0 0 15px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--brand);
+        }
+
+        .record-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .record-btn {
+            min-height: 46px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(36,34,26,.18);
+            background: transparent;
+            color: var(--heading-dark);
+            font-family: "Montserrat", sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            cursor: pointer;
+        }
+
+        .record-btn.primary {
+            background: var(--brand);
+            color: #fff;
+            border-color: var(--brand);
+        }
+
+        .record-btn.danger {
+            color: #8a3b3b;
+            border-color: rgba(138,59,59,.28);
+        }
+
+        .record-btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        .record-note {
+            padding: 12px 14px;
+            border-left: 4px solid var(--brand);
+            border-radius: 4px 12px 12px 4px;
+            background: rgba(255,255,255,.28);
+            font-size: 10px;
+            line-height: 1.6;
+            margin: 16px 0 12px;
+        }
+
         @media screen and (max-width: 600px) {
             body { display: block; padding: 0; }
             .con-card { width: 94vw; margin: 10px auto; padding: 20px; }
@@ -456,6 +517,22 @@
 
         <h2 class="section-title">Patch Test Record</h2>
 
+
+        <section class="con-section saved-loader no-print">
+            <h3>Open Saved Client Record</h3>
+            <label class="con-label" for="savedRecordSelect">Saved Record</label>
+            <select id="savedRecordSelect" class="con-input">
+                <option value="">Select a saved client record</option>
+            </select>
+
+            <div class="record-actions">
+                <button class="record-btn" type="button" id="openSavedBtn">Open Selected Record</button>
+                <button class="record-btn" type="button" id="nextSessionBtn">Create Next Session</button>
+            </div>
+        </section>
+
+        <input type="hidden" id="recordId">
+
         <div class="con-section">
             <div class="settings-grid">
                 <div>
@@ -597,6 +674,19 @@
     <strong id="legal-name"></strong><br>
     <span id="registered-in"></span><br>
     Company No. <span id="company-number"></span>
+</div>
+
+
+<div class="record-note no-print">
+    Saving stores the patch test record in your database. Next time the client attends, choose their saved record above,
+    open it, then use “Create Next Session” or “Duplicate Previous Session” to copy the details into a new record.
+</div>
+
+<div class="record-actions no-print">
+    <button class="record-btn primary" type="button" id="saveRecordBtn">Save Patch Test Record</button>
+    <button class="record-btn" type="button" id="duplicateBtn">Duplicate Previous Session</button>
+    <button class="record-btn" type="button" id="newBtn">New Blank Record</button>
+    <button class="record-btn danger" type="button" id="deleteBtn" disabled>Delete This Record</button>
 </div>
 
 <div class="con-actions no-print">
@@ -778,6 +868,322 @@
     return data;
 }
 
+
+    const PATCH_TEST_RECORDS_API = "/api?patch-test-records=1";
+    let cachedPatchTestRecords = [];
+
+    async function patchApiRequest(url, options = {}) {
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {})
+            }
+        });
+
+        let data = null;
+        try {
+            data = await response.json();
+        } catch {
+            data = null;
+        }
+
+        if (!response.ok) {
+            throw new Error(data?.message || `Request failed (${response.status})`);
+        }
+
+        return data;
+    }
+
+    function selectedReactionsArray() {
+        return [...document.querySelectorAll(".pill.selected")]
+            .map(p => p.textContent.trim());
+    }
+
+    function setSelectedReactions(values) {
+        const wanted = new Set(Array.isArray(values) ? values : []);
+        document.querySelectorAll(".pill").forEach(pill => {
+            pill.classList.toggle("selected", wanted.has(pill.textContent.trim()));
+        });
+    }
+
+    function collectPatchTestRecord() {
+        const existingId = document.getElementById("recordId").value;
+        return {
+            id: existingId ? Number(existingId) : null,
+            practitioner: document.getElementById("practitioner").value.trim(),
+            test_date: document.getElementById("testDate").value,
+            client_name: document.getElementById("clientName").value.trim(),
+            date_of_birth: document.getElementById("dateOfBirth").value,
+            treatment_type: document.getElementById("treatmentType").value,
+            test_area: document.getElementById("testArea").value.trim(),
+            skin_type: document.getElementById("skinType").value,
+            serial_no: document.getElementById("serialNo").value.trim(),
+            wavelength: document.getElementById("wavelength").value,
+            joules: document.getElementById("joules").value.trim(),
+            test_shots: document.getElementById("testShots").value.trim(),
+            earliest_treatment_date: document.getElementById("earliestTreatmentDate").value,
+            immediate_reaction: selectedReactionsArray(),
+            eye_protection: document.getElementById("eyePro").checked ? "Yes" : "No",
+            practitioner_notes: document.getElementById("practitionerNotes").value.trim(),
+            signature: signaturePad && !signaturePad.isEmpty()
+                ? signaturePad.toDataURL("image/png")
+                : "",
+            signed_at: document.getElementById("printTimeStamp").innerText || ""
+        };
+    }
+
+    function formatRecordDate(value) {
+        if (!value) return "No date";
+        const [year, month, day] = value.split("-");
+        return year && month && day ? `${day}/${month}/${year}` : value;
+    }
+
+    async function loadPatchTestRecords() {
+        const data = await patchApiRequest(PATCH_TEST_RECORDS_API);
+        cachedPatchTestRecords = Array.isArray(data.records) ? data.records : [];
+        return cachedPatchTestRecords;
+    }
+
+    async function renderPatchTestRecords() {
+        const select = document.getElementById("savedRecordSelect");
+
+        try {
+            const records = await loadPatchTestRecords();
+
+            records.sort((a, b) => {
+                const nameCompare = String(a.client_name || "")
+                    .localeCompare(String(b.client_name || ""));
+                if (nameCompare) return nameCompare;
+                return String(b.test_date || "").localeCompare(String(a.test_date || ""));
+            });
+
+            select.innerHTML = '<option value="">Select a saved client record</option>';
+
+            records.forEach(record => {
+                const option = document.createElement("option");
+                option.value = record.id;
+                option.textContent =
+                    `${record.client_name || "Unnamed client"} — ` +
+                    `${record.treatment_type || "Patch Test"} — ` +
+                    `${formatRecordDate(record.test_date)}`;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            setStatus("Could not load saved patch test records: " + error.message, "error");
+        }
+    }
+
+    function loadSignatureData(signatureData) {
+        signaturePad.clear();
+        if (!signatureData) return;
+
+        signaturePad.fromDataURL(signatureData, {
+            ratio: Math.max(window.devicePixelRatio || 1, 1)
+        }).catch(() => {
+            signaturePad.clear();
+            setStatus("The saved signature could not be restored.", "error");
+        });
+    }
+
+    function fillPatchTestRecord(record) {
+        document.getElementById("recordId").value = record.id || "";
+        document.getElementById("practitioner").value = record.practitioner || "Marlese Rosch Haden";
+        document.getElementById("testDate").value = record.test_date || "";
+        document.getElementById("clientName").value = record.client_name || "";
+        document.getElementById("dateOfBirth").value = record.date_of_birth || "";
+        document.getElementById("treatmentType").value = record.treatment_type || "";
+        updateConsentText();
+        document.getElementById("testArea").value = record.test_area || "";
+        document.getElementById("skinType").value = record.skin_type || "";
+        document.getElementById("serialNo").value = record.serial_no || "HL6 Pro Q-Switch Nd:YAG";
+        document.getElementById("wavelength").value = record.wavelength || "";
+        document.getElementById("joules").value = record.joules || "";
+        document.getElementById("testShots").value = record.test_shots || "";
+        document.getElementById("earliestTreatmentDate").value = record.earliest_treatment_date || "";
+        setSelectedReactions(record.immediate_reaction);
+        document.getElementById("eyePro").checked =
+            String(record.eye_protection || "Yes").toLowerCase() !== "no";
+        document.getElementById("practitionerNotes").value = record.practitioner_notes || "";
+        document.getElementById("printTimeStamp").innerText = record.signed_at || "";
+        loadSignatureData(record.signature || "");
+        document.getElementById("deleteBtn").disabled = false;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setStatus("Patch test record opened. Make changes and press Save Patch Test Record.");
+    }
+
+    function resetPatchTestRecord(scroll = true) {
+        clearSig();
+        document.getElementById("recordId").value = "";
+        document.getElementById("deleteBtn").disabled = true;
+        document.getElementById("savedRecordSelect").value = "";
+
+        const testDateEl = document.getElementById("testDate");
+        if (testDateEl) {
+            testDateEl.valueAsDate = new Date();
+            testDateEl.dispatchEvent(new Event("change"));
+        }
+
+        if (scroll) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    }
+
+    function findPreviousPatchTest() {
+        const clientName = document.getElementById("clientName").value.trim().toLowerCase();
+        const treatmentType = document.getElementById("treatmentType").value;
+
+        if (!clientName || !treatmentType) {
+            setStatus("Enter the client name and select the treatment first.", "error");
+            return null;
+        }
+
+        return cachedPatchTestRecords
+            .filter(record =>
+                String(record.client_name || "").trim().toLowerCase() === clientName &&
+                record.treatment_type === treatmentType
+            )
+            .sort((a, b) =>
+                String(b.test_date || "").localeCompare(String(a.test_date || ""))
+            )[0] || null;
+    }
+
+    function duplicatePatchTestRecord(source) {
+        const copy = JSON.parse(JSON.stringify(source));
+        copy.id = "";
+        copy.test_date = new Date().toISOString().slice(0, 10);
+        copy.earliest_treatment_date = "";
+        copy.signature = "";
+        copy.signed_at = "";
+        copy.immediate_reaction = [];
+        copy.practitioner_notes = "";
+
+        fillPatchTestRecord(copy);
+        document.getElementById("recordId").value = "";
+        document.getElementById("deleteBtn").disabled = true;
+        document.getElementById("testDate").dispatchEvent(new Event("change"));
+        signaturePad.clear();
+        setStatus("Previous patch test copied into a new record. Check the details, add a new signature, then save.");
+    }
+
+    document.getElementById("saveRecordBtn").addEventListener("click", async () => {
+        const record = collectPatchTestRecord();
+
+        if (!record.client_name) {
+            setStatus("Please enter client name.", "error");
+            return;
+        }
+
+        if (!record.treatment_type) {
+            setStatus("Please select the treatment type.", "error");
+            return;
+        }
+
+        if (!record.signature) {
+            setStatus("Please add the client signature before saving.", "error");
+            return;
+        }
+
+        try {
+            const isUpdate = Boolean(record.id);
+            const data = await patchApiRequest(PATCH_TEST_RECORDS_API, {
+                method: isUpdate ? "PUT" : "POST",
+                body: JSON.stringify(record)
+            });
+
+            const saved = data.record;
+            document.getElementById("recordId").value = saved.id;
+            document.getElementById("deleteBtn").disabled = false;
+
+            await renderPatchTestRecords();
+            document.getElementById("savedRecordSelect").value = String(saved.id);
+
+            setStatus(isUpdate
+                ? "Patch test record updated successfully in D1."
+                : "Patch test record saved successfully in D1."
+            );
+        } catch (error) {
+            setStatus("Could not save patch test record: " + error.message, "error");
+        }
+    });
+
+    document.getElementById("openSavedBtn").addEventListener("click", () => {
+        const id = Number(document.getElementById("savedRecordSelect").value);
+
+        if (!id) {
+            setStatus("Please select a saved client record first.", "error");
+            return;
+        }
+
+        const record = cachedPatchTestRecords.find(item => Number(item.id) === id);
+        if (!record) {
+            setStatus("That saved record could not be found.", "error");
+            renderPatchTestRecords();
+            return;
+        }
+
+        fillPatchTestRecord(record);
+    });
+
+    document.getElementById("nextSessionBtn").addEventListener("click", () => {
+        const id = Number(
+            document.getElementById("savedRecordSelect").value ||
+            document.getElementById("recordId").value
+        );
+
+        if (id) {
+            const record = cachedPatchTestRecords.find(item => Number(item.id) === id);
+            if (record) {
+                duplicatePatchTestRecord(record);
+                return;
+            }
+        }
+
+        const previous = findPreviousPatchTest();
+        if (previous) {
+            duplicatePatchTestRecord(previous);
+            return;
+        }
+
+        setStatus("Save the first patch test record, then select or open it before creating the next record.", "error");
+    });
+
+    document.getElementById("duplicateBtn").addEventListener("click", () => {
+        const previous = findPreviousPatchTest();
+
+        if (!previous) {
+            setStatus("No previous saved patch test was found for this client and treatment.", "error");
+            return;
+        }
+
+        duplicatePatchTestRecord(previous);
+    });
+
+    document.getElementById("newBtn").addEventListener("click", () => {
+        resetPatchTestRecord();
+        setStatus("New blank patch test record ready.");
+    });
+
+    document.getElementById("deleteBtn").addEventListener("click", async () => {
+        const id = Number(document.getElementById("recordId").value);
+        if (!id) return;
+
+        if (!confirm("Delete this patch test record? This cannot be undone.")) return;
+
+        try {
+            await patchApiRequest(
+                `${PATCH_TEST_RECORDS_API}&id=${encodeURIComponent(id)}`,
+                { method: "DELETE" }
+            );
+
+            resetPatchTestRecord();
+            await renderPatchTestRecords();
+            setStatus("Patch test record deleted from D1.");
+        } catch (error) {
+            setStatus("Could not delete patch test record: " + error.message, "error");
+        }
+    });
+
     async function prepareAndSend() {
         const clientName = document.getElementById("clientName")?.value.trim();
 
@@ -844,6 +1250,7 @@ testDate.addEventListener("change", () => {
     }
 
     updateConsentText();
+    renderPatchTestRecords();
 
     const treatmentTypeEl = document.getElementById("treatmentType");
     if (treatmentTypeEl) {
