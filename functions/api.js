@@ -1471,6 +1471,593 @@ if (
   }
 }
 
+/* =========================================================
+   PATCH TEST RECORDS — Cloudflare D1
+   Routes:
+   GET    ?patch-test-records=1
+   POST   ?patch-test-records=1
+   PUT    ?patch-test-records=1
+   DELETE ?patch-test-records=1&id=123
+   ========================================================= */
+
+function patchTestRecordJson(value) {
+  return JSON.stringify(
+    Array.isArray(value) ? value : value ? [value] : []
+  );
+}
+
+function parsePatchTestRecordJson(value) {
+  if (!value) return [];
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return String(value)
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean);
+  }
+}
+
+function normalisePatchTestRecord(row) {
+  if (!row) return null;
+
+  return {
+    ...row,
+    immediate_reaction: parsePatchTestRecordJson(
+      row.immediate_reaction
+    )
+  };
+}
+
+function patchTestRecordPayload(body = {}) {
+  return {
+    appointment_id: cleanOptionalInteger(body.appointment_id),
+
+    practitioner: String(
+      body.practitioner || "Marlese Rosch Haden"
+    ).trim(),
+
+    test_date: String(body.test_date || "").trim(),
+    client_name: String(body.client_name || "").trim(),
+    date_of_birth: String(body.date_of_birth || "").trim(),
+
+    treatment_type: String(body.treatment_type || "").trim(),
+    test_area: String(body.test_area || "").trim(),
+    skin_type: String(body.skin_type || "").trim(),
+
+    serial_no: String(body.serial_no || "").trim(),
+    wavelength: String(body.wavelength || "").trim(),
+    joules: String(body.joules || "").trim(),
+    test_shots: String(body.test_shots || "").trim(),
+
+    earliest_treatment_date: String(
+      body.earliest_treatment_date || ""
+    ).trim(),
+
+    immediate_reaction: patchTestRecordJson(
+      body.immediate_reaction
+    ),
+
+    eye_protection: String(
+      body.eye_protection || "Yes"
+    ).trim(),
+
+    practitioner_notes: String(
+      body.practitioner_notes || ""
+    ).trim(),
+
+    signature: String(body.signature || ""),
+    signed_at: String(body.signed_at || "").trim()
+  };
+}
+
+function validatePatchTestRecordPayload(record) {
+  if (!record.client_name) {
+    return "Client name is required.";
+  }
+
+  if (!record.test_date) {
+    return "Patch-test date is required.";
+  }
+
+  if (!record.treatment_type) {
+    return "Treatment type is required.";
+  }
+
+  if (!record.signature) {
+    return "Client signature is required.";
+  }
+
+  return "";
+}
+
+/* GET PATCH TEST RECORDS */
+
+if (
+  url.searchParams.get("patch-test-records") === "1" &&
+  request.method === "GET"
+) {
+  try {
+    const id = cleanOptionalInteger(
+      url.searchParams.get("id")
+    );
+
+    const appointmentId = cleanOptionalInteger(
+      url.searchParams.get("appointment_id")
+    );
+
+    const clientName = String(
+      url.searchParams.get("client_name") || ""
+    ).trim();
+
+    if (id) {
+      const record = await env.DB.prepare(`
+        SELECT *
+        FROM patch_test_records
+        WHERE id = ?
+      `).bind(id).first();
+
+      if (!record) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "Patch test record not found."
+          }),
+          {
+            status: 404,
+            headers: jsonHeaders
+          }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          record: normalisePatchTestRecord(record)
+        }),
+        {
+          status: 200,
+          headers: jsonHeaders
+        }
+      );
+    }
+
+    let query = `
+      SELECT *
+      FROM patch_test_records
+    `;
+
+    const bindings = [];
+
+    if (appointmentId) {
+      query += ` WHERE appointment_id = ?`;
+      bindings.push(appointmentId);
+    } else if (clientName) {
+      query += ` WHERE LOWER(client_name) = LOWER(?)`;
+      bindings.push(clientName);
+    }
+
+    query += `
+      ORDER BY test_date DESC, id DESC
+    `;
+
+    const result = bindings.length
+      ? await env.DB.prepare(query).bind(...bindings).all()
+      : await env.DB.prepare(query).all();
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        records: (result.results || []).map(
+          normalisePatchTestRecord
+        )
+      }),
+      {
+        status: 200,
+        headers: jsonHeaders
+      }
+    );
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Load patch test records error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message:
+          error.message ||
+          "Patch test records could not be loaded."
+      }),
+      {
+        status: 500,
+        headers: jsonHeaders
+      }
+    );
+  }
+}
+
+/* CREATE PATCH TEST RECORD */
+
+if (
+  url.searchParams.get("patch-test-records") === "1" &&
+  request.method === "POST"
+) {
+  try {
+    const body = await request.json();
+    const record = patchTestRecordPayload(body);
+
+    const validationError =
+      validatePatchTestRecordPayload(record);
+
+    if (validationError) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: validationError
+        }),
+        {
+          status: 400,
+          headers: jsonHeaders
+        }
+      );
+    }
+
+    if (record.appointment_id) {
+      const appointment = await env.DB.prepare(`
+        SELECT id
+        FROM appointments
+        WHERE id = ?
+      `).bind(record.appointment_id).first();
+
+      if (!appointment) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "The linked appointment was not found."
+          }),
+          {
+            status: 404,
+            headers: jsonHeaders
+          }
+        );
+      }
+    }
+
+    const inserted = await env.DB.prepare(`
+      INSERT INTO patch_test_records
+      (
+        appointment_id,
+        practitioner,
+        test_date,
+        client_name,
+        date_of_birth,
+        treatment_type,
+        test_area,
+        skin_type,
+        serial_no,
+        wavelength,
+        joules,
+        test_shots,
+        earliest_treatment_date,
+        immediate_reaction,
+        eye_protection,
+        practitioner_notes,
+        signature,
+        signed_at
+      )
+      VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?, ?
+      )
+    `).bind(
+      record.appointment_id,
+      record.practitioner,
+      record.test_date,
+      record.client_name,
+      record.date_of_birth || null,
+      record.treatment_type,
+      record.test_area,
+      record.skin_type,
+      record.serial_no,
+      record.wavelength,
+      record.joules,
+      record.test_shots,
+      record.earliest_treatment_date || null,
+      record.immediate_reaction,
+      record.eye_protection,
+      record.practitioner_notes,
+      record.signature,
+      record.signed_at
+    ).run();
+
+    const savedId = Number(
+      inserted.meta?.last_row_id
+    );
+
+    const saved = await env.DB.prepare(`
+      SELECT *
+      FROM patch_test_records
+      WHERE id = ?
+    `).bind(savedId).first();
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        created: true,
+        record: normalisePatchTestRecord(saved)
+      }),
+      {
+        status: 201,
+        headers: jsonHeaders
+      }
+    );
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Save patch test record error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message:
+          error.message ||
+          "The patch test record could not be saved."
+      }),
+      {
+        status: 500,
+        headers: jsonHeaders
+      }
+    );
+  }
+}
+
+/* UPDATE PATCH TEST RECORD */
+
+if (
+  url.searchParams.get("patch-test-records") === "1" &&
+  request.method === "PUT"
+) {
+  try {
+    const body = await request.json();
+    const id = cleanOptionalInteger(body.id);
+
+    if (!id) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "A valid patch test record ID is required."
+        }),
+        {
+          status: 400,
+          headers: jsonHeaders
+        }
+      );
+    }
+
+    const record = patchTestRecordPayload(body);
+
+    const validationError =
+      validatePatchTestRecordPayload(record);
+
+    if (validationError) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: validationError
+        }),
+        {
+          status: 400,
+          headers: jsonHeaders
+        }
+      );
+    }
+
+    const existing = await env.DB.prepare(`
+      SELECT id
+      FROM patch_test_records
+      WHERE id = ?
+    `).bind(id).first();
+
+    if (!existing) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Patch test record not found."
+        }),
+        {
+          status: 404,
+          headers: jsonHeaders
+        }
+      );
+    }
+
+    if (record.appointment_id) {
+      const appointment = await env.DB.prepare(`
+        SELECT id
+        FROM appointments
+        WHERE id = ?
+      `).bind(record.appointment_id).first();
+
+      if (!appointment) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            message: "The linked appointment was not found."
+          }),
+          {
+            status: 404,
+            headers: jsonHeaders
+          }
+        );
+      }
+    }
+
+    await env.DB.prepare(`
+      UPDATE patch_test_records
+      SET
+        appointment_id = ?,
+        practitioner = ?,
+        test_date = ?,
+        client_name = ?,
+        date_of_birth = ?,
+        treatment_type = ?,
+        test_area = ?,
+        skin_type = ?,
+        serial_no = ?,
+        wavelength = ?,
+        joules = ?,
+        test_shots = ?,
+        earliest_treatment_date = ?,
+        immediate_reaction = ?,
+        eye_protection = ?,
+        practitioner_notes = ?,
+        signature = ?,
+        signed_at = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(
+      record.appointment_id,
+      record.practitioner,
+      record.test_date,
+      record.client_name,
+      record.date_of_birth || null,
+      record.treatment_type,
+      record.test_area,
+      record.skin_type,
+      record.serial_no,
+      record.wavelength,
+      record.joules,
+      record.test_shots,
+      record.earliest_treatment_date || null,
+      record.immediate_reaction,
+      record.eye_protection,
+      record.practitioner_notes,
+      record.signature,
+      record.signed_at,
+      id
+    ).run();
+
+    const saved = await env.DB.prepare(`
+      SELECT *
+      FROM patch_test_records
+      WHERE id = ?
+    `).bind(id).first();
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        updated: true,
+        record: normalisePatchTestRecord(saved)
+      }),
+      {
+        status: 200,
+        headers: jsonHeaders
+      }
+    );
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Update patch test record error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message:
+          error.message ||
+          "The patch test record could not be updated."
+      }),
+      {
+        status: 500,
+        headers: jsonHeaders
+      }
+    );
+  }
+}
+
+/* DELETE PATCH TEST RECORD */
+
+if (
+  url.searchParams.get("patch-test-records") === "1" &&
+  request.method === "DELETE"
+) {
+  try {
+    const id = cleanOptionalInteger(
+      url.searchParams.get("id")
+    );
+
+    if (!id) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "A valid patch test record ID is required."
+        }),
+        {
+          status: 400,
+          headers: jsonHeaders
+        }
+      );
+    }
+
+    const deleted = await env.DB.prepare(`
+      DELETE FROM patch_test_records
+      WHERE id = ?
+    `).bind(id).run();
+
+    if (!deleted.meta?.changes) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Patch test record not found."
+        }),
+        {
+          status: 404,
+          headers: jsonHeaders
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        deleted: true,
+        id
+      }),
+      {
+        status: 200,
+        headers: jsonHeaders
+      }
+    );
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "Delete patch test record error",
+      error.stack || error.message || error
+    );
+
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message:
+          error.message ||
+          "The patch test record could not be deleted."
+      }),
+      {
+        status: 500,
+        headers: jsonHeaders
+      }
+    );
+  }
+}
+
 if (
   request.method === "POST" &&
   url.searchParams.get("payment") === "create-consultation-checkout"
