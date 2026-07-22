@@ -314,7 +314,13 @@ if (category === "tattoo") {
 }
 
 
-function getReturningTreatmentDefinition(category, packageKey, tattooSize, packageType) {
+function getReturningTreatmentDefinition(
+  category,
+  packageKey,
+  tattooSize,
+  packageType,
+  env
+) {
   const normalisedCategory = String(category || "").toLowerCase();
   const normalisedKey = String(packageKey || "").toLowerCase();
   const normalisedSize = String(tattooSize || "").toLowerCase();
@@ -392,7 +398,11 @@ function getReturningTreatmentDefinition(category, packageKey, tattooSize, packa
       tattooSize: normalisedSize,
       amount: isSingle ? tattoo.single : tattoo.bundle,
       name: `${tattoo.name} - ${isSingle ? "Single Session" : "6 Session Bundle"}`,
-      sessionsTotal: isSingle ? 1 : 6
+      sessionsTotal: isSingle ? 1 : 6,
+      stripePriceId:
+        !isSingle && normalisedSize === "small"
+          ? env.STRIPE_PRICE_TATTOO_SMALL_BUNDLE
+          : null
     };
   }
 
@@ -450,15 +460,37 @@ async function createReturningTreatmentCheckout(booking, env) {
   }
 
   form.set("line_items[0][quantity]", "1");
-  form.set("line_items[0][price_data][currency]", "gbp");
-  form.set(
-    "line_items[0][price_data][unit_amount]",
-    String(Math.round(Number(booking.full_price || 0) * 100))
-  );
-  form.set(
-    "line_items[0][price_data][product_data][name]",
-    booking.treatment_name || "Returning Client Treatment"
-  );
+
+  const stripePriceId = String(
+    booking.stripe_price_id || ""
+  ).trim();
+
+  if (stripePriceId.startsWith("price_")) {
+    form.set(
+      "line_items[0][price]",
+      stripePriceId
+    );
+  } else {
+    form.set(
+      "line_items[0][price_data][currency]",
+      "gbp"
+    );
+
+    form.set(
+      "line_items[0][price_data][unit_amount]",
+      String(
+        Math.round(
+          Number(booking.full_price || 0) * 100
+        )
+      )
+    );
+
+    form.set(
+      "line_items[0][price_data][product_data][name]",
+      booking.treatment_name ||
+      "Returning Client Treatment"
+    );
+  }
 
   const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",
@@ -2227,7 +2259,8 @@ if (
       body.treatment_category,
       body.package_key,
       body.tattoo_size,
-      body.package_type
+      body.package_type,
+      env
     );
 
     if (!definition) {
@@ -2315,7 +2348,8 @@ if (
       package_type: definition.packageType,
       tattoo_size: definition.tattooSize,
       sessions_total: definition.sessionsTotal,
-      full_price: definition.amount
+      full_price: definition.amount,
+      stripe_price_id: definition.stripePriceId
     };
 
     const checkout = await createReturningTreatmentCheckout(booking, env);
