@@ -105,13 +105,14 @@
  }
  ],
 
- "description": "VTCT Level 5 Certified laser specialist offering professional laser tattoo removal and carbon laser facial consultations and treatments in South Oxfordshire.",
+ "description": "VTCT Level 5 Certified laser specialist offering professional laser tattoo removal, carbon laser facial and fungal nail laser treatment consultations and treatments in South Oxfordshire.",
 
 "priceRange": "££",
 
 "serviceType": [
   "Laser Tattoo Removal",
-  "Carbon Laser Facial"
+  "Carbon Laser Facial",
+  "Fungal Nail Laser Treatment"
 ],
 
 "hasOfferCatalog": {
@@ -130,6 +131,13 @@
    "itemOffered": {
     "@type": "MedicalProcedure",
     "name": "Carbon Laser Facial"
+   }
+  },
+  {
+   "@type": "Offer",
+   "itemOffered": {
+    "@type": "MedicalProcedure",
+    "name": "Fungal Nail Laser Treatment"
    }
   }
  ]
@@ -1540,6 +1548,107 @@ text-transform:uppercase;
   }
 }
 
+
+/* COMPLETE LOCATION PAGE INTERNAL LINKS */
+.location-links-section{
+  padding:70px 0;
+}
+
+.location-links-card{
+  padding:42px;
+  border:1px solid rgba(36,34,26,.12);
+  border-radius:24px;
+  background:linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.12));
+  box-shadow:var(--shadow);
+}
+
+.location-links-eyebrow{
+  margin:0 0 10px;
+  color:var(--brand);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.location-links-card h2{
+  margin:0;
+  color:var(--heading-dark);
+  font-size:clamp(28px,4vw,44px);
+  line-height:1.15;
+}
+
+.location-links-intro{
+  max-width:720px;
+  margin:16px 0 32px;
+  color:var(--heading-dark);
+  opacity:.78;
+  line-height:1.65;
+}
+
+.location-links-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
+}
+
+.location-links-group{
+  padding:24px;
+  border:1px solid rgba(36,34,26,.12);
+  border-radius:18px;
+  background:rgba(255,255,255,.15);
+}
+
+.location-links-group h3{
+  margin:0 0 18px;
+  color:var(--brand);
+  font-size:17px;
+  line-height:1.4;
+}
+
+.location-links-list{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.location-links-list a{
+  position:relative;
+  color:var(--heading-dark);
+  font-size:14px;
+  font-weight:500;
+  text-decoration:none;
+}
+
+.location-links-list a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-3px;
+  width:100%;
+  height:1px;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .2s ease;
+}
+
+.location-links-list a:hover::after,
+.location-links-list a:focus-visible::after{
+  transform:scaleX(1);
+}
+
+@media (max-width:850px){
+  .location-links-grid{
+    grid-template-columns:1fr;
+  }
+
+  .location-links-card{
+    padding:28px 22px;
+  }
+}
+
 </style>
 <script src="/config.js"></script>
 <script src="/analytics.js"></script>
@@ -1950,7 +2059,7 @@ Laser Tattoo Removal &amp; Carbon Facial Treatments
   Clients also travel from <strong>Reading</strong>, <strong>Goring</strong>, <strong>Woodcote</strong>, <strong>Sonning Common</strong> and <strong>Pangbourne</strong> for professional <strong>Laser Tattoo Removal</strong> and <strong>Carbon Laser Facial</strong> treatments with a VTCT Level 5 Certified practitioner.
 </p>
 <div class="areas-list">
-<a href="/laser-tattoo-removal-henley.html">
+<a href="/laser-tattoo-removal-henley-on-thames.html">
     Laser Tattoo Removal Henley-on-Thames
   </a>
 <a href="/laser-tattoo-removal-wallingford.html">
@@ -2185,6 +2294,58 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
 <!-- FAQ -->
 
 <!-- PRICE LIST -->
+
+
+<section class="location-links-section" aria-labelledby="location-links-title">
+  <div class="wrap">
+    <div class="location-links-card">
+      <p class="location-links-eyebrow">Areas we serve</p>
+      <h2 id="location-links-title">Laser treatments across South Oxfordshire</h2>
+      <p class="location-links-intro">
+        Explore treatment information for Woodcote, Reading, Oxford, Didcot,
+        Wallingford and Henley-on-Thames.
+      </p>
+
+      <div class="location-links-grid">
+        <div class="location-links-group">
+          <h3>Laser Tattoo Removal</h3>
+          <div class="location-links-list">
+            <a href="/laser-tattoo-removal-woodcote.html">Woodcote</a>
+            <a href="/laser-tattoo-removal-reading.html">Reading</a>
+            <a href="/laser-tattoo-removal-oxford.html">Oxford</a>
+            <a href="/laser-tattoo-removal-didcot.html">Didcot</a>
+            <a href="/laser-tattoo-removal-wallingford.html">Wallingford</a>
+            <a href="/laser-tattoo-removal-henley-on-thames.html">Henley-on-Thames</a>
+          </div>
+        </div>
+
+        <div class="location-links-group">
+          <h3>Carbon Laser Facial</h3>
+          <div class="location-links-list">
+            <a href="/carbon-laser-facial-woodcote.html">Woodcote</a>
+            <a href="/carbon-laser-facial-reading.html">Reading</a>
+            <a href="/carbon-laser-facial-oxford.html">Oxford</a>
+            <a href="/carbon-laser-facial-didcot.html">Didcot</a>
+            <a href="/carbon-laser-facial-wallingford.html">Wallingford</a>
+            <a href="/carbon-laser-facial-henley-on-thames.html">Henley-on-Thames</a>
+          </div>
+        </div>
+
+        <div class="location-links-group">
+          <h3>Fungal Nail Laser Treatment</h3>
+          <div class="location-links-list">
+            <a href="/fungal-nail-laser-treatment-woodcote.html">Woodcote</a>
+            <a href="/fungal-nail-laser-treatment-reading.html">Reading</a>
+            <a href="/fungal-nail-laser-treatment-oxford.html">Oxford</a>
+            <a href="/fungal-nail-laser-treatment-didcot.html">Didcot</a>
+            <a href="/fungal-nail-laser-treatment-wallingford.html">Wallingford</a>
+            <a href="/fungal-nail-laser-treatment-henley-on-thames.html">Henley-on-Thames</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 </main>
 <a aria-label="Chat with BARE by Marlese on WhatsApp" class="floating-cta" href="https://wa.me/447404127830?text=Hi%20Marlese%2C%20I%27d%20like%20to%20ask%20about%20a%20treatment." rel="noopener noreferrer" target="_blank">
