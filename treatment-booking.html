@@ -348,9 +348,19 @@ function renderReturningBooking(){
 
   setMinDate();
 
-  document.getElementById("booking-date").addEventListener("change", event => {
-    if(event.target.value) loadAvailableSlots(event.target.value, true);
+  const returningDateInput = document.getElementById("booking-date");
+
+  returningDateInput.addEventListener("change", event => {
+    if(event.target.value) {
+      loadAvailableSlots(event.target.value, true);
+    }
   });
+
+  // Browsers often restore the selected date when returning from Stripe.
+  // Reload the available slots whenever a restored date is already present.
+  if(returningDateInput.value) {
+    loadAvailableSlots(returningDateInput.value, true);
+  }
 }
 
 function renderPaidTattooBooking(){
@@ -405,9 +415,17 @@ function renderPaidTattooBooking(){
 
   setMinDate();
 
-  document.getElementById("booking-date").addEventListener("change", event => {
-    if(event.target.value) loadAvailableSlots(event.target.value, false);
+  const paidDateInput = document.getElementById("booking-date");
+
+  paidDateInput.addEventListener("change", event => {
+    if(event.target.value) {
+      loadAvailableSlots(event.target.value, false);
+    }
   });
+
+  if(paidDateInput.value) {
+    loadAvailableSlots(paidDateInput.value, false);
+  }
 }
 
 async function loadAvailableSlots(date, returning){
@@ -518,7 +536,7 @@ async function startReturningCheckout(){
     return;
   }
 
-  status.textContent = "Reserving your appointment and opening secure payment...";
+  status.textContent = "Opening secure payment...";
   status.className = "";
 
   const button = document.getElementById("confirm-booking-btn");
@@ -553,7 +571,7 @@ async function startReturningCheckout(){
     if(!response.ok){
       const message = await response.text();
       throw new Error(
-        message || "The appointment could not be reserved for payment."
+        message || "Secure payment could not be opened."
       );
     }
 
@@ -653,6 +671,18 @@ async function confirmPaidTattooBooking(){
     status.className = "error";
   }
 }
+
+window.addEventListener("pageshow", () => {
+  // This event also runs when the browser restores this page from its
+  // back-forward cache after the client leaves Stripe Checkout.
+  setTimeout(() => {
+    const dateInput = document.getElementById("booking-date");
+
+    if(dateInput?.value) {
+      loadAvailableSlots(dateInput.value, isReturningClient);
+    }
+  }, 0);
+});
 
 if(isReturningClient){
   renderReturningBooking();
