@@ -4088,13 +4088,7 @@ if (bookingType === "treatment") {
   FROM appointments a
   WHERE a.appointment_date = ?
   AND a.booking_type = 'treatment'
-  AND (
-    a.status = 'confirmed'
-    OR (
-      a.status = 'pending_payment'
-      AND datetime(a.created_at) > datetime('now', '-15 minutes')
-    )
-  )
+  AND a.status IN ('confirmed', 'completed')
   AND NOT EXISTS (
     SELECT 1
     FROM treatment_sessions s
