@@ -422,21 +422,28 @@ async function createReturningTreatmentCheckout(booking, env) {
     "https://barebymarlese.com/payment-complete.html?session_id={CHECKOUT_SESSION_ID}"
   );
   form.set(
-  "cancel_url",
-  "https://barebymarlese.com/payment-cancelled.html?client=existing"
-);
-  form.set("client_reference_id", String(booking.id));
-  form.set("metadata[appointment_id]", String(booking.id));
+    "cancel_url",
+    "https://barebymarlese.com/payment-cancelled.html?client=existing"
+  );
+
   form.set("metadata[payment_purpose]", "returning_treatment_payment");
-  form.set("metadata[treatment_category]", booking.treatment_category);
-  form.set("metadata[package_type]", booking.package_type);
-  form.set("payment_intent_data[metadata][appointment_id]", String(booking.id));
+  form.set("metadata[client_name]", String(booking.client_name || ""));
+  form.set("metadata[email]", String(booking.email || ""));
+  form.set("metadata[phone]", String(booking.phone || ""));
+  form.set("metadata[appointment_date]", String(booking.appointment_date || ""));
+  form.set("metadata[appointment_time]", String(booking.appointment_time || ""));
+  form.set("metadata[treatment_category]", String(booking.treatment_category || ""));
+  form.set("metadata[treatment_name]", String(booking.treatment_name || ""));
+  form.set("metadata[package_type]", String(booking.package_type || ""));
+  form.set("metadata[tattoo_size]", String(booking.tattoo_size || ""));
+  form.set("metadata[sessions_total]", String(booking.sessions_total || 1));
+  form.set("metadata[full_price]", String(booking.full_price || 0));
+
   form.set(
     "payment_intent_data[metadata][payment_purpose]",
     "returning_treatment_payment"
   );
   form.set("allow_promotion_codes", "true");
-  form.set("expires_at", String(Math.floor(Date.now() / 1000) + (15 * 60)));
 
   if (booking.email) {
     form.set("customer_email", booking.email);
@@ -497,153 +504,248 @@ async function applyReturningTreatmentPayment(sessionId, env) {
     throw new Error("This Checkout Session is not a returning-client treatment payment.");
   }
 
-  const bookingId = Number(
-    stripe.metadata?.appointment_id || stripe.client_reference_id
-  );
-
-  if (!Number.isInteger(bookingId) || bookingId <= 0) {
-    throw new Error("Stripe payment is missing its appointment reference.");
-  }
-
-  const booking = await env.DB.prepare(`
+  // Idempotency: never create two appointments for the same Stripe payment.
+  const existingBooking = await env.DB.prepare(`
     SELECT *
     FROM appointments
-    WHERE id = ?
-  `).bind(bookingId).first();
+    WHERE payment_reference = ?
+    LIMIT 1
+  `).bind(stripe.id).first();
 
-  if (!booking) {
-    throw new Error("The reserved treatment appointment was not found.");
-  }
-
-  if (booking.payment_reference === stripe.id && booking.status === "confirmed") {
+  if (existingBooking) {
     return {
       success: true,
       already_applied: true,
-      booking_id: booking.id,
-      client_name: booking.client_name,
-      treatment_name: booking.treatment_name,
-      appointment_date: booking.appointment_date,
-      appointment_time: booking.appointment_time,
-      payment_status: booking.payment_status,
-      amount_paid: Number(booking.amount_paid || 0),
-      remaining_balance: Number(booking.remaining_balance || 0),
-      coupon_code: booking.coupon_code || null,
-      discount_amount: Number(booking.discount_amount || 0),
-      price_before_discount: Number(booking.price_before_discount || booking.full_price || 0)
+      booking_id: existingBooking.id,
+      client_name: existingBooking.client_name,
+      treatment_name: existingBooking.treatment_name,
+      appointment_date: existingBooking.appointment_date,
+      appointment_time: existingBooking.appointment_time,
+      payment_status: existingBooking.payment_status,
+      amount_paid: Number(existingBooking.amount_paid || 0),
+      remaining_balance: Number(existingBooking.remaining_balance || 0),
+      coupon_code: existingBooking.coupon_code || null,
+      discount_amount: Number(existingBooking.discount_amount || 0),
+      price_before_discount: Number(
+        existingBooking.price_before_discount || existingBooking.full_price || 0
+      )
     };
   }
 
-  if (booking.status !== "pending_payment") {
-    throw new Error("This appointment is no longer awaiting payment.");
+  const metadata = stripe.metadata || {};
+  const clientName = String(metadata.client_name || "").trim();
+  const email = String(metadata.email || "").trim();
+  const phone = String(metadata.phone || "").trim();
+  const appointmentDate = String(metadata.appointment_date || "").trim();
+  const appointmentTime = String(metadata.appointment_time || "").trim();
+  const treatmentCategory = String(metadata.treatment_category || "").trim().toLowerCase();
+  const treatmentName = String(metadata.treatment_name || "").trim();
+  const packageType = String(metadata.package_type || "").trim();
+  const tattooSize = String(metadata.tattoo_size || "").trim() || null;
+  const sessionsTotal = Number(metadata.sessions_total || 1);
+  const fullPrice = Number(metadata.full_price || 0);
+
+  if (
+    !clientName ||
+    !email ||
+    !phone ||
+    !appointmentDate ||
+    !appointmentTime ||
+    !treatmentName ||
+    !packageType
+  ) {
+    throw new Error("The Stripe payment is missing required booking details.");
+  }
+
+  if (!["tattoo", "carbon", "fungal"].includes(treatmentCategory)) {
+    throw new Error("The Stripe payment contains an invalid treatment category.");
+  }
+
+  if (!Number.isInteger(sessionsTotal) || sessionsTotal <= 0) {
+    throw new Error("The Stripe payment contains an invalid session total.");
+  }
+
+  if (!Number.isFinite(fullPrice) || fullPrice <= 0) {
+    throw new Error("The Stripe payment contains an invalid treatment price.");
+  }
+
+  const blockedDate = await env.DB.prepare(`
+    SELECT block_date
+    FROM blocked_dates
+    WHERE block_date = ?
+    LIMIT 1
+  `).bind(appointmentDate).first();
+
+  if (blockedDate) {
+    throw new Error("The selected treatment date has since been blocked.");
+  }
+
+  const validSlots = getSlotsByType("treatment", appointmentDate);
+  if (!validSlots.includes(appointmentTime)) {
+    throw new Error("The selected treatment time is no longer valid.");
+  }
+
+  // Read-only clash checks. No existing appointment is updated or deleted.
+  const appointmentClash = await env.DB.prepare(`
+    SELECT id
+    FROM appointments
+    WHERE appointment_date = ?
+      AND appointment_time = ?
+      AND status IN ('confirmed', 'completed')
+    LIMIT 1
+  `).bind(appointmentDate, appointmentTime).first();
+
+  const sessionClash = await env.DB.prepare(`
+    SELECT id
+    FROM treatment_sessions
+    WHERE appointment_date = ?
+      AND appointment_time = ?
+      AND status = 'booked'
+    LIMIT 1
+  `).bind(appointmentDate, appointmentTime).first();
+
+  if (appointmentClash || sessionClash) {
+    await sendErrorAlert(
+      env,
+      "Paid returning-client slot clash",
+      `Stripe payment ${stripe.id} was received for ${clientName}, but ${appointmentDate} at ${appointmentTime} is already occupied. The payment has not been attached to an appointment.`
+    );
+
+    throw new Error(
+      "This appointment time was taken while payment was being completed. The payment has been received, but the client must be moved to another available time."
+    );
   }
 
   const amountPaid = Number(stripe.amount_total || 0) / 100;
   const discountAmount = Number(stripe.total_details?.amount_discount || 0) / 100;
   const couponCode =
-  stripe.discounts?.[0]?.promotion_code?.code ||
-  stripe.discounts?.[0]?.source?.promotion_code?.code ||
-  null;
-  const fullPrice = Number(booking.full_price || 0);
+    stripe.discounts?.[0]?.promotion_code?.code ||
+    stripe.discounts?.[0]?.source?.promotion_code?.code ||
+    null;
   const remainingBalance = Math.max(0, fullPrice - amountPaid - discountAmount);
+  const rescheduleToken = crypto.randomUUID();
 
-  const updated = await env.DB.prepare(`
-    UPDATE appointments
-    SET
-      status = 'confirmed',
-      amount_paid = ?,
-      payment_status = 'paid',
-      payment_type = 'returning_treatment_payment',
-      payment_reference = ?,
-      remaining_balance = ?,
-      coupon_code = ?,
-      discount_amount = ?,
-      price_before_discount = ?,
-      package_status = 'active'
-    WHERE id = ?
-      AND status = 'pending_payment'
+  // Create a new confirmed appointment only after Stripe confirms payment.
+  const insert = await env.DB.prepare(`
+    INSERT INTO appointments
+    (
+      client_name,
+      email,
+      phone,
+      appointment_date,
+      appointment_time,
+      status,
+      reschedule_token,
+      booking_type,
+      package_type,
+      tattoo_size,
+      amount_paid,
+      payment_status,
+      payment_type,
+      sessions_total,
+      sessions_used,
+      package_status,
+      payment_reference,
+      treatment_category,
+      treatment_name,
+      full_price,
+      remaining_balance,
+      coupon_code,
+      discount_amount,
+      price_before_discount,
+      consultation_complete,
+      patch_test_complete
+    )
+    VALUES (
+      ?, ?, ?, ?, ?,
+      'confirmed',
+      ?, 'treatment', ?, ?, ?, 'paid',
+      'returning_treatment_payment',
+      ?, 0, 'active', ?, ?, ?, ?, ?, ?, ?, ?, 0, 0
+    )
   `).bind(
+    clientName,
+    email,
+    phone,
+    appointmentDate,
+    appointmentTime,
+    rescheduleToken,
+    packageType,
+    tattooSize,
     amountPaid,
+    sessionsTotal,
     stripe.id,
+    treatmentCategory,
+    treatmentName,
+    fullPrice,
     remainingBalance,
     couponCode,
     discountAmount,
-    fullPrice,
-    booking.id
+    fullPrice
   ).run();
 
-  if (!updated.meta?.changes) {
-    return applyReturningTreatmentPayment(stripe.id, env);
+  const bookingId = Number(insert.meta?.last_row_id);
+  if (!Number.isInteger(bookingId) || bookingId <= 0) {
+    throw new Error("The paid treatment appointment could not be created.");
   }
 
-  const existingSessions = await env.DB.prepare(`
-    SELECT COUNT(*) AS count
-    FROM treatment_sessions
-    WHERE appointment_id = ?
-  `).bind(booking.id).first();
-
-  if (Number(existingSessions?.count || 0) === 0) {
-    const sessionsTotal = Number(booking.sessions_total || 1);
-
-    for (let i = 1; i <= sessionsTotal; i++) {
-      await env.DB.prepare(`
-        INSERT INTO treatment_sessions
-        (
-          appointment_id,
-          session_number,
-          appointment_date,
-          appointment_time,
-          status,
-          reschedule_token
-        )
-        VALUES (?, ?, ?, ?, ?, ?)
-      `).bind(
-        booking.id,
-        i,
-        i === 1 ? booking.appointment_date : null,
-        i === 1 ? booking.appointment_time : null,
-        i === 1 ? "booked" : "pending",
-        crypto.randomUUID()
-      ).run();
-    }
+  for (let sessionNumber = 1; sessionNumber <= sessionsTotal; sessionNumber++) {
+    await env.DB.prepare(`
+      INSERT INTO treatment_sessions
+      (
+        appointment_id,
+        session_number,
+        appointment_date,
+        appointment_time,
+        status,
+        reschedule_token
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(
+      bookingId,
+      sessionNumber,
+      sessionNumber === 1 ? appointmentDate : null,
+      sessionNumber === 1 ? appointmentTime : null,
+      sessionNumber === 1 ? "booked" : "pending",
+      crypto.randomUUID()
+    ).run();
   }
 
   await sendEmail({
     to: env.TO_EMAIL,
     subject: "Returning Client Treatment Paid & Confirmed",
     html: `
-      <p><strong>Client:</strong> ${escapeHtml(booking.client_name)}</p>
-      <p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>
-      <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
-      <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
+      <p><strong>Client:</strong> ${escapeHtml(clientName)}</p>
+      <p><strong>Treatment:</strong> ${escapeHtml(treatmentName)}</p>
+      <p><strong>Date:</strong> ${escapeHtml(appointmentDate)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(appointmentTime)}</p>
       <p><strong>Paid:</strong> £${amountPaid.toFixed(2)}</p>
       <p><strong>Returning client:</strong> Verify previous consultation and patch test before treatment.</p>
     `
   });
 
-  if (booking.email) {
-    await sendEmail({
-      to: booking.email,
-      subject: "Treatment Appointment Confirmed – BARE by Marlese",
-      html: `
-        <p>Hi ${escapeHtml(booking.client_name || "there")},</p>
-        <p>Your treatment appointment has been confirmed.</p>
-        <p><strong>Treatment:</strong> ${escapeHtml(booking.treatment_name)}</p>
-        <p><strong>Date:</strong> ${escapeHtml(booking.appointment_date)}</p>
-        <p><strong>Time:</strong> ${escapeHtml(booking.appointment_time)}</p>
-        <p>Your previous consultation and patch-test history will be checked before treatment proceeds.</p>
-        <p>Kind regards,<br><strong>Marlese</strong><br>BARE by Marlese</p>
-      `
-    });
-  }
+  await sendEmail({
+    to: email,
+    subject: "Treatment Appointment Confirmed – BARE by Marlese",
+    html: `
+      <p>Hi ${escapeHtml(clientName || "there")},</p>
+      <p>Your treatment appointment has been confirmed.</p>
+      <p><strong>Treatment:</strong> ${escapeHtml(treatmentName)}</p>
+      <p><strong>Date:</strong> ${escapeHtml(appointmentDate)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(appointmentTime)}</p>
+      <p>Your previous consultation and patch-test history will be checked before treatment proceeds.</p>
+      <p>Kind regards,<br><strong>Marlese</strong><br>BARE by Marlese</p>
+    `
+  });
 
   return {
     success: true,
     already_applied: false,
-    booking_id: booking.id,
-    client_name: booking.client_name,
-    treatment_name: booking.treatment_name,
-    appointment_date: booking.appointment_date,
-    appointment_time: booking.appointment_time,
+    booking_id: bookingId,
+    client_name: clientName,
+    treatment_name: treatmentName,
+    appointment_date: appointmentDate,
+    appointment_time: appointmentTime,
     checkout_session_id: stripe.id,
     amount_paid: amountPaid,
     remaining_balance: remainingBalance,
@@ -653,7 +755,6 @@ async function applyReturningTreatmentPayment(sessionId, env) {
     price_before_discount: fullPrice
   };
 }
-
 
 function hexToBytes(hex = "") {
   if (!hex || hex.length % 2 !== 0) return new Uint8Array();
@@ -2109,16 +2210,7 @@ if (
   request.method === "POST" &&
   url.searchParams.get("payment") === "create-returning-treatment-checkout"
 ) {
-  let reservedBookingId = null;
-
-await env.DB.prepare(`
-  DELETE FROM appointments
-  WHERE status = 'pending_payment'
-    AND payment_status = 'unpaid'
-    AND datetime(created_at) <= datetime('now', '-15 minutes')
-`).run();
-
-try {
+  try {
     const body = await request.json();
 
     if (
@@ -2148,8 +2240,8 @@ try {
     const clientName = String(body.client_name || "").trim();
     const email = String(body.email || "").trim();
     const phone = String(body.phone || "").trim();
-    const appointmentDate = String(body.appointment_date || "");
-    const appointmentTime = String(body.appointment_time || "");
+    const appointmentDate = String(body.appointment_date || "").trim();
+    const appointmentTime = String(body.appointment_time || "").trim();
 
     if (!clientName || !email || !phone) {
       return new Response(
@@ -2169,6 +2261,7 @@ try {
       SELECT block_date
       FROM blocked_dates
       WHERE block_date = ?
+      LIMIT 1
     `).bind(appointmentDate).first();
 
     if (blockedDate) {
@@ -2187,118 +2280,55 @@ try {
       );
     }
 
-    const clash = await env.DB.prepare(`
+    // Read-only checks against genuine bookings. No booking is deleted or changed.
+    const appointmentClash = await env.DB.prepare(`
       SELECT id
       FROM appointments
       WHERE appointment_date = ?
         AND appointment_time = ?
-        AND booking_type = 'treatment'
-        AND (
-          status = 'confirmed'
-          OR (
-            status = 'pending_payment'
-            AND datetime(created_at) > datetime('now', '-15 minutes')
-          )
-        )
+        AND status IN ('confirmed', 'completed')
       LIMIT 1
     `).bind(appointmentDate, appointmentTime).first();
 
-    if (clash) {
+    const sessionClash = await env.DB.prepare(`
+      SELECT id
+      FROM treatment_sessions
+      WHERE appointment_date = ?
+        AND appointment_time = ?
+        AND status = 'booked'
+      LIMIT 1
+    `).bind(appointmentDate, appointmentTime).first();
+
+    if (appointmentClash || sessionClash) {
       return new Response("That slot is already taken.", { status: 409 });
     }
 
-    const rescheduleToken = crypto.randomUUID();
-
-    const insert = await env.DB.prepare(`
-      INSERT INTO appointments
-      (
-        client_name,
-        email,
-        phone,
-        appointment_date,
-        appointment_time,
-        status,
-        reschedule_token,
-        booking_type,
-        package_type,
-        tattoo_size,
-        amount_paid,
-        payment_status,
-        payment_type,
-        sessions_total,
-        sessions_used,
-        package_status,
-        payment_reference,
-        treatment_category,
-        treatment_name,
-        full_price,
-        remaining_balance,
-        coupon_code,
-        discount_amount,
-        price_before_discount,
-        consultation_complete,
-        patch_test_complete
-      )
-      VALUES (
-        ?, ?, ?, ?, ?,
-        'pending_payment',
-        ?, 'treatment', ?, ?, 0, 'unpaid',
-        'returning_treatment_payment',
-        ?, 0, 'pending_payment', NULL,
-        ?, ?, ?, ?, NULL, 0, ?, 0, 0
-      )
-    `).bind(
-      clientName,
+    // Temporary in-memory object only: nothing is inserted into D1 before payment.
+    const booking = {
+      client_name: clientName,
       email,
       phone,
-      appointmentDate,
-      appointmentTime,
-      rescheduleToken,
-      definition.packageType,
-      definition.tattooSize,
-      definition.sessionsTotal,
-      definition.category,
-      definition.name,
-      definition.amount,
-      definition.amount,
-      definition.amount
-    ).run();
-
-    reservedBookingId = Number(insert.meta?.last_row_id);
-
-    if (!reservedBookingId) {
-      throw new Error("The appointment could not be reserved.");
-    }
-
-    const booking = await env.DB.prepare(`
-      SELECT *
-      FROM appointments
-      WHERE id = ?
-    `).bind(reservedBookingId).first();
+      appointment_date: appointmentDate,
+      appointment_time: appointmentTime,
+      treatment_category: definition.category,
+      treatment_name: definition.name,
+      package_type: definition.packageType,
+      tattoo_size: definition.tattooSize,
+      sessions_total: definition.sessionsTotal,
+      full_price: definition.amount
+    };
 
     const checkout = await createReturningTreatmentCheckout(booking, env);
 
     return new Response(JSON.stringify({
       success: true,
-      booking_id: reservedBookingId,
       checkout_session_id: checkout.id,
-      checkout_url: checkout.url,
-      reservation_expires_in_minutes: 15
+      checkout_url: checkout.url
     }), {
       status: 200,
       headers: jsonHeaders
     });
   } catch (error) {
-    if (reservedBookingId) {
-      try {
-        await env.DB.prepare(`
-          DELETE FROM appointments
-          WHERE id = ?
-            AND status = 'pending_payment'
-        `).bind(reservedBookingId).run();
-      } catch {}
-    }
-
     await sendErrorAlert(
       env,
       "Create returning treatment Checkout error",
@@ -2457,23 +2487,7 @@ if (
       }
     }
 
-    if (event.type === "checkout.session.expired") {
-      const session = event.data?.object;
-
-      if (session?.metadata?.payment_purpose === "returning_treatment_payment") {
-        const bookingId = Number(
-          session.metadata?.appointment_id || session.client_reference_id
-        );
-
-        if (Number.isInteger(bookingId) && bookingId > 0) {
-          await env.DB.prepare(`
-            DELETE FROM appointments
-            WHERE id = ?
-              AND status = 'pending_payment'
-          `).bind(bookingId).run();
-        }
-      }
-    }
+    
 
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
