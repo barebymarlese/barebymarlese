@@ -58,6 +58,168 @@ export async function onRequest(context) {
     return hoursUntilAppointment < 24;
   }
 
+  function timeToMinutes(time = "") {
+    const [hour, minute] = String(time).split(":").map(Number);
+    if (!Number.isInteger(hour) || !Number.isInteger(minute)) return null;
+    return (hour * 60) + minute;
+  }
+
+  function bookingDurationMinutes(bookingType = "consultation") {
+    return bookingType === "treatment" ? 60 : 30;
+  }
+
+  function appointmentTimesOverlap(
+    firstTime,
+    firstType,
+    secondTime,
+    secondType
+  ) {
+    const firstStart = timeToMinutes(firstTime);
+    const secondStart = timeToMinutes(secondTime);
+
+    if (firstStart === null || secondStart === null) return false;
+
+    const firstEnd =
+      firstStart + bookingDurationMinutes(firstType);
+    const secondEnd =
+      secondStart + bookingDurationMinutes(secondType);
+
+    return firstStart < secondEnd && secondStart < firstEnd;
+  }
+
+  async function getOccupiedClinicTimes(
+    date,
+    env,
+    excludeAppointmentId = null
+  ) {
+    const appointmentQuery = excludeAppointmentId
+      ? `
+        SELECT id, appointment_time, booking_type
+        FROM appointments
+        WHERE appointment_date = ?
+          AND status IN ('confirmed', 'completed')
+          AND id != ?
+      `
+      : `
+        SELECT id, appointment_time, booking_type
+        FROM appointments
+        WHERE appointment_date = ?
+          AND status IN ('confirmed', 'completed')
+      `;
+
+    const appointments = excludeAppointmentId
+      ? await env.DB.prepare(appointmentQuery)
+          .bind(date, excludeAppointmentId)
+          .all()
+      : await env.DB.prepare(appointmentQuery)
+          .bind(date)
+          .all();
+
+    const sessionQuery = excludeAppointmentId
+      ? `
+        SELECT id, appointment_id, appointment_time
+        FROM treatment_sessions
+        WHERE appointment_date = ?
+          AND status = 'booked'
+          AND appointment_id != ?
+      `
+      : `
+        SELECT id, appointment_id, appointment_time
+        FROM treatment_sessions
+        WHERE appointment_date = ?
+          AND status = 'booked'
+      `;
+
+    const sessions = excludeAppointmentId
+      ? await env.DB.prepare(sessionQuery)
+          .bind(date, excludeAppointmentId)
+          .all()
+      : await env.DB.prepare(sessionQuery)
+          .bind(date)
+          .all();
+
+    const occupied = [];
+
+    for (const appointment of appointments.results || []) {
+      // Treatment appointments that already have a treatment_sessions row
+      // are represented by that row below, so do not count them twice.
+      if (
+        appointment.booking_type === "treatment" &&
+        (sessions.results || []).some(
+          session =>
+            Number(session.appointment_id) === Number(appointment.id)
+        )
+      ) {
+        continue;
+      }
+
+      occupied.push({
+        time: appointment.appointment_time,
+        type:
+          appointment.booking_type === "treatment"
+            ? "treatment"
+            : "consultation"
+      });
+    }
+
+    for (const session of sessions.results || []) {
+      occupied.push({
+        time: session.appointment_time,
+        type: "treatment"
+      });
+    }
+
+    return occupied;
+  }
+
+  async function isClinicSlotOccupied(
+    date,
+    time,
+    bookingType,
+    env,
+    excludeAppointmentId = null
+  ) {
+    const occupied = await getOccupiedClinicTimes(
+      date,
+      env,
+      excludeAppointmentId
+    );
+
+    return occupied.some(item =>
+      appointmentTimesOverlap(
+        time,
+        bookingType,
+        item.time,
+        item.type
+      )
+    );
+  }
+
+  function getStripeDiscountDetails(stripe = {}) {
+    const discountAmount =
+      Number(stripe.total_details?.amount_discount || 0) / 100;
+
+    const candidates = [
+      stripe.discounts?.[0]?.promotion_code?.code,
+      stripe.discounts?.[0]?.source?.promotion_code?.code,
+      stripe.total_details?.breakdown?.discounts?.[0]
+        ?.discount?.promotion_code?.code,
+      stripe.discounts?.[0]?.coupon?.name,
+      stripe.total_details?.breakdown?.discounts?.[0]
+        ?.discount?.coupon?.name
+    ];
+
+    const couponCode =
+      candidates
+        .map(value => String(value || "").trim())
+        .find(Boolean) || null;
+
+    return {
+      discountAmount,
+      couponCode
+    };
+  }
+
   async function sendEmail({ to, subject, html }) {
     if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return;
 
@@ -674,26 +836,15 @@ async function applyReturningTreatmentPayment(sessionId, env) {
     throw new Error("The selected treatment time is no longer valid.");
   }
 
-  // Read-only clash checks. No existing appointment is updated or deleted.
-  const appointmentClash = await env.DB.prepare(`
-    SELECT id
-    FROM appointments
-    WHERE appointment_date = ?
-      AND appointment_time = ?
-      AND status IN ('confirmed', 'completed')
-    LIMIT 1
-  `).bind(appointmentDate, appointmentTime).first();
+  // Read-only duration-aware clash check. No existing record is changed.
+  const slotOccupied = await isClinicSlotOccupied(
+    appointmentDate,
+    appointmentTime,
+    "treatment",
+    env
+  );
 
-  const sessionClash = await env.DB.prepare(`
-    SELECT id
-    FROM treatment_sessions
-    WHERE appointment_date = ?
-      AND appointment_time = ?
-      AND status = 'booked'
-    LIMIT 1
-  `).bind(appointmentDate, appointmentTime).first();
-
-  if (appointmentClash || sessionClash) {
+  if (slotOccupied) {
     await sendErrorAlert(
       env,
       "Paid returning-client slot clash",
@@ -706,11 +857,10 @@ async function applyReturningTreatmentPayment(sessionId, env) {
   }
 
   const amountPaid = Number(stripe.amount_total || 0) / 100;
-  const discountAmount = Number(stripe.total_details?.amount_discount || 0) / 100;
-  const couponCode =
-    stripe.discounts?.[0]?.promotion_code?.code ||
-    stripe.discounts?.[0]?.source?.promotion_code?.code ||
-    null;
+  const {
+    discountAmount,
+    couponCode
+  } = getStripeDiscountDetails(stripe);
   const remainingBalance = Math.max(0, fullPrice - amountPaid - discountAmount);
   const rescheduleToken = crypto.randomUUID();
 
@@ -981,9 +1131,10 @@ async function applyStripeBalancePayment(sessionId, env) {
   }
 
   const balanceCashPaid = Number(stripe.amount_total || 0) / 100;
-  const balanceDiscount = Number(stripe.total_details?.amount_discount || 0) / 100;
-  const balanceCoupon =
-    stripe.total_details?.breakdown?.discounts?.[0]?.discount?.promotion_code?.code || null;
+  const {
+    discountAmount: balanceDiscount,
+    couponCode: balanceCoupon
+  } = getStripeDiscountDetails(stripe);
 
   const fullPrice = Number(booking.full_price || 0);
   const existingPaid = Number(booking.amount_paid || 0);
@@ -2370,26 +2521,15 @@ if (
       );
     }
 
-    // Read-only checks against genuine bookings. No booking is deleted or changed.
-    const appointmentClash = await env.DB.prepare(`
-      SELECT id
-      FROM appointments
-      WHERE appointment_date = ?
-        AND appointment_time = ?
-        AND status IN ('confirmed', 'completed')
-      LIMIT 1
-    `).bind(appointmentDate, appointmentTime).first();
+    // Duration-aware check against all genuine clinic bookings.
+    const slotOccupied = await isClinicSlotOccupied(
+      appointmentDate,
+      appointmentTime,
+      "treatment",
+      env
+    );
 
-    const sessionClash = await env.DB.prepare(`
-      SELECT id
-      FROM treatment_sessions
-      WHERE appointment_date = ?
-        AND appointment_time = ?
-        AND status = 'booked'
-      LIMIT 1
-    `).bind(appointmentDate, appointmentTime).first();
-
-    if (appointmentClash || sessionClash) {
+    if (slotOccupied) {
       return new Response("That slot is already taken.", { status: 409 });
     }
 
@@ -3087,8 +3227,19 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     return new Response("Missing or invalid booking ID", { status: 400 });
   }
 
+  if (!Number.isFinite(amountPaid) || amountPaid < 0) {
+    return new Response("Invalid payment amount", { status: 400 });
+  }
+
   const booking = await env.DB.prepare(`
-    SELECT id, booking_type, full_price, amount_paid, remaining_balance
+    SELECT
+      id,
+      booking_type,
+      treatment_category,
+      full_price,
+      amount_paid,
+      remaining_balance,
+      discount_amount
     FROM appointments
     WHERE id = ?
   `).bind(id).first();
@@ -3097,45 +3248,79 @@ if (request.method === "POST" && url.searchParams.get("admin") === "mark-paid") 
     return new Response("Booking not found", { status: 404 });
   }
 
-  const category = String(booking.treatment_category || "").toLowerCase();
+  const category = String(
+    booking.treatment_category || ""
+  ).toLowerCase();
 
-if (
-  !["consultation", "treatment"].includes(booking.booking_type) ||
-  !["tattoo", "carbon", "fungal"].includes(category)
-) {
-  return new Response(
-    "Manual balance payment is only available for treatment packages.",
-    { status: 409 }
-  );
-}
+  if (
+    !["consultation", "treatment"].includes(booking.booking_type) ||
+    !["tattoo", "carbon", "fungal"].includes(category)
+  ) {
+    return new Response(
+      "Manual balance payment is only available for treatment packages.",
+      { status: 409 }
+    );
+  }
 
   const currentPaid = Number(booking.amount_paid || 0);
   const fullPrice = Number(booking.full_price || 0);
-  const outstanding = Number(booking.remaining_balance || 0);
-  const paymentToAdd = amountPaid > 0 ? amountPaid : outstanding;
-  const newAmountPaid = fullPrice > 0
-    ? Math.min(fullPrice, currentPaid + Math.max(0, paymentToAdd))
-    : currentPaid + Math.max(0, paymentToAdd);
+  const discountAmount = Number(booking.discount_amount || 0);
+  const calculatedOutstanding = Math.max(
+    0,
+    fullPrice - currentPaid - discountAmount
+  );
+  const storedOutstanding = Number(booking.remaining_balance || 0);
+  const outstanding =
+    Number.isFinite(storedOutstanding) && storedOutstanding >= 0
+      ? Math.min(calculatedOutstanding, storedOutstanding)
+      : calculatedOutstanding;
+
+  const paymentToAdd =
+    amountPaid > 0
+      ? Math.min(amountPaid, outstanding)
+      : outstanding;
+
+  const newAmountPaid =
+    currentPaid + Math.max(0, paymentToAdd);
+
+  const newRemainingBalance = Math.max(
+    0,
+    fullPrice - newAmountPaid - discountAmount
+  );
+
+  const newPaymentStatus =
+    newRemainingBalance <= 0.005
+      ? "paid"
+      : newAmountPaid > 0
+        ? "deposit_paid"
+        : "unpaid";
 
   await env.DB.prepare(`
-  UPDATE appointments
-  SET payment_status = 'paid',
+    UPDATE appointments
+    SET
+      payment_status = ?,
       amount_paid = ?,
-      remaining_balance = 0
-  WHERE id = ?
-    AND booking_type IN ('consultation', 'treatment')
-`).bind(newAmountPaid, id).run();
+      remaining_balance = ?
+    WHERE id = ?
+      AND booking_type IN ('consultation', 'treatment')
+  `).bind(
+    newPaymentStatus,
+    newAmountPaid,
+    newRemainingBalance,
+    id
+  ).run();
 
   return new Response(JSON.stringify({
     success: true,
     amount_paid: newAmountPaid,
-    remaining_balance: 0,
-    payment_status: "paid"
+    discount_amount: discountAmount,
+    remaining_balance: newRemainingBalance,
+    payment_status: newPaymentStatus
   }), {
     headers: jsonHeaders
   });
 }
-  
+
   if (request.method === "GET" && url.searchParams.get("reschedule") === "booking") {
     const id = url.searchParams.get("id");
     const token = url.searchParams.get("token");
@@ -3240,14 +3425,13 @@ const validSlots = getSlotsByType(bookingType, appointment_date);
       return new Response("This appointment time has already passed", { status: 400 });
     }
 
-    const clash = await env.DB.prepare(
-      `SELECT id FROM appointments
-       WHERE appointment_date = ?
-       AND appointment_time = ?
-       AND booking_type = ?
-       AND status = 'confirmed'
-       AND id != ?`
-    ).bind(appointment_date, appointment_time, bookingType, id).first();
+    const clash = await isClinicSlotOccupied(
+      appointment_date,
+      appointment_time,
+      bookingType,
+      env,
+      Number(id)
+    );
 
     if (clash) {
       return new Response("That slot is already taken", { status: 409 });
@@ -4171,44 +4355,25 @@ if (blockedDate) {
 
 const allSlots = getSlotsByType(bookingType, date);
 
-    let bookedTimes = [];
-
-if (bookingType === "treatment") {
-  const booked = await env.DB.prepare(`
-  SELECT a.appointment_time
-  FROM appointments a
-  WHERE a.appointment_date = ?
-  AND a.booking_type = 'treatment'
-  AND a.status IN ('confirmed', 'completed')
-  AND NOT EXISTS (
-    SELECT 1
-    FROM treatment_sessions s
-    WHERE s.appointment_id = a.id
-  )
-
-  UNION
-
-  SELECT appointment_time
-  FROM treatment_sessions
-  WHERE appointment_date = ?
-  AND status = 'booked'
-`).bind(date, date).all();
-
-  bookedTimes = booked.results.map(row => row.appointment_time);
-} else {
-  const booked = await env.DB.prepare(`
-    SELECT appointment_time
-    FROM appointments
-    WHERE appointment_date = ?
-    AND booking_type = ?
-    AND status = 'confirmed'
-  `).bind(date, bookingType).all();
-
-  bookedTimes = booked.results.map(row => row.appointment_time);
-}
+    const occupiedClinicTimes = await getOccupiedClinicTimes(
+      date,
+      env
+    );
 
     const availableSlots = allSlots.filter(slot => {
-      return !bookedTimes.includes(slot) && !isPastSlot(date, slot);
+      const overlapsExistingBooking = occupiedClinicTimes.some(item =>
+        appointmentTimesOverlap(
+          slot,
+          bookingType,
+          item.time,
+          item.type
+        )
+      );
+
+      return (
+        !overlapsExistingBooking &&
+        !isPastSlot(date, slot)
+      );
     });
 
     const nextAvailable = availableSlots.length ? availableSlots[0] : null;
@@ -4497,6 +4662,17 @@ if (blockedDate) {
 
     if (isPastSlot(appointmentDate, appointmentTime)) {
       return new Response("This appointment time has already passed", { status: 400 });
+    }
+
+    const slotOccupied = await isClinicSlotOccupied(
+      appointmentDate,
+      appointmentTime,
+      bookingType,
+      env
+    );
+
+    if (slotOccupied) {
+      return new Response("Slot already taken", { status: 409 });
     }
 
     try {
@@ -4838,8 +5014,27 @@ ${bookingType === "treatment"
       });
 
     } catch (e) {
-      await sendErrorAlert(env, "New booking error", e.stack || e.message || e);
-      return new Response("Slot already taken", { status: 409 });
+      await sendErrorAlert(
+        env,
+        "New booking error",
+        e.stack || e.message || e
+      );
+
+      const errorMessage = String(
+        e?.message || e || ""
+      ).toLowerCase();
+
+      const isSlotConflict =
+        errorMessage.includes("unique constraint failed") ||
+        errorMessage.includes("constraint failed") ||
+        errorMessage.includes("slot already taken");
+
+      return new Response(
+        isSlotConflict
+          ? "Slot already taken"
+          : "The booking could not be completed. Please try again.",
+        { status: isSlotConflict ? 409 : 500 }
+      );
     }
   }
 
