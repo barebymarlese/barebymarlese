@@ -2861,6 +2861,391 @@ if (
   }
 }
 
+
+
+/* =========================================================
+   SYSTEM HEALTH & RECONCILIATION
+   Admin routes:
+   GET  ?admin=system-health
+   POST ?admin=resolve-system-issue
+   POST ?admin=reopen-system-issue
+   ========================================================= */
+
+if (
+  request.method === "GET" &&
+  url.searchParams.get("admin") === "system-health"
+) {
+  try {
+    const liveIssues = [];
+
+    function addRows(rows, definition) {
+      for (const row of rows.results || []) {
+        liveIssues.push({
+          issue_type: definition.issue_type,
+          category: definition.category,
+          severity: definition.severity,
+          title: definition.title,
+          appointment_id: row.appointment_id ?? row.id ?? null,
+          treatment_session_id: row.treatment_session_id ?? null,
+          client_name: row.client_name || null,
+          payment_reference: row.payment_reference || row.balance_payment_reference || null,
+          details: definition.details(row)
+        });
+      }
+    }
+
+    const paidWithBalance = await env.DB.prepare(`
+      SELECT id, client_name, full_price, amount_paid, discount_amount,
+             remaining_balance, payment_status, payment_reference,
+             balance_payment_reference
+      FROM appointments
+      WHERE status != 'cancelled'
+        AND payment_status = 'paid'
+        AND COALESCE(remaining_balance, 0) > 0.01
+    `).all();
+
+    addRows(paidWithBalance, {
+      issue_type: "paid_with_balance",
+      category: "payment",
+      severity: "error",
+      title: "Paid booking still has a balance",
+      details: row =>
+        `Booking is marked paid but £${Number(row.remaining_balance || 0).toFixed(2)} remains outstanding.`
+    });
+
+    const paymentMathMismatch = await env.DB.prepare(`
+      SELECT id, client_name, full_price, amount_paid, discount_amount,
+             remaining_balance, payment_status, payment_reference,
+             balance_payment_reference
+      FROM appointments
+      WHERE status != 'cancelled'
+        AND COALESCE(full_price, 0) > 0
+        AND ABS(
+          COALESCE(amount_paid, 0) +
+          COALESCE(discount_amount, 0) +
+          COALESCE(remaining_balance, 0) -
+          COALESCE(full_price, 0)
+        ) > 0.01
+    `).all();
+
+    addRows(paymentMathMismatch, {
+      issue_type: "payment_math_mismatch",
+      category: "payment",
+      severity: "error",
+      title: "Payment totals do not reconcile",
+      details: row => {
+        const total = Number(row.amount_paid || 0) +
+          Number(row.discount_amount || 0) +
+          Number(row.remaining_balance || 0);
+        return `Paid + discount + remaining equals £${total.toFixed(2)}, but full price is £${Number(row.full_price || 0).toFixed(2)}.`;
+      }
+    });
+
+    const zeroBalanceNotPaid = await env.DB.prepare(`
+      SELECT id, client_name, full_price, amount_paid, discount_amount,
+             remaining_balance, payment_status, payment_reference,
+             balance_payment_reference
+      FROM appointments
+      WHERE status != 'cancelled'
+        AND COALESCE(full_price, 0) > 0
+        AND COALESCE(remaining_balance, 0) <= 0.01
+        AND COALESCE(payment_status, '') NOT IN ('paid', 'refunded')
+    `).all();
+
+    addRows(zeroBalanceNotPaid, {
+      issue_type: "zero_balance_not_paid",
+      category: "payment",
+      severity: "warning",
+      title: "Zero balance but payment status is not paid",
+      details: row => `Remaining balance is £0.00 but status is ${row.payment_status || 'blank'}.`
+    });
+
+    const paidWithoutReference = await env.DB.prepare(`
+      SELECT id, client_name, payment_status, payment_type,
+             payment_reference, balance_payment_reference
+      FROM appointments
+      WHERE status != 'cancelled'
+        AND payment_status = 'paid'
+        AND COALESCE(payment_type, '') NOT IN ('manual', 'cash', 'bank_transfer')
+        AND COALESCE(payment_reference, '') = ''
+        AND COALESCE(balance_payment_reference, '') = ''
+    `).all();
+
+    addRows(paidWithoutReference, {
+      issue_type: "paid_without_reference",
+      category: "payment",
+      severity: "warning",
+      title: "Paid booking has no payment reference",
+      details: row => `Payment status is paid, but no Stripe or manual payment reference is stored.`
+    });
+
+    const duplicatePaymentReferences = await env.DB.prepare(`
+      SELECT MIN(id) AS id,
+             GROUP_CONCAT(id) AS appointment_ids,
+             payment_reference,
+             COUNT(*) AS duplicate_count
+      FROM appointments
+      WHERE COALESCE(payment_reference, '') != ''
+      GROUP BY payment_reference
+      HAVING COUNT(*) > 1
+    `).all();
+
+    addRows(duplicatePaymentReferences, {
+      issue_type: "duplicate_payment_reference",
+      category: "payment",
+      severity: "error",
+      title: "Duplicate payment reference",
+      details: row => `Reference ${row.payment_reference} is used by appointment IDs ${row.appointment_ids}.`
+    });
+
+    const duplicateBalanceReferences = await env.DB.prepare(`
+      SELECT MIN(id) AS id,
+             GROUP_CONCAT(id) AS appointment_ids,
+             balance_payment_reference,
+             COUNT(*) AS duplicate_count
+      FROM appointments
+      WHERE COALESCE(balance_payment_reference, '') != ''
+      GROUP BY balance_payment_reference
+      HAVING COUNT(*) > 1
+    `).all();
+
+    addRows(duplicateBalanceReferences, {
+      issue_type: "duplicate_balance_reference",
+      category: "payment",
+      severity: "error",
+      title: "Duplicate balance payment reference",
+      details: row => `Reference ${row.balance_payment_reference} is used by appointment IDs ${row.appointment_ids}.`
+    });
+
+    const sessionCountMismatch = await env.DB.prepare(`
+      SELECT
+        a.id,
+        a.client_name,
+        a.sessions_total,
+        a.sessions_used,
+        a.package_status,
+        COUNT(ts.id) AS actual_sessions
+      FROM appointments a
+      LEFT JOIN treatment_sessions ts
+        ON ts.appointment_id = a.id
+      WHERE COALESCE(a.sessions_total, 0) > 0
+        AND (
+          a.booking_type = 'treatment' OR
+          a.package_status IN ('active', 'completed')
+        )
+        AND a.status != 'cancelled'
+      GROUP BY a.id
+      HAVING COUNT(ts.id) != COALESCE(a.sessions_total, 0)
+    `).all();
+
+    addRows(sessionCountMismatch, {
+      issue_type: "session_count_mismatch",
+      category: "session",
+      severity: "error",
+      title: "Package session count mismatch",
+      details: row => `Package expects ${Number(row.sessions_total || 0)} sessions but has ${Number(row.actual_sessions || 0)} session rows.`
+    });
+
+    const excessiveSessionsUsed = await env.DB.prepare(`
+      SELECT id, client_name, sessions_total, sessions_used, package_status
+      FROM appointments
+      WHERE COALESCE(sessions_used, 0) > COALESCE(sessions_total, 0)
+    `).all();
+
+    addRows(excessiveSessionsUsed, {
+      issue_type: "sessions_used_exceeds_total",
+      category: "session",
+      severity: "error",
+      title: "Sessions used exceeds package total",
+      details: row => `${Number(row.sessions_used || 0)} sessions are marked used from a ${Number(row.sessions_total || 0)}-session package.`
+    });
+
+    const completedPackageMismatch = await env.DB.prepare(`
+      SELECT id, client_name, sessions_total, sessions_used, package_status
+      FROM appointments
+      WHERE package_status = 'completed'
+        AND COALESCE(sessions_used, 0) < COALESCE(sessions_total, 0)
+    `).all();
+
+    addRows(completedPackageMismatch, {
+      issue_type: "completed_package_incomplete",
+      category: "session",
+      severity: "warning",
+      title: "Package completed before all sessions were used",
+      details: row => `Package is completed with ${Number(row.sessions_used || 0)} of ${Number(row.sessions_total || 0)} sessions used.`
+    });
+
+    const orphanedSessions = await env.DB.prepare(`
+      SELECT ts.id AS treatment_session_id,
+             ts.appointment_id,
+             ts.session_number,
+             ts.status
+      FROM treatment_sessions ts
+      LEFT JOIN appointments a
+        ON a.id = ts.appointment_id
+      WHERE a.id IS NULL
+    `).all();
+
+    addRows(orphanedSessions, {
+      issue_type: "orphaned_session",
+      category: "session",
+      severity: "error",
+      title: "Treatment session has no parent booking",
+      details: row => `Treatment session ${row.treatment_session_id} points to missing appointment ${row.appointment_id}.`
+    });
+
+    const completedWithoutAftercare = await env.DB.prepare(`
+      SELECT ts.id AS treatment_session_id,
+             ts.appointment_id,
+             ts.session_number,
+             ts.aftercare_sent,
+             a.client_name
+      FROM treatment_sessions ts
+      JOIN appointments a
+        ON a.id = ts.appointment_id
+      WHERE ts.status = 'completed'
+        AND COALESCE(ts.aftercare_sent, 'no') != 'yes'
+    `).all();
+
+    addRows(completedWithoutAftercare, {
+      issue_type: "aftercare_pending",
+      category: "email",
+      severity: "warning",
+      title: "Completed session is awaiting aftercare",
+      details: row => `Session ${Number(row.session_number || 0)} is completed but aftercare_sent is not yes.`
+    });
+
+    let storedIssues = { results: [] };
+    try {
+      storedIssues = await env.DB.prepare(`
+        SELECT
+          si.*,
+          a.client_name
+        FROM system_issues si
+        LEFT JOIN appointments a
+          ON a.id = si.appointment_id
+        ORDER BY
+          CASE si.status WHEN 'open' THEN 0 ELSE 1 END,
+          si.detected_at DESC,
+          si.id DESC
+        LIMIT 250
+      `).all();
+    } catch (error) {
+      if (!String(error?.message || error).includes("no such table")) {
+        throw error;
+      }
+    }
+
+    const summary = {
+      payment: liveIssues.filter(issue => issue.category === "payment").length,
+      session: liveIssues.filter(issue => issue.category === "session").length,
+      email: liveIssues.filter(issue => issue.category === "email").length,
+      open_runtime: (storedIssues.results || []).filter(issue => issue.status === "open").length,
+      resolved_runtime: (storedIssues.results || []).filter(issue => issue.status === "resolved").length,
+      total_open:
+        liveIssues.length +
+        (storedIssues.results || []).filter(issue => issue.status === "open").length
+    };
+
+    return new Response(JSON.stringify({
+      success: true,
+      generated_at: new Date().toISOString(),
+      summary,
+      live_issues: liveIssues,
+      stored_issues: storedIssues.results || []
+    }), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    await sendErrorAlert(
+      env,
+      "System health dashboard error",
+      error.stack || error.message || error,
+      { source: "system_health" }
+    );
+
+    return new Response(JSON.stringify({
+      success: false,
+      message: error.message || "System health could not be loaded."
+    }), {
+      status: 500,
+      headers: jsonHeaders
+    });
+  }
+}
+
+if (
+  request.method === "POST" &&
+  url.searchParams.get("admin") === "resolve-system-issue"
+) {
+  try {
+    const body = await request.json();
+    const id = Number(body.id);
+    const notes = String(body.resolution_notes || "").trim();
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return new Response("Invalid issue ID", { status: 400 });
+    }
+
+    const result = await env.DB.prepare(`
+      UPDATE system_issues
+      SET status = 'resolved',
+          resolved_at = CURRENT_TIMESTAMP,
+          resolution_notes = ?
+      WHERE id = ?
+    `).bind(notes || null, id).run();
+
+    if (!result.meta?.changes) {
+      return new Response("Issue not found", { status: 404 });
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    return new Response(error.message || "Issue could not be resolved", {
+      status: 500
+    });
+  }
+}
+
+if (
+  request.method === "POST" &&
+  url.searchParams.get("admin") === "reopen-system-issue"
+) {
+  try {
+    const body = await request.json();
+    const id = Number(body.id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+      return new Response("Invalid issue ID", { status: 400 });
+    }
+
+    const result = await env.DB.prepare(`
+      UPDATE system_issues
+      SET status = 'open',
+          resolved_at = NULL,
+          resolution_notes = NULL
+      WHERE id = ?
+    `).bind(id).run();
+
+    if (!result.meta?.changes) {
+      return new Response("Issue not found", { status: 404 });
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    return new Response(error.message || "Issue could not be reopened", {
+      status: 500
+    });
+  }
+}
+
 if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
 
   const bookings = await env.DB.prepare(`
@@ -5174,11 +5559,105 @@ ${bookingType === "treatment"
 
   return new Response("Method not allowed", { status: 405 });
 }
-async function sendErrorAlert(env, title, details) {
+async function recordSystemIssue(
+  env,
+  {
+    issue_type = "runtime_error",
+    severity = "error",
+    source = "api",
+    appointment_id = null,
+    treatment_session_id = null,
+    payment_reference = null,
+    title,
+    details
+  }
+) {
   try {
+    if (!env.DB || !title) return;
+
+    const detailText = String(details || "").slice(0, 12000);
+
+    const existing = await env.DB.prepare(`
+      SELECT id
+      FROM system_issues
+      WHERE status = 'open'
+        AND issue_type = ?
+        AND title = ?
+        AND COALESCE(details, '') = ?
+      LIMIT 1
+    `).bind(
+      String(issue_type || "runtime_error"),
+      String(title),
+      detailText
+    ).first();
+
+    if (existing) {
+      await env.DB.prepare(`
+        UPDATE system_issues
+        SET detected_at = CURRENT_TIMESTAMP,
+            severity = ?,
+            source = ?,
+            appointment_id = COALESCE(?, appointment_id),
+            treatment_session_id = COALESCE(?, treatment_session_id),
+            payment_reference = COALESCE(?, payment_reference)
+        WHERE id = ?
+      `).bind(
+        String(severity || "error"),
+        String(source || "api"),
+        appointment_id,
+        treatment_session_id,
+        payment_reference,
+        existing.id
+      ).run();
+      return;
+    }
+
+    await env.DB.prepare(`
+      INSERT INTO system_issues
+      (
+        issue_type,
+        severity,
+        source,
+        appointment_id,
+        treatment_session_id,
+        payment_reference,
+        title,
+        details,
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open')
+    `).bind(
+      String(issue_type || "runtime_error"),
+      String(severity || "error"),
+      String(source || "api"),
+      appointment_id,
+      treatment_session_id,
+      payment_reference,
+      String(title),
+      detailText
+    ).run();
+  } catch (error) {
+    // The dashboard table may not exist yet. Never allow issue logging
+    // to interrupt a booking, payment or other primary operation.
+  }
+}
+
+async function sendErrorAlert(env, title, details, context = {}) {
+  try {
+    await recordSystemIssue(env, {
+      issue_type: context.issue_type || "runtime_error",
+      severity: context.severity || "error",
+      source: context.source || "api",
+      appointment_id: context.appointment_id || null,
+      treatment_session_id: context.treatment_session_id || null,
+      payment_reference: context.payment_reference || null,
+      title,
+      details
+    });
+
     if (!env.RESEND_API_KEY || !env.FROM_EMAIL || !env.TO_EMAIL) return;
 
-    await fetch("https://api.resend.com/emails", {
+    const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${env.RESEND_API_KEY}`,
@@ -5197,6 +5676,16 @@ async function sendErrorAlert(env, title, details) {
         `
       })
     });
+
+    if (!response.ok) {
+      await recordSystemIssue(env, {
+        issue_type: "alert_email_failure",
+        severity: "warning",
+        source: "api_email",
+        title: "System alert email failed",
+        details: `Alert '${title}' could not be sent. Resend returned ${response.status}: ${await response.text()}`
+      });
+    }
   } catch (e) {
     // fail silently to avoid alert loops
   }
