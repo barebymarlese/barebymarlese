@@ -284,8 +284,26 @@ export async function onRequest(context) {
 }
 
   async function sendEmail({ to, subject, html }) {
+  const recipient = String(to || "").trim();
+  const emailSubject = String(subject || "").trim();
+
   if (!env.RESEND_API_KEY || !env.FROM_EMAIL) {
-    return;
+    const details =
+      `Recipient: ${recipient || "Not provided"}\n` +
+      `Subject: ${emailSubject || "Not provided"}\n` +
+      "RESEND_API_KEY or FROM_EMAIL is not configured.";
+
+    await recordSystemIssue(env, {
+      issue_type: "api_email_failure",
+      severity: "error",
+      source: "api_email",
+      title: "API email configuration missing",
+      details
+    });
+
+    throw new Error(
+      "Email could not be sent because the Resend configuration is missing."
+    );
   }
 
   const response = await fetch(
@@ -298,9 +316,9 @@ export async function onRequest(context) {
       },
       body: JSON.stringify({
         from: env.FROM_EMAIL,
-        to,
+        to: recipient,
         reply_to: env.REPLY_TO_EMAIL || env.TO_EMAIL,
-        subject,
+        subject: emailSubject,
         html
       })
     }
@@ -308,6 +326,20 @@ export async function onRequest(context) {
 
   if (!response.ok) {
     const errorText = await response.text();
+
+    const details =
+      `Recipient: ${recipient || "Not provided"}\n` +
+      `Subject: ${emailSubject || "Not provided"}\n` +
+      `Resend status: ${response.status}\n\n` +
+      errorText;
+
+    await recordSystemIssue(env, {
+      issue_type: "api_email_failure",
+      severity: "error",
+      source: "api_email",
+      title: "API email failed",
+      details
+    });
 
     throw new Error(
       `Resend failed (${response.status}): ${errorText}`
