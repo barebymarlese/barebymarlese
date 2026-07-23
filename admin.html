@@ -1120,6 +1120,109 @@ footer{
     font-size:11px;
   }
 }
+
+
+/* SYSTEM HEALTH DASHBOARD */
+.health-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(150px,1fr));
+  gap:12px;
+  margin-bottom:18px;
+}
+.health-card{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  background:#fff;
+}
+.health-card.healthy{background:rgba(47,125,50,.06)}
+.health-card.warning{background:#fff7e8}
+.health-card.error{background:#f8ece9}
+.health-label{
+  color:rgba(36,34,26,.62);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.health-count{
+  margin-top:7px;
+  color:var(--ink);
+  font-size:28px;
+  font-weight:700;
+}
+.health-panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  margin-top:16px;
+}
+.health-panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.health-panel h2{
+  margin:0;
+  color:var(--olive);
+  font-size:19px;
+}
+.health-status-line{
+  font-size:12px;
+  color:rgba(36,34,26,.65);
+}
+.health-list{display:flex;flex-direction:column;gap:10px}
+.health-issue{
+  display:grid;
+  grid-template-columns:90px minmax(0,1fr) auto;
+  gap:12px;
+  align-items:start;
+  border:1px solid rgba(36,34,26,.10);
+  border-radius:15px;
+  padding:13px;
+  background:#f8f8f6;
+}
+.health-issue.error{border-left:5px solid #8a3b3b}
+.health-issue.warning{border-left:5px solid #a46a15}
+.health-issue.info{border-left:5px solid var(--olive)}
+.health-severity{
+  display:inline-flex;
+  justify-content:center;
+  padding:6px 8px;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:700;
+  text-transform:uppercase;
+}
+.health-severity.error{background:#f1e6e3;color:#8a3b3b}
+.health-severity.warning{background:#fff0d3;color:#7a5318}
+.health-severity.info{background:#eceee9;color:var(--olive-dark)}
+.health-issue-title{font-size:13px;font-weight:700;color:var(--ink)}
+.health-issue-meta{margin-top:4px;font-size:10px;color:rgba(36,34,26,.56)}
+.health-issue-details{margin-top:6px;font-size:11px;line-height:1.55;color:rgba(36,34,26,.76)}
+.health-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.health-empty{
+  padding:18px;
+  border-radius:14px;
+  background:rgba(47,125,50,.07);
+  color:#2f7d32;
+  font-size:13px;
+  font-weight:600;
+  text-align:center;
+}
+@media(max-width:1100px){
+  .health-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .health-summary-grid{grid-template-columns:1fr}
+  .health-issue{grid-template-columns:1fr}
+  .health-actions{justify-content:flex-start}
+}
+
 </style>
 </head>
 
@@ -1147,6 +1250,7 @@ footer{
             <button class="btn btn-secondary view-tab active" id="calendar-tab" type="button" onclick="showAdminView('calendar')">Calendar</button>
             <button class="btn btn-secondary view-tab" id="bookings-tab" type="button" onclick="showAdminView('bookings')">Manage Bookings</button>
             <button class="btn btn-secondary view-tab" id="blocked-tab" type="button" onclick="showAdminView('blocked')">Block Dates</button>
+            <button class="btn btn-secondary view-tab" id="health-tab" type="button" onclick="showAdminView('health')">System Health</button>
           </div>
           <button class="btn btn-secondary" type="button" onclick="refreshAdmin()">Refresh</button>
 
@@ -1242,6 +1346,44 @@ footer{
 
             <div id="blocked-dates-list" style="margin-top:18px;font-size:13px;color:rgba(36,34,26,.78);">
               Loading blocked dates...
+            </div>
+          </div>
+        </section>
+
+
+
+        <section id="health-view" class="admin-view">
+          <div class="health-panel" style="margin-top:0;">
+            <div class="health-panel-header">
+              <div>
+                <h2>System Health & Reconciliation</h2>
+                <div class="health-status-line" id="health-generated-at">Checking payments, packages, sessions and stored system errors...</div>
+              </div>
+              <button class="btn btn-secondary" type="button" onclick="loadSystemHealth()">Refresh Health Check</button>
+            </div>
+
+            <div class="health-summary-grid" id="health-summary-grid">
+              <div class="health-card"><div class="health-label">Loading</div><div class="health-count">…</div></div>
+            </div>
+          </div>
+
+          <div class="health-panel">
+            <div class="health-panel-header">
+              <h2>Live Reconciliation Checks</h2>
+              <div class="health-status-line">Calculated directly from your current booking database.</div>
+            </div>
+            <div id="health-live-list" class="health-list">
+              <div class="empty-state">Loading live checks...</div>
+            </div>
+          </div>
+
+          <div class="health-panel">
+            <div class="health-panel-header">
+              <h2>Stored Runtime & Payment Errors</h2>
+              <div class="health-status-line">Errors recorded by the API remain here until you mark them resolved.</div>
+            </div>
+            <div id="health-stored-list" class="health-list">
+              <div class="empty-state">Loading stored issues...</div>
             </div>
           </div>
         </section>
@@ -1958,28 +2100,207 @@ function buildSessionInfo(booking){
 }
   
 
+
+
+function healthCard(label, count, level){
+  return `
+    <div class="health-card ${level}">
+      <div class="health-label">${escapeHtml(label)}</div>
+      <div class="health-count">${Number(count || 0)}</div>
+    </div>
+  `;
+}
+
+function formatHealthDate(value){
+  if (!value) return "";
+  const date = new Date(String(value).replace(" ", "T") + (String(value).includes("Z") ? "" : "Z"));
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString("en-GB", {
+    day:"2-digit",
+    month:"short",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+}
+
+function openHealthBooking(id){
+  if (!id) return;
+  showAdminView("bookings");
+  setTimeout(() => {
+    const row = document.querySelector(`[data-booking-id="${Number(id)}"]`);
+    if (row) {
+      row.scrollIntoView({behavior:"smooth", block:"center"});
+      row.style.background = "rgba(94,105,89,.15)";
+      setTimeout(() => row.style.background = "", 1800);
+    } else {
+      alert("The linked booking is not currently visible in the table.");
+    }
+  }, 150);
+}
+
+function renderLiveHealthIssues(issues){
+  const container = document.getElementById("health-live-list");
+  if (!issues.length) {
+    container.innerHTML = `<div class="health-empty">✓ No payment, package or session inconsistencies were detected.</div>`;
+    return;
+  }
+
+  container.innerHTML = issues.map(issue => `
+    <div class="health-issue ${escapeHtml(issue.severity || "warning")}">
+      <div><span class="health-severity ${escapeHtml(issue.severity || "warning")}">${escapeHtml(issue.severity || "warning")}</span></div>
+      <div>
+        <div class="health-issue-title">${escapeHtml(issue.title || "System issue")}</div>
+        <div class="health-issue-meta">
+          ${issue.client_name ? `Client: ${escapeHtml(issue.client_name)} • ` : ""}
+          ${issue.appointment_id ? `Booking #${Number(issue.appointment_id)} • ` : ""}
+          ${escapeHtml(issue.category || issue.issue_type || "check")}
+        </div>
+        <div class="health-issue-details">${escapeHtml(issue.details || "")}</div>
+      </div>
+      <div class="health-actions">
+        ${issue.appointment_id ? `<button class="btn btn-secondary" type="button" onclick="openHealthBooking(${Number(issue.appointment_id)})">Open Booking</button>` : ""}
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderStoredHealthIssues(issues){
+  const container = document.getElementById("health-stored-list");
+  if (!issues.length) {
+    container.innerHTML = `<div class="health-empty">✓ No runtime or payment errors have been stored.</div>`;
+    return;
+  }
+
+  container.innerHTML = issues.map(issue => {
+    const isOpen = String(issue.status || "open") === "open";
+    return `
+      <div class="health-issue ${isOpen ? escapeHtml(issue.severity || "error") : "info"}">
+        <div><span class="health-severity ${isOpen ? escapeHtml(issue.severity || "error") : "info"}">${isOpen ? escapeHtml(issue.severity || "error") : "resolved"}</span></div>
+        <div>
+          <div class="health-issue-title">${escapeHtml(issue.title || "Stored issue")}</div>
+          <div class="health-issue-meta">
+            ${issue.client_name ? `Client: ${escapeHtml(issue.client_name)} • ` : ""}
+            ${issue.appointment_id ? `Booking #${Number(issue.appointment_id)} • ` : ""}
+            ${escapeHtml(issue.source || "system")} • ${escapeHtml(formatHealthDate(issue.detected_at))}
+          </div>
+          <div class="health-issue-details">${escapeHtml(issue.details || "")}</div>
+          ${issue.resolution_notes ? `<div class="health-issue-details"><strong>Resolution:</strong> ${escapeHtml(issue.resolution_notes)}</div>` : ""}
+        </div>
+        <div class="health-actions">
+          ${issue.appointment_id ? `<button class="btn btn-secondary" type="button" onclick="openHealthBooking(${Number(issue.appointment_id)})">Open Booking</button>` : ""}
+          ${isOpen
+            ? `<button class="btn btn-primary" type="button" onclick="resolveSystemIssue(${Number(issue.id)})">Mark Resolved</button>`
+            : `<button class="btn btn-secondary" type="button" onclick="reopenSystemIssue(${Number(issue.id)})">Reopen</button>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function loadSystemHealth(){
+  const summaryGrid = document.getElementById("health-summary-grid");
+  const liveList = document.getElementById("health-live-list");
+  const storedList = document.getElementById("health-stored-list");
+  const generated = document.getElementById("health-generated-at");
+
+  summaryGrid.innerHTML = healthCard("Loading", 0, "healthy");
+  liveList.innerHTML = `<div class="empty-state">Running live reconciliation checks...</div>`;
+  storedList.innerHTML = `<div class="empty-state">Loading stored issues...</div>`;
+
+  try {
+    const res = await fetch(`${API_BASE}/api?admin=system-health`);
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok || data.success !== true) {
+      throw new Error(data.message || "System health could not be loaded.");
+    }
+
+    const summary = data.summary || {};
+    const totalOpen = Number(summary.total_open || 0);
+
+    summaryGrid.innerHTML = [
+      healthCard("Overall Open", totalOpen, totalOpen ? "error" : "healthy"),
+      healthCard("Payment Warnings", summary.payment, summary.payment ? "error" : "healthy"),
+      healthCard("Session Warnings", summary.session, summary.session ? "warning" : "healthy"),
+      healthCard("Aftercare / Email", summary.email, summary.email ? "warning" : "healthy"),
+      healthCard("Stored Errors", summary.open_runtime, summary.open_runtime ? "error" : "healthy")
+    ].join("");
+
+    generated.textContent = `Last checked ${formatHealthDate(data.generated_at)} • ${totalOpen ? `${totalOpen} open item${totalOpen === 1 ? "" : "s"}` : "All checks healthy"}`;
+    renderLiveHealthIssues(Array.isArray(data.live_issues) ? data.live_issues : []);
+    renderStoredHealthIssues(Array.isArray(data.stored_issues) ? data.stored_issues : []);
+  } catch (error) {
+    generated.textContent = error.message || "System health could not be loaded.";
+    summaryGrid.innerHTML = healthCard("Health Check Error", 1, "error");
+    liveList.innerHTML = `<div class="message">${escapeHtml(error.message || "System health could not be loaded.")}</div>`;
+    storedList.innerHTML = "";
+  }
+}
+
+async function resolveSystemIssue(id){
+  const notes = prompt("Optional resolution note:", "Checked and resolved");
+  if (notes === null) return;
+
+  const res = await fetch(`${API_BASE}/api?admin=resolve-system-issue`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id, resolution_notes:notes})
+  });
+
+  if (!res.ok) {
+    alert(await res.text() || "Issue could not be resolved.");
+    return;
+  }
+
+  loadSystemHealth();
+}
+
+async function reopenSystemIssue(id){
+  if (!confirm("Reopen this system issue?")) return;
+
+  const res = await fetch(`${API_BASE}/api?admin=reopen-system-issue`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({id})
+  });
+
+  if (!res.ok) {
+    alert(await res.text() || "Issue could not be reopened.");
+    return;
+  }
+
+  loadSystemHealth();
+}
+
 function showAdminView(view){
   const calendarView = document.getElementById("calendar-view");
   const bookingsView = document.getElementById("bookings-view");
   const blockedView = document.getElementById("blocked-view");
+  const healthView = document.getElementById("health-view");
   const calendarTab = document.getElementById("calendar-tab");
   const bookingsTab = document.getElementById("bookings-tab");
   const blockedTab = document.getElementById("blocked-tab");
+  const healthTab = document.getElementById("health-tab");
 
   const showCalendar = view === "calendar";
   const showBookings = view === "bookings";
   const showBlocked = view === "blocked";
+  const showHealth = view === "health";
 
   calendarView.classList.toggle("active", showCalendar);
   bookingsView.classList.toggle("active", showBookings);
   blockedView.classList.toggle("active", showBlocked);
+  healthView.classList.toggle("active", showHealth);
 
   calendarTab.classList.toggle("active", showCalendar);
   bookingsTab.classList.toggle("active", showBookings);
   blockedTab.classList.toggle("active", showBlocked);
+  healthTab.classList.toggle("active", showHealth);
 
   if (showCalendar) renderCalendar();
   if (showBlocked) loadBlockedDates();
+  if (showHealth) loadSystemHealth();
 
   window.scrollTo({top:0, behavior:"smooth"});
 }
@@ -1987,6 +2308,9 @@ function showAdminView(view){
 function refreshAdmin(){
   loadBookings();
   loadBlockedDates();
+  if (document.getElementById("health-view")?.classList.contains("active")) {
+    loadSystemHealth();
+  }
 }
 
 function toLocalDateString(date){
