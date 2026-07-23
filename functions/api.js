@@ -284,9 +284,13 @@ export async function onRequest(context) {
 }
 
   async function sendEmail({ to, subject, html }) {
-    if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return;
+  if (!env.RESEND_API_KEY || !env.FROM_EMAIL) {
+    return;
+  }
 
-    await fetch("https://api.resend.com/emails", {
+  const response = await fetch(
+    "https://api.resend.com/emails",
+    {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${env.RESEND_API_KEY}`,
@@ -299,8 +303,19 @@ export async function onRequest(context) {
         subject,
         html
       })
-    });
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+
+    throw new Error(
+      `Resend failed (${response.status}): ${errorText}`
+    );
   }
+
+  return true;
+}
   async function getStripeCheckout(sessionId, env) {
     if (!sessionId || !env.STRIPE_SECRET_KEY) {
       return null;
