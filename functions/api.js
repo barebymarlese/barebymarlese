@@ -3874,36 +3874,20 @@ if (request.method === "POST" && url.searchParams.get("session") === "book") {
     return new Response("This appointment time has already passed", { status: 400 });
   }
 
-  const clash = await env.DB.prepare(`
-  SELECT a.appointment_time
-  FROM appointments a
-  WHERE a.appointment_date = ?
-  AND a.appointment_time = ?
-  AND a.booking_type = 'treatment'
-  AND a.status = 'confirmed'
-  AND NOT EXISTS (
-    SELECT 1
-    FROM treatment_sessions s
-    WHERE s.appointment_id = a.id
-  )
-
-  UNION
-
-  SELECT appointment_time
-  FROM treatment_sessions
-  WHERE appointment_date = ?
-  AND appointment_time = ?
-  AND status = 'booked'
-`).bind(
+  const clash = await isClinicSlotOccupied(
   appointment_date,
   appointment_time,
-  appointment_date,
-  appointment_time
-).first();
+  "treatment",
+  env,
+  Number(session.appointment_id)
+);
 
-  if (clash) {
-    return new Response("That slot is already taken", { status: 409 });
-  }
+if (clash) {
+  return new Response(
+    "That slot is already taken",
+    { status: 409 }
+  );
+}
 
   await env.DB.prepare(`
   UPDATE treatment_sessions
@@ -4035,38 +4019,20 @@ if (session.email) {
     return new Response("This appointment time has already passed", { status: 400 });
   }
 
-  const clash = await env.DB.prepare(`
-  SELECT a.appointment_time
-  FROM appointments a
-  WHERE a.appointment_date = ?
-  AND a.appointment_time = ?
-  AND a.booking_type = 'treatment'
-  AND a.status = 'confirmed'
-  AND NOT EXISTS (
-    SELECT 1
-    FROM treatment_sessions s
-    WHERE s.appointment_id = a.id
-  )
-
-  UNION
-
-  SELECT appointment_time
-  FROM treatment_sessions
-  WHERE appointment_date = ?
-  AND appointment_time = ?
-  AND status = 'booked'
-  AND id != ?
-`).bind(
+  const clash = await isClinicSlotOccupied(
   appointment_date,
   appointment_time,
-  appointment_date,
-  appointment_time,
-  session_id
-).first();
+  "treatment",
+  env,
+  Number(session.appointment_id)
+);
 
-  if (clash) {
-    return new Response("That slot is already taken", { status: 409 });
-  }
+if (clash) {
+  return new Response(
+    "That slot is already taken",
+    { status: 409 }
+  );
+}
 
   await env.DB.prepare(`
   UPDATE treatment_sessions
@@ -4543,16 +4509,13 @@ if (paymentReference?.startsWith("cs_")) {
         0
       ) / 100;
 
-    discountAmount =
-      Number(stripe.total_details?.amount_discount || 0) / 100;
+    const stripeDiscount = await getStripeDiscountDetails(
+  stripe,
+  env
+);
 
-    couponCode =
-      stripe.total_details
-        ?.breakdown
-        ?.discounts?.[0]
-        ?.discount
-        ?.promotion_code
-        ?.code || null;
+discountAmount = stripeDiscount.discountAmount;
+couponCode = stripeDiscount.couponCode;
 
   } catch (stripeError) {
     await sendErrorAlert(
