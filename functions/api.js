@@ -195,30 +195,93 @@ export async function onRequest(context) {
     );
   }
 
-  function getStripeDiscountDetails(stripe = {}) {
-    const discountAmount =
-      Number(stripe.total_details?.amount_discount || 0) / 100;
+  async function getStripeDiscountDetails(stripe = {}, env) {
+  const discountAmount =
+    Number(stripe.total_details?.amount_discount || 0) / 100;
 
-    const candidates = [
-      stripe.discounts?.[0]?.promotion_code?.code,
-      stripe.discounts?.[0]?.source?.promotion_code?.code,
-      stripe.total_details?.breakdown?.discounts?.[0]
-        ?.discount?.promotion_code?.code,
-      stripe.discounts?.[0]?.coupon?.name,
-      stripe.total_details?.breakdown?.discounts?.[0]
-        ?.discount?.coupon?.name
-    ];
+  const promotionCodeValues = [
+    stripe.discounts?.[0]?.promotion_code,
+    stripe.discounts?.[0]?.source?.promotion_code,
+    stripe.total_details?.breakdown?.discounts?.[0]
+      ?.discount?.promotion_code
+  ];
 
-    const couponCode =
-      candidates
-        .map(value => String(value || "").trim())
-        .find(Boolean) || null;
-
-    return {
-      discountAmount,
-      couponCode
-    };
+  // First look for an already-expanded promotion-code object.
+  for (const value of promotionCodeValues) {
+    if (
+      value &&
+      typeof value === "object" &&
+      String(value.code || "").trim()
+    ) {
+      return {
+        discountAmount,
+        couponCode: String(value.code).trim()
+      };
+    }
   }
+
+  // If Stripe returned only promo_xxx, retrieve the readable code.
+  const promotionCodeId = promotionCodeValues
+    .map(value =>
+      typeof value === "string"
+        ? value.trim()
+        : String(value?.id || "").trim()
+    )
+    .find(value => value.startsWith("promo_"));
+
+  if (promotionCodeId && env.STRIPE_SECRET_KEY) {
+    const response = await fetch(
+      `https://api.stripe.com/v1/promotion_codes/${encodeURIComponent(
+        promotionCodeId
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`
+        }
+      }
+    );
+
+    if (response.ok) {
+      const promotionCode = await response.json();
+
+      const readableCode = String(
+        promotionCode.code || ""
+      ).trim();
+
+      if (readableCode) {
+        return {
+          discountAmount,
+          couponCode: readableCode
+        };
+      }
+    } else {
+      console.error(
+        "Stripe promotion code lookup failed",
+        promotionCodeId,
+        response.status,
+        await response.text()
+      );
+    }
+  }
+
+  // Final fallback for discounts created directly from a coupon.
+  const couponNameCandidates = [
+    stripe.discounts?.[0]?.coupon?.name,
+    stripe.total_details?.breakdown?.discounts?.[0]
+      ?.discount?.coupon?.name
+  ];
+
+  const couponCode =
+    couponNameCandidates
+      .map(value => String(value || "").trim())
+      .find(Boolean) || null;
+
+  return {
+    discountAmount,
+    couponCode
+  };
+}
 
   async function sendEmail({ to, subject, html }) {
     if (!env.RESEND_API_KEY || !env.FROM_EMAIL) return;
@@ -858,9 +921,9 @@ async function applyReturningTreatmentPayment(sessionId, env) {
 
   const amountPaid = Number(stripe.amount_total || 0) / 100;
   const {
-    discountAmount,
-    couponCode
-  } = getStripeDiscountDetails(stripe);
+  discountAmount,
+  couponCode
+} = await getStripeDiscountDetails(stripe, env);
   const remainingBalance = Math.max(0, fullPrice - amountPaid - discountAmount);
   const rescheduleToken = crypto.randomUUID();
 
@@ -1132,9 +1195,9 @@ async function applyStripeBalancePayment(sessionId, env) {
 
   const balanceCashPaid = Number(stripe.amount_total || 0) / 100;
   const {
-    discountAmount: balanceDiscount,
-    couponCode: balanceCoupon
-  } = getStripeDiscountDetails(stripe);
+  discountAmount: balanceDiscount,
+  couponCode: balanceCoupon
+} = await getStripeDiscountDetails(stripe, env);
 
   const fullPrice = Number(booking.full_price || 0);
   const existingPaid = Number(booking.amount_paid || 0);
