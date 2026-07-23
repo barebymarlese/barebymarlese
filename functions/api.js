@@ -239,49 +239,73 @@ async function createStripeBalanceCheckout(booking, env) {
   }
 
   const category = String(
-  booking.treatment_category || ""
-).toLowerCase();
+    booking.treatment_category || ""
+  ).toLowerCase();
 
-const packageType = String(
-  booking.package_type || ""
-).toLowerCase();
+  const packageType = String(
+    booking.package_type || ""
+  ).toLowerCase();
 
-const stripePriceLookup = {
-  carbon: {
-    single_session: env.STRIPE_PRICE_CARBON_SINGLE_BALANCE,
-    three_sessions: env.STRIPE_PRICE_CARBON_COURSE3_BALANCE,
-    "3_sessions": env.STRIPE_PRICE_CARBON_COURSE3_BALANCE
-  },
+  const tattooSize = String(
+    booking.tattoo_size || ""
+  ).toLowerCase();
 
-  fungal: {
-    single_nail: env.STRIPE_PRICE_FUNGAL_SINGLE_NAIL_BALANCE,
-    one_foot: env.STRIPE_PRICE_FUNGAL_ONE_FOOT_BALANCE,
-    both_feet: env.STRIPE_PRICE_FUNGAL_BOTH_FEET_BALANCE,
-    course4_one_foot: env.STRIPE_PRICE_FUNGAL_COURSE4_ONE_FOOT_BALANCE,
-    course4_both_feet: env.STRIPE_PRICE_FUNGAL_COURSE4_BOTH_FEET_BALANCE
-  }
-};
+  const stripePriceLookup = {
+    tattoo: {
+      single_session: {
+        tiny: env.STRIPE_PRICE_TATTOO_TINY_SINGLE_CC,
+        small: env.STRIPE_PRICE_TATTOO_SMALL_SINGLE_CC,
+        medium: env.STRIPE_PRICE_TATTOO_MEDIUM_SINGLE_CC,
+        large: env.STRIPE_PRICE_TATTOO_LARGE_SINGLE_CC,
+        xl: env.STRIPE_PRICE_TATTOO_XL_SINGLE_CC
+      },
 
-form.set("line_items[0][quantity]", "1");
+      six_sessions: {
+        tiny: env.STRIPE_PRICE_TATTOO_TINY_BUNDLE_CC,
+        small: env.STRIPE_PRICE_TATTOO_SMALL_BUNDLE_CC,
+        medium: env.STRIPE_PRICE_TATTOO_MEDIUM_BUNDLE_CC,
+        large: env.STRIPE_PRICE_TATTOO_LARGE_BUNDLE_CC,
+        xl: env.STRIPE_PRICE_TATTOO_XL_BUNDLE_CC
+      },
 
-if (category === "tattoo") {
-  form.set("line_items[0][price_data][currency]", "gbp");
-  form.set("line_items[0][price_data][unit_amount]", String(balancePence));
-  form.set(
-    "line_items[0][price_data][product_data][name]",
-    booking.treatment_name || "Tattoo Removal Treatment Balance"
-  );
-} else {
-  const stripePriceId = stripePriceLookup[category]?.[packageType] || "";
+      "6_sessions": {
+        tiny: env.STRIPE_PRICE_TATTOO_TINY_BUNDLE_CC,
+        small: env.STRIPE_PRICE_TATTOO_SMALL_BUNDLE_CC,
+        medium: env.STRIPE_PRICE_TATTOO_MEDIUM_BUNDLE_CC,
+        large: env.STRIPE_PRICE_TATTOO_LARGE_BUNDLE_CC,
+        xl: env.STRIPE_PRICE_TATTOO_XL_BUNDLE_CC
+      }
+    },
 
-  if (!stripePriceId?.startsWith("price_")) {
+    carbon: {
+      single_session: env.STRIPE_PRICE_CARBON_SINGLE_BALANCE,
+      three_sessions: env.STRIPE_PRICE_CARBON_COURSE3_BALANCE,
+      "3_sessions": env.STRIPE_PRICE_CARBON_COURSE3_BALANCE
+    },
+
+    fungal: {
+      single_nail: env.STRIPE_PRICE_FUNGAL_SINGLE_NAIL_BALANCE,
+      one_foot: env.STRIPE_PRICE_FUNGAL_ONE_FOOT_BALANCE,
+      both_feet: env.STRIPE_PRICE_FUNGAL_BOTH_FEET_BALANCE,
+      course4_one_foot: env.STRIPE_PRICE_FUNGAL_COURSE4_ONE_FOOT_BALANCE,
+      course4_both_feet: env.STRIPE_PRICE_FUNGAL_COURSE4_BOTH_FEET_BALANCE
+    }
+  };
+
+  form.set("line_items[0][quantity]", "1");
+
+  const stripePriceId =
+    category === "tattoo"
+      ? stripePriceLookup.tattoo?.[packageType]?.[tattooSize] || ""
+      : stripePriceLookup[category]?.[packageType] || "";
+
+  if (!stripePriceId.startsWith("price_")) {
     throw new Error(
-      `Stripe Price ID is not configured for ${category} ${packageType}.`
+      `Stripe Price ID is not configured for ${category} ${packageType}${tattooSize ? ` ${tattooSize}` : ""}.`
     );
   }
 
   form.set("line_items[0][price]", stripePriceId);
-}
 
   const response = await fetch(
     "https://api.stripe.com/v1/checkout/sessions",
@@ -327,11 +351,45 @@ function getReturningTreatmentDefinition(
   const normalisedPackageType = String(packageType || "").toLowerCase();
 
   const tattooPrices = {
-    tiny:   { single: 70, bundle: 360, name: "Tiny Tattoo" },
-    small:  { single: 95, bundle: 495, name: "Small Tattoo" },
-    medium: { single: 120, bundle: 620, name: "Medium Tattoo" },
-    large:  { single: 160, bundle: 820, name: "Large Tattoo" },
-    xl:     { single: 200, bundle: 1050, name: "XL Tattoo" }
+    tiny: {
+      single: 70,
+      bundle: 360,
+      name: "Tiny Tattoo",
+      singlePriceId: env.STRIPE_PRICE_TATTOO_TINY_SINGLE,
+      bundlePriceId: env.STRIPE_PRICE_TATTOO_TINY_BUNDLE
+    },
+
+    small: {
+      single: 95,
+      bundle: 495,
+      name: "Small Tattoo",
+      singlePriceId: env.STRIPE_PRICE_TATTOO_SMALL_SINGLE,
+      bundlePriceId: env.STRIPE_PRICE_TATTOO_SMALL_BUNDLE
+    },
+
+    medium: {
+      single: 120,
+      bundle: 620,
+      name: "Medium Tattoo",
+      singlePriceId: env.STRIPE_PRICE_TATTOO_MEDIUM_SINGLE,
+      bundlePriceId: env.STRIPE_PRICE_TATTOO_MEDIUM_BUNDLE
+    },
+
+    large: {
+      single: 160,
+      bundle: 820,
+      name: "Large Tattoo",
+      singlePriceId: env.STRIPE_PRICE_TATTOO_LARGE_SINGLE,
+      bundlePriceId: env.STRIPE_PRICE_TATTOO_LARGE_BUNDLE
+    },
+
+    xl: {
+      single: 200,
+      bundle: 1050,
+      name: "XL Tattoo",
+      singlePriceId: env.STRIPE_PRICE_TATTOO_XL_SINGLE,
+      bundlePriceId: env.STRIPE_PRICE_TATTOO_XL_BUNDLE
+    }
   };
 
   const laserPrices = {
@@ -399,10 +457,9 @@ function getReturningTreatmentDefinition(
       amount: isSingle ? tattoo.single : tattoo.bundle,
       name: `${tattoo.name} - ${isSingle ? "Single Session" : "6 Session Bundle"}`,
       sessionsTotal: isSingle ? 1 : 6,
-      stripePriceId:
-        !isSingle && normalisedSize === "small"
-          ? env.STRIPE_PRICE_TATTOO_SMALL_BUNDLE
-          : null
+      stripePriceId: isSingle
+        ? tattoo.singlePriceId
+        : tattoo.bundlePriceId
     };
   }
 
