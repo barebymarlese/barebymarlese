@@ -1287,7 +1287,7 @@ header .brand *{
 <input class="con-input" id="tattoo_photos" type="file" name="tattoo_photos" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple>
 
 <p class="con-small" style="margin:10px 0 0;">
-  File upload limits: max 10MB per image, up to 10 images, 30MB total combined. Accepted formats: JPG, PNG, WEBP.
+  File upload limits: max 10MB per image, up to 10 images, 20MB total combined. Accepted formats: JPG, PNG, WEBP.
 </p>
 
             <!-- Clinical photo consent -->
@@ -1429,7 +1429,7 @@ function onTurnstileError() {
 
 if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
   document.getElementById("turnstile-container").innerHTML =
-    '<div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError" data-response-field="true" data-response-field-name="cf-turnstile-response"></div>';
+    '<div class="cf-turnstile" data-sitekey="0x4AAAAAADBFfs7wRUB7Xuo8" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileError" data-refresh-expired="auto" data-refresh-timeout="auto" data-response-field="true" data-response-field-name="cf-turnstile-response"></div>';
 }
 </script>
 
@@ -2293,7 +2293,19 @@ location.href =
       submitBtn.disabled = false;
       submitBtn.textContent = defaultSubmitLabel;
     }
-  }
+  
+      if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
+        turnstileToken = "";
+
+        if (window.turnstile) {
+          try {
+            window.turnstile.reset();
+          } catch (error) {
+            console.error("Could not reset Turnstile", error);
+          }
+        }
+      }
+}
 
 }catch(err){
         setStatus(err.message || "Oops - connection error. Please try again.", "error");
@@ -2303,7 +2315,19 @@ location.href =
           submitBtn.disabled = false;
           submitBtn.textContent = defaultSubmitLabel;
         }
+      
+      if (typeof isLiveDomain !== "undefined" && isLiveDomain) {
+        turnstileToken = "";
+
+        if (window.turnstile) {
+          try {
+            window.turnstile.reset();
+          } catch (error) {
+            console.error("Could not reset Turnstile", error);
+          }
+        }
       }
+}
     });
   </script>
 
