@@ -927,90 +927,120 @@ async function applyReturningTreatmentPayment(sessionId, env) {
   const remainingBalance = Math.max(0, fullPrice - amountPaid - discountAmount);
   const rescheduleToken = crypto.randomUUID();
 
-  // Create a new confirmed appointment only after Stripe confirms payment.
-  const insert = await env.DB.prepare(`
-    INSERT INTO appointments
-    (
-      client_name,
-      email,
-      phone,
-      appointment_date,
-      appointment_time,
-      status,
-      reschedule_token,
-      booking_type,
-      package_type,
-      tattoo_size,
-      amount_paid,
-      payment_status,
-      payment_type,
-      sessions_total,
-      sessions_used,
-      package_status,
-      payment_reference,
-      treatment_category,
-      treatment_name,
-      full_price,
-      remaining_balance,
-      coupon_code,
-      discount_amount,
-      price_before_discount,
-      consultation_complete,
-      patch_test_complete
-    )
-    VALUES (
-      ?, ?, ?, ?, ?,
-      'confirmed',
-      ?, 'treatment', ?, ?, ?, 'paid',
-      'returning_treatment_payment',
-      ?, 0, 'active', ?, ?, ?, ?, ?, ?, ?, ?, 0, 0
-    )
-  `).bind(
-    clientName,
-    email,
-    phone,
-    appointmentDate,
-    appointmentTime,
-    rescheduleToken,
-    packageType,
-    tattooSize,
-    amountPaid,
-    sessionsTotal,
-    stripe.id,
-    treatmentCategory,
-    treatmentName,
-    fullPrice,
-    remainingBalance,
-    couponCode,
-    discountAmount,
-    fullPrice
-  ).run();
-
-  const bookingId = Number(insert.meta?.last_row_id);
-  if (!Number.isInteger(bookingId) || bookingId <= 0) {
-    throw new Error("The paid treatment appointment could not be created.");
-  }
-
-  for (let sessionNumber = 1; sessionNumber <= sessionsTotal; sessionNumber++) {
-    await env.DB.prepare(`
-      INSERT INTO treatment_sessions
+  // Create the paid appointment and every package session atomically.
+  // D1 rolls the entire batch back if any statement fails.
+  const statements = [
+    env.DB.prepare(`
+      INSERT INTO appointments
       (
-        appointment_id,
-        session_number,
+        client_name,
+        email,
+        phone,
         appointment_date,
         appointment_time,
         status,
-        reschedule_token
+        reschedule_token,
+        booking_type,
+        package_type,
+        tattoo_size,
+        amount_paid,
+        payment_status,
+        payment_type,
+        sessions_total,
+        sessions_used,
+        package_status,
+        payment_reference,
+        treatment_category,
+        treatment_name,
+        full_price,
+        remaining_balance,
+        coupon_code,
+        discount_amount,
+        price_before_discount,
+        consultation_complete,
+        patch_test_complete
       )
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES (
+        ?, ?, ?, ?, ?,
+        'confirmed',
+        ?, 'treatment', ?, ?, ?, 'paid',
+        'returning_treatment_payment',
+        ?, 0, 'active', ?, ?, ?, ?, ?, ?, ?, ?, 0, 0
+      )
     `).bind(
-      bookingId,
-      sessionNumber,
-      sessionNumber === 1 ? appointmentDate : null,
-      sessionNumber === 1 ? appointmentTime : null,
-      sessionNumber === 1 ? "booked" : "pending",
-      crypto.randomUUID()
-    ).run();
+      clientName,
+      email,
+      phone,
+      appointmentDate,
+      appointmentTime,
+      rescheduleToken,
+      packageType,
+      tattooSize,
+      amountPaid,
+      sessionsTotal,
+      stripe.id,
+      treatmentCategory,
+      treatmentName,
+      fullPrice,
+      remainingBalance,
+      couponCode,
+      discountAmount,
+      fullPrice
+    )
+  ];
+
+  for (
+    let sessionNumber = 1;
+    sessionNumber <= sessionsTotal;
+    sessionNumber++
+  ) {
+    statements.push(
+      env.DB.prepare(`
+        INSERT INTO treatment_sessions
+        (
+          appointment_id,
+          session_number,
+          appointment_date,
+          appointment_time,
+          status,
+          reschedule_token
+        )
+        SELECT
+          id,
+          ?,
+          ?,
+          ?,
+          ?,
+          ?
+        FROM appointments
+        WHERE payment_reference = ?
+        LIMIT 1
+      `).bind(
+        sessionNumber,
+        sessionNumber === 1 ? appointmentDate : null,
+        sessionNumber === 1 ? appointmentTime : null,
+        sessionNumber === 1 ? "booked" : "pending",
+        crypto.randomUUID(),
+        stripe.id
+      )
+    );
+  }
+
+  await env.DB.batch(statements);
+
+  const savedBooking = await env.DB.prepare(`
+    SELECT id
+    FROM appointments
+    WHERE payment_reference = ?
+    LIMIT 1
+  `).bind(stripe.id).first();
+
+  const bookingId = Number(savedBooking?.id);
+
+  if (!Number.isInteger(bookingId) || bookingId <= 0) {
+    throw new Error(
+      "The paid treatment appointment could not be confirmed."
+    );
   }
 
   await sendEmail({
@@ -3102,26 +3132,54 @@ if (
       return new Response("The remaining treatment balance must be paid before booking treatment.", { status: 409 });
     }
 
-    const sessionsTotal = Math.max(1, Number(booking.sessions_total || 1));
-    const existing = await env.DB.prepare(`
-      SELECT id FROM treatment_sessions WHERE appointment_id = ? LIMIT 1
-    `).bind(booking.id).first();
+    const sessionsTotal = Math.max(
+      1,
+      Number(booking.sessions_total || 1)
+    );
 
-    if (!existing) {
-      for (let i = 1; i <= sessionsTotal; i++) {
-        await env.DB.prepare(`
+    // Create every missing session and activate the package atomically.
+    // Existing sessions are left untouched.
+    const statements = [];
+
+    for (let i = 1; i <= sessionsTotal; i++) {
+      statements.push(
+        env.DB.prepare(`
           INSERT INTO treatment_sessions
-          (appointment_id, session_number, appointment_date, appointment_time, status, reschedule_token)
-          VALUES (?, ?, NULL, NULL, 'pending', ?)
-        `).bind(booking.id, i, crypto.randomUUID()).run();
-      }
+          (
+            appointment_id,
+            session_number,
+            appointment_date,
+            appointment_time,
+            status,
+            reschedule_token
+          )
+          SELECT
+            ?, ?, NULL, NULL, 'pending', ?
+          WHERE NOT EXISTS (
+            SELECT 1
+            FROM treatment_sessions
+            WHERE appointment_id = ?
+              AND session_number = ?
+          )
+        `).bind(
+          booking.id,
+          i,
+          crypto.randomUUID(),
+          booking.id,
+          i
+        )
+      );
     }
 
-    await env.DB.prepare(`
-      UPDATE appointments
-      SET package_status = 'active'
-      WHERE id = ?
-    `).bind(booking.id).run();
+    statements.push(
+      env.DB.prepare(`
+        UPDATE appointments
+        SET package_status = 'active'
+        WHERE id = ?
+      `).bind(booking.id)
+    );
+
+    await env.DB.batch(statements);
 
     const firstSession = await env.DB.prepare(`
       SELECT id, appointment_id, session_number, status, reschedule_token
@@ -4704,105 +4762,155 @@ if (blockedDate) {
     try {
       const rescheduleToken = crypto.randomUUID();
 
-      const insertResult = await env.DB.prepare(
-  `INSERT INTO appointments
-  (
-    client_name,
-    email,
-    phone,
-    appointment_date,
-    appointment_time,
-    status,
-    reschedule_token,
-    booking_type,
-    package_type,
-    tattoo_size,
-    amount_paid,
-    payment_status,
-    payment_type,
-    sessions_total,
-    sessions_used,
-    package_status,
-    payment_reference,
-    treatment_category,
-    treatment_name,
-    full_price,
-    remaining_balance,
-    coupon_code,
-    discount_amount,
-    price_before_discount,
-    consultation_complete,
-    patch_test_complete
-  )
-  VALUES (
-    ?, ?, ?, ?, ?,
-    'confirmed',
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, 0, 0
-  )`
-)
-.bind(
-  clientName,
-  email,
-  phone,
-  appointmentDate,
-  appointmentTime,
-  rescheduleToken,
-  bookingType,
-  packageType,
-  tattooSize,
-  amountPaid,
-  paymentStatus,
-  paymentType,
-  sessionsTotal,
-  sessionsUsed,
-  packageStatus,
-  paymentReference,
-  treatmentCategory,
-  treatmentName,
-  fullPrice,
-  remainingBalance,
-  couponCode,
-  discountAmount,
-  priceBeforeDiscount
-)
-.run();
+      // Create the appointment and all treatment-session rows atomically.
+      // Consultation bookings use the same batch with only the appointment insert.
+      const statements = [
+        env.DB.prepare(`
+          INSERT INTO appointments
+          (
+            client_name,
+            email,
+            phone,
+            appointment_date,
+            appointment_time,
+            status,
+            reschedule_token,
+            booking_type,
+            package_type,
+            tattoo_size,
+            amount_paid,
+            payment_status,
+            payment_type,
+            sessions_total,
+            sessions_used,
+            package_status,
+            payment_reference,
+            treatment_category,
+            treatment_name,
+            full_price,
+            remaining_balance,
+            coupon_code,
+            discount_amount,
+            price_before_discount,
+            consultation_complete,
+            patch_test_complete
+          )
+          VALUES (
+            ?, ?, ?, ?, ?,
+            'confirmed',
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?, 0, 0
+          )
+        `).bind(
+          clientName,
+          email,
+          phone,
+          appointmentDate,
+          appointmentTime,
+          rescheduleToken,
+          bookingType,
+          packageType,
+          tattooSize,
+          amountPaid,
+          paymentStatus,
+          paymentType,
+          sessionsTotal,
+          sessionsUsed,
+          packageStatus,
+          paymentReference,
+          treatmentCategory,
+          treatmentName,
+          fullPrice,
+          remainingBalance,
+          couponCode,
+          discountAmount,
+          priceBeforeDiscount
+        )
+      ];
 
-      const bookingId = insertResult.meta.last_row_id;
+      let firstSessionToken = null;
 
-let firstSessionId = null;
-let firstSessionToken = null;
+      if (
+        bookingType === "treatment" &&
+        sessionsTotal >= 1
+      ) {
+        for (let i = 1; i <= sessionsTotal; i++) {
+          const sessionToken = crypto.randomUUID();
 
-if (bookingType === "treatment" && sessionsTotal >= 1) {
-  for (let i = 1; i <= sessionsTotal; i++) {
-    const sessionToken = crypto.randomUUID();
+          if (i === 1) {
+            firstSessionToken = sessionToken;
+          }
 
-    const sessionInsert = await env.DB.prepare(`
-      INSERT INTO treatment_sessions
-      (
-        appointment_id,
-        session_number,
-        appointment_date,
-        appointment_time,
-        status,
-        reschedule_token
-      )
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(
-      bookingId,
-      i,
-      i === 1 ? appointmentDate : null,
-      i === 1 ? appointmentTime : null,
-      i === 1 ? "booked" : "pending",
-      sessionToken
-    ).run();
+          statements.push(
+            env.DB.prepare(`
+              INSERT INTO treatment_sessions
+              (
+                appointment_id,
+                session_number,
+                appointment_date,
+                appointment_time,
+                status,
+                reschedule_token
+              )
+              SELECT
+                id,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+              FROM appointments
+              WHERE reschedule_token = ?
+              LIMIT 1
+            `).bind(
+              i,
+              i === 1 ? appointmentDate : null,
+              i === 1 ? appointmentTime : null,
+              i === 1 ? "booked" : "pending",
+              sessionToken,
+              rescheduleToken
+            )
+          );
+        }
+      }
 
-    if (i === 1) {
-      firstSessionId = sessionInsert.meta.last_row_id;
-      firstSessionToken = sessionToken;
-    }
-  }
-}
+      await env.DB.batch(statements);
+
+      const savedBooking = await env.DB.prepare(`
+        SELECT id
+        FROM appointments
+        WHERE reschedule_token = ?
+        LIMIT 1
+      `).bind(rescheduleToken).first();
+
+      const bookingId = Number(savedBooking?.id);
+
+      if (!Number.isInteger(bookingId) || bookingId <= 0) {
+        throw new Error(
+          "The booking could not be confirmed."
+        );
+      }
+
+      let firstSessionId = null;
+
+      if (
+        bookingType === "treatment" &&
+        firstSessionToken
+      ) {
+        const firstSession = await env.DB.prepare(`
+          SELECT id
+          FROM treatment_sessions
+          WHERE appointment_id = ?
+            AND session_number = 1
+            AND reschedule_token = ?
+          LIMIT 1
+        `).bind(
+          bookingId,
+          firstSessionToken
+        ).first();
+
+        firstSessionId = Number(firstSession?.id) || null;
+      }
       const rescheduleLink = firstSessionId && firstSessionToken
   ? `https://barebymarlese.com/reschedule.html?session_id=${firstSessionId}&token=${firstSessionToken}`
   : `https://barebymarlese.com/reschedule.html?id=${bookingId}&token=${rescheduleToken}`;
