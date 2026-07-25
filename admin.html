@@ -299,6 +299,14 @@ tbody tr:last-child td{border-bottom:0}
 .patch-status.pending{background:#fff7e8;color:#7a5318;}
 .patch-status.cancelled{background:#f1e6e3;color:#8a3b3b;}
 
+.email-delivery-status{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:700;white-space:nowrap;}
+.email-delivery-status.delivered{background:rgba(47,125,50,.12);color:#2f7d32;}
+.email-delivery-status.sent,.email-delivery-status.opened,.email-delivery-status.clicked{background:rgba(94,105,89,.14);color:var(--olive-dark);}
+.email-delivery-status.delayed{background:#fff7e8;color:#7a5318;}
+.email-delivery-status.bounced,.email-delivery-status.failed,.email-delivery-status.complained{background:#f1e6e3;color:#8a3b3b;}
+.email-delivery-meta{display:block;margin-top:3px;font-size:9px;line-height:1.35;color:rgba(36,34,26,.58);white-space:normal;}
+.review-clicked{display:block;margin-top:3px;color:#2f7d32;font-size:10px;font-weight:700;}
+
 .badge.unpaid{
   background:#f1e6e3;
   color:#8a3b3b;
@@ -1566,6 +1574,62 @@ function buildClientFlags(booking){
   return flags.join("");
 }
 
+function formatEmailTrackingDate(value){
+  if (!value) return "";
+  const normalised = String(value).includes("T")
+    ? String(value)
+    : String(value).replace(" ", "T") + "Z";
+  const date = new Date(normalised);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString("en-GB", {
+    day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit"
+  });
+}
+
+function buildEmailDeliveryDetails(session){
+  const deliveryStatus = String(
+    session.aftercare_delivery_status || ""
+  ).toLowerCase();
+
+  if (!deliveryStatus) {
+    return "";
+  }
+
+  const statusLabels = {
+    sent: "Sent to Resend",
+    delivered: "Delivered",
+    delayed: "Delivery delayed",
+    bounced: "Bounced",
+    failed: "Failed",
+    complained: "Spam complaint",
+    opened: "Opened",
+    clicked: "Link clicked"
+  };
+
+  const statusDate = session.aftercare_delivered_at ||
+    session.aftercare_email_sent_at || "";
+
+  const reviewClicked = Boolean(session.review_clicked_at);
+  const reviewRequested = Number(session.review_requested || 0) === 1;
+
+  return `
+    <div style="margin-top:4px;">
+      <span class="email-delivery-status ${escapeHtml(deliveryStatus)}">
+        ${escapeHtml(statusLabels[deliveryStatus] || deliveryStatus)}
+      </span>
+      ${statusDate ? `<span class="email-delivery-meta">${escapeHtml(formatEmailTrackingDate(statusDate))}</span>` : ""}
+      ${reviewClicked
+        ? `<span class="review-clicked">★ Review button clicked ${escapeHtml(formatEmailTrackingDate(session.review_clicked_at))}</span>`
+        : reviewRequested
+          ? `<span class="email-delivery-meta">Review requested — no click recorded yet</span>`
+          : ""}
+      ${session.aftercare_delivery_error
+        ? `<span class="email-delivery-meta" style="color:#8a3b3b;">${escapeHtml(session.aftercare_delivery_error)}</span>`
+        : ""}
+    </div>
+  `;
+}
+
 function buildAftercareStatus(booking){
   const sessions = Array.isArray(booking.sessions)
     ? [...booking.sessions].sort(
@@ -1622,6 +1686,7 @@ function buildAftercareStatus(booking){
             ">
               ✓ Session ${sessionNumber} sent
             </div>
+            ${buildEmailDeliveryDetails(session)}
           `;
         }
 
