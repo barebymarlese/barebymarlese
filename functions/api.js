@@ -283,6 +283,97 @@ export async function onRequest(context) {
   };
 }
 
+  function base64ToBytes(value = "") {
+    const normalised = String(value).replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalised + "=".repeat((4 - normalised.length % 4) % 4);
+    const binary = atob(padded);
+    return Uint8Array.from(binary, char => char.charCodeAt(0));
+  }
+
+  function timingSafeEqual(first, second) {
+    if (first.length !== second.length) return false;
+    let difference = 0;
+    for (let index = 0; index < first.length; index++) {
+      difference |= first[index] ^ second[index];
+    }
+    return difference === 0;
+  }
+
+  async function verifyResendWebhook(rawBody, headers, secret) {
+    const webhookId = headers.get("svix-id");
+    const webhookTimestamp = headers.get("svix-timestamp");
+    const webhookSignature = headers.get("svix-signature");
+
+    if (!webhookId || !webhookTimestamp || !webhookSignature || !secret) {
+      return { valid: false, webhookId: webhookId || null };
+    }
+
+    const timestampNumber = Number(webhookTimestamp);
+    const nowSeconds = Math.floor(Date.now() / 1000);
+
+    // Reject payloads older/newer than five minutes to reduce replay risk.
+    if (!Number.isFinite(timestampNumber) || Math.abs(nowSeconds - timestampNumber) > 300) {
+      return { valid: false, webhookId };
+    }
+
+    const secretValue = String(secret).startsWith("whsec_")
+      ? String(secret).slice(6)
+      : String(secret);
+
+    let secretBytes;
+    try {
+      secretBytes = base64ToBytes(secretValue);
+    } catch {
+      return { valid: false, webhookId };
+    }
+
+    const signedContent = `${webhookId}.${webhookTimestamp}.${rawBody}`;
+    const key = await crypto.subtle.importKey(
+      "raw",
+      secretBytes,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+
+    const expected = new Uint8Array(
+      await crypto.subtle.sign(
+        "HMAC",
+        key,
+        new TextEncoder().encode(signedContent)
+      )
+    );
+
+    const signatures = String(webhookSignature)
+      .split(" ")
+      .map(item => item.trim())
+      .filter(Boolean)
+      .map(item => item.startsWith("v1,") ? item.slice(3) : item);
+
+    const valid = signatures.some(signature => {
+      try {
+        return timingSafeEqual(expected, base64ToBytes(signature));
+      } catch {
+        return false;
+      }
+    });
+
+    return { valid, webhookId };
+  }
+
+  function deliveryStatusFromEvent(eventType = "") {
+    return {
+      "email.sent": "sent",
+      "email.delivered": "delivered",
+      "email.delivery_delayed": "delayed",
+      "email.bounced": "bounced",
+      "email.failed": "failed",
+      "email.complained": "complained",
+      "email.opened": "opened",
+      "email.clicked": "clicked"
+    }[eventType] || null;
+  }
+
   async function sendEmail({ to, subject, html }) {
   const recipient = String(to || "").trim();
   const emailSubject = String(subject || "").trim();
@@ -3293,6 +3384,151 @@ if (
   }
 }
 
+if (
+  request.method === "GET" &&
+  url.searchParams.has("review_click")
+) {
+  const trackingToken = String(
+    url.searchParams.get("review_click") || ""
+  ).trim();
+
+  if (trackingToken) {
+    try {
+      await env.DB.prepare(`
+        UPDATE email_delivery_log
+        SET review_clicked_at = COALESCE(review_clicked_at, CURRENT_TIMESTAMP),
+            updated_at = CURRENT_TIMESTAMP
+        WHERE review_tracking_token = ?
+      `).bind(trackingToken).run();
+    } catch (error) {
+      console.error(
+        "Review click could not be recorded",
+        error?.stack || error?.message || error
+      );
+    }
+  }
+
+  return Response.redirect(
+    "https://g.page/r/Cdz2ty6kXsK2EBM/review",
+    302
+  );
+}
+
+if (
+  request.method === "POST" &&
+  url.searchParams.get("webhook") === "resend"
+) {
+  const rawBody = await request.text();
+  const verification = await verifyResendWebhook(
+    rawBody,
+    request.headers,
+    env.RESEND_WEBHOOK_SECRET
+  );
+
+  if (!verification.valid) {
+    return new Response("Invalid webhook signature", { status: 401 });
+  }
+
+  let event;
+  try {
+    event = JSON.parse(rawBody);
+  } catch {
+    return new Response("Invalid JSON", { status: 400 });
+  }
+
+  const eventType = String(event?.type || "");
+  const emailId = String(event?.data?.email_id || "").trim();
+  const eventTime = String(event?.created_at || event?.data?.created_at || "").trim();
+  const deliveryStatus = deliveryStatusFromEvent(eventType);
+
+  if (!emailId || !deliveryStatus) {
+    return new Response(JSON.stringify({ received: true, ignored: true }), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  }
+
+  try {
+    const eventInsert = await env.DB.prepare(`
+      INSERT OR IGNORE INTO email_webhook_events
+      (event_id, resend_email_id, event_type, event_created_at, payload_json)
+      VALUES (?, ?, ?, ?, ?)
+    `).bind(
+      verification.webhookId,
+      emailId,
+      eventType,
+      eventTime || null,
+      rawBody
+    ).run();
+
+    // A replayed event is acknowledged but not processed twice.
+    if (!eventInsert.meta?.changes) {
+      return new Response(JSON.stringify({ received: true, duplicate: true }), {
+        status: 200,
+        headers: jsonHeaders
+      });
+    }
+
+    const timestampColumn = {
+      "email.sent": "sent_at",
+      "email.delivered": "delivered_at",
+      "email.delivery_delayed": "delayed_at",
+      "email.bounced": "bounced_at",
+      "email.failed": "failed_at",
+      "email.complained": "complained_at",
+      "email.opened": "opened_at",
+      "email.clicked": "clicked_at"
+    }[eventType];
+
+    const allowedTimestampColumns = new Set([
+      "sent_at", "delivered_at", "delayed_at", "bounced_at",
+      "failed_at", "complained_at", "opened_at", "clicked_at"
+    ]);
+
+    if (!allowedTimestampColumns.has(timestampColumn)) {
+      return new Response(JSON.stringify({ received: true, ignored: true }), {
+        status: 200,
+        headers: jsonHeaders
+      });
+    }
+
+    const eventDetails = event?.data?.bounce?.message ||
+      event?.data?.failed?.reason ||
+      event?.data?.reason ||
+      null;
+
+    await env.DB.prepare(`
+      UPDATE email_delivery_log
+      SET status = ?,
+          ${timestampColumn} = COALESCE(${timestampColumn}, ?),
+          last_event_type = ?,
+          last_event_at = ?,
+          error_details = COALESCE(?, error_details),
+          updated_at = CURRENT_TIMESTAMP
+      WHERE resend_email_id = ?
+    `).bind(
+      deliveryStatus,
+      eventTime || new Date().toISOString(),
+      eventType,
+      eventTime || new Date().toISOString(),
+      eventDetails,
+      emailId
+    ).run();
+
+    return new Response(JSON.stringify({ received: true }), {
+      status: 200,
+      headers: jsonHeaders
+    });
+  } catch (error) {
+    console.error(
+      "Resend webhook processing failed",
+      error?.stack || error?.message || error
+    );
+
+    return new Response("Webhook processing failed", { status: 500 });
+  }
+}
+
 if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
 
   const bookings = await env.DB.prepare(`
@@ -3346,7 +3582,55 @@ if (request.method === "GET" && url.searchParams.get("admin") === "bookings") {
         last_cancelled_date,
         last_cancelled_time,
         cancelled_at,
-        cancelled_count
+        cancelled_count,
+        (
+          SELECT status
+          FROM email_delivery_log edl
+          WHERE edl.treatment_session_id = treatment_sessions.id
+            AND edl.email_type = 'aftercare'
+          ORDER BY edl.id DESC
+          LIMIT 1
+        ) AS aftercare_delivery_status,
+        (
+          SELECT sent_at
+          FROM email_delivery_log edl
+          WHERE edl.treatment_session_id = treatment_sessions.id
+            AND edl.email_type = 'aftercare'
+          ORDER BY edl.id DESC
+          LIMIT 1
+        ) AS aftercare_email_sent_at,
+        (
+          SELECT delivered_at
+          FROM email_delivery_log edl
+          WHERE edl.treatment_session_id = treatment_sessions.id
+            AND edl.email_type = 'aftercare'
+          ORDER BY edl.id DESC
+          LIMIT 1
+        ) AS aftercare_delivered_at,
+        (
+          SELECT review_requested
+          FROM email_delivery_log edl
+          WHERE edl.treatment_session_id = treatment_sessions.id
+            AND edl.email_type = 'aftercare'
+          ORDER BY edl.id DESC
+          LIMIT 1
+        ) AS review_requested,
+        (
+          SELECT review_clicked_at
+          FROM email_delivery_log edl
+          WHERE edl.treatment_session_id = treatment_sessions.id
+            AND edl.email_type = 'aftercare'
+          ORDER BY edl.id DESC
+          LIMIT 1
+        ) AS review_clicked_at,
+        (
+          SELECT error_details
+          FROM email_delivery_log edl
+          WHERE edl.treatment_session_id = treatment_sessions.id
+            AND edl.email_type = 'aftercare'
+          ORDER BY edl.id DESC
+          LIMIT 1
+        ) AS aftercare_delivery_error
       FROM treatment_sessions
       WHERE appointment_id = ?
       ORDER BY session_number ASC
