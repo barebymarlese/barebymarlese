@@ -1231,6 +1231,151 @@ footer{
   .health-actions{justify-content:flex-start}
 }
 
+
+/* EMAIL CENTRE */
+.email-centre-summary{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(130px,1fr));
+  gap:12px;
+  margin-bottom:18px;
+}
+.email-stat-card{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:15px;
+  background:#fff;
+}
+.email-stat-card.healthy{background:rgba(47,125,50,.06)}
+.email-stat-card.warning{background:#fff7e8}
+.email-stat-card.error{background:#f8ece9}
+.email-stat-label{
+  color:rgba(36,34,26,.62);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.email-stat-count{
+  margin-top:7px;
+  color:var(--ink);
+  font-size:26px;
+  font-weight:700;
+}
+.email-centre-panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+}
+.email-centre-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.email-centre-header h2{
+  margin:0 0 6px;
+  color:var(--olive);
+  font-size:20px;
+}
+.email-centre-note{
+  margin:0;
+  max-width:760px;
+  font-size:11px;
+  line-height:1.55;
+  color:rgba(36,34,26,.62);
+}
+.email-centre-controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.email-centre-controls input,
+.email-centre-controls select{
+  min-height:38px;
+  padding:8px 10px;
+  border:1px solid rgba(36,34,26,.15);
+  border-radius:10px;
+  background:#fff;
+  color:var(--ink);
+  font-family:inherit;
+  font-size:11px;
+}
+.email-centre-controls input{min-width:220px}
+.email-centre-table-wrap{
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:16px;
+}
+#email-centre-table{
+  min-width:1050px;
+  font-size:11px;
+}
+#email-centre-table th,
+#email-centre-table td{
+  padding:11px 9px;
+}
+#email-centre-table th{
+  font-size:9px;
+}
+.email-client-name{font-weight:700;color:var(--ink)}
+.email-address{
+  margin-top:3px;
+  color:rgba(36,34,26,.62);
+  font-size:10px;
+  overflow-wrap:anywhere;
+}
+.email-status-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+}
+.email-review-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(47,125,50,.12);
+  color:#2f7d32;
+  font-size:9px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.email-review-pending{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#fff7e8;
+  color:#7a5318;
+  font-size:9px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.email-none{
+  padding:28px 18px;
+  text-align:center;
+  color:rgba(36,34,26,.62);
+  font-size:12px;
+  line-height:1.6;
+}
+@media(max-width:1100px){
+  .email-centre-summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .email-centre-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .email-centre-controls{width:100%}
+  .email-centre-controls input,
+  .email-centre-controls select,
+  .email-centre-controls .btn{width:100%}
+}
+
 </style>
 </head>
 
@@ -1259,6 +1404,7 @@ footer{
             <button class="btn btn-secondary view-tab" id="bookings-tab" type="button" onclick="showAdminView('bookings')">Manage Bookings</button>
             <button class="btn btn-secondary view-tab" id="blocked-tab" type="button" onclick="showAdminView('blocked')">Block Dates</button>
             <button class="btn btn-secondary view-tab" id="health-tab" type="button" onclick="showAdminView('health')">System Health</button>
+            <button class="btn btn-secondary view-tab" id="email-tab" type="button" onclick="showAdminView('email')">Email Centre</button>
           </div>
           <button class="btn btn-secondary" type="button" onclick="refreshAdmin()">Refresh</button>
 
@@ -1392,6 +1538,74 @@ footer{
             </div>
             <div id="health-stored-list" class="health-list">
               <div class="empty-state">Loading stored issues...</div>
+            </div>
+          </div>
+        </section>
+
+
+        <section id="email-view" class="admin-view">
+          <div class="email-centre-summary" id="email-centre-summary">
+            <div class="email-stat-card">
+              <div class="email-stat-label">Loading</div>
+              <div class="email-stat-count">…</div>
+            </div>
+          </div>
+
+          <div class="email-centre-panel">
+            <div class="email-centre-header">
+              <div>
+                <h2>Email Centre</h2>
+                <p class="email-centre-note">
+                  Monitor tracked aftercare and review-request emails. “Delivered” means the recipient’s email provider accepted the message; it does not guarantee the client opened or read it.
+                </p>
+              </div>
+
+              <div class="email-centre-controls">
+                <input
+                  id="email-centre-search"
+                  type="search"
+                  placeholder="Search client, email or treatment"
+                  oninput="renderEmailCentre()"
+                >
+                <select id="email-centre-status" onchange="renderEmailCentre()">
+                  <option value="all">All statuses</option>
+                  <option value="sent">Sent</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="opened">Opened</option>
+                  <option value="clicked">Link clicked</option>
+                  <option value="delayed">Delayed</option>
+                  <option value="bounced">Bounced</option>
+                  <option value="failed">Failed</option>
+                  <option value="complained">Spam complaint</option>
+                </select>
+                <select id="email-centre-review" onchange="renderEmailCentre()">
+                  <option value="all">All review statuses</option>
+                  <option value="requested">Review requested</option>
+                  <option value="clicked">Review button clicked</option>
+                  <option value="not-requested">No review requested</option>
+                </select>
+                <button class="btn btn-secondary" type="button" onclick="loadBookings()">Refresh Emails</button>
+              </div>
+            </div>
+
+            <div class="email-centre-table-wrap">
+              <div id="email-centre-empty" class="email-none">Loading tracked emails...</div>
+              <table id="email-centre-table" style="display:none;">
+                <thead>
+                  <tr>
+                    <th>Client</th>
+                    <th>Treatment</th>
+                    <th>Session</th>
+                    <th>Email Type</th>
+                    <th>Delivery Status</th>
+                    <th>Sent</th>
+                    <th>Delivered</th>
+                    <th>Review</th>
+                    <th>Delivery Details</th>
+                  </tr>
+                </thead>
+                <tbody id="email-centre-body"></tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -2338,34 +2552,237 @@ async function reopenSystemIssue(id){
   loadSystemHealth();
 }
 
+
+function getTrackedEmailRows(){
+  const rows = [];
+
+  for (const booking of adminBookings) {
+    const sessions = Array.isArray(booking.sessions) ? booking.sessions : [];
+
+    for (const session of sessions) {
+      const deliveryStatus = String(
+        session.aftercare_delivery_status || ""
+      ).toLowerCase();
+
+      const aftercareSent =
+        String(session.aftercare_sent || "").toLowerCase() === "yes";
+
+      if (!deliveryStatus && !aftercareSent) continue;
+
+      rows.push({
+        bookingId: Number(booking.id || 0),
+        clientName: booking.client_name || "Client",
+        recipient: booking.email || "",
+        treatmentName:
+          booking.treatment_name ||
+          formatPackageType(booking.package_type) ||
+          getBookingTypeLabel(booking),
+        sessionNumber: Number(session.session_number || 0),
+        emailType: Number(session.review_requested || 0) === 1
+          ? "Aftercare + review request"
+          : "Aftercare",
+        status: deliveryStatus || "sent",
+        sentAt: session.aftercare_email_sent_at || "",
+        deliveredAt: session.aftercare_delivered_at || "",
+        reviewRequested: Number(session.review_requested || 0) === 1,
+        reviewClickedAt: session.review_clicked_at || "",
+        errorDetails: session.aftercare_delivery_error || ""
+      });
+    }
+  }
+
+  return rows.sort((a, b) => {
+    const aDate = new Date(String(a.sentAt || "").replace(" ", "T")).getTime() || 0;
+    const bDate = new Date(String(b.sentAt || "").replace(" ", "T")).getTime() || 0;
+    return bDate - aDate || b.bookingId - a.bookingId;
+  });
+}
+
+function emailStatCard(label, count, level = ""){
+  return `
+    <div class="email-stat-card ${escapeHtml(level)}">
+      <div class="email-stat-label">${escapeHtml(label)}</div>
+      <div class="email-stat-count">${Number(count || 0)}</div>
+    </div>
+  `;
+}
+
+function buildEmailCentreStatus(status){
+  const normalised = String(status || "sent").toLowerCase();
+  const labels = {
+    sent: "Sent to Resend",
+    delivered: "Delivered",
+    delayed: "Delivery delayed",
+    bounced: "Bounced",
+    failed: "Failed",
+    complained: "Spam complaint",
+    opened: "Opened",
+    clicked: "Link clicked"
+  };
+
+  return `
+    <span class="email-delivery-status ${escapeHtml(normalised)}">
+      ${escapeHtml(labels[normalised] || normalised)}
+    </span>
+  `;
+}
+
+function renderEmailCentre(){
+  const summary = document.getElementById("email-centre-summary");
+  const table = document.getElementById("email-centre-table");
+  const body = document.getElementById("email-centre-body");
+  const empty = document.getElementById("email-centre-empty");
+
+  if (!summary || !table || !body || !empty) return;
+
+  const allRows = getTrackedEmailRows();
+
+  const deliveredCount = allRows.filter(row =>
+    ["delivered", "opened", "clicked"].includes(row.status)
+  ).length;
+
+  const problemCount = allRows.filter(row =>
+    ["delayed", "bounced", "failed", "complained"].includes(row.status)
+  ).length;
+
+  const reviewRequestedCount = allRows.filter(row => row.reviewRequested).length;
+  const reviewClickedCount = allRows.filter(row => Boolean(row.reviewClickedAt)).length;
+
+  summary.innerHTML = [
+    emailStatCard("Tracked emails", allRows.length, allRows.length ? "" : "healthy"),
+    emailStatCard("Delivered", deliveredCount, "healthy"),
+    emailStatCard("Sent / awaiting", allRows.filter(row => row.status === "sent").length, ""),
+    emailStatCard("Delivery issues", problemCount, problemCount ? "error" : "healthy"),
+    emailStatCard("Reviews requested", reviewRequestedCount, ""),
+    emailStatCard("Review clicks", reviewClickedCount, reviewClickedCount ? "healthy" : "")
+  ].join("");
+
+  const search = String(
+    document.getElementById("email-centre-search")?.value || ""
+  ).trim().toLowerCase();
+
+  const statusFilter =
+    document.getElementById("email-centre-status")?.value || "all";
+
+  const reviewFilter =
+    document.getElementById("email-centre-review")?.value || "all";
+
+  const filteredRows = allRows.filter(row => {
+    const searchable = [
+      row.clientName,
+      row.recipient,
+      row.treatmentName,
+      row.emailType,
+      row.status
+    ].join(" ").toLowerCase();
+
+    const matchesSearch = !search || searchable.includes(search);
+    const matchesStatus =
+      statusFilter === "all" || row.status === statusFilter;
+
+    let matchesReview = true;
+    if (reviewFilter === "requested") {
+      matchesReview = row.reviewRequested;
+    } else if (reviewFilter === "clicked") {
+      matchesReview = Boolean(row.reviewClickedAt);
+    } else if (reviewFilter === "not-requested") {
+      matchesReview = !row.reviewRequested;
+    }
+
+    return matchesSearch && matchesStatus && matchesReview;
+  });
+
+  body.innerHTML = "";
+
+  if (!filteredRows.length) {
+    table.style.display = "none";
+    empty.style.display = "block";
+    empty.textContent = allRows.length
+      ? "No tracked emails match the selected filters."
+      : "No tracked aftercare emails yet. New emails sent after the tracking setup will appear here.";
+    return;
+  }
+
+  for (const row of filteredRows) {
+    const tr = document.createElement("tr");
+
+    const reviewHtml = row.reviewClickedAt
+      ? `
+        <span class="email-review-badge">★ Review button clicked</span>
+        <span class="email-delivery-meta">${escapeHtml(formatEmailTrackingDate(row.reviewClickedAt))}</span>
+      `
+      : row.reviewRequested
+        ? `<span class="email-review-pending">Review requested — awaiting click</span>`
+        : `<span class="action-note">Not requested</span>`;
+
+    const detailHtml = row.errorDetails
+      ? `<span style="color:#8a3b3b;font-weight:600;">${escapeHtml(row.errorDetails)}</span>`
+      : ["delivered", "opened", "clicked"].includes(row.status)
+        ? `<span style="color:#2f7d32;font-weight:600;">No delivery problem recorded</span>`
+        : row.status === "sent"
+          ? `<span class="action-note" style="text-align:left;">Awaiting the next Resend delivery event</span>`
+          : `<span class="action-note" style="text-align:left;">No extra details supplied</span>`;
+
+    tr.innerHTML = `
+      <td>
+        <div class="email-client-name">${escapeHtml(row.clientName)}</div>
+        <div class="email-address">${escapeHtml(row.recipient || "No email")}</div>
+      </td>
+      <td>${escapeHtml(row.treatmentName || "Treatment")}</td>
+      <td>Session ${escapeHtml(row.sessionNumber || "—")}</td>
+      <td>${escapeHtml(row.emailType)}</td>
+      <td>
+        <div class="email-status-stack">
+          ${buildEmailCentreStatus(row.status)}
+        </div>
+      </td>
+      <td>${row.sentAt ? escapeHtml(formatEmailTrackingDate(row.sentAt)) : "—"}</td>
+      <td>${row.deliveredAt ? escapeHtml(formatEmailTrackingDate(row.deliveredAt)) : "—"}</td>
+      <td>${reviewHtml}</td>
+      <td>${detailHtml}</td>
+    `;
+
+    body.appendChild(tr);
+  }
+
+  empty.style.display = "none";
+  table.style.display = "table";
+}
+
 function showAdminView(view){
   const calendarView = document.getElementById("calendar-view");
   const bookingsView = document.getElementById("bookings-view");
   const blockedView = document.getElementById("blocked-view");
   const healthView = document.getElementById("health-view");
+  const emailView = document.getElementById("email-view");
   const calendarTab = document.getElementById("calendar-tab");
   const bookingsTab = document.getElementById("bookings-tab");
   const blockedTab = document.getElementById("blocked-tab");
   const healthTab = document.getElementById("health-tab");
+  const emailTab = document.getElementById("email-tab");
 
   const showCalendar = view === "calendar";
   const showBookings = view === "bookings";
   const showBlocked = view === "blocked";
   const showHealth = view === "health";
+  const showEmail = view === "email";
 
   calendarView.classList.toggle("active", showCalendar);
   bookingsView.classList.toggle("active", showBookings);
   blockedView.classList.toggle("active", showBlocked);
   healthView.classList.toggle("active", showHealth);
+  emailView.classList.toggle("active", showEmail);
 
   calendarTab.classList.toggle("active", showCalendar);
   bookingsTab.classList.toggle("active", showBookings);
   blockedTab.classList.toggle("active", showBlocked);
   healthTab.classList.toggle("active", showHealth);
+  emailTab.classList.toggle("active", showEmail);
 
   if (showCalendar) renderCalendar();
   if (showBlocked) loadBlockedDates();
   if (showHealth) loadSystemHealth();
+  if (showEmail) renderEmailCentre();
 
   window.scrollTo({top:0, behavior:"smooth"});
 }
@@ -2375,6 +2792,9 @@ function refreshAdmin(){
   loadBlockedDates();
   if (document.getElementById("health-view")?.classList.contains("active")) {
     loadSystemHealth();
+  }
+  if (document.getElementById("email-view")?.classList.contains("active")) {
+    renderEmailCentre();
   }
 }
 
@@ -2646,12 +3066,14 @@ async function loadBookings(){
     const bookings = await res.json();
     adminBookings = Array.isArray(bookings) ? bookings : [];
     renderCalendar();
+    renderEmailCentre();
 
     if(!bookings.length){
       message.textContent = "No bookings found.";
       summary.textContent = "0 bookings";
       adminBookings = [];
       renderCalendar();
+      renderEmailCentre();
       return;
     }
 
@@ -2761,6 +3183,7 @@ ${isArchivedCompletedConsultation(booking)
     summary.textContent = "Unable to load";
     adminBookings = [];
     renderCalendar();
+    renderEmailCentre();
   }
 }
 
