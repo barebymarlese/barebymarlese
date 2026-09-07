@@ -1,56 +1,24 @@
 <?xml version='1.0' encoding='utf-8'?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://barebymarlese.com/</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/consultation.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/deposit.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/booking.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/treatment.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/treatment-booking.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/aftercare.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/booking-terms.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/privacy.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/cancel.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/reschedule.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/laser-tattoo-removal-wallingford.html</loc>
-  </url>
-
-  <url>
-    <loc>https://barebymarlese.com/laser-tattoo-removal-didcot.html</loc>
-  </url>
-
-  <url><loc>https://barebymarlese.com/laser-tattoo-removal-woodcote.html</loc></url><url><loc>https://barebymarlese.com/laser-tattoo-removal-reading.html</loc></url><url><loc>https://barebymarlese.com/laser-tattoo-removal-oxford.html</loc></url><url><loc>https://barebymarlese.com/laser-tattoo-removal-henley-on-thames.html</loc></url><url><loc>https://barebymarlese.com/carbon-laser-facial-woodcote.html</loc></url><url><loc>https://barebymarlese.com/carbon-laser-facial-reading.html</loc></url><url><loc>https://barebymarlese.com/carbon-laser-facial-oxford.html</loc></url><url><loc>https://barebymarlese.com/carbon-laser-facial-didcot.html</loc></url><url><loc>https://barebymarlese.com/carbon-laser-facial-wallingford.html</loc></url><url><loc>https://barebymarlese.com/carbon-laser-facial-henley-on-thames.html</loc></url><url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-woodcote.html</loc></url><url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-reading.html</loc></url><url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-oxford.html</loc></url><url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-didcot.html</loc></url><url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-wallingford.html</loc></url><url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-henley-on-thames.html</loc></url></urlset>
+  <url><loc>https://barebymarlese.com/</loc></url>
+  <url><loc>https://barebymarlese.com/treatment</loc></url>
+  <url><loc>https://barebymarlese.com/aftercare</loc></url>
+  <url><loc>https://barebymarlese.com/laser-tattoo-removal-woodcote</loc></url>
+  <url><loc>https://barebymarlese.com/laser-tattoo-removal-reading</loc></url>
+  <url><loc>https://barebymarlese.com/laser-tattoo-removal-oxford</loc></url>
+  <url><loc>https://barebymarlese.com/laser-tattoo-removal-didcot</loc></url>
+  <url><loc>https://barebymarlese.com/laser-tattoo-removal-wallingford</loc></url>
+  <url><loc>https://barebymarlese.com/laser-tattoo-removal-henley-on-thames</loc></url>
+  <url><loc>https://barebymarlese.com/carbon-laser-facial-woodcote</loc></url>
+  <url><loc>https://barebymarlese.com/carbon-laser-facial-reading</loc></url>
+  <url><loc>https://barebymarlese.com/carbon-laser-facial-oxford</loc></url>
+  <url><loc>https://barebymarlese.com/carbon-laser-facial-didcot</loc></url>
+  <url><loc>https://barebymarlese.com/carbon-laser-facial-wallingford</loc></url>
+  <url><loc>https://barebymarlese.com/carbon-laser-facial-henley-on-thames</loc></url>
+  <url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-woodcote</loc></url>
+  <url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-reading</loc></url>
+  <url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-oxford</loc></url>
+  <url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-didcot</loc></url>
+  <url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-wallingford</loc></url>
+  <url><loc>https://barebymarlese.com/fungal-nail-laser-treatment-henley-on-thames</loc></url>
+</urlset>
