@@ -1723,6 +1723,20 @@ text-transform:uppercase;
   .nav-inner .nav-social{margin:6px 0 0;display:flex;justify-content:center;gap:18px}
 }
 @media(min-width:981px){.nav-inner .nav-links{display:flex!important}}
+
+/* Mobile social shortcuts beside the menu; desktop retains original links */
+.bare-mobile-social{display:none}
+@media(max-width:980px){
+  .nav-inner{gap:8px}
+  .nav-inner .logo{flex:1 1 0;min-width:0}
+  .bare-mobile-social{display:flex;flex:0 0 auto;align-items:center;margin-left:auto}
+  .bare-mobile-social-links{display:flex;align-items:center;gap:7px}
+  .bare-mobile-social-links a{display:inline-flex;align-items:center;justify-content:center;width:40px;height:44px;color:#5d6b5a;border-radius:12px;text-decoration:none}
+  .bare-mobile-social-links a:focus-visible,.bare-menu-toggle:focus-visible{outline:2px solid #5d6b5a;outline-offset:3px}
+  .nav-inner .nav-links .nav-social{display:none}
+  .bare-menu-toggle{padding:10px 12px;gap:6px}
+}
+@media(max-width:380px){.bare-menu-toggle span{display:none}.bare-menu-toggle{width:44px;padding:10px}}
 </style>
 <script src="/config.js"></script>
 <script src="/analytics.js"></script>
@@ -1736,6 +1750,21 @@ text-transform:uppercase;
 <div class="brand-location" id="brand-location">South Oxfordshire<br/>
     Henley • Wallingford • Didcot</div>
 </div>
+<div class="bare-mobile-social" aria-label="Social links"><div class="bare-mobile-social-links">
+<a aria-label="Instagram" href="https://www.instagram.com/barebymarlese/" rel="noopener noreferrer" target="_blank">
+<svg fill="currentColor" height="20" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.8 2h8.4C19.9 2 22 4.1 22 6.8v8.4c0 2.7-2.1 4.8-4.8 4.8H7.8C5.1 20 3 17.9 3 15.2V6.8C3 4.1 5.1 2 7.8 2zm0 2C6.3 4 5 5.3 5 6.8v8.4C5 16.7 6.3 18 7.8 18h8.4c1.5 0 2.8-1.3 2.8-2.8V6.8C19 5.3 17.7 4 16.2 4H7.8zm9.9 1.5a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"></path>
+</svg>
+</a>
+<a aria-label="WhatsApp" href="https://wa.me/447404127830" rel="noopener noreferrer" target="_blank">
+<svg aria-hidden="true" fill="currentColor" height="20" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+<!-- outer circle -->
+<path d="M12 2a10 10 0 0 0-8.7 14.9L2 22l5.3-1.4A10 10 0 1 0 12 2z"></path>
+<!-- handset + chat mark (cut-out style) -->
+<path d="M17.4 14.9c-.2.6-1 1.1-1.6 1.2-.4.1-.9.2-2.9-.6-2.6-1.1-4.3-3.7-4.4-3.9-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.2.5-.3.8-.3h.6c.2 0 .5-.1.7.5.2.6.8 2.1.8 2.3.1.2.1.4 0 .6-.1.2-.2.4-.3.5-.1.1-.3.3-.4.4-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1.1 2.1 1.4 2.5 1.6.3.1.5.1.7-.1.2-.2.8-.9 1-1.2.2-.3.4-.2.7-.1.3.1 1.9.9 2.2 1.1.3.2.5.2.6.4.1.2.1 1-.1 1.6z" fill="var(--bg)"></path>
+</svg>
+</a>
+</div></div>
 <button class="bare-menu-toggle" type="button" aria-expanded="false" aria-controls="bare-site-menu" aria-label="Open navigation menu"><span>Menu</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <nav id="bare-site-menu" aria-label="Site navigation" class="nav-links">
 
