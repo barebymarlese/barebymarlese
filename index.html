@@ -1708,6 +1708,21 @@ text-transform:uppercase;
 .meet-marlese-role { font-size:12px; color:var(--brand); font-weight:600; margin:0 0 12px; }
 .meet-marlese-bio { font-size:14px; line-height:1.75; color:var(--heading-dark); margin:0; }
 @media(max-width:650px){ .meet-marlese {padding:18px 0 36px;} .meet-marlese-card{flex-direction:column; text-align:center; gap:16px; padding:26px 20px;} .meet-marlese-photo{width:116px;height:116px;flex-basis:116px;} .meet-marlese-name{font-size:29px;} }
+
+/* Accessible mobile navigation — desktop remains unchanged */
+.bare-menu-toggle{display:none}
+@media(max-width:980px){
+  .nav-inner{position:relative;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:12px 0}
+  .nav-inner .logo{width:auto;min-width:0;flex:1;padding-top:0}
+  .bare-menu-toggle{display:inline-flex;align-items:center;justify-content:center;gap:9px;flex:none;min-height:44px;padding:10px 15px;border:1px solid rgba(79,95,78,.32);border-radius:999px;background:#5d6b5a;color:#fff;font:inherit;font-size:13px;font-weight:650;letter-spacing:.04em;cursor:pointer}
+  .bare-menu-toggle svg{width:19px;height:19px}
+  .nav-inner .nav-links{display:none;width:100%;flex-basis:100%;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:2px;overflow:visible;max-height:none;padding:12px;background:#f5f3ee;border:1px solid rgba(79,95,78,.16);border-radius:16px;box-shadow:0 12px 28px rgba(0,0,0,.09)}
+  .nav-inner .nav-links.bare-menu-open{display:flex}
+  .nav-inner .nav-links .nav-item{flex:none;display:block;text-align:left;white-space:normal;width:100%;padding:12px 14px;font-size:14px;letter-spacing:.04em;color:#394338}
+  .nav-inner .nav-links .nav-item[href="#contact"]{background:#5d6b5a;color:#fff;text-align:center;border-radius:999px;font-weight:700;margin-top:7px}
+  .nav-inner .nav-social{margin:6px 0 0;display:flex;justify-content:center;gap:18px}
+}
+@media(min-width:981px){.nav-inner .nav-links{display:flex!important}}
 </style>
 <script src="/config.js"></script>
 <script src="/analytics.js"></script>
@@ -1721,7 +1736,8 @@ text-transform:uppercase;
 <div class="brand-location" id="brand-location">South Oxfordshire<br/>
     Henley • Wallingford • Didcot</div>
 </div>
-<nav aria-label="Site navigation" class="nav-links">
+<button class="bare-menu-toggle" type="button" aria-expanded="false" aria-controls="bare-site-menu" aria-label="Open navigation menu"><span>Menu</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<nav id="bare-site-menu" aria-label="Site navigation" class="nav-links">
 
 
 
@@ -2569,6 +2585,19 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
       }
     });
   }
+})();
+</script>
+<script>
+(function(){
+  const toggle=document.querySelector('.bare-menu-toggle');
+  const menu=document.getElementById('bare-site-menu');
+  if(!toggle||!menu)return;
+  function close(){menu.classList.remove('bare-menu-open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation menu');}
+  toggle.addEventListener('click',function(){const open=menu.classList.toggle('bare-menu-open');toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');});
+  menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close)});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){close();}});
+  document.addEventListener('click',function(e){if(!menu.contains(e.target)&&!toggle.contains(e.target))close();});
+  window.addEventListener('resize',function(){if(window.innerWidth>980)close();});
 })();
 </script>
 </body>
