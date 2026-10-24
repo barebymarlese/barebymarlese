@@ -1654,11 +1654,11 @@ text-transform:uppercase;
 .bare-google-reviews-shell {
   max-width: 960px;
   margin: 0 auto;
-  padding: 12px;
-  border: 1px solid rgba(255,255,255,.32);
-  border-radius: 20px;
-  background: rgba(255,255,255,.10);
-  box-shadow: 0 12px 32px rgba(36,34,26,.055);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   overflow: visible;
 }
 #google-reviews { padding: 58px 0 64px !important; }
@@ -1679,21 +1679,24 @@ text-transform:uppercase;
   font-size: 15px;
   line-height: 1.7;
 }
-#google-reviews .reviews-footer { text-align:center; margin:22px 0 0; }
+#google-reviews .reviews-footer { text-align:center; margin:12px 0 0; }
 #google-reviews .reviews-footer .forms-btn {
   display: inline-flex;
   width: auto;
-  min-width: 250px;
-  padding: 14px 30px;
+  min-width: 310px;
+  max-width: 100%;
+  white-space: nowrap;
+  justify-content: center;
+  padding: 14px 32px;
   background: var(--brand);
   color: #fff;
   box-shadow: 0 10px 26px rgba(36,34,26,.12);
 }
 @media (max-width: 980px) {
-  .bare-google-reviews-shell { padding: 8px; border-radius: 16px; }
+  .bare-google-reviews-shell { padding: 0; border-radius: 0; }
   #google-reviews { padding: 42px 0 48px !important; }
   #google-reviews .reviews-intro { font-size: 14px; }
-  #google-reviews .reviews-footer .forms-btn { min-width: 0; width: min(100%, 320px); }
+  #google-reviews .reviews-footer .forms-btn { min-width: 0; width: min(100%, 340px); white-space: normal; }
 }
 </style>
 <script src="/config.js"></script>
@@ -1920,7 +1923,7 @@ Carbon Laser Facial results can often be seen immediately after treatment. The l
       <div data-review-widget="6d6e8177-76ea-4998-9f21-d789564f37f7"></div>
     </div>
     <p class="reviews-footer">
-      <a class="forms-btn" href="https://maps.app.goo.gl/6Sq9SBUWzat3LUcw5" target="_blank" rel="noopener noreferrer">Read all reviews on Google ↗</a>
+      <a class="forms-btn" href="https://maps.app.goo.gl/6Sq9SBUWzat3LUcw5" target="_blank" rel="noopener noreferrer">View Reviews on Google ↗</a>
     </p>
   </div>
 </section>
