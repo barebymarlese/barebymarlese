@@ -1,6 +1,6 @@
 /consultation.html https://barebymarlese.eselram.com/ 301
 
-# Local treatment pages — serve their own HTML, not the homepage
+# Serve the 18 treatment/location HTML files at clean URLs
 /carbon-laser-facial-didcot /carbon-laser-facial-didcot.html 200
 /carbon-laser-facial-henley-on-thames /carbon-laser-facial-henley-on-thames.html 200
 /carbon-laser-facial-oxford /carbon-laser-facial-oxford.html 200
