@@ -1779,7 +1779,14 @@ text-transform:uppercase;
 </style>
 
 <!-- Analytics is loaded only after opt-in via the cookie controls below. -->
-</link></meta></meta></meta></head>
+</link></meta></meta></meta>
+<style>
+.bare-cf-option{margin:12px 0;padding:12px 14px;background:#e9ede6;border:1px solid #bdc7b9;border-radius:12px;color:#24221a;font-size:13px;line-height:1.55}
+.bare-cf-option label{display:flex;gap:10px;align-items:center;font-weight:700;cursor:pointer}
+.bare-cf-option input{width:19px;height:19px;accent-color:#5e6959;flex:none}
+.bare-cf-option p{margin:6px 0 0!important;font-size:12px!important}
+</style>
+</head>
 <body>
 <header class="nav">
 <div class="wrap nav-inner">
@@ -2667,7 +2674,12 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
 </script>
 <div aria-describedby="bare-cookie-desc" aria-labelledby="bare-cookie-title" aria-modal="false" class="bare-cookie-banner" hidden="" id="bare-cookie-banner" role="dialog">
 <h2 id="bare-cookie-title">Your privacy matters</h2>
-<p id="bare-cookie-desc">We use essential technologies to operate our website. With your permission, we also use Google Analytics to understand website visits. You can accept or reject analytics, and change your choice anytime using Cookie Settings in the footer. <a href="/privacy.html" style="text-decoration:underline">Privacy Policy</a>.</p>
+<p id="bare-cookie-desc">We use essential technologies to operate our website. Cloudflare Web Analytics measures basic website use without analytics cookies, unless you object using the control below. Google Analytics is separate and only loads with your consent. You can accept or reject analytics, and change your choice anytime using Cookie Settings in the footer. <a href="/privacy.html" style="text-decoration:underline">Privacy Policy</a>.</p>
+
+<div class="bare-cf-option">
+  <label><input type="checkbox" id="bare-cf-analytics" checked>Allow Cloudflare basic website statistics</label>
+  <p>Cookieless, aggregate visit and performance statistics. Enabled by default; untick to object at any time. This choice is separate from Google Analytics. <a href="/privacy.html" style="text-decoration:underline">Privacy Policy</a>.</p>
+</div>
 <div class="bare-cookie-actions">
 <button class="bare-cookie-reject" id="bare-cookie-reject" type="button">Reject analytics</button>
 <button class="bare-cookie-accept" id="bare-cookie-accept" type="button">Accept analytics</button>
@@ -2696,6 +2708,32 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
   var value=stored();
   if(value==='accepted')enableAnalytics();
   else if(value!=='rejected')banner.hidden=false;
+})();
+</script>
+
+<script>
+/* BARE Cloudflare Web Analytics: separate, revocable statistical-purpose preference.
+   GA4 remains controlled by the pre-existing consent script. */
+(function(){
+  'use strict';
+  var key='bare_cloudflare_stats_optout_v1';
+  var checkbox=document.getElementById('bare-cf-analytics');
+  function isAllowed(){try{return localStorage.getItem(key)!=='off'}catch(e){return true}}
+  function setChoice(allowed){try{localStorage.setItem(key,allowed?'on':'off')}catch(e){}}
+  if(checkbox){
+    checkbox.checked=isAllowed();
+    checkbox.addEventListener('change',function(){
+      setChoice(checkbox.checked);
+      /* The loaded beacon cannot be reliably unloaded; reload to honour changes. */
+      window.location.reload();
+    });
+  }
+  if(!isAllowed())return;
+  var script=document.createElement('script');
+  script.type='module';
+  script.src='https://static.cloudflareinsights.com/beacon.min.js';
+  script.setAttribute('data-cf-beacon','{"token":"62b1e01e6efd4d5a8dafeea944c236eb"}');
+  document.head.appendChild(script);
 })();
 </script>
 </body>
