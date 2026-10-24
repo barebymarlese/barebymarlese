@@ -147,7 +147,8 @@
 <!-- Fonts (similar clean, modern look) -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/></noscript>
 <style>
     :root{
       --bg: #cacdc6;
@@ -1776,7 +1777,7 @@ text-transform:uppercase;
 .bare-cookie-settings{border:0;background:none;text-decoration:underline;color:#394438;font:inherit;cursor:pointer;padding:4px}
 @media(max-width:600px){.bare-cookie-banner{bottom:0;padding:14px 18px max(14px,env(safe-area-inset-bottom));max-height:65dvh}.bare-cookie-banner h2{font-size:16px}.bare-cookie-banner p{font-size:12px;line-height:1.5;margin-bottom:10px}.bare-cookie-actions{flex-direction:row;gap:8px}.bare-cookie-actions button{min-width:0;padding:10px 7px;font-size:11px}}
 </style>
-<script src="/config.js"></script>
+
 <!-- Analytics is loaded only after opt-in via the cookie controls below. -->
 </link></meta></meta></meta></head>
 <body>
@@ -2550,6 +2551,7 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
     <button class="bare-cookie-settings" id="bare-cookie-reopen" type="button">Cookie Settings</button>
 </div>
 </footer>
+<script src="/config.js"></script>
 <script>
 (function(){
   const CONFIG = window.SITE_CONFIG || {};
