@@ -1764,9 +1764,20 @@ text-transform:uppercase;
   .nav-inner .bare-menu-toggle span{display:inline}
   .nav-inner .bare-menu-toggle{width:auto}
 }
+
+/* BARE privacy controls */
+.bare-cookie-banner{position:fixed;z-index:20000;bottom:18px;left:50%;transform:translateX(-50%);width:min(590px,calc(100% - 28px));background:#f5f3ee;color:#24221a;border:1px solid #c6cbc1;border-radius:18px;padding:20px 22px;box-shadow:0 16px 50px rgba(0,0,0,.23);font-family:inherit;letter-spacing:normal;text-transform:none}
+.bare-cookie-banner[hidden]{display:none!important}
+.bare-cookie-banner h2{font-size:18px;color:#5e6959;margin:0 0 8px}
+.bare-cookie-banner p{font-size:13px;line-height:1.65;margin:0 0 15px}
+.bare-cookie-actions{display:flex;gap:10px;flex-wrap:wrap}
+.bare-cookie-actions button{font:600 13px inherit;font-family:inherit;font-size:13px;font-weight:600;border-radius:999px;padding:12px 17px;cursor:pointer;min-height:44px;flex:1;border:1px solid #5e6959}
+.bare-cookie-accept{background:#5e6959;color:white}.bare-cookie-reject{background:transparent;color:#394438}
+.bare-cookie-settings{border:0;background:none;text-decoration:underline;color:#394438;font:inherit;cursor:pointer;padding:4px}
+@media(max-width:600px){.bare-cookie-banner{bottom:10px;padding:17px}.bare-cookie-actions{flex-direction:column}.bare-cookie-actions button{width:100%}}
 </style>
 <script src="/config.js"></script>
-<script src="/analytics.js"></script>
+<!-- Analytics is loaded only after opt-in via the cookie controls below. -->
 </meta></meta></meta></link></head>
 <body>
 <header class="nav">
@@ -2550,6 +2561,8 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
 <a href="/privacy.html" style="color:#878274;">Privacy Policy</a>
      | 
     <a href="/booking-terms.html" style="color:#878274;">Booking Terms</a>
+     &nbsp;|&nbsp;
+    <button type="button" class="bare-cookie-settings" id="bare-cookie-reopen">Cookie Settings</button>
 </div>
 </footer>
 <script>
@@ -2657,6 +2670,40 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){close();}});
   document.addEventListener('click',function(e){if(!menu.contains(e.target)&&!toggle.contains(e.target))close();});
   window.addEventListener('resize',function(){if(window.innerWidth>980)close();});
+})();
+</script>
+
+<div class="bare-cookie-banner" id="bare-cookie-banner" role="dialog" aria-modal="false" aria-labelledby="bare-cookie-title" aria-describedby="bare-cookie-desc" hidden>
+  <h2 id="bare-cookie-title">Your privacy matters</h2>
+  <p id="bare-cookie-desc">We use essential technologies to operate our website. With your permission, we also use Google Analytics to understand website visits. You can accept or reject analytics, and change your choice anytime using Cookie Settings in the footer. <a href="/privacy.html" style="text-decoration:underline">Privacy Policy</a>.</p>
+  <div class="bare-cookie-actions">
+    <button type="button" class="bare-cookie-reject" id="bare-cookie-reject">Reject analytics</button>
+    <button type="button" class="bare-cookie-accept" id="bare-cookie-accept">Accept analytics</button>
+  </div>
+</div>
+<script>
+(function(){
+  'use strict';
+  var key='bare_analytics_consent_v1';
+  var banner=document.getElementById('bare-cookie-banner');
+  var loaded=false;
+  function stored(){try{return localStorage.getItem(key)}catch(e){return null}}
+  function save(value){try{localStorage.setItem(key,value)}catch(e){}}
+  function enableAnalytics(){
+    if(loaded)return;
+    loaded=true;
+    var script=document.createElement('script');
+    script.src='/analytics.js';
+    script.async=true;
+    document.head.appendChild(script);
+  }
+  function choose(value){save(value);banner.hidden=true;if(value==='accepted')enableAnalytics();}
+  document.getElementById('bare-cookie-accept').addEventListener('click',function(){choose('accepted')});
+  document.getElementById('bare-cookie-reject').addEventListener('click',function(){choose('rejected')});
+  document.getElementById('bare-cookie-reopen').addEventListener('click',function(){banner.hidden=false;document.getElementById('bare-cookie-reject').focus()});
+  var value=stored();
+  if(value==='accepted')enableAnalytics();
+  else if(value!=='rejected')banner.hidden=false;
 })();
 </script>
 </body>
