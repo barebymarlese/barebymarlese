@@ -1798,8 +1798,38 @@ text-transform:uppercase;
 .bare-cf-option input{width:19px;height:19px;accent-color:#5e6959;flex:none}
 .bare-cf-option p{margin:6px 0 0!important;font-size:12px!important}
 </style>
+<style>
+/* BARE floating new-client offer: compact, dismissible and time-limited. */
+.bare-floating-offer{display:none;position:fixed;z-index:9998;top:var(--bare-floating-top,108px);left:50%;transform:translateX(-50%);width:min(920px,calc(100% - 28px));box-sizing:border-box;background:#414b3e;color:#f8f6ef;border:1px solid rgba(250,247,234,.28);border-radius:18px;box-shadow:0 14px 40px rgba(25,31,23,.26);padding:14px 52px 14px 21px;font-family:inherit;letter-spacing:normal;text-transform:none;}
+.bare-floating-offer.is-visible{display:block;animation:bare-offer-arrive .5s ease-out both;}
+.bare-floating-offer-content{display:flex;align-items:center;gap:18px;justify-content:space-between;}
+.bare-floating-offer-copy{min-width:0;}
+.bare-floating-offer-kicker{display:block;color:#dfd8bc;font-size:10px;letter-spacing:.14em;font-weight:700;margin-bottom:3px;}
+.bare-floating-offer-title{display:block;color:#fff;font-weight:750;font-size:clamp(16px,2vw,22px);line-height:1.18;}
+.bare-floating-offer-note{display:block;color:#e9e8df;font-size:12px;margin-top:4px;line-height:1.4;}
+.bare-floating-offer-cta{flex:none;display:inline-block;text-align:center;white-space:nowrap;background:#ede9dd;color:#35402f!important;text-decoration:none!important;border-radius:999px;padding:11px 17px;font-size:12px;font-weight:750;line-height:1.2;transition:background-color .2s ease;}
+.bare-floating-offer-cta:hover,.bare-floating-offer-cta:focus-visible{background:#fff;}
+.bare-floating-offer-close{position:absolute;top:12px;right:12px;width:29px;height:29px;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:transparent;color:#fff;cursor:pointer;font-size:20px;line-height:24px;text-align:center;padding:0;}
+.bare-floating-offer-close:focus-visible,.bare-floating-offer-cta:focus-visible{outline:3px solid #fff;outline-offset:3px;}
+@keyframes bare-offer-arrive{from{opacity:0;transform:translate(-50%,-9px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:650px){.bare-floating-offer{padding:11px 37px 12px 14px;border-radius:14px;width:calc(100% - 18px)}.bare-floating-offer-content{align-items:stretch;gap:8px;flex-direction:column}.bare-floating-offer-kicker{font-size:9px;margin-bottom:2px}.bare-floating-offer-title{font-size:16px}.bare-floating-offer-note{font-size:11px;margin-top:2px}.bare-floating-offer-cta{padding:8px 10px;font-size:11px;align-self:flex-start}.bare-floating-offer-close{top:8px;right:7px;width:25px;height:25px;line-height:20px}}
+@media(prefers-reduced-motion:reduce){.bare-floating-offer.is-visible{animation:none}.bare-floating-offer-cta{transition:none}}
+</style>
 </head>
 <body>
+<!-- BARE time-limited floating first-session offer (all pages). -->
+<aside id="bare-floating-offer" class="bare-floating-offer" role="region" aria-label="New client laser tattoo removal offer" hidden>
+  <div class="bare-floating-offer-content">
+    <div class="bare-floating-offer-copy">
+      <span class="bare-floating-offer-kicker">NEW CLIENT OFFER · ENDS 7 NOVEMBER</span>
+      <span class="bare-floating-offer-title">10% OFF YOUR FIRST SESSION</span>
+      <span class="bare-floating-offer-note">Laser tattoo removal only · New clients · Terms apply below</span>
+    </div>
+    <a class="bare-floating-offer-cta" href="https://wa.me/447404127830?text=Hi%20BARE%2C%20I%27d%20like%20to%20enquire%20about%20the%2010%25%20new-client%20laser%20tattoo%20removal%20offer." target="_blank" rel="noopener noreferrer">Enquire on WhatsApp</a>
+  </div>
+  <button class="bare-floating-offer-close" type="button" aria-label="Dismiss offer" title="Dismiss offer">&times;</button>
+</aside>
+
 <header class="nav">
 <div class="wrap nav-inner">
 <div aria-label="Laser Tattoo Removal and Carbon Facial Specialist" class="logo">
@@ -2751,5 +2781,31 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
   document.head.appendChild(script);
 })();
 </script>
+<script>
+/* Show only during the advertised offer period; closing hides it for this browser tab's visit. */
+(function(){
+  'use strict';
+  var offer=document.getElementById('bare-floating-offer');
+  if(!offer)return;
+  var now=Date.now();
+  if(now<Date.parse('2026-10-25T00:00:00Z') || now>=Date.parse('2026-11-08T00:00:00Z'))return;
+  try{if(sessionStorage.getItem('bare_floating_offer_dismissed_2026')==='yes')return;}catch(e){}
+  var nav=document.querySelector('header.nav');
+  function positionOffer(){
+    var bottom=nav?Math.ceil(nav.getBoundingClientRect().bottom):0;
+    offer.style.setProperty('--bare-floating-top',Math.max(8,bottom+9)+'px');
+  }
+  positionOffer();
+  offer.hidden=false;
+  offer.classList.add('is-visible');
+  window.addEventListener('resize',positionOffer,{passive:true});
+  window.addEventListener('scroll',positionOffer,{passive:true});
+  offer.querySelector('.bare-floating-offer-close').addEventListener('click',function(){
+    offer.classList.remove('is-visible');offer.hidden=true;
+    try{sessionStorage.setItem('bare_floating_offer_dismissed_2026','yes');}catch(e){}
+  });
+})();
+</script>
+
 </body>
 </html>
