@@ -1823,18 +1823,18 @@ text-transform:uppercase;
 @media(prefers-reduced-motion:reduce){.bare-floating-offer-cta{transition:none}}
 </style>
 <style>
-/* BARE consultation video: self-contained responsive layout */
-.bare-consultation-video{padding:48px 0;background:#e7e9e1;color:#252a24}
-.bare-consultation-video-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:clamp(24px,5vw,72px);align-items:center;max-width:960px;margin:0 auto}
-.bare-consultation-video-copy{min-width:0}
-.bare-consultation-eyebrow{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:#596854;font-weight:700}
-.bare-consultation-video-copy h2{font-size:clamp(28px,3.4vw,42px);line-height:1.14;margin:14px 0 18px;color:#252a24}
-.bare-consultation-video-copy>p:not(.bare-consultation-eyebrow){line-height:1.65;color:#505a4e;max-width:48ch}
-.bare-consultation-video-book{display:inline-block;background:#5f705b;color:white!important;border-radius:999px;padding:13px 28px;text-decoration:none!important;font-weight:700;margin-top:18px}
-.bare-consultation-video-book:hover,.bare-consultation-video-book:focus-visible{background:#455640}
-.bare-consultation-video-frame{width:100%;max-width:320px;margin:auto;border:7px solid #f7f6ef;border-radius:20px;overflow:hidden;background:#242b25;box-shadow:0 12px 32px rgba(27,34,25,.13);aspect-ratio:480/854}
-.bare-consultation-video-frame video{display:block;width:100%;height:100%;object-fit:contain;background:#242b25}
-@media(max-width:700px){.bare-consultation-video{padding:36px 0}.bare-consultation-video-inner{grid-template-columns:1fr;gap:22px}.bare-consultation-video-copy{text-align:center}.bare-consultation-video-copy>p:not(.bare-consultation-eyebrow){margin-left:auto;margin-right:auto}.bare-consultation-video-frame{max-width:270px}}
+/* BARE consultation video: simple and lightweight */
+.bare-consultation-video{padding:38px 0;background:#e7e9e1;color:#252a24}
+.bare-consultation-video-inner{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:32px;align-items:center;max-width:850px;margin:auto}
+.bare-consultation-video-copy h2{font-size:clamp(23px,2.8vw,31px);line-height:1.25;margin:0 0 12px;color:#252a24}
+.bare-consultation-video-copy>p{line-height:1.55;color:#505a4e;margin:0 0 15px}
+.bare-consultation-video-book{display:inline-block;background:#5f705b;color:#fff!important;border-radius:999px;padding:10px 22px;text-decoration:none!important;font-weight:700}
+.bare-consultation-video-frame{width:100%;max-width:220px;aspect-ratio:480/854;border-radius:10px;overflow:hidden;background:#242b25}
+.bare-consultation-video-frame video{display:block;width:100%;height:100%;object-fit:contain}
+.bare-video-play{display:block;position:relative;width:100%;height:100%;padding:0;border:0;background:#242b25;cursor:pointer}
+.bare-video-play img{display:block;width:100%;height:100%;object-fit:cover}
+.bare-video-play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:rgba(95,112,91,.95);color:#fff;font-size:23px}
+@media(max-width:600px){.bare-consultation-video{padding:30px 0}.bare-consultation-video-inner{grid-template-columns:minmax(0,1fr) 118px;gap:15px}.bare-consultation-video-frame{max-width:118px}.bare-consultation-video-copy h2{font-size:21px}.bare-consultation-video-copy>p{font-size:14px}.bare-consultation-video-book{font-size:13px;padding:9px 16px}}
 </style>
 </head>
 <body>
@@ -2093,23 +2093,35 @@ Carbon Laser Facial results can often be seen immediately after treatment. The l
 </div>
 </section>
 
-<!-- BARE: consultation video, click-to-play and optimised for mobile -->
+<!-- BARE: lightweight consultation video -->
 <section class="bare-consultation-video" aria-labelledby="bare-consultation-video-heading">
   <div class="wrap bare-consultation-video-inner">
     <div class="bare-consultation-video-copy">
-      <p class="bare-consultation-eyebrow">BARE BY MARLESE · THE EXPERIENCE</p>
       <h2 id="bare-consultation-video-heading">Your Consultation: What to Expect</h2>
-      <p>Take a look at what to expect when you visit BARE by Marlese for your consultation.</p>
+      <p>See what happens when you visit BARE by Marlese for a consultation.</p>
       <a class="bare-consultation-video-book" href="https://barebymarlese.eselram.com/website">Book Now</a>
     </div>
     <div class="bare-consultation-video-frame">
-      <video controls playsinline preload="none" poster="/assets/consultation-poster.webp" width="480" height="854" aria-label="BARE by Marlese consultation: what to expect">
-        <source src="/assets/consultation-what-to-expect.mp4" type="video/mp4">
-        Your browser does not support embedded video.
-      </video>
+      <button type="button" class="bare-video-play" aria-label="Play consultation video">
+        <img src="/assets/consultation-poster.webp" alt="Preview of BARE consultation video" width="480" height="854" loading="lazy" decoding="async">
+        <span class="bare-video-play-icon" aria-hidden="true">▶</span>
+      </button>
     </div>
   </div>
 </section>
+<script>
+document.querySelectorAll('.bare-video-play').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var frame=btn.parentElement;
+    var video=document.createElement('video');
+    video.controls=true;video.playsInline=true;video.autoplay=true;
+    video.preload='metadata';video.setAttribute('aria-label','BARE consultation video');
+    var source=document.createElement('source');
+    source.src='/assets/consultation-what-to-expect.mp4';source.type='video/mp4';
+    video.appendChild(source);frame.replaceChildren(video);video.play().catch(function(){});
+  },{once:true});
+});
+</script>
 <!-- /BARE consultation video -->
 
 <!-- BARE: optimised client tattoo photo carousel -->
