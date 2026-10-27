@@ -1790,6 +1790,13 @@ text-transform:uppercase;
 @media(max-width:430px){.bare-gallery-slide{flex-basis:85%}.bare-gallery-slide img{height:355px}}
 @media(prefers-reduced-motion:reduce){.bare-gallery-track{scroll-behavior:auto}}
 
+
+/* Booking consultation video: beside booking card, stacked on mobile */
+#contact .booking-grid{grid-template-columns:minmax(0,1fr) minmax(180px,260px);max-width:900px;align-items:center;justify-items:stretch;gap:24px}
+#contact .booking-video{width:100%;max-width:260px;justify-self:center;aspect-ratio:480/854;border-radius:12px;overflow:hidden;background:#080808}
+#contact .booking-video video{display:block;width:100%;height:100%;object-fit:contain;background:#080808}
+#contact .booking-note{text-align:center}
+@media(max-width:650px){#contact .booking-grid{grid-template-columns:minmax(0,1fr);gap:18px}#contact .booking-video{width:180px;max-width:65%;margin:auto}}
 </style>
 <script src="/config.js" defer></script>
 <!-- Analytics is loaded only after opt-in via the cookie controls below. -->
@@ -2454,7 +2461,7 @@ Carbon Laser Facial results can often be seen immediately after treatment. The l
 </section><section id="contact" style="padding:40px 0 8px;">
 <div class="wrap">
 <div style="
-      max-width:720px;
+      max-width:1040px;
       margin:0 auto;
     ">
 <div style="
@@ -2480,6 +2487,7 @@ Carbon Laser Facial results can often be seen immediately after treatment. The l
 </div>
 <a class="booking-btn" href="https://barebymarlese.eselram.com/website">Book Consultation</a>
 </div>
+<div class="booking-video"><video controls playsinline preload="none" aria-label="What to expect at your consultation" onended="this.pause();this.load()"><source src="/assets/consultation-what-to-expect.mp4" type="video/mp4">Your browser does not support video playback.</video></div>
 </div>
 <div class="booking-note">
 Consultation form first • £15 deposit required before booking • Online booking calendar • 24 hours’ notice required for changes.
