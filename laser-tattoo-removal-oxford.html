@@ -1778,6 +1778,17 @@ text-transform:uppercase;
 .bare-cookie-accept{background:#5e6959;color:white}.bare-cookie-reject{background:transparent;color:#394438}
 .bare-cookie-settings{border:0;background:none;text-decoration:underline;color:#394438;font:inherit;cursor:pointer;padding:4px}
 @media(max-width:600px){.bare-cookie-banner{bottom:0;padding:14px 18px max(14px,env(safe-area-inset-bottom));max-height:65dvh}.bare-cookie-banner h2{font-size:16px}.bare-cookie-banner p{font-size:12px;line-height:1.5;margin-bottom:10px}.bare-cookie-actions{flex-direction:row;gap:8px}.bare-cookie-actions button{min-width:0;padding:10px 7px;font-size:11px}}
+
+/* BARE seven-photo carousel — responsive, lightweight, no external libraries */
+.bare-photo-gallery{padding:28px 0 32px}.bare-photo-gallery .bare-gallery-intro{text-align:center;max-width:670px;margin:0 auto 20px;color:var(--text,#50584e)}
+.bare-gallery-shell{position:relative;max-width:1020px;margin:auto}.bare-gallery-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:8px 3px 18px;overscroll-behavior-inline:contain}.bare-gallery-track::-webkit-scrollbar{display:none}
+.bare-gallery-slide{flex:0 0 calc((100% - 32px)/3);min-width:0;scroll-snap-align:start;margin:0}.bare-gallery-slide button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in;border-radius:17px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.10)}.bare-gallery-slide img{width:100%;height:340px;object-fit:contain;background:#eaeae7;display:block}.bare-gallery-slide button:focus-visible,.bare-gallery-arrow:focus-visible{outline:3px solid #4e654d;outline-offset:3px}
+.bare-gallery-arrow{position:absolute;top:43%;z-index:2;width:42px;height:42px;border-radius:50%;border:1px solid #c4c9be;background:#f8f8f3;color:#303b2e;font-size:26px;cursor:pointer;box-shadow:0 3px 12px #0002}.bare-gallery-prev{left:-18px}.bare-gallery-next{right:-18px}.bare-gallery-hint{text-align:center;font-size:13px;opacity:.8;margin:8px 0 0}
+.bare-gallery-lightbox{border:0;border-radius:14px;padding:16px;background:#f7f7f3;max-width:min(92vw,850px);max-height:94vh}.bare-gallery-lightbox::backdrop{background:rgba(0,0,0,.78)}.bare-gallery-lightbox img{display:block;max-width:100%;max-height:78vh;object-fit:contain;margin:auto}.bare-gallery-close{display:block;margin:0 0 10px auto;background:#465743;color:white;border:0;border-radius:24px;padding:8px 17px;cursor:pointer}
+@media(max-width:760px){.bare-gallery-slide{flex-basis:76%}.bare-gallery-slide img{height:390px}.bare-gallery-arrow{width:34px;height:34px;font-size:21px}.bare-gallery-prev{left:0}.bare-gallery-next{right:0}.bare-photo-gallery{padding-top:22px}}
+@media(max-width:430px){.bare-gallery-slide{flex-basis:85%}.bare-gallery-slide img{height:355px}}
+@media(prefers-reduced-motion:reduce){.bare-gallery-track{scroll-behavior:auto}}
+
 </style>
 
 <!-- Analytics is loaded only after opt-in via the cookie controls below. -->
@@ -2077,6 +2088,26 @@ Carbon Laser Facial results can often be seen immediately after treatment. The l
 </div>
 </div>
 </section>
+
+<!-- BARE: optimised client tattoo photo carousel -->
+<div class="wrap bare-photo-gallery" id="tattoo-photo-gallery" aria-labelledby="bare-gallery-heading">
+<p class="results-progress-kicker" style="text-align:center">BARE by Marlese</p>
+<h3 class="results-progress-title" id="bare-gallery-heading" style="text-align:center">Tattoo Photo Gallery</h3>
+<p class="bare-gallery-intro">Browse tattoo photographs. Individual treatment plans and outcomes vary.</p>
+<div class="bare-gallery-shell"><button class="bare-gallery-arrow bare-gallery-prev" type="button" aria-label="Previous photographs">&#8249;</button>
+<div class="bare-gallery-track" aria-label="Tattoo photograph carousel" tabindex="0"><figure class="bare-gallery-slide"><button type="button" aria-label="Enlarge tattoo photograph 1" data-bare-gallery-photo="1"><img src="/assets/gallery/car-1.webp" alt="Tattoo photograph 1 from the BARE by Marlese gallery" width="720" height="1280" loading="lazy" decoding="async"></button></figure>
+<figure class="bare-gallery-slide"><button type="button" aria-label="Enlarge tattoo photograph 2" data-bare-gallery-photo="2"><img src="/assets/gallery/car-2.webp" alt="Tattoo photograph 2 from the BARE by Marlese gallery" width="720" height="1280" loading="lazy" decoding="async"></button></figure>
+<figure class="bare-gallery-slide"><button type="button" aria-label="Enlarge tattoo photograph 3" data-bare-gallery-photo="3"><img src="/assets/gallery/car-3.webp" alt="Tattoo photograph 3 from the BARE by Marlese gallery" width="720" height="1280" loading="lazy" decoding="async"></button></figure>
+<figure class="bare-gallery-slide"><button type="button" aria-label="Enlarge tattoo photograph 4" data-bare-gallery-photo="4"><img src="/assets/gallery/car-4.webp" alt="Tattoo photograph 4 from the BARE by Marlese gallery" width="720" height="1280" loading="lazy" decoding="async"></button></figure>
+<figure class="bare-gallery-slide"><button type="button" aria-label="Enlarge tattoo photograph 5" data-bare-gallery-photo="5"><img src="/assets/gallery/car-5.webp" alt="Tattoo photograph 5 from the BARE by Marlese gallery" width="720" height="1280" loading="lazy" decoding="async"></button></figure>
+<figure class="bare-gallery-slide"><button type="button" aria-label="Enlarge tattoo photograph 6" data-bare-gallery-photo="6"><img src="/assets/gallery/car-6.webp" alt="Tattoo photograph 6 from the BARE by Marlese gallery" width="720" height="1280" loading="lazy" decoding="async"></button></figure>
+<figure class="bare-gallery-slide"><button type="button" aria-label="Enlarge tattoo photograph 7" data-bare-gallery-photo="7"><img src="/assets/gallery/car-7.webp" alt="Tattoo photograph 7 from the BARE by Marlese gallery" width="720" height="1280" loading="lazy" decoding="async"></button></figure></div>
+<button class="bare-gallery-arrow bare-gallery-next" type="button" aria-label="Next photographs">&#8250;</button></div>
+<p class="bare-gallery-hint">Swipe or use the arrows · Tap a photo to enlarge</p>
+<dialog class="bare-gallery-lightbox" aria-label="Enlarged tattoo photograph"><button class="bare-gallery-close" type="button">Close ×</button><img alt="Enlarged tattoo photograph" width="720" height="1280"></dialog>
+</div>
+<!-- /BARE carousel -->
+
 <!-- BARE by Marlese: automatically updated Google reviews via WeWidget -->
 <section aria-labelledby="google-reviews-heading" id="google-reviews" style="padding:48px 0 56px;">
 <div class="wrap">
@@ -2797,5 +2828,17 @@ Opening Hours: Monday–Friday 5pm–8pm • Saturday 9am–11am
 })();
 </script>
 
+<script>
+/* BARE gallery: small vanilla JS; no dependencies or auto-play */
+(function(){
+ const gallery=document.getElementById('tattoo-photo-gallery');if(!gallery)return;
+ const track=gallery.querySelector('.bare-gallery-track');const dialog=gallery.querySelector('dialog');const enlarged=dialog.querySelector('img');
+ gallery.querySelector('.bare-gallery-prev').addEventListener('click',()=>track.scrollBy({left:-track.clientWidth*.8,behavior:'smooth'}));
+ gallery.querySelector('.bare-gallery-next').addEventListener('click',()=>track.scrollBy({left:track.clientWidth*.8,behavior:'smooth'}));
+ gallery.querySelectorAll('[data-bare-gallery-photo]').forEach(btn=>btn.addEventListener('click',()=>{const img=btn.querySelector('img');enlarged.src=img.currentSrc||img.src;enlarged.alt=img.alt;if(typeof dialog.showModal==='function')dialog.showModal();}));
+ gallery.querySelector('.bare-gallery-close').addEventListener('click',()=>dialog.close());
+ dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+})();
+</script>
 </body>
 </html>
