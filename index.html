@@ -1829,9 +1829,9 @@ text-transform:uppercase;
 .bare-consultation-video-copy h2{font-size:clamp(23px,2.8vw,31px);line-height:1.25;margin:0 0 12px;color:#252a24}
 .bare-consultation-video-copy>p{line-height:1.55;color:#505a4e;margin:0 0 15px}
 .bare-consultation-video-book{display:inline-block;background:#5f705b;color:#fff!important;border-radius:999px;padding:10px 22px;text-decoration:none!important;font-weight:700}
-.bare-consultation-video-frame{width:100%;max-width:220px;aspect-ratio:480/854;border-radius:10px;overflow:hidden;background:#242b25}
+.bare-consultation-video-frame{width:100%;max-width:220px;aspect-ratio:480/854;border-radius:10px;overflow:hidden;background:#000}
 .bare-consultation-video-frame video{display:block;width:100%;height:100%;object-fit:contain}
-.bare-video-play{display:block;position:relative;width:100%;height:100%;padding:0;border:0;background:#242b25;cursor:pointer}
+.bare-video-play{display:block;position:relative;width:100%;height:100%;padding:0;border:0;background:#000;cursor:pointer}
 .bare-video-play img{display:block;width:100%;height:100%;object-fit:cover}
 .bare-video-play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:rgba(95,112,91,.95);color:#fff;font-size:23px}
 @media(max-width:600px){.bare-consultation-video{padding:30px 0}.bare-consultation-video-inner{grid-template-columns:minmax(0,1fr) 118px;gap:15px}.bare-consultation-video-frame{max-width:118px}.bare-consultation-video-copy h2{font-size:21px}.bare-consultation-video-copy>p{font-size:14px}.bare-consultation-video-book{font-size:13px;padding:9px 16px}}
@@ -2103,7 +2103,7 @@ Carbon Laser Facial results can often be seen immediately after treatment. The l
     </div>
     <div class="bare-consultation-video-frame">
       <button type="button" class="bare-video-play" aria-label="Play consultation video">
-        <img src="/assets/consultation-poster.webp" alt="Preview of BARE consultation video" width="480" height="854" loading="lazy" decoding="async">
+        
         <span class="bare-video-play-icon" aria-hidden="true">▶</span>
       </button>
     </div>
@@ -2115,10 +2115,25 @@ document.querySelectorAll('.bare-video-play').forEach(function(btn){
     var frame=btn.parentElement;
     var video=document.createElement('video');
     video.controls=true;video.playsInline=true;video.autoplay=true;
-    video.preload='metadata';video.setAttribute('aria-label','BARE consultation video');
+    video.preload='none';video.setAttribute('aria-label','BARE consultation video');
     var source=document.createElement('source');
     source.src='/assets/consultation-what-to-expect.mp4';source.type='video/mp4';
-    video.appendChild(source);frame.replaceChildren(video);video.play().catch(function(){});
+    video.appendChild(source);frame.replaceChildren(video);
+    video.addEventListener('ended',function(){
+      video.pause();video.removeAttribute('src');
+      while(video.firstChild) video.removeChild(video.firstChild);
+      video.load();
+      var replay=btn.cloneNode(true);
+      replay.addEventListener('click',function(){
+        var next=document.createElement('video');next.controls=true;next.playsInline=true;next.autoplay=true;next.preload='none';
+        next.setAttribute('aria-label','BARE consultation video');
+        var nextSource=document.createElement('source');nextSource.src='/assets/consultation-what-to-expect.mp4';nextSource.type='video/mp4';next.appendChild(nextSource);
+        frame.replaceChildren(next);next.addEventListener('ended',function(){frame.replaceChildren(replay);next.load();},{once:true});
+        next.play().catch(function(){});
+      });
+      frame.replaceChildren(replay);
+    },{once:true});
+    video.play().catch(function(){});
   },{once:true});
 });
 </script>
