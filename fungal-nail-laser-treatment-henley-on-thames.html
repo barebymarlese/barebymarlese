@@ -1790,6 +1790,11 @@ text-transform:uppercase;
 @media(max-width:430px){.bare-gallery-slide{flex-basis:85%}.bare-gallery-slide img{height:355px}}
 @media(prefers-reduced-motion:reduce){.bare-gallery-track{scroll-behavior:auto}}
 
+
+/* Two WebP images replacing the former contact-arm illustration */
+.contact-photo-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px;align-items:stretch}
+.contact-photo-pair img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:12px}
+@media(max-width:480px){.contact-photo-pair{gap:8px}.contact-photo-pair img{border-radius:9px}}
 </style>
 
 <!-- Analytics is loaded only after opt-in via the cookie controls below. -->
@@ -2496,7 +2501,10 @@ Consultation form first • £15 deposit required before booking • Online book
 </div>
 </div>
 </div>
-<img alt="Laser tattoo removal and carbon facial consultation South Oxfordshire" src="assets/contact-arm.webp" style="width:100%;margin-top:8px;border-radius:12px;"/>
+<div class="contact-photo-pair" aria-label="Tattoo removal information images">
+<img src="assets/contact_1.webp" alt="Tattooed shoulder and back" width="1080" height="1350" loading="lazy" decoding="async"/>
+<img src="assets/contact_2.webp" alt="Tattoo removal myth and fact: your body clears the ink" width="1080" height="1350" loading="lazy" decoding="async"/>
+</div>
 <div aria-label="Contact links" class="contact-links">
 <a aria-label="Email" class="contact-icon" href="mailto:marlese@barebymarlese.com">
 <svg aria-hidden="true" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
