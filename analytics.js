@@ -10,6 +10,9 @@
   window.dataLayer = window.dataLayer || [];
   window.gtag = function(){ dataLayer.push(arguments); };
 
+  gtag("set", "linker", {
+    domains: ["barebymarlese.com", "barebymarlese.eselram.com"]
+  });
   gtag("js", new Date());
   gtag("config", GA_ID);
 })();
